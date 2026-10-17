@@ -1,0 +1,59 @@
+                                                                                                                                                         9
+
+
+the following piece-wise equation for cell ci to capture this
+relationship.
+                                     1        if ci is an extended
+   ¯yiL(1−yiL)+(xiH−1) =                      left endpoint
+                                       ≤ 0   otherwise
+Now, let βH  be a vector of binary variables that represents
+whether each cell is an extended horizontal endpoint. We use
+this to compute a valueβH that counts the number of extended
+horizontal endpoints as follows:
+
+           βH =1TβH,
+   where βH ≥ ¯yH◦(1−yH)+(xHT   xHTT −1),
+           βH ∈{0,1}2n,
+
+where  the ◦  operator  is  the  element-wise  product  of  two
+vectors. The endpoint changes that remain to be counted are
+the cells that were endpoints in ¯yH and are not endpoints in
+yH while changing coverage orientations (to vertical in this
+case). However, such a cell will now be a part of a vertical
+rank that would either have an added or extended vertical                     Fig.  8:  Illustration  of  rank  endpoint  changes  as  a  result  of  rank
+rank endpoint. Therefore, we do not count these endpoints as                  replanning. Each row shows horizontal (orange lines) and vertical
+it tracks rank changes that are already accounted for.                        (purple  lines)  ranks  blocked  by  obstacles  (black  boxes)  and  the
+                                                                              corresponding replanned ranks and endpoint changes.
+  We  extend  these  concepts  to  the  vertical  case  to  count
+all endpoint changes. Let ¯yV  be a binary vector indicating
+whether a cell was a vertical endpoint for a rank in the initial              endpoints. As a result, the maximum number of merged ranks
+path. The total number of added endpoints α and extended                      is β/2. With this, we have the following bound on mnew:
+endpoints β is then obtained as follows:                                                                 mnew≤α+β/2,
+
+         α = (1−¯yH)TyH +(1−¯yV)TyV                    (28)                   which proves the lemma.
+         β =1TβH +1TβV,                                             (29)         We now propose our second ILP extension. We use the
+ where βH ≥ ¯yH◦(1−yH)+(xHT   xHTT −1),                                     bound  we  derived  in  Lemma  2  to  constrain mnew  in  the
+                                                                      (30)    ILP.  Following  Proposition  1,  we  add  an  additional  term
+         βV ≥ ¯yV ◦(1−yV)+(xV T   xV TT −1),  (31)                          ϵ (α+β/2) to the objective function, whereϵ = 1/(¯m+1), to
+         βH,βV ∈{0,1}2n.                                               (32)   compute a solution with the smallestmnew without dominating
+                                                                              the minimization of m. The resulting ILP is as follows:
+  We now look to bound the number of new ranksmnew using                                       ILP-2:
+α and β, for which we exploit the following property.                                         min
+                                                                                        xH,xV,yH,yV    m+ϵ (α+β/2)                          (33)
+Lemma 2. Consider α and β to be the number of added and                                              s.t.   Eqs. (8), (9), (10), (28) - (32)
+extended endpoints respectively for a set of replanned ranks.
+Then the number of new ranks mnew in the set is bounded as                                                 α+β/2≤ ¯m                                (34)
+follows:                                                                                                   xH,xV ∈{0,1}n                         (35)
+                          mnew≤α+β/2.                                                                      yH,yV ∈{0,1}2n.                      (36)
+                                                                                 Solving  ILP-2  guarantees  a  solution  where mnew ≤  ¯m.
+                                                                              Moreover,ILP-2onlyaddsO(n)decisionvariablestothebase
+Proof. We  start  by  considering  all  possible  changes  to  the            ILP (βH andβV). So, we expect ILP-2 to run faster than ILP-
+ranks  as  illustrated  in  Fig.  8.  For  the  first  four  possible         1. We observed that Remark 1 also applies for ILP-2, so we
+changes, the minimum number of added endpoints for each                       simply solve the linear relaxation to obtain integral solutions.
+new rank is 1. However, for a merged rank, the number of                      Since there are negative terms involving yH  and yV  (Eqs.
+added endpoints for the new rank is 0, so we instead count the                (30),  (31),  the  following  constraint  in  the  linear  relaxation
+minimum number of extended endpoints. Merging two ranks                       ensures that the optimization problem is bounded:
+can be thought of as extending two endpoints so that the ranks                                              yH,yV ≤1.
+join to form a new rank. Therefore, a merged rank results in
+at least two extended endpoints. Note that merging more than                     Unlike ILP-1, ILP-2 does not guarantee an optimal solution
+2 ranks to form one new rank results in more than 2 extended                  to the rank replanning problem, as we use a pessimistic bound

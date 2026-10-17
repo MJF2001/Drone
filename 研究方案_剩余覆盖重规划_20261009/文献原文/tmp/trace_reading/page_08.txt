@@ -1,0 +1,74 @@
+                                                                                                                                                                 8
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                   Fig. 5.Office Scenario:Performance comparison with the baseline algorithms.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                Fig. 6.Warehouse Scenario:Performance comparison with the baseline algorithms.
+
+nodes. Hence, the resulting increase in tour length is bounded                    2(J   k+1)r   k. The initial global tour contains only the root node
+byr    k+2(J   k−1)r    k+r   k = 2J  krk, yieldingl             k≤l   k−1    +2J  krk.and is therefore trivially optimal, givingϵ       0 = 0. Recursively
+If the expanded parent is an endpoint of the tour, one boundary                   applying this inequality over theKexpansion events yields
+connection is absent and the same upper bound still holds.                        lK −l  ∗K ≤2 PKk=1 (J k + 1)r   k. Therefore, forl   ∗K >0, the
+                                                                                                                                                  k=1 (J k+1)r      k
+   Next, consider the globally optimal tour. We construct a                       approximation ratio satisfiesσ              inc = lKl∗K ≤1+    2PK  l∗K          .
+feasible tour for the pre-expansion node set from this optimal                        The bound indicates that the approximation ratio introduced
+tour. Specifically, all but one child node inC   k  are removed                   by incremental tour refinement is determined by the number
+by directly connecting their predecessor and successor nodes.                     of newly generated child nodes and their spatial deviations
+By the triangle inequality, these shortcut operations do not                      from the corresponding parent nodes. Since tree expansion is
+increase the tour length. The remaining child node is then                        local, the refinement radiusr          k is typically small, leading to a
+replaced by its parentn          pk. Since the distance between the               limited degradation from global optimality.
+parent and any child is at mostr        k, this replacement increases
+thetwoincidentconnectionsbyatmost2r          k intotal.Therefore,                                    VI.  RESULTS ANDDISCUSSION
+the constructed pre-expansion tour has length no greater than
+l∗k +2r  k. Letl    ∗k−1     be the globally optimal tour length before               This section evaluates TRACE through high-fidelity simu-
+expansion, we obtainl        ∗k≥l  ∗k−1   −2r     k. Letϵ     k =l   k−l  ∗k denotelations in Gazebo and real-robot experiments. The simulation
+the suboptimality gap between the updated tour and globally                       studiescompareTRACEwithfivebaselinealgorithmsinterms
+optimal tour. Combining the above results givesϵ   k≤ϵ   k−1    +                 of coverage time, path length, overlap ratio, and number of

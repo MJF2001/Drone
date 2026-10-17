@@ -1,0 +1,66 @@
+                                                                                                                                                              7
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                (a)⇒ direction
+
+Fig. 6: The matching edges used to detect ranks for a given row of
+grid cells. Each cell ci has edges that match it with another cell in
+the row if ci is a right (using magenta edges) or left (using cyan
+edges) endpoint. Here, we illustrate an example where ci is a left
+endpoint and is matched with a right endpoint in the row (bold cyan
+edge). No matching occurs if ci is not an endpoint.
+
+                                                                                                                (b)⇐ direction
+   We  formulate  this  with  variables  that  represent  directed                Fig. 7: Illustrations of the cases considered for Lemma 1’s proof.
+edges added betweenci and every cellcr to its right, as any of
+them could be a right endpoint. We also add an edge fromci to                    left endpoint to match with, which in turn gives an infeasible
+itself to account for a single-cell rank. For each edge between                  solution unless zik = 1 and zir = 0. This contradicts the fact
+ci andacellcr,weaddabinaryvariablezir∈{0,1}thattakes                             that zir = 1, and therefore shows that there must exist a rank
+a value of 1 if the edge is included in the matching (i.e. cr is                 between ci and cr if zir = 1. This proves the lemma.
+a right endpoint). To ensure that ci and cr are matched only if
+they are left and right endpoints respectively, we enforce the                      Following Lemma 1, we now have a way of representing
+following constraints:                                                           a horizontal rank as a matching of its endpoints. We extract
+                     X                                                           each horizontal row of connected grid cells in the given IOP
+                          zir =yiL,                                            (13)and add the following constraints for each cell ci in the row:
+                     X∀r                                                                 X
+                          zir =yrR,                                            (14)           zir =yiL,    where cr is to the right of ci,        (16)
+                      ∀i                                                                 X∀r
+                    zir∈{0,1}  ∀1≤i,j≤n.                    (15)                              zli =yiR,    where cl is to the left of ci,            (17)
+                                                                                          ∀l
+Lemma 1. Consider a horizontal row of connected IOP grid                                zij ∈{0,1}  ∀1≤i,j≤n.                                      (18)
+cells and two cells ci and cr in this row where cr is to the                        We simply extend the setup to represent vertical ranks as a
+right of ci. Then there exists a horizontal rank with its left                   matching of its endpoints in a vertical row of connected grid
+endpoint at ci and right endpoint at cr iff zir = 1.                             cells. For each cellci in the vertical row, we add the following
+Proof. (⇒ direction) If there exists a rank between ci and cr,                   constraints:
+then yiL = 1 and yrR = 1. As a result, we have the following                           Xzib =yiT,    where cb is to the bottom of ci,       (19)
+for ci:    X
+                                                                                       X∀b
+                      zir = 1,    and X          zir = 1.                                   zti =yiB,    where ct is to the top of ci              (20)
+                  ∀r                         ∀i                                         ∀t
+Assume that zir = 0 (see Fig. 7(a)). This indicates that ci                            zij ∈{0,1}  ∀1≤i,j≤n.                                        (21)
+must be matched with another right endpoint ck to its right,
+i.e. zik = 1. Since there exists a rank between ci and cr, ck                       Now, let ¯zij be an input to the ILP such that ¯zij is 1 if the
+cannot be between the two cells. Therefore, ck must be to the                    initial path contains a rank with cells ci and cj as endpoints
+right of cr. WLOG, let us assume that the rank between ci                        and 0 otherwise. From Lemma 1, if the ILP solution has a
+and cr  is the left-most horizontal rank in the row, meaning                     rank with ci and cj as endpoints (zij = 1), then it is a new
+that there are no other left endpoints for cr  to match with.                    rank if ¯zij = 0. Using this relation for all pairs of cells ci and
+This is an infeasible solution for the set of constraints unless                 cj with matching edges, we compute mnew as follows:
+zir = 1, thereby proving the statement.                                                                               X
+   (⇐ direction) If zir = 1, then yiL and yrR have to both be 1,                                      mnew =X             (1− ¯zij)zij.                    (22)
+indicating that they are left and right endpoints respectively.                                                   ∀i   ∀j
+However, consider the case where there is a vertically-oriented                     We  now  propose  our  extended  ILP,  namely  ILP-1,  that
+cell between them, indicating that there is no horizontal rank                   minimizes the number of ranks in the replanned solution while
+betweenci andcr (see Fig. 7(b)). In this case, there must exist                  constraining the number of new ranks to be within a budget ¯m.
+anothercellck thatisarightendpoint(totheleftofthevertical                        We also add the term ϵ mnew to the ILP’s objective function,
+cell), where ykR = 1. WLOG, let us assume that ci is the only                    where ϵ> 0 is used to compute the rank-minimizing solution
+endpoint to the left of ck. This indicates that ck has no other                  with the smallest mnew. Specifically, in the case of a large

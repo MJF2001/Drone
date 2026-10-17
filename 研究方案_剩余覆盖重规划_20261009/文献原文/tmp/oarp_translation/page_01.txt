@@ -1,0 +1,63 @@
+                                                                                                                                                        1
+   Anytime Replanning of Robot Coverage Paths for
+                            Partially Unknown Environments
+
+                             Megnath Ramesh, Frank Imeson, Baris Fidan, and Stephen L. Smith
+
+
+
+
+
+  Abstract—In  this  paper,  we  propose  a  method  to  replan               of the path (local replanning) while keeping the rest of the
+coverage  paths  for  a  robot  operating  in  an  environment  with          path intact. A simple example of local replanning would be
+initially unknown static obstacles. Existing coverage approaches              where the robot simply drives around the obstacle whenever
+reduce coverage time by covering along the minimum number                     a collision is imminent. However, a more practical approach
+of  coverage  lines  (straight-line  paths).  However,  recomputing           would be to use the time while driving towards the blockage
+such paths online can be computationally expensive resulting in
+robot stoppages that increase coverage time. A naive alternative              to find more optimal solutions. In this paper, we propose an
+is  greedy  detour  replanning,  i.e.,  replanning  with  minimum             anytime coverage replanner that utilizes the time spent driving
+deviation from the initial path, which is efficient to compute but            to  conduct  near-optimal  replans  on  the  provided  coverage
+may result in unnecessary detours. In this work, we propose an                paths (see Fig. 1).
+anytime coverage replanning approach named OARP-Replan that                      In our previous work [6], we developed the Optimal Axis-
+performs near-optimal replans to an interrupted coverage path
+within a given time budget. We do this by solving linear relax-               Parallel Rank Partitioning (OARP) approach to plan coverage
+ations of integer linear programs (ILPs) to identify sections of the          paths  that  minimize  the  number  of  turns  in  the  solution.
+interrupted path that can be optimally replanned within the time              Minimizing turns is motivated by path quality and optimality
+budget. We validate OARP-Replan in simulation and perform                     asrobotscanhavedecreasedperformancewhileturning(speed
+comparisons against a greedy detour replanner and other state-                and coverage). OARP solves this using the following three-
+of-the-art coverage planners. We also demonstrate OARP-Replan
+in experiments using an industrial-level autonomous robot.                    step  framework:  i)  decomposing  the  environment  into  grid
+  Index Terms—Coverage path planning, online coverage replan-                 cells, ii) using the decomposition to compute the minimum
+ning, planning in unknown environments.                                       number  of  axis-parallel  (horizontal  and  vertical)  ranks,  i.e.
+                                                                              long rectangles that match the width of the robot’s coverage
+                         I.  INTRODUCTION                                     tool while covering along a straight-line path, and iii) finding
+                                                                              an optimal tour of the ranks to obtain the coverage path. In
+  Coverage planning problems show up in many real-world                       this paper, we extend OARP to provide a coverage replanning
+applications  such  as  cleaning  [1],  manufacturing  [2],  and              approach, namely OARP-Replan, that replans coverage paths.
+agriculture  [3].  Informally,  the  coverage  planning  problem                 Our specific contributions are as follows:
+is to find a path that has the robot covering its entire en-                     1.We present an Integer Linear Program (ILP) that replans
+vironment with an onboard sensor or tool and minimizes a                            the ranks of a coverage path such that a tour of the ranks
+cost  function  [4].  In  this  paper,  we  tackle  the  problem  of                (i.e.  a  coverage  path)  can  be  replanned  within  a  time
+replanning optimal coverage paths that have been interrupted                        budget.
+by previously unknown static obstacles. We refer to this as                        a)We leverage LP relaxations of this ILP to replan ranks
+the coverage replanning problem. This problem arises when                              in polynomial time (efficient to compute).
+businesses such as retail stores and warehouses change their                       b)We present a second ILP that reduces the number of
+environments frequently to accommodate new products and                                decision variables, and therefore replans the coverage
+remapping beforehand each time would be too costly.                                    ranks faster than the first ILP.
+  One approach to coverage replanning is to stop executing                       2.We  provide  an  anytime  coverage  replanning  method
+the current coverage path and plan a new path for the uncov-                        named OARP-Replan that leverages the above ILPs to
+ered environment with the new obstacle(s). However, coverage                        conduct near-optimal replans to the coverage path within
+planning for arbitrary environments is generally NP-Hard [5]                        a given time budget.
+and this approach does not scale well for large environments                     3.Finally, we conduct simulations and robot experiments to
+with  many  unknown  obstacles.  Moreover,  an  obstacle  may                       validate our proposed approach. Our simulation results
+only  affect  a  small  section  of  the  path,  i.e.,  the  unbroken               include  comparisons  against  other  state-of-the-art  ap-
+parts of the path may still be drivable and near-optimal. An                        proaches, including offline approaches (i.e. all obstacles
+alternate  approach  is  to  only  replan  the  affected  section(s)                are known) [7], [8].
+
+  M. Ramesh (m5ramesh@uwaterloo.ca) and S. L. Smith (stephen.smith@
+uwaterloo.ca)arewiththeDepartmentofElectricalandComputerEngineering           A. Related Works
+and B. Fidan (fidan@uwaterloo.ca) is with the Department of Mechanical
+and Mechatronics Engineering, at the University of Waterloo, Waterloo ON,        Detailed surveys of coverage planning approaches can be
+Canada                                                                        found in [4], [9], [10]. Broadly, they can be characterized into
+  F. Imeson (frank.imeson@avidbots.com) is with Avidbots Corp., Kitchener
+ON, Canada                                                                    two classes: offline and online approaches. Offline approaches

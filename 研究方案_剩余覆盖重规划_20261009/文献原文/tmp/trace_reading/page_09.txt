@@ -1,0 +1,73 @@
+                                                                                                                                                          9
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                 Fig. 7.Forest Scenario:Performance comparison with the baseline algorithms.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                 Fig. 8.Mall 1 Scenario:Performance comparison with the baseline algorithms.
+
+turns, and further examine its path quality and robustness to                     2) Baseline Algorithms:The proposed algorithm is com-
+sensing and localization uncertainties.                                        pared with five online CPP algorithms: BINN [15], BA∗ [14],
+                                                                               ϵ∗  [18],  PPCPP  [19],  and  IBINN  [21].  All  algorithms  are
+A. Validation on a Simulation Platform                                         implemented  in  C++and  evaluated  using  the  same  robot
+   1) Simulated Robot and Test Scenarios:A mobile robot                        model, sensing configuration, map resolution, starting condi-
+is simulated with motion constraints including a maximum                       tions, and computing platform. The experiments are conducted
+translational velocity of2m/sand a minimum turning radius                      on a computer equipped with a2.60-GHz processor and32
+of1m. It is equipped with a LiDAR providing a360      ◦ field of               GBofRAM.Algorithm-specificparametersfollowthesettings
+view and a maximum sensing range of12m. Six90m×90m                             recommended in the corresponding publications.
+with different obstacle arrangements and spatial structures are                   3) Performance Metrics:The following performance met-
+constructed for evaluation, as shown in Fig. 4. The scenarios                  rics are used to quantitatively compare the algorithms:
+include representations of an office, warehouse, forest, and                      •Coverage Time: elapsed time from the start of operation
+mall and are designed to cover different levels of obstacle                          until  all  obstacle-free  cells  are  covered.  This  metric
+density, corridor structure, and spatial complexity. Each envi-                      jointly  reflects  travel  distance  and  maneuvering  costs
+ronment is represented by a30×30tiling for mapping and                               under the robot motion constraints.
+coverage planning. At the beginning of each run, the interior                     •Path Length: total distance traveled by the robot from
+obstacle layout is unknown to the robot and is progressively                         initialization until complete coverage.
+revealed through onboard sensing during coverage.                                 •Overlap Ratio: the amount of repeated coverage normal-

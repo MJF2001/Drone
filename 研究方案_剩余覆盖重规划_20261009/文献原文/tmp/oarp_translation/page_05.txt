@@ -1,0 +1,61 @@
+                                                                                                                                                         5
+
+
+                                                                               Algorithm 1 OARP-Replan
+                                                                               Input: Current path P, Environment IOPfW
+                                                                               Output: Replanned path P′
+                                                                                1: for each encounter i≤k on P do
+                                                                                2:     Wi← Part offW to cover after ith encounter
+                                                                                3:      R← Ranks from coverage path P
+                                                                                4:      τi← Time to reach ith encounter
+                                                                                5:       ¯mi← ˆT−1(τi)     ▷ Maximum instance size given τi
+Fig. 3: A run of OARP-Replan with one obstacle (dotted grey box).               6:      R′← RANK-REPLAN(Wi, R, ¯mi)
+The visible part of the obstacle (pink dots) is used to identify blocked        7:       if R′̸=∅ then
+grid cells (grey) and obstacle encounters (blue dots) along the current         8:           P′← TOUR-REPLAN(R′, R)
+path. For each encounter i≤ k, the planner attempts to replan the               9:             return P′
+remaining path (red path) within the time τi to reach the encounter
+(black path). To computeτi, previous encounters are replanned using            10:       else
+GD replan (green dotted lines).                                                11:             Apply GD replanning to ith encounter
+
+anymore  due  to  newly  detected  obstacles  (if  the  obstacle                  In our implementation, we run OARP-Replan using the path
+was  partially  observed,  this  process  would  be  repeated  for             that the robot is currently executing, i.e. if a new obstacle is
+each scan that reveals more of the obstacle). Let k  be the                    detected before P′ is returned, we start a new replan of P.
+number of all projected encounters along P  (each obstacle                     In the rest of the paper, we will expand on how the RANK-
+may cause multiple encounters). For each encounter, the robot                  REPLAN and TOUR-REPLAN sub-routines work.
+has the option of replanning the remaining path (the preferred
+solution) or simply going around the obstacle while covering
+the interrupted rank (if there is no time to replan). We refer to                          V.  THE RANK-REPLAN SUBROUTINE
+the latter method as the greedy detour (GD) replan, which                         In this section, we extend the integer linear program (ILP)
+can  be  performed  using  a  local  planner  with  little  to  no             fromtheOARPapproachinourpreviouswork[6]toformulate
+computational time and thus no robot stoppage. We propose                      the RANK-REPLAN subroutine that minimizes the number
+only using GD replan as a fallback method in the case where                    of  replanned  ranks  while  constraining  the  number  of  new
+the main planner does not have enough time to replan the path.                 ranks  within  a  budget  ¯m.  We  first  provide  a  brief  review
+  Fig. 3 illustrates an example run of the algorithm. Note                     of the original ILP with some additional variables to allow
+that we replan using the obstacle encounters that have been                    for extension. Then, we propose two extensions to this ILP:
+observed so far by the robot. The encounters that were not                     the first extension solves the rank replanning step optimally,
+observed (even from an obstacle that was partially observed)                   and the second extension solves it efficiently with fewer ILP
+is replanned once the robot has observed them later in the                     variables  (no  optimality  guarantees).  The  user  may  choose
+coverage  run.  We  iterate  through  each  obstacle  encounter                either ILP based on their replanning preferences (optimality
+i ≤ k and evaluate whether the main planner can replan the                     vs efficiency).
+path after the ith encounter. The path for all previous obstacle
+encounters ({1,2,...i−1}) is replanned using GD replan. In                     A. The base ILP
+other words, we look for an obstacle encounter that gives the
+planner enough time to replan the path after the encounter. Let                   Consider an integral orthogonal polygon (IOP) containingn
+τi be the time for the robot to reach the ith encounter along                  grid cells representing the input environment, where each cell
+the current path, which will be the time budget for the replan.                ci for 1≤i≤n is of size l×l (l is the tool width). The goal
+  To evaluate if the path after encounter i can be replanned,                  of the ILP is to assign a coverage orientation (horizontal or
+the planner runs a sub-routine named RANK-REPLAN to get                        vertical)foreachcellci suchthatthenumberofrankscovering
+a set of replanned ranks for which a tour can be computed in                   the cells is minimized. We obtain ranks by merging similarly-
+timeτi (Line 6). If RANK-REPLAN returns a set of ranks, we                     oriented  neighboring  grid  cells.  To  this  end,  we  introduce
+compute a tour of the ranks using another sub-routine called                   variables to represent cell orientations and count the resulting
+TOUR-REPLAN (Line 8) that solves the GTSP to obtain our                        ranks after all merges are complete.
+replanned path. This sub-routine runs as a background process                     Let xiH  and xiV  be binary variables that denote whether
+while the robot continues to follow the current coverage path.                 cell ci is oriented horizontally or vertically (cannot be both).
+However, if RANK-REPLAN returns an empty set, then this                        Fig. 4 shows an example IOP with oriented grid cells and
+indicates that there is no solution that will finish within the                their corresponding ranks. We also add variables to identify
+expected time budget. In that case, GD replan is used to replan                the rank endpoints. Let yiL and yiR  be binary variables that
+encounter i (Line 11), and the procedure is repeated for the                   indicate whether the cell, ci, is the left endpoint and/or the
+next encounter. In the end, we obtain a replanned path where                   right endpoint of a horizontal rank. Similarly, let yiT  and yiB
+some (or all) encounters are replanned using GD replan, while                  be binary variables that indicate whether ci  is a top and/or
+the remaining path undergoes a near-optimal replan before the                  bottom endpoint of a vertical rank. This notation is different
+robot reaches the corresponding encounter.                                     from the original OARP approach, which only has indicator

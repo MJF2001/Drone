@@ -1,0 +1,1617 @@
+1
+Anytime Replanning of Robot Coverage Paths for
+Partially Unknown Environments
+Megnath Ramesh, Frank Imeson, Baris Fidan, and Stephen L. Smith
+Abstract—In this paper, we propose a method to replan
+coverage paths for a robot operating in an environment with
+initially unknown static obstacles. Existing coverage approaches
+reduce coverage time by covering along the minimum number
+of coverage lines (straight-line paths). However, recomputing
+such paths online can be computationally expensive resulting in
+robot stoppages that increase coverage time. A naive alternative
+is greedy detour replanning, i.e., replanning with minimum
+deviation from the initial path, which is efficient to compute but
+may result in unnecessary detours. In this work, we propose an
+anytime coverage replanning approach named OARP-Replan that
+performs near-optimal replans to an interrupted coverage path
+within a given time budget. We do this by solving linear relax-
+ations of integer linear programs (ILPs) to identify sections of the
+interrupted path that can be optimally replanned within the time
+budget. We validate OARP-Replan in simulation and perform
+comparisons against a greedy detour replanner and other state-
+of-the-art coverage planners. We also demonstrate OARP-Replan
+in experiments using an industrial-level autonomous robot.
+Index Terms—Coverage path planning, online coverage replan-
+ning, planning in unknown environments.
+I. I NTRODUCTION
+Coverage planning problems show up in many real-world
+applications such as cleaning [1], manufacturing [2], and
+agriculture [3]. Informally, the coverage planning problem
+is to find a path that has the robot covering its entire en-
+vironment with an onboard sensor or tool and minimizes a
+cost function [4]. In this paper, we tackle the problem of
+replanning optimal coverage paths that have been interrupted
+by previously unknown static obstacles. We refer to this as
+the coverage replanning problem. This problem arises when
+businesses such as retail stores and warehouses change their
+environments frequently to accommodate new products and
+remapping beforehand each time would be too costly.
+One approach to coverage replanning is to stop executing
+the current coverage path and plan a new path for the uncov-
+ered environment with the new obstacle(s). However, coverage
+planning for arbitrary environments is generally NP-Hard [5]
+and this approach does not scale well for large environments
+with many unknown obstacles. Moreover, an obstacle may
+only affect a small section of the path, i.e., the unbroken
+parts of the path may still be drivable and near-optimal. An
+alternate approach is to only replan the affected section(s)
+M. Ramesh (m5ramesh@uwaterloo.ca) and S. L. Smith (stephen.smith@
+uwaterloo.ca) are with the Department of Electrical and Computer Engineering
+and B. Fidan (fidan@uwaterloo.ca) is with the Department of Mechanical
+and Mechatronics Engineering, at the University of Waterloo, Waterloo ON,
+Canada
+F. Imeson (frank.imeson@avidbots.com) is with Avidbots Corp., Kitchener
+ON, Canada
+of the path ( local replanning ) while keeping the rest of the
+path intact. A simple example of local replanning would be
+where the robot simply drives around the obstacle whenever
+a collision is imminent. However, a more practical approach
+would be to use the time while driving towards the blockage
+to find more optimal solutions. In this paper, we propose an
+anytime coverage replanner that utilizes the time spent driving
+to conduct near-optimal replans on the provided coverage
+paths (see Fig. 1).
+In our previous work [6], we developed the Optimal Axis-
+Parallel Rank Partitioning (OARP) approach to plan coverage
+paths that minimize the number of turns in the solution.
+Minimizing turns is motivated by path quality and optimality
+as robots can have decreased performance while turning (speed
+and coverage). OARP solves this using the following three-
+step framework: i) decomposing the environment into grid
+cells, ii) using the decomposition to compute the minimum
+number of axis-parallel (horizontal and vertical) ranks, i.e.
+long rectangles that match the width of the robot’s coverage
+tool while covering along a straight-line path, and iii) finding
+an optimal tour of the ranks to obtain the coverage path. In
+this paper, we extend OARP to provide a coverage replanning
+approach, namely OARP-Replan, that replans coverage paths.
+Our specific contributions are as follows:
+1. We present an Integer Linear Program (ILP) that replans
+the ranks of a coverage path such that a tour of the ranks
+(i.e. a coverage path) can be replanned within a time
+budget.
+a) We leverage LP relaxations of this ILP to replan ranks
+in polynomial time (efficient to compute).
+b) We present a second ILP that reduces the number of
+decision variables, and therefore replans the coverage
+ranks faster than the first ILP.
+2. We provide an anytime coverage replanning method
+named OARP-Replan that leverages the above ILPs to
+conduct near-optimal replans to the coverage path within
+a given time budget.
+3. Finally, we conduct simulations and robot experiments to
+validate our proposed approach. Our simulation results
+include comparisons against other state-of-the-art ap-
+proaches, including offline approaches (i.e. all obstacles
+are known) [7], [8].
+A. Related Works
+Detailed surveys of coverage planning approaches can be
+found in [4], [9], [10]. Broadly, they can be characterized into
+two classes: offline and online approaches. Offline approaches
+arXiv:2311.17837v2  [cs.RO]  7 Jun 2024
+2
+(a)
+ (b)
+ (c)
+Fig. 1: Replanning coverage paths in partially unknown environments. (a) An initial coverage path for the known base environment, (b) the
+robot (blue triangle) covers part of the environment (gray region) and observes a new obstacle (red box) interrupting the initial path (red
+path), and (c) a near-optimal replanned path (green path) computed online using the proposed approach (OARP-Replan).
+plan coverage paths with complete information about all obsta-
+cles in the environment, whereas online approaches start with
+little to no information about the obstacles in the environment
+and compute a path during the coverage operation.
+Offline Coverage Planning: Offline approaches can be
+further categorized into 2 sub-classes: (i) exact decomposition
+approaches, and (ii) grid-based approaches. In exact decom-
+position methods, the environment is first decomposed into
+polygonal sub-regions or cells. Each cell is then individually
+covered either by sweeping (i) back-and-forth along coverage
+parallel lines [11], (ii) along spiral paths [12], or (iii) a
+combination of both [13]. There are also turn-minimizing
+approaches that cover each cell in a locally optimal direction,
+generally determined using the cell’s geometry [7], [14], [15].
+These cells are however complex to compute, and as a result,
+these methods do not scale well for online replanning.
+Grid-based approaches use a grid approximation of the
+given environment and compute a path covering all the grid
+cells in the approximation. This path can be computed either
+by solving the Traveling Salesman Problem (TSP) [9], using
+a spanning tree of the grid cells (Spanning Tree Coverage
+or STC) [16], or using a wavefront algorithm to determine
+visitation order [17]. Turn-minimizing approaches of this class
+look to minimize the number of axis-parallel (horizontal or
+vertical) coverage lines or ranks in the coverage path [18],
+[19]. While these methods were demonstrated to work well in
+offline settings, they lack online extensions that can replan a
+path within a given time budget. Our proposed method, OARP-
+Replan, extends the OARP approach from [6], which is an
+offline grid-based turn-minimizing approach, to be applicable
+in online replanning scenarios.
+Online Coverage Planning: Online coverage planning ap-
+proaches have gained recent interest, and as such, there is a
+wide range of different approaches in the literature. Initially,
+online exact decomposition approaches were investigated [20],
+[21], but these methods involve identifying changes to exact
+cells online, which does not scale well for large cluttered en-
+vironments. Moreover, these methods do not aim to minimize
+turns in the coverage path.
+Grid-based methods work better for such environments as
+one can easily update a grid with new occupancy information.
+Our proposed approach falls under this class. A popular
+approach of this class is Online STC [22], which computes
+a spanning tree of the grid cells online to update its coverage
+plan. However, given a square coverage tool of width l, STC
+is generally applied to coarse grids with cells of width 2l
+and does not generalize well to finer grids with cell width l.
+Other grid-based online approaches use various local search
+and optimization methods to determine the coverage plan
+in an unknown environment. Song et al [23] proposed an
+approach using artificial potential fields (APF) to determine
+a coverage path online. A similar technique to APFs is using
+bio-inspired neural networks to model and search the environ-
+ment. This was originally proposed by Luo and Yang in [24]
+and has gained popularity in many recent works [25]–[27].
+However, these local search-based approaches are susceptible
+to deadlocking, where the robot does not know where to go
+next. Deadlocks are computationally expensive to get out of
+and affect overall coverage time. Moreover, these approaches
+generally minimize turns by penalizing them in a local search
+cost function, which does not guarantee minimum turns for the
+path overall. Our proposed approach avoids deadlocks (using
+an initial path) and guarantees minimum turns in the overall
+path when provided with sufficient planning time.
+Online coverage planning shares similarities with explo-
+ration planning, which involves covering unknown environ-
+ments using sensors [28]. Exploration planning algorithms
+use information theory [29], [30] and frontiers [31] to de-
+termine the next-best scan of the environment, rather than
+using decompositions. Recently, a decomposition-free online
+coverage planner was proposed that uses frontiers and search-
+based planning to identify the next-best region to cover [32].
+Online coverage replanning has also been investigated in 3D
+settings for applications in underwater inspection tasks [33],
+but they involve 3D maneuvers and are not necessarily feasible
+for robots operating in 2D planes.
+B. Organization
+The rest of this paper is organized as follows. In Section
+II, we provide some background on the coverage planning
+problem and the OARP approach from our previous work [6].
+In Section III, we define the problem of replanning a coverage
+path within a given time budget. In Section IV, we present
+the high-level framework of our proposed approach, OARP-
+3
+Replan, that constrains the runtime to replan the coverage path,
+which solves the problem in two stages: (i) rank replanning,
+and (ii) touring. In Section V, we describe the rank replanning
+stage where we use ILPs to replan the ranks of the coverage
+path such that the overall runtime is constrained. In Section
+VI, we describe the touring stage where we formulate a
+Generalized Traveling Salesman Problem (GTSP) to compute
+a tour of the replanned ranks to obtain the replanned path.
+In Section VII, we provide simulation results on a range of
+real-world environments and compare our proposed approach
+against state-of-the-art coverage planning methods in online
+and offline settings. In Section VIII, we present experimental
+results of testing our replanning approach using an industrial-
+level autonomous cleaning robot.
+II. P RELIMINARIES
+We first review the coverage planning problem and our
+previously proposed coverage planning approach, namely the
+optimal axis-parallel rank partitioning (OARP) approach [6].
+A. The Coverage Planning Problem
+Consider a 2D non-convex environment with known ob-
+stacles, where W ⊆ R2 is a closed and bounded set that
+represents all free points within the environment. We now
+consider a robot with a state composed of its position x ∈ W ,
+where x is a vector in R2, and a heading θ ∈ [0, 2π) radians.
+The robot is carrying a coverage tool with a footprint given by
+A ⊆ R2. In this work, similar to [6], [18], [34], we assume that
+the coverage tool is a square of width l > 0. Let A(x, θ) ⊆ W
+represent the placement of the tool with respect to the robot’s
+state. In reality, a square tool may not be able to cover the
+entire environment, so we look to cover an approximation of
+the environment fW ⊆ W that the tool can reach. Consider
+a set P of all possible paths in the environment, where each
+path P ∈ P is given by a sequence of poses, i.e. position and
+heading pairs (x, θ). We now formally define the coverage
+planning problem (CPP) of interest as follows.
+Problem 1 (Coverage Planning Problem (CPP)) . Given an
+approximation fW of a 2D environment W and a robot
+carrying a coverage tool of footprint A, plan a path P from
+the set P of all possible paths which solves
+min
+P ∈P
+J(P ) (1)
+s.t.
+[
+(x,θ)∈P
+A(x, θ) = fW, (2)
+where J(P ) is the cost of the path P .
+In this paper, we consider the path cost J(P ) to be the time
+for the robot to cover the given environment along P .
+B. Optimal Axis-Parallel Rank Partitioning (OARP)
+We now briefly describe the coverage planning approach
+from our previous work [6], namely the Optimal Axis-Parallel
+Rank Partitioning (OARP) approach. The focus of the OARP
+approach is to plan optimal coverage paths in which the cover-
+age tool moves only in axis-parallel directions (horizontal and
+vertical) during coverage. The OARP approach uses a three-
+step framework to plan coverage paths: (i) decompose the
+environment W into an Integral Orthogonal Polygon (IOP),
+which is a set of square grid cells of size l, (ii) place the
+minimum number of axis-parallel (horizontal or vertical) ranks
+(straight-line paths) to cover the IOP, and (iii) compute a tour
+of the ranks to construct the coverage path. Here, the IOP
+forms the environment subset fW that we look to cover. To
+place the minimum number of ranks in the IOP, OARP solves
+a linear program (LP) to compute the coverage orientation of
+each cell in the IOP. Once the ranks are obtained, a tour of
+the ranks is computed by solving a Generalized Travelling
+Salesman Problem (GTSP) that minimizes the cost of transi-
+tioning (driving) between ranks. The resulting coverage path is
+represented as a series of ranks connected by cost-minimizing
+transition paths, which are collision-free dynamically feasible
+paths to traverse between ranks. Note that, unlike ranks,
+transition paths do not have to be axis-parallel.
+III. P ROBLEM DEFINITION
+In this section, we define the problem of replanning the
+coverage path.
+A. Coverage Replanning Problem
+Let us consider the case where our robot is trying to follow
+its initial coverage path P but it observes a set O of previously
+unknown obstacles. In other words, the actual environment is
+W ⊆ W \ O . We assume the robot is equipped with a sensor
+that can observe its environment within a sensor footprint
+relative to the robot’s position, e.g., an optical range sensor.
+Suppose, at position xi, the robot detects a new obstacle
+interrupting the path. Let τ be the time in which the robot
+would reach the obstacle along its current path from xi. While
+the robot might be able to continue along P for time τ,
+the subsequent path must be replanned. One solution is to
+solve the full CPP for the new environment W. While this
+method would give us the optimal coverage path, it has a major
+drawback. If solving CPP takes longer than τ, the robot may
+have to stop and wait for a new path, which is undesirable. To
+address this, we instead solve the coverage replanning problem
+that takes into account a time budget τ.
+Let Pr be the remaining path after the first interruption by
+the obstacle. Let Wr ⊆ fW be the area covered by Pr, where
+O∩W r ̸= ∅. The replanning problem is to plan a new coverage
+path P ′
+r before τ such that it covers the same areas as Pr
+without colliding into O. We are now ready to pose the main
+problem we look to solve in this paper.
+Problem 2 (Coverage Replanning Problem (CRP)) . Given a
+path P covering fW, a set of newly observed obstacles O, a
+time τ until the first such obstacle is encountered along P ,
+the remaining path Pr after the first encounter, and the area
+Wr ⊆ fW covered by Pr, find a new coverage path P ′
+r within
+time τ which solves
+min
+P ′r ∈P
+J(P ′
+r ) (3)
+s.t.
+[
+(x,θ)∈P ′r
+A(x, θ) = Wr \ O. (4)
+4
+Fig. 2: The effect of an obstacle (black box) on replanning a coverage
+path consisting of ranks (black lines) and transition paths (green
+lines). The ranks of the initial path (left) when interrupted can be
+replanned in many ways, two of which are shown here. Example 1
+has fewer new ranks (red lines in dotted box) than example 2 and is
+preferable for shorter planning time. Example 2 has fewer total ranks
+and is preferable for shorter drive time.
+CRP is similar to CPP when τ is infinite and P = Pr.
+However, for a finite τ, CRP must find a trade-off between
+minimizing coverage cost and ensuring a path is computed
+within τ. The larger the τ value, the closer the coverage cost
+is to the optimal path (CPP solution).
+B. Rank-based Coverage Replanning
+CPP is NP-Hard [5], which indicates that Problem 2 is
+intractable. Therefore, we look for relaxations of Problem
+2 that are more solvable. A common approach is to solve
+this problem in stages. While this may remove some optimal
+solutions in the search space, it reduces the complexity of the
+problem and makes it tractable.
+In this paper, we focus on replanning initial coverage paths
+that are represented as a series of axis-parallel (horizon-
+tal/vertical) ranks covering an IOP decomposition of our initial
+environment, e.g., paths generated by OARP. With this setup,
+we approach Problem 2 in two stages: (i) rank replanning,
+and (ii) touring. In the rank replanning stage, we compute the
+minimum number of axis-parallel ranks to cover the IOP of
+the remaining region Wr \ O. In the touring stage, we obtain
+the replanned path P ′
+r by computing a tour of the ranks that
+minimizes the cost of transitioning between the ranks. We also
+look to ensure that both stages are completed within the time
+budget τ. The following problem captures this requirement.
+Problem 3 (Rank-based Coverage Replanning). Given a set of
+newly observed obstacles O that interrupts the remainder Pr
+of the coverage path P , and a time budget τ before the robot’s
+first encounter with an obstacle in O, compute the following
+within time τ: (i) a minimum set of ranks that covers the IOP
+representation of the uncovered free region Wr \ O and (ii)
+a tour of the ranks that minimize the total cost of transition
+between ranks.
+IV. S OLUTION FRAMEWORK
+In this section, we describe our solution framework for
+coverage replanning. Unlike OARP, we look to re-use sections
+of the initial coverage plan which adds an additional coupling
+between the rank replanning and touring stages. In this section,
+we first explore this coupling with an example, and then
+present the high-level algorithm for the proposed approach.
+A. The effect of changing ranks
+We aim to solve rank replanning efficiently so that the
+majority of the time budget is available for the touring stage,
+which is formulated as a Generalized Travelling Salesman
+Problem (GTSP), an NP-hard problem. However, the rank
+replanning output affects the GTSP input size, and in turn,
+the runtime. Therefore, we design the rank replanning stage
+such that the tour of the replanned ranks can be computed
+within the time budget τ.
+To better understand this coupling, consider the example
+coverage path shown in Fig. 2 with an initial set of horizontal
+ranks. Let us now introduce an obstacle, for which rank
+replanning returns two different sets of ranks (example 1 and
+example 2). Each set contains ranks that are unchanged from
+the initial path and new ranks, i.e., ranks that were not in the
+initial solution. To reduce the computational complexity of
+the touring step, we reuse sections of the initial path to cover
+unchanged ranks. This allows us to spend the time budget on
+connecting new ranks to the unchanged path sections. As a
+result, the GTSP problem size is driven by the number of new
+ranks. In Fig. 2, Example 1’s second stage has a GTSP size
+of 6 sets (4 new ranks + 2 retained paths), whereas Example 2
+has a GTSP size of 7 sets (6 new ranks + 1 retained path of one
+rank) despite having fewer total ranks. Note that the number
+of unchanged disconnected path sections is also bounded by
+the number of new ranks.
+Let m be the number of total ranks in the replanned
+solution and mnew ≤ m be the number of new ranks. The
+GTSP input size is dependent on mnew and the estimated
+GTSP runtime would be a monotonically increasing function
+ˆT (mnew). Therefore, given a time budget τ, we bound mnew
+such that ˆT (mnew) ≤ τ. In other words, a larger τ allows us
+to change more ranks ( mnew) so that we can minimize the
+total number of ranks ( m). To compute this bound, we first
+determine ˆT using data collected from previous GTSP runs
+(e.g. data from the offline planning of the initial coverage
+path). We then set ¯m = ˆT −1(τ) as the maximum GTSP
+instance size, where ˆT −1 is the inverse of ˆT . Thus, we add
+the following constraint in rank replanning to ensure that the
+touring stage finishes within time τ:
+mnew ≤ ˆT −1(τ) = ¯m. (5)
+In Section V, we will propose a rank replanning approach
+that constrains the number of new ranks mnew in its output
+within a budget ¯m derived from τ. In Section VII-A, we
+provide more details about how ˆT can be determined.
+B. Algorithm
+We now describe the high-level algorithm of our proposed
+approach, namely OARP-Replan, for which the pseudocode is
+given in Algorithm 1. We consider a robot that is equipped
+with a sensor similar to that of a laser scanner (LIDAR) that
+is capable of detecting obstacles (or parts of obstacles) in the
+environment. OARP-Replan is run when potential collisions
+or encounters are detected along the current path P using
+the robot’s sensor model. More specifically, we determine the
+grid cells in the IOP decomposition that cannot be covered
+5
+Fig. 3: A run of OARP-Replan with one obstacle (dotted grey box).
+The visible part of the obstacle (pink dots) is used to identify blocked
+grid cells (grey) and obstacle encounters (blue dots) along the current
+path. For each encounter i ≤ k, the planner attempts to replan the
+remaining path (red path) within the time τi to reach the encounter
+(black path). To compute τi, previous encounters are replanned using
+GD replan (green dotted lines).
+anymore due to newly detected obstacles (if the obstacle
+was partially observed, this process would be repeated for
+each scan that reveals more of the obstacle). Let k be the
+number of all projected encounters along P (each obstacle
+may cause multiple encounters). For each encounter, the robot
+has the option of replanning the remaining path (the preferred
+solution) or simply going around the obstacle while covering
+the interrupted rank (if there is no time to replan). We refer to
+the latter method as the greedy detour (GD) replan, which
+can be performed using a local planner with little to no
+computational time and thus no robot stoppage. We propose
+only using GD replan as a fallback method in the case where
+the main planner does not have enough time to replan the path.
+Fig. 3 illustrates an example run of the algorithm. Note
+that we replan using the obstacle encounters that have been
+observed so far by the robot. The encounters that were not
+observed (even from an obstacle that was partially observed)
+is replanned once the robot has observed them later in the
+coverage run. We iterate through each obstacle encounter
+i ≤ k and evaluate whether the main planner can replan the
+path after the ith encounter. The path for all previous obstacle
+encounters ({1, 2, . . . i− 1}) is replanned using GD replan. In
+other words, we look for an obstacle encounter that gives the
+planner enough time to replan the path after the encounter. Let
+τi be the time for the robot to reach the ith encounter along
+the current path, which will be the time budget for the replan.
+To evaluate if the path after encounter i can be replanned,
+the planner runs a sub-routine named RANK-REPLAN to get
+a set of replanned ranks for which a tour can be computed in
+time τi (Line 6). If RANK-REPLAN returns a set of ranks, we
+compute a tour of the ranks using another sub-routine called
+TOUR-REPLAN (Line 8) that solves the GTSP to obtain our
+replanned path. This sub-routine runs as a background process
+while the robot continues to follow the current coverage path.
+However, if RANK-REPLAN returns an empty set, then this
+indicates that there is no solution that will finish within the
+expected time budget. In that case, GD replan is used to replan
+encounter i (Line 11), and the procedure is repeated for the
+next encounter. In the end, we obtain a replanned path where
+some (or all) encounters are replanned using GD replan, while
+the remaining path undergoes a near-optimal replan before the
+robot reaches the corresponding encounter.
+Algorithm 1 OARP-Replan
+Input: Current path P , Environment IOP fW
+Output: Replanned path P ′
+1: for each encounter i ≤ k on P do
+2: Wi ← Part of fW to cover after ith encounter
+3: R ← Ranks from coverage path P
+4: τi ← Time to reach ith encounter
+5: ¯mi ← ˆT −1(τi) ▷ Maximum instance size given τi
+6: R′ ← RANK-REPLAN(Wi, R, ¯mi)
+7: if R′ ̸= ∅ then
+8: P ′ ← TOUR-REPLAN(R′, R)
+9: return P ′
+10: else
+11: Apply GD replanning to ith encounter
+In our implementation, we run OARP-Replan using the path
+that the robot is currently executing, i.e. if a new obstacle is
+detected before P ′ is returned, we start a new replan of P .
+In the rest of the paper, we will expand on how the RANK-
+REPLAN and TOUR-REPLAN sub-routines work.
+V. T HE RANK-REPLAN S UBROUTINE
+In this section, we extend the integer linear program (ILP)
+from the OARP approach in our previous work [6] to formulate
+the RANK-REPLAN subroutine that minimizes the number
+of replanned ranks while constraining the number of new
+ranks within a budget ¯m. We first provide a brief review
+of the original ILP with some additional variables to allow
+for extension. Then, we propose two extensions to this ILP:
+the first extension solves the rank replanning step optimally,
+and the second extension solves it efficiently with fewer ILP
+variables (no optimality guarantees). The user may choose
+either ILP based on their replanning preferences (optimality
+vs efficiency).
+A. The base ILP
+Consider an integral orthogonal polygon (IOP) containing n
+grid cells representing the input environment, where each cell
+ci for 1 ≤ i ≤ n is of size l × l (l is the tool width). The goal
+of the ILP is to assign a coverage orientation (horizontal or
+vertical) for each cell ci such that the number of ranks covering
+the cells is minimized. We obtain ranks by merging similarly-
+oriented neighboring grid cells. To this end, we introduce
+variables to represent cell orientations and count the resulting
+ranks after all merges are complete.
+Let xi
+H and xi
+V be binary variables that denote whether
+cell ci is oriented horizontally or vertically (cannot be both).
+Fig. 4 shows an example IOP with oriented grid cells and
+their corresponding ranks. We also add variables to identify
+the rank endpoints. Let yi
+L and yi
+R be binary variables that
+indicate whether the cell, ci, is the left endpoint and/or the
+right endpoint of a horizontal rank. Similarly, let yi
+T and yi
+B
+be binary variables that indicate whether ci is a top and/or
+bottom endpoint of a vertical rank. This notation is different
+from the original OARP approach, which only has indicator
+6
+Fig. 4: Integral orthogonal polygon (IOP) of an environment where
+each grid cell is either oriented horizontally (orange) or vertically
+(purple). The left, right, top, and bottom rank endpoints are also
+shown (see legend). Each cell ci (zoomed-in cell) has four endpoint
+indicator variables. If the cell is an endpoint (e.g. ci is a right
+endpoint), the corresponding variable is active ( yi
+R = 1).
+variables for the left and top endpoints. Fig. 4 also illustrates
+the endpoint variables and rank endpoints for the oriented grid
+cells.
+Let xH , xV , yL, yR, yT , yB be n dimensional binary vec-
+tors of the corresponding variables for all grid cells. Let
+yH =
+
+yLT yRTT
+and yV =
+
+yT T yB TT
+be the
+vectors of all horizontal rank and vertical rank endpoints
+respectively, where yH , yV ∈ { 0, 1}2n. Since each rank has
+exactly two endpoints, the number of coverage ranks m is
+given by half the sum of all rank endpoints:
+m = 1
+2(1T yH + 1T yV ), (6)
+where 1 is the column vector of ones. This constitutes the
+objective of the optimization problem.
+To formulate the ILP constraints, we must encode the rela-
+tionship between the orientations ( x variables) and endpoints
+(y variables). Following from our previous work [6], we use
+directed graphs in the IOP to detect whether a neighboring
+cell can be merged. Let GL and GR be directed graphs
+composed of all horizontal path flows for each grid cell from
+its left and right neighbors respectively. For cells at the IOP
+border, we add artificial nodes called border identifiers to
+simulate path flow into those cells. Similarly, let GT and
+GB be the graphs composed of all vertical path flows for
+each grid cell from its top and bottom neighbors respectively.
+Fig. 5 illustrates these graphs for an example IOP. From these
+graphs, let AL, AR, AT , and AB be matrices representing the
+corresponding graphs, where each row of a matrix signifies a
+directed edge in the graph, with a −1 for a source grid cell
+(outgoing edge), a +1 for a sink grid cell (incoming edge), and
+0s otherwise. These matrices resemble the node-arc incidence
+(NAI) matrices for the graphs GL, GR, GT , and GB.
+We now pose the rank minimization ILP, namely ILP-0,
+Fig. 5: The directed graphs GL, GR, GT , and GB for the example
+IOP.
+that we will extend in the rest of this section:
+ILP-0:
+min
+xH ,xV ,yH ,yV
+m (7)
+s.t.
+
+AT
+L AT
+R
+T
+xH − yH ≤ 0 (8)
+
+AT
+T AT
+B
+T
+xV − yV ≤ 0 (9)
+xH + xV = 1 (10)
+xH , xV ∈ {0, 1}n (11)
+yH , yV ∈ {0, 1}2n. (12)
+In this ILP, equations (8) and (9) ensure that, for an optimal
+solution of ILP-0, vectors yH and yV correspond to the
+endpoints of the optimal number of ranks covering the IOP.
+This follows from the minimization of m, which in-turn
+minimizes yH and yV (Eq. (6)), thereby tightening equations
+(8) and (9). Equation (10) ensures that each cell is only
+assigned one orientation (can be either horizontal or vertical).
+For an in-depth discussion about the formulation of these
+constraints, we refer the reader to [6].
+B. Constraining new ranks
+We now look to constrain the number of new ranks mnew to
+be within the rank budget ¯m. To compute mnew, we identify
+the new ranks in the replanned solution by comparing them
+with the ranks from the initial path. This comparison requires
+an encoding of ranks using the ILP variables. To this end,
+we propose an encoding based on perfect matching [35] that
+matches the endpoints for each rank in the ILP solution. The
+new ranks are therefore the difference between the old and
+new endpoint matchings.
+To simplify the explanation of the encoding, we first look
+at the horizontal case and simply extend the same ideas to
+the vertical case. Consider a horizontal row of connected
+(unobstructed) grid cells in the IOP as depicted in Fig. 6.
+Now, consider the case where the row contains a horizontal
+rank with a left endpoint at a cell ci. This indicates that the
+rank either (i) covers cells to the right of ci or, (ii) covers only
+ci. In both cases, we observe that there must exist a cell to
+the right of ci (including ci) that is the right endpoint of this
+rank. We look to identify this rank by matching its left and
+right endpoints.
+7
+Fig. 6: The matching edges used to detect ranks for a given row of
+grid cells. Each cell ci has edges that match it with another cell in
+the row if ci is a right ( using magenta edges ) or left ( using cyan
+edges) endpoint. Here, we illustrate an example where ci is a left
+endpoint and is matched with a right endpoint in the row (bold cyan
+edge). No matching occurs if ci is not an endpoint.
+We formulate this with variables that represent directed
+edges added between ci and every cell cr to its right, as any of
+them could be a right endpoint. We also add an edge from ci to
+itself to account for a single-cell rank. For each edge between
+ci and a cell cr, we add a binary variable zir ∈ {0, 1} that takes
+a value of 1 if the edge is included in the matching (i.e. cr is
+a right endpoint). To ensure that ci and cr are matched only if
+they are left and right endpoints respectively, we enforce the
+following constraints:
+X
+∀r
+zir = yi
+L, (13)
+X
+∀i
+zir = yr
+R, (14)
+zir ∈ {0, 1} ∀ 1 ≤ i, j ≤ n. (15)
+Lemma 1. Consider a horizontal row of connected IOP grid
+cells and two cells ci and cr in this row where cr is to the
+right of ci. Then there exists a horizontal rank with its left
+endpoint at ci and right endpoint at cr iff zir = 1.
+Proof. (⇒ direction) If there exists a rank between ci and cr,
+then yi
+L = 1 and yr
+R = 1. As a result, we have the following
+for ci:
+X
+∀r
+zir = 1, and
+X
+∀i
+zir = 1.
+Assume that zir = 0 (see Fig. 7(a)). This indicates that ci
+must be matched with another right endpoint ck to its right,
+i.e. zik = 1. Since there exists a rank between ci and cr, ck
+cannot be between the two cells. Therefore, ck must be to the
+right of cr. WLOG, let us assume that the rank between ci
+and cr is the left-most horizontal rank in the row, meaning
+that there are no other left endpoints for cr to match with.
+This is an infeasible solution for the set of constraints unless
+zir = 1, thereby proving the statement.
+(⇐ direction) If zir = 1, then yi
+L and yr
+R have to both be 1,
+indicating that they are left and right endpoints respectively.
+However, consider the case where there is a vertically-oriented
+cell between them, indicating that there is no horizontal rank
+between ci and cr (see Fig. 7(b)). In this case, there must exist
+another cell ck that is a right endpoint (to the left of the vertical
+cell), where yk
+R = 1. WLOG, let us assume that ci is the only
+endpoint to the left of ck. This indicates that ck has no other
+(a) ⇒ direction
+(b) ⇐ direction
+Fig. 7: Illustrations of the cases considered for Lemma 1’s proof.
+left endpoint to match with, which in turn gives an infeasible
+solution unless zik = 1 and zir = 0. This contradicts the fact
+that zir = 1, and therefore shows that there must exist a rank
+between ci and cr if zir = 1. This proves the lemma.
+Following Lemma 1, we now have a way of representing
+a horizontal rank as a matching of its endpoints. We extract
+each horizontal row of connected grid cells in the given IOP
+and add the following constraints for each cell ci in the row:
+X
+∀r
+zir = yi
+L, where cr is to the right of ci, (16)
+X
+∀l
+zli = yi
+R, where cl is to the left of ci, (17)
+zij ∈ {0, 1} ∀ 1 ≤ i, j ≤ n. (18)
+We simply extend the setup to represent vertical ranks as a
+matching of its endpoints in a vertical row of connected grid
+cells. For each cell ci in the vertical row, we add the following
+constraints:
+X
+∀b
+zib = yi
+T , where cb is to the bottom of ci, (19)
+X
+∀t
+zti = yi
+B, where ct is to the top of ci (20)
+zij ∈ {0, 1} ∀ 1 ≤ i, j ≤ n. (21)
+Now, let ¯zij be an input to the ILP such that ¯zij is 1 if the
+initial path contains a rank with cells ci and cj as endpoints
+and 0 otherwise. From Lemma 1, if the ILP solution has a
+rank with ci and cj as endpoints ( zij = 1), then it is a new
+rank if ¯zij = 0. Using this relation for all pairs of cells ci and
+cj with matching edges, we compute mnew as follows:
+mnew =
+X
+∀i
+X
+∀j
+(1 − ¯zij)zij. (22)
+We now propose our extended ILP, namely ILP-1, that
+minimizes the number of ranks in the replanned solution while
+constraining the number of new ranks to be within a budget ¯m.
+We also add the term ϵ m new to the ILP’s objective function,
+where ϵ > 0 is used to compute the rank-minimizing solution
+with the smallest mnew. Specifically, in the case of a large
+8
+budget ¯m, the additional term helps prevent rank changes
+that do not improve the number of ranks in the solution. The
+resulting ILP is as follows:
+ILP-1:
+min
+xH ,xV ,yH ,yV
+m + ϵ m new (23)
+s.t. Eqs. (8), (9), (10),
+Eqs. (16), (17), (19) (20), ∀1 ≤ i ≤ n,
+mnew ≤ ¯m, (24)
+zij ∈ {0, 1} ∀ 1 ≤ i, j ≤ n, (25)
+xH , xV ∈ {0, 1}n, (26)
+yH , yV ∈ {0, 1}2n. (27)
+We now show that we can configure ILP-1 to solve the rank
+replanning stage (Problem 3(i)) optimally, i.e. the solution (i)
+minimizes the number of ranks m, (ii) subject to the constraint
+that mnew ≤ ¯m.
+Proposition 1. If ϵ < 1/ ¯m, then ILP-1 computes optimal
+solutions to Problem 3(i).
+Proof. Based on our criteria of optimality, Problem 3(i) can
+be simplified as follows:
+P1: min m
+s.t. mnew ≤ ¯m.
+Any solution to ILP-1 must satisfy Eq. 24 and is therefore a
+feasible solution to P1. What remains to be shown is whether
+ILP-1 computes the solution with minimum m, i.e., there
+exists an ϵ > 0 such ILP-1 returns an optimizer to P1. To
+show this, consider the simplified version of ILP-1:
+P2: min m + ϵ m new
+s.t. mnew ≤ ¯m.
+Note that since the constraints of P1 and P2 are the same, they
+share the same feasible solution space. Let m∗ and m∗∗ be
+the number of ranks corresponding to the optimizers to P1 and
+P2 respectively, where m∗
+new and m∗∗
+new are the corresponding
+values of mnew. Clearly, m∗ ≤ m∗∗.
+Let us assume, by way of contradiction, that m∗ ̸= m∗∗.
+Since m is an integer, we have m∗∗ − m∗ ≥ 1. Since the
+optimizer of P1 is feasible for P2, we have the following:
+m∗ + ϵ m ∗
+new ≥ m** + ϵ m ∗∗
+neq
+ϵ (m∗
+new − m**
+new) ≥ m** − m* ≥ 1.
+From the constraints of P1 and P2, we have the following:
+(m∗
+new − m**
+new) ≤ m∗
+new ≤ ¯m.
+Combining the inequalities, we get:
+ϵ ¯m ≥ 1
+ϵ ≥ 1/ ¯m.
+Following this, for values of ϵ < 1/ ¯m, our assumption that
+m∗ ̸= m∗∗ is contradicted, which proves our proposition. We
+choose ϵ = 1/( ¯m + 1) for the rest of this work.
+Remark 1 (Linear Relaxation). The linear relaxation of ILP-
+1 is obtained by replacing the integrality constraints for the
+decision variables with real-valued constraints as follows:
+0 ≤ zij ≤ 1 ∀1 ≤ i, j ≤ n,
+0 ≤ yH , yV ≤ 1,
+xH , xV ≥ 0.
+We observed that solving this relaxation consistently gives
+integral solutions despite the constraints not being totally
+unimodular (TUM). Our reasoning for this is that (i) the
+constraints of ILP-0 is TUM (following the proof from [6]),
+and (ii) perfect matching on a bipartite graph (e.g. graph
+partitioned as left endpoints ( yi
+L variables) and right end-
+points ( yi
+R variables)) can be solved using a linear program
+(LP) [35]. For our experiments, we simply solve the linear
+relaxation as LPs can be solved in polynomial time [36].
+C. On reducing ILP variables
+In the previous section, we formulated ILP-1 which solves
+the rank replanning step optimally. However, one drawback
+of ILP-1 is that it adds a large number of decision variables
+(O(n2)) to the base ILP, which affects the runtime of the ILP.
+In this section, we propose another ILP extension, namely
+ILP-2, that uses fewer decision variables and can be more
+successfully used for large environments. Instead of matching
+rank endpoints to count the number of new ranks mnew,
+we formulate a bound for mnew using the number of rank
+endpoints that have changed. Specifically, we look to identify
+and count two types of changes: (i) added endpoints and (ii)
+extended endpoints (i.e. endpoints removed when ranks from
+the initial solution are merged). Fig. 8 illustrates cases where
+the ranks are changed with the introduction of obstacles and
+the corresponding added and extended rank endpoints.
+We first analyze the horizontal ranks to present our approach
+and extend the same approach to vertical ranks. Consider a
+binary vector ¯yH ∈ { 0, 1}2n that indicates if a cell was a
+horizontal (left or right) endpoint for a rank in the initial path.
+We take this vector as an input to the ILP. We look to compare
+vectors yH and ¯yH to identify added and extended endpoints.
+An added endpoint represents an endpoint in yH but not in
+¯yH. This helps count the first four of the five possible rank
+changes illustrated in Fig. 8, as each rank after the change has
+at least one added endpoint. Let αH ∈ R be the number of
+added horizontal endpoints, which we compute as follows:
+αH = (1 − ¯yH)T yH .
+However, in the case of a merged rank (Fig. 8), the new
+rank may not contain any added endpoints. To account for
+this, we also count extended endpoints that count cells that
+were endpoints in ¯yH and are not endpoints in yH while
+still maintaining the same coverage orientation (horizontal in
+this case). Suppose a cell ci was a left endpoint in ¯yH, i.e.
+¯yi
+L = 1. The cell is considered an extended endpoint if yi
+L = 0
+and the cell is still covered horizontally ( xi
+H = 1 ). We use
+9
+the following piece-wise equation for cell ci to capture this
+relationship.
+¯yi
+L(1 − yi
+L) + (xi
+H − 1) =
+
+
+
+1 if ci is an extended
+left endpoint
+≤ 0 otherwise
+Now, let βH be a vector of binary variables that represents
+whether each cell is an extended horizontal endpoint. We use
+this to compute a value βH that counts the number of extended
+horizontal endpoints as follows:
+βH = 1T βH ,
+where βH ≥ ¯yH ◦ (1 − yH) + (
+
+xH T xH TT
+− 1),
+βH ∈ {0, 1}2n,
+where the ◦ operator is the element-wise product of two
+vectors. The endpoint changes that remain to be counted are
+the cells that were endpoints in ¯yH and are not endpoints in
+yH while changing coverage orientations (to vertical in this
+case). However, such a cell will now be a part of a vertical
+rank that would either have an added or extended vertical
+rank endpoint. Therefore, we do not count these endpoints as
+it tracks rank changes that are already accounted for.
+We extend these concepts to the vertical case to count
+all endpoint changes. Let ¯yV be a binary vector indicating
+whether a cell was a vertical endpoint for a rank in the initial
+path. The total number of added endpoints α and extended
+endpoints β is then obtained as follows:
+α = (1 − ¯yH)T yH + (1 − ¯yV )T yV (28)
+β = 1T βH + 1T βV , (29)
+where βH ≥ ¯yH ◦ (1 − yH) + (
+
+xH T xH TT
+− 1),
+(30)
+βV ≥ ¯yV ◦ (1 − yV ) + (
+
+xV T xV TT
+− 1), (31)
+βH , βV ∈ {0, 1}2n. (32)
+We now look to bound the number of new ranks mnew using
+α and β, for which we exploit the following property.
+Lemma 2. Consider α and β to be the number of added and
+extended endpoints respectively for a set of replanned ranks.
+Then the number of new ranks mnew in the set is bounded as
+follows:
+mnew ≤ α + β/2.
+Proof. We start by considering all possible changes to the
+ranks as illustrated in Fig. 8. For the first four possible
+changes, the minimum number of added endpoints for each
+new rank is 1. However, for a merged rank, the number of
+added endpoints for the new rank is 0, so we instead count the
+minimum number of extended endpoints. Merging two ranks
+can be thought of as extending two endpoints so that the ranks
+join to form a new rank. Therefore, a merged rank results in
+at least two extended endpoints. Note that merging more than
+2 ranks to form one new rank results in more than 2 extended
+Fig. 8: Illustration of rank endpoint changes as a result of rank
+replanning. Each row shows horizontal (orange lines) and vertical
+(purple lines) ranks blocked by obstacles (black boxes) and the
+corresponding replanned ranks and endpoint changes.
+endpoints. As a result, the maximum number of merged ranks
+is β/2. With this, we have the following bound on mnew:
+mnew ≤ α + β/2,
+which proves the lemma.
+We now propose our second ILP extension. We use the
+bound we derived in Lemma 2 to constrain mnew in the
+ILP. Following Proposition 1, we add an additional term
+ϵ (α+β/2) to the objective function, where ϵ = 1/( ¯m+1), to
+compute a solution with the smallest mnew without dominating
+the minimization of m. The resulting ILP is as follows:
+ILP-2:
+min
+xH ,xV ,yH ,yV
+m + ϵ (α + β/2) (33)
+s.t. Eqs. (8), (9), (10), (28) - (32)
+α + β/2 ≤ ¯m (34)
+xH , xV ∈ {0, 1}n (35)
+yH , yV ∈ {0, 1}2n. (36)
+Solving ILP-2 guarantees a solution where mnew ≤ ¯m.
+Moreover, ILP-2 only adds O(n) decision variables to the base
+ILP (βH and βV ). So, we expect ILP-2 to run faster than ILP-
+1. We observed that Remark 1 also applies for ILP-2, so we
+simply solve the linear relaxation to obtain integral solutions.
+Since there are negative terms involving yH and yV (Eqs.
+(30), (31), the following constraint in the linear relaxation
+ensures that the optimization problem is bounded:
+yH , yV ≤ 1.
+Unlike ILP-1, ILP-2 does not guarantee an optimal solution
+to the rank replanning problem, as we use a pessimistic bound
+10
+Fig. 9: All possible changes to an example initial tour of only
+horizontal ranks (orange circles). The initial tour requires replanning
+if the ranks (i) switch orientations to form vertical ranks (purple
+circles), (ii) are split by obstacles, and (iii) become unreachable due to
+obstacles (black circle). The resulting GTSP sets are shown consisting
+of (i) path sets (yellow), (ii) rank sets for each new replanned rank,
+and (iii) artificial vertices representing the start and end of the initial
+path, with a directed zero-cost edge connecting them.
+on mnew in our ILP constraint. However, we observe in our
+simulation results that the paths replanned with ranks from
+ILP-2 are close in cost to those from ILP-1.
+VI. T HE TOUR-REPLAN S UBROUTINE
+In this section, we describe our approach to compute a
+tour of the replanned ranks to obtain our new coverage path.
+Similar to the approaches from [14] and [6], we formulate this
+as a Generalized Travelling Salesman Problem (GTSP) on a
+fully-connected auxiliary graph representing all connections
+between ranks. Each set in the graph represents a rank and
+consists of two vertices to represent the directions in which
+the rank can be traversed. We call these sets as rank sets. The
+edge costs are the transition times between two ranks, i.e. the
+time for the robot to travel from one rank endpoint to another.
+Since the transition times depend on the robot’s design and
+dynamics, we compute the edge costs by assuming dynamics
+similar to [6] and [18], where (i) the robot traverses a straight
+line with piecewise constant acceleration with a maximum
+velocity and (ii) the robot stops and turns in place with a
+constant angular velocity. Solving GTSP on this graph obtains
+a tour that covers each rank while minimizing the transition
+times between the ranks. In Section VII-A, we provide more
+details on the robot dynamics parameters used to compute
+transition times in our simulations.
+However, we look to address two additional challenges
+in the tour replan. Firstly, we look to limit the size of the
+GTSP instance by considering only the interrupted sections of
+the initial path. Fig 9 gives an illustration of possible path
+interruptions caused by (i) ranks changing orientations (ii)
+ranks split by an obstacle, and (iii) unreachable ranks. The
+ranks that are unchanged correspond with sub-sections of the
+initial path that are unchanged. We retain each such section by
+TABLE I: Robot parameters used for experiments
+Parameter Value
+Coverage tool width 0.8 m
+Maximum linear velocity 1 m/s
+Linear acceleration ±0.5 m/s2
+Angular velocity 30◦/s
+Radial sensor range 5.6 m
+representing it as its own GTSP set, consisting of two vertices
+representing possible traversal directions. We refer to this set
+as a path set . The GTSP is computed on a graph containing
+these path sets and rank sets that each represent a new rank
+obtained from RANK-REPLAN to be added to the tour.
+The second challenge is that we must also take into account
+the position of the robot and the desired end of the tour. To
+address this, we add artificial start and end vertices to the
+GTSP graph, as in Fig. 9. To ensure that the solution is a
+path from the start vertex to the end vertex, we add a directed
+zero-cost edge from the end vertex to the start vertex. Solving
+the GTSP on this graph gives us the replanned coverage path.
+In this paper, we created a fully-connected auxiliary graph.
+There are alternative approaches where the auxiliary graph
+need not be fully-connected, such as those using lazy edge
+evaluations to compute a tour [37]. However, the above
+challenges must still be addressed for such a formulation using
+the approach described for the fully-connected case.
+VII. S IMULATION RESULTS
+In this section, we evaluate the OARP-Replan approach
+in simulation using real-world maps. We compare the per-
+formance of OARP-Replan in online coverage replanning
+scenarios against greedy detour (GD) replan and other plan-
+ning approaches [6], [18], [32]. We also compare OARP-
+Replan with offline coverage planning approaches provided
+with complete obstacle information [7], [8], where OARP-
+Replan is given no prior obstacle information. Finally, we
+demonstrate using OARP-Replan to replan coverage paths in
+a high-fidelity ROS simulation.
+A. Simulation setup
+We simulate the robot covering partially known environ-
+ments: the base environment is known but there are unknown
+obstacles that the robot discovers during coverage using its
+sensor. We plan initial coverage paths for the base environ-
+ments using the OARP method [6] and replan the path as new
+obstacles are detected.
+Dataset: We use a dataset of 8 real-world 2D maps obtained
+from Avidbots as our base environments, with their minimum
+coverage path lengths ranging from 145 m to 1900 m. We
+then add randomly generated obstacles with varying sizes
+and orientations to create a set of unknown environments.
+Specifically, we create two datasets of unknown environments:
+(i) fixed clutter dataset where the new obstacles occupy 10% of
+the base map’s free area for all maps, and (ii) varying clutter
+dataset where starting with a candidate base environment,
+we generate unknown environments by varying the % area
+11
+Fig. 10: Data used to estimate TOUR-REPLAN runtime, where we
+plot the number of ranks (x-axis) and the time taken to compute all
+transitions and replan GTSP (y-axis). The red line shows the cubic
+polynomial fit to the data.
+occupied by new obstacles. For the varying clutter dataset, we
+chose the base environment to be the one used in Fig. 1(a) and
+we test with 2 to 20 % area occupied. Due to the confidentiality
+of the environments, we are unable to share the complete
+dataset, but we have created anonymized environments for
+visualization, as seen in Figs. 1, 12, and 16. Fig. 12 shows an
+example base environment containing three unknown obstacles
+(red boxes) for which the initial coverage path (dark path)
+needs replanning.
+Implementation: We test the two variants of OARP-Replan
+(Algorithm 1) based on which RANK-REPLAN method is
+used: (i) OARP-Replan-1 which uses ILP-1, and (ii) OARP-
+Replan-2 which uses ILP-2. Both approaches were imple-
+mented in Python. For each ILP, we solve the corresponding
+linear relaxation using the free SCIP solver [38]. Then, we
+compute a tour of the replanned ranks by solving the GTSP
+formulation from Section VI, for which we use the open-
+source GLNS solver [39]. Table I shows the robot parameters
+used to compute the transition time between ranks. The robot
+is also equipped with a radial sensor in simulation (radius in
+Table I) that detects new obstacles and runs OARP-Replan.
+Metrics: Our main metric of interest is the time taken by
+the robot to complete coverage, i.e. total coverage time . This
+is computed as a sum of drive time and stoppage time, where
+stoppages occur when the robot is waiting for a new path to be
+computed. Table I shows the robot parameters used to compute
+the path drive time using the dynamics model from Section
+VI. To measure stoppage, we compute the minimum excess
+time taken by the algorithm to compute the replanned path as
+follows:
+Minimum stoppage time = max({0, [Time to plan transitions ]
++ [Time to find GTSP tour ]
+− [Time to obstacle encounter ]}.
+Replan runtime estimator: In each simulation run, the robot
+conducts many replans of the coverage path depending on the
+obstacles it observes. For each replan, we compute a time τ to
+reach the next obstacle encounter along the current path using
+the robot model from Section VI. Using τ, we then determine
+a budget ¯m for rank replanning using an estimator function
+ˆT (m) of the runtime needed to compute a tour for m ranks.
+The inverse of ˆT (m) is then used to compute the replanning
+budget, i.e. ¯m = ˆT −1(τ).
+The runtime estimate ˆT (m) includes (i) the estimated time
+to compute transition paths ˆTtrans(m), and (ii) the estimated
+time to solve the GTSP ˆTGTSP(m). Transition path computa-
+tion is included as it is a time-intensive process, especially for
+large maps. Formally,
+ˆT (m) = ˆTtrans(m) + ˆTGTSP(m).
+We use data collected from previous coverage planning
+runs to estimate each function. Our solver of choice, GLNS,
+typically computes a tour in O(m2) time for m ranks [39].
+Therefore, we estimate ˆTGTSP by fitting a cubic polynomial
+through the data as shown in Fig. 10, where we plot the time
+to compute the tour for different rank counts ( m values). For
+ˆTtrans(m), we use the following map-specific linear estimator.
+Let tavg be the average time to compute the transition paths for
+one rank in the given map. We compute ˆTtrans(m) as follows:
+ˆTtrans(m) = tavgm.
+Under-estimating the replan runtime will result in robot stop-
+page, as the robot must wait for the new path to be computed.
+Using the above estimator with OARP-Replan in our simula-
+tions, we observed little to no such robot stoppage. Therefore,
+we use this simple estimator for the rest of the paper as it
+works well for OARP-Replan. Regardless, this estimator may
+be inaccurate in cases where the time to compute transition
+path differs significantly from tavg (e.g. time to compute
+transitions increase when a large number of obstacles are
+added to an environment). While other sophisticated estimators
+can be used with OARP-Replan to handle this, we do not focus
+on this for this paper.
+B. Comparisons with online approaches
+In this section, we compare the total coverage time (drive
+time + stop time) of our two proposed OARP-Replan ap-
+proaches against online coverage planning/replanning ap-
+proaches. Our baseline approaches are as follows: (i) the
+OARP approach as proposed in [6], (ii) the heuristic (HR)
+approach from [18], (iii) the online search-based (SB) cover-
+age planning approach from [32], and (iv) GD replan, i.e. the
+practical case of following a turn-minimizing coverage path
+with a local planner. The first two approaches minimize turns
+in the path but they are offline planners. So we modify them
+to be usable online for replanning as follows:
+(i) while the robot is following the path and detects new
+obstacle encounters, the planning approach is used to
+replan the ranks for the remaining coverage path, and
+(ii) the tour of the resulting ranks is computed by solving
+the GTSP as formulated in Section VI, where unchanged
+parts of the coverage path are preserved.
+For OARP, we replan coverage ranks by solving the linear
+relaxation of ILP-0 from Section V (identical to the LP in [6]).
+We refer to this online variant of OARP asOARP-Original. For
+the HR approach, we solve Algorithm 1 from [18] to replan
+ranks. The latter two approaches (SB and GD) are designed for
+12
+(a)
+ (b)
+Fig. 11: Comparison of the online replanning approaches using the
+fixed clutter dataset: (a) Difference between total coverage time and
+base coverage time. (b) Minimum stop time of the robot during
+coverage (GD and SB omitted as replanning time is negligible). The
+line shows the average and the lighter region shows the data interval.
+online coverage planning with fast computation of coverage
+paths. As a result, these approaches have negligible stoppage
+time. The online SB approach plans the entire coverage path
+online and does not require an initial path. However, the SB
+approach minimizes path length rather than total coverage time
+with turns.
+Fixed Clutter Dataset: We first review the results for the
+fixed clutter dataset. For each base environment, we ran 5
+trials, where each trial was generated with a new random set of
+obstacles occupying 10% of the free space in the environment.
+The maps are sorted in the order of base coverage time ,
+which is the time to cover the base environment (without the
+unknown obstacles) using the initial coverage path. Fig. 11(a)
+and (b) show the results of the comparison where we plot
+the following for each method: (a) the difference between the
+total coverage time (including stops) and the base coverage
+time (i.e. total − base), and (b) the minimum stop time. To
+visualize the best-case coverage time for each environment (a
+lower bound), we also include the results for an offline planner
+(OARP) when provided with all obstacle information a-priori.
+We observe that both OARP-Replan approaches result in
+lower total coverage times relative to all baseline approaches,
+and comes closest to the performance of the offline planner.
+In comparison with GD replan, OARP-Replan exhibits an
+average improvement of about 12% across all maps. To visu-
+alize this improvement, we show an example map with three
+unknown obstacles (red boxes) in Figs. 12(a) and (b) where
+the initial path was replanned using GD replan and OARP-
+Replan-1 respectively. Fig. 12(c) shows two examples where
+we observe qualitative differences between the approaches. In
+example 1, paths replanned using GD replan (red paths) have
+multiple long detours around the obstacle, whereas OARP-
+Replan-1 has no such detours. In example 2, GD replan
+generates messy overlapping paths when avoiding the large
+obstacle, while OARP-Replan-1 reorients the ranks in this
+region to obtain a path with fewer overlaps. Using OARP-
+Replan-2, we observe similar improvements in the replanned
+path for this example. Since the tour of the replanned ranks is
+computed with little to no stoppage, the replanning time does
+not affect the total coverage time.
+When comparing with OARP-Original and the HR approach
+[18], both OARP-Replan approaches achieve faster coverage
+times, with the gap increasing as initial paths get longer (larger
+maps). This is because both ILP-0 and the HR approach
+do not limit the change to the coverage path, leading to
+longer replanning times and resulting robot stoppages (Fig.
+11 (b)). In contrast, OARP-Replan approaches cause little to
+no stoppage. We expect this difference in performance to be
+exaggerated in weaker computation setups, such as onboard
+computers on robot platforms. The OARP-Replan approaches
+also outperform the SB approach as a result of minimizing
+the number of ranks (turns) in the coverage path. However,
+we observe that the SB approach performs well on the map
+with the longest base coverage time when compared to the
+other baselines. Note that this map is not the largest in terms
+of area, so we reason that the performance of SB is more
+closely related to map area than to base coverage time (which
+may be influenced by complex layouts/geometry). Between the
+OARP-Replan approaches, OARP-Replan-1 consistently plans
+paths with slightly shorter coverage times than OARP-Replan-
+2.
+Varying Clutter Dataset: We also conducted similar ex-
+periments using the varying clutter dataset, where we ran 5
+trials for each clutter level. The map chosen for this dataset
+has a base coverage time of 944 s. Fig. 13 shows the results
+of the coverage time comparisons. In Fig. 13(a), we plot the
+difference between the total coverage time and base coverage
+time. We observe that the OARP-Replan approaches outper-
+form GD replan by 18% on average, with the performance
+gap increasing with clutter level. This is because, with more
+obstacles, GD replan causes many detours, while the OARP-
+Replan approaches tend to shorten such detours.
+In comparison with OARP-Original and the HR approach
+[18], the OARP-Replan approaches plan coverage paths with
+comparable coverage times. However, both OARP-Original
+and HR experience longer stops with increasing clutter (Fig.
+13(b)). We also observe some stoppage with using the OARP-
+Replan approaches in environments of 20% clutter. We believe
+this is because we do not update our runtime estimator
+during an experiment, making it inaccurate for highly cluttered
+environments (e.g. computing transitions take more time with
+more obstacles). A more sophisticated estimator that updates
+itself during coverage may eliminate this stoppage. We also
+observe that the coverage time using the SB approach plateaus
+with increasing clutter due to SB’s rapid online computation
+of coverage paths. Although OARP-Replan outperforms SB at
+all the clutter levels tested, this performance gap may decrease
+with higher clutter levels ( > 20%).
+C. ILP runtime comparisons
+In this section, we compare the average runtimes of the
+rank replanning ILPs for both OARP-Replan approaches. Our
+approach relies on the ILP being solved efficiently so that the
+GTSP tour can be reliably computed within the time budget
+(preventing robot stoppages). The ILP from OARP-Original
+is excluded from this comparison as it does not constrain the
+GTSP input size.
+13
+(a) GD replan result
+ (b) OARP-Replan-1 result
+ (c) Path improvement examples
+Fig. 12: Qualitative results of replanning an initial coverage path for the example environment with unknown obstacles.
+(a)
+ (b)
+Fig. 13: Comparison of the online replanning approaches using the
+varying clutter dataset: (a) Difference between total coverage time
+and base coverage time. (b) Minimum stop time of the robot during
+coverage (GD and SB omitted as replanning time is negligible). The
+line shows the average and the lighter region shows the data interval.
+Fig. 14(a) and (b) show the comparison results in the fixed
+clutter and varying clutter datasets respectively, where we
+plotted the average ILP runtimes for each map. For the fixed
+clutter dataset, the maps are sorted in the order of increasing
+size (area) of the environment, and in-turn, the number of
+grid cells in the IOP. We observe that ILP-2’s runtime scales
+better than ILP-1 as the environment area increases. This is
+mainly due to the reduction in the ILP variables that speed up
+runtime. Moreover, we also observe in Fig 11(b) that using
+ILP-2 resulted in slightly shorter stop times for larger maps
+(the plot for OARP-Replan-2 is close to zero while OARP-
+Replan-1 goes up to 100 s for one map). We believe that this
+difference will be exaggerated when computation power is
+constrained (e.g. low-cost robot hardware) to the point that
+it will affect coverage time. Therefore, for such applications,
+we recommend ILP-2 over ILP-1. A future improvement of
+this work could involve combining both ILPs, with ILP-2 as
+a fallback for ILP-1.
+For the varying clutter dataset, we observe that the average
+runtimes of both ILPs are comparable, with ILP-1 performing
+better overall. Increasing clutter seems to slightly change
+both ILPs’ runtimes, and as such, we observed no drastic
+runtime difference as with the fixed clutter dataset. While this
+comparison was performed with a fixed tool width (grid cell
+size), changing the tool width could either increase or decrease
+the number of grid cells for all maps. However, since the
+change in map area also has the same effect, we expect the
+(a)
+ (b)
+Fig. 14: Comparison of average ILP runtimes for the OARP-Replan
+approaches. (a) Fixed clutter dataset comparisons, with maps sorted
+by base map area . (b) Varying clutter dataset comparisons. The line
+shows the average and the lighter region shows the data interval.
+observed trend to be maintained with a change in tool width.
+D. Comparisons with offline approaches
+In this section, we compare the proposed OARP-Replan ap-
+proach (i.e. OARP-Replan-1) against offline coverage planning
+approaches, which are provided with all obstacle information
+prior to coverage. In contrast, we provide OARP-Replan with
+no prior obstacle information, so it must replan the coverage
+path whenever the robot detects obstacles. We compare OARP-
+Replan against 3 offline approaches: (i) boustrophedon cell
+decomposition (BCD) method [7], (ii) line coverage (LC)
+approach [8], and (iii) the offline OARP planner [6]. For
+clarity, we will refer to the offline approaches as BCD-Offline,
+LC-Offline, and OARP-Offline for the rest of this section. The
+BCD-Offline algorithm also resembles the BCD approach from
+the ‘ipa room exploration’ ROS package, which is the most
+effective algorithm in the package according to the adjoining
+survey in [9].
+While OARP-Replan was developed with mobile robots
+as a focus, it can also be used for coverage planning with
+aerial robots (fixed coverage tool width). As such, we apply
+the OARP-Replan approach to plan coverage paths for an
+aerial robot where the obstacles in the environment are not
+previously known. We use the dataset from the BCD paper
+[7] that consists of around 300 scans of environments with
+varying numbers of obstacles or holes. The outer boundary of
+each map is a square, which is then filled with the obstacles
+observed in the scans. The maps are arranged in the order of
+14
+(a)
+ (b)
+Fig. 15: Comparison results with offline planning approaches. (a)
+Coverage time comparisons between OARP-Replan and offline base-
+lines. (b) Violin plot of percent coverage achieved by the OARP-based
+approaches (with data points plotted). BCD-Offline and LC-Offline
+are omitted as they are exact approaches that achieve 100% coverage.
+increasing complexity, which is given by the number of hole
+vertices (e.g., one square hole consists of 4 vertices). We also
+use robot parameters similar to that of the UA V from [7]: a
+tool width of 3 m, maximum velocity of 3 m/s, and linear
+acceleration of ±1 m/s2 (turning time omitted to match [7]).
+Additionally, OARP-Replan is provided with an initial path
+for the unobstructed base environment (a square), and a radial
+range sensor similar to previous sections to identify obstacles.
+Fig. 15(a) shows the results of comparing the total coverage
+times of using all approaches. We observe that OARP-Replan
+outperforms BCD-Offline and LC-Offline across all maps,
+with an improvement of about 25% on average from BCD-
+Offline. We believe this improvement to be due to the optimal
+coverage lines produced by both OARP-based methods, as
+BCD-Offline paths tend to overlap closer to cell boundaries
+and obstacles. We also observe that OARP-Offline exhibits
+the best performance with an average improvement of 31% in
+coverage time from BCD-Offline. However, note that OARP-
+Offline is equivalent to OARP-Replan when provided with all
+obstacle information a-priori and unlimited solver time. We
+conclude that using OARP-Replan with a simple initial path
+is a competitive alternative to using BCD-Offline with com-
+plete obstacle information. However, if obstacle information
+is available beforehand, OARP-Offline is a better alternative
+as it computes paths with the fastest coverage times.
+One thing to note is that both BCD-Offline and LC-Offline
+are exact approaches that aim to cover the entire environment
+(100% coverage). In contrast, the OARP-based approaches use
+grid approximations that may not cover the environment fully.
+To address this, we plot the percent coverage achieved by both
+OARP-based methods (they cover the same grid) in Fig. 15(b),
+where we observe that the OARP-based approaches achieve
+about 96% coverage on average across all environments,
+with missed coverage usually occurring close to obstacles
+and boundaries. Therefore, we recommend OARP-Replan for
+covering environments with unknown obstacles where small
+amounts of missed coverage is acceptable.
+E. Simulation case study
+This section provides a case study of a Turtlebot 3 replan-
+ning coverage paths in a ROS simulation using GD replan and
+(a)
+ (b)
+Fig. 16: Robot operating system (ROS) simulation of covering an
+example environment with unknown obstacles. (a) An initial coverage
+path for the base environment (b) replanning the path online using
+OARP-Replan.
+OARP-Replan (i.e. OARP-Replan-1). This is to demonstrate
+the real-world applicability of our replanning approach in
+contrast to GD replanning. We generated an anonymized
+environment as shown in Fig. 16, for which an initial coverage
+path was planned (Fig. 16(a)). We added new obstacles to
+the environment that occupied 10% of the initial area. As
+the robot observes new obstacles blocking this path, the robot
+replans the path either using OARP-Replan or GD replan. The
+replanning is done while driving and the robot switches to the
+new path when available. The robot is also equipped with a
+local planner to traverse the path and make small changes if the
+path goes close to the walls. Fig. 16(b) shows a snapshot of the
+robot replanning the coverage path using OARP-Replan. We
+use the robot parameters from Table I for this simulation with
+some changes to use the default Turtlebot controller in ROS:
+we set maximum velocity to 0.3 m/s and linear acceleration
+to 1 m/s2. With these parameters, we observed that OARP-
+Replan covered the environment 16.5% faster than GD replan
+along a path that was 12.2% shorter. This difference is mainly
+due to the reduction in long detours where the robot travels
+around obstacles many times. We included recordings of this
+case study in our video attachment.
+VIII. R OBOT EXPERIMENTS
+In this section, we present the results of testing OARP-
+Replan (i.e. OARP-Replan-1) on an Avidbots Neo robot (Fig.
+17(a)) covering a partially unknown environment. The robot’s
+task is to cover a test environment for which an initial path
+is provided (Fig. 18(a)). The robot has tricycle dynamics and
+is equipped with a local planner to make small changes to
+difficult parts of the initial path. However, the robot may
+encounter large obstacles during coverage (Fig. 17(b)) which
+may result in narrow regions that the robot cannot reach along
+its current path. Therefore, a replan of the coverage path is
+necessary to reach such regions and maximize the coverage
+of the environment.
+We conducted our experiments using two test scenarios.
+Fig. 18 shows the results of applying OARP-Replan in both
+scenarios. In scenario 1 (Fig. 17(a) / Fig. 18(b)), the robot
+observes an obstacle that interrupts a large number of ranks in
+the initial path. The path is replanned using OARP-Replan,
+which computes horizontal ranks to comfortably cover the
+15
+(a) Neo robot in Scenario 1
+ (b) Scenario 2 obstacles
+Fig. 17: Snapshots from experiments using the Avidbots Neo robot
+(a) Initial Path
+ (b) Scenario 1
+ (c) Scenario 2
+Fig. 18: Robot experiment results of replanning an initial coverage
+path using OARP-Replan. The final robot path (pink curves) and the
+covered area (blue) are shown for both scenarios.
+narrow region (bottom right of the environment in Fig. 18(b)).
+In scenario 2 (Fig. 17(b) / Fig. 18(c)), the robot encounters
+a large obstacle that it must observe over time. Later in the
+task, the robot observes a part of the obstacle that causes a
+narrow coverage region (top right of the environment in Fig.
+18(c)). OARP-Replan allows the robot to cover this region
+by re-orienting the coverage ranks. We provide recordings of
+these experiments in our multimedia attachment.
+To implement OARP-Replan, we require an occupancy map
+that uses the LIDAR scan collected by the robot to identify
+grid cells that correspond to static obstacles. However, this
+occupancy map must differentiate between a static obstacle
+and a noisy LIDAR scan. We do this by checking consecutive
+LIDAR readings for obstacles that block grid cells in the
+occupancy grid and has not moved for some time. While
+this step increases the time between detecting an obstacle and
+replanning, it is necessary to prevent faulty replanning of the
+coverage path as a result of LIDAR scan noise/fluctuations.
+Note that without replanning (i.e. GD replan with the local
+planner), the coverage path for the narrow regions will have
+short ranks with turns occurring in quick succession. The Neo
+robot cannot drive such paths without manual assistance. The
+proposed replanning approach aims to reduce such instances
+where manual assistance is required to continue coverage.
+IX. C ONCLUSION
+We proposed an anytime coverage replanning approach
+called OARP-Replan to replan coverage paths for environ-
+ments with unknown static obstacles. OARP-Replan solves
+this problem in two stages: (i) rank replanning, and (ii) touring.
+The first stage replans the ranks (straight-line paths) of an
+obstructed coverage path, while the second stage computes
+a tour of the replanned ranks to obtain the new path. We
+proposed two integer linear programs (ILPs) that each solve
+the rank replanning stage so that the resulting touring stage
+is completed within a time budget τ. Simulations on maps
+of real-world environments showed that the OARP-Replan
+variants using each ILP achieve better coverage performance
+than a greedy replanner and state-of-the-art coverage planners
+used for online replanning [6], [18], [32]. Moreover, we
+also compared OARP-Replan with offline planning approaches
+(treating all obstacles as known) [7], [8] where we observed an
+improvement in total coverage time. Finally, we demonstrated
+the proposed approach by replanning coverage paths for an
+industrial-level cleaning robot.
+In this work, we focus only on the case of new obstacles
+in the environment. The case where an obstacle is observed
+and later removed from the environment (including dynamic
+obstacles) is left for future work. This would involve detecting
+areas in the environment that could be free at a later time due
+to an obstacle removal and returning to cover them without
+long detours. Another future direction involves replanning
+using predictions about environment occupancy to balance
+coverage and exploration, which are competing objectives. To
+balance them, the coverage planner must determine when to
+replan the coverage path, perhaps even delaying a replan until
+more information about an obstacle is collected. Removing
+the axis-parallel constraint and allowing multiple directions of
+coverage may also improve coverage paths for non-orthogonal
+environments.
+ACKNOWLEDGMENT
+This work was supported by Canadian Mitacs Accelerate
+Project IT16435 and Avidbots Corp, Kitchener, ON, Canada.
+REFERENCES
+[1] C. Hofner and G. Schmidt, “Path planning and guidance techniques
+for an autonomous mobile cleaning robot,” Robotics and Autonomous
+Systems, vol. 14, no. 2, pp. 199–212, 1995.
+[2] M. Kapanoglu, M. Alikalfa, M. Ozkan, A. Yazıcı, and O. Parlaktuna, “A
+pattern-based genetic algorithm for multi-robot coverage path planning
+minimizing completion time,” Journal of Intelligent Manufacturing ,
+vol. 23, no. 4, pp. 1035–1045, Aug. 2012.
+[3] I. A. Hameed, “Intelligent coverage path planning for agricultural robots
+and autonomous machines on three-dimensional terrain,” Journal of
+Intelligent and Robotic Systems: Theory and Applications , vol. 74, no.
+3-4, pp. 965–983, 2014.
+[4] E. Galceran and M. Carreras, “A survey on coverage path planning for
+robotics,” Robotics and Autonomous Systems, vol. 61, no. 12, pp. 1258–
+1276, 2013.
+[5] E. M. Arkin, S. P. Fekete, and J. S. Mitchell, “Approximation algorithms
+for lawn mowing and milling,” Computational Geometry , vol. 17, no.
+1-2, pp. 25–50, 2000.
+[6] M. Ramesh, F. Imeson, B. Fidan, and S. L. Smith, “Optimal Partitioning
+of Non-Convex Environments for Minimum Turn Coverage Planning,”
+IEEE Robotics and Automation Letters , vol. 7, no. 4, pp. 9731–9738,
+Oct. 2022.
+[7] R. B ¨ahnemann, N. Lawrance, J. J. Chung, M. Pantic, R. Siegwart,
+and J. Nieto, “Revisiting Boustrophedon Coverage Path Planning as
+a Generalized Traveling Salesman Problem,” in Field and Service
+Robotics, ser. Springer Proceedings in Advanced Robotics. Singapore:
+Springer, 2021, pp. 277–290.
+[8] S. Agarwal and S. Akella, “Area Coverage With Multiple Capacity-
+Constrained Robots,” IEEE Robotics and Automation Letters , vol. 7,
+no. 2, pp. 3734–3741, Apr. 2022.
+[9] R. Bormann, F. Jordan, J. Hampp, and M. H ¨agele, “Indoor Coverage
+Path Planning: Survey, Implementation, Analysis,” in 2018 IEEE Inter-
+national Conference on Robotics and Automation (ICRA) , May 2018,
+pp. 1718–1725.
+[10] C. S. Tan, R. Mohd-Mokhtar, and M. R. Arshad, “A Comprehensive
+Review of Coverage Path Planning in Robotics Using Classical and
+Heuristic Algorithms,” IEEE Access, vol. 9, pp. 119 310–119 342, 2021.
+16
+[11] H. Choset and P. Pignon, “Coverage Path Planning: The Boustrophedon
+Cellular Decomposition,” Field and Service Robotics , pp. 203–209,
+1998.
+[12] T. M. Cabreira, C. D. Franco, P. R. Ferreira, and G. C. Buttazzo,
+“Energy-Aware Spiral Coverage Path Planning for UA V Photogrammet-
+ric Applications,” IEEE Robotics and Automation Letters , vol. 3, no. 4,
+pp. 3662–3668, Oct. 2018.
+[13] S. Brown and S. L. Waslander, “The constriction decomposition method
+for coverage path planning,” in2016 IEEE/RSJ International Conference
+on Intelligent Robots and Systems (IROS) , Oct. 2016, pp. 3233–3238.
+[14] S. Bochkarev and S. L. Smith, “On minimizing turns in robot coverage
+path planning,” in 2016 IEEE International Conference on Automation
+Science and Engineering (CASE) , 2016, pp. 1237–1242.
+[15] A. Das, M. Diu, N. Mathew, C. Scharfenberger, J. Servos, A. Wong,
+J. S. Zelek, D. A. Clausi, and S. L. Waslander, “Mapping, Planning,
+and Sample Detection Strategies for Autonomous Exploration,” Journal
+of Field Robotics , vol. 31, no. 1, pp. 75–106, 2014.
+[16] Y . Gabriely and E. Rimon, “Spanning-tree based coverage of contin-
+uous areas by a mobile robot,” Annals of Mathematics and Artificial
+Intelligence, vol. 31, no. 1-4, pp. 77–98, 2001.
+[17] A. Zelinsky and S. Yuta, “A unified approach to planning, sensing
+and navigation for mobile robots,” in Experimental Robotics III , ser.
+Lecture Notes in Control and Information Sciences. Berlin, Heidelberg:
+Springer, 1994, pp. 444–455.
+[18] I. Vandermeulen, R. Groß, and A. Kolling, “Turn-minimizing multirobot
+coverage,” in 2019 IEEE International Conference on Robotics and
+Automation (ICRA), 2019, pp. 1014–1020.
+[19] J. Lu, B. Zeng, J. Tang, T. L. Lam, and J. Wen, “TMSTC*: A Path
+Planning Algorithm for Minimizing Turns in Multi-Robot Coverage,”
+IEEE Robotics and Automation Letters , vol. 8, no. 8, pp. 5275–5282,
+Aug. 2023.
+[20] E. U. Acar and H. Choset, “Sensor-based Coverage of Unknown
+Environments: Incremental Construction of Morse Decompositions,”The
+International Journal of Robotics Research, vol. 21, no. 4, pp. 345–366,
+Apr. 2002.
+[21] H. H. Viet, V .-H. Dang, M. N. U. Laskar, and T. Chung, “BA*: An online
+complete coverage algorithm for cleaning robots,” Applied Intelligence,
+vol. 39, no. 2, pp. 217–235, Sep. 2013.
+[22] Y . Gabriely and E. Rimon, “Competitive on-line coverage of grid
+environments by a mobile robot,” Computational Geometry , vol. 24,
+no. 3, pp. 197–224, 2003.
+[23] J. Song and S. Gupta, “ ε⋆: An online coverage path planning algorithm,”
+IEEE Transactions on Robotics , vol. 34, no. 2, pp. 526–533, 2018.
+[24] C. Luo and S. X. Yang, “A Bioinspired Neural Network for Real-Time
+Concurrent Map Building and Complete Coverage Robot Navigation
+in Unknown Environments,” IEEE Transactions on Neural Networks ,
+vol. 19, no. 7, pp. 1279–1298, Jul. 2008.
+[25] M. A. V . J. Muthugala, S. M. B. P. Samarakoon, and M. R. Elara,
+“Toward energy-efficient online Complete Coverage Path Planning of
+a ship hull maintenance robot based on Glasius Bio-inspired Neural
+Network,” Expert Systems with Applications , vol. 187, p. 115940, Jan.
+2022.
+[26] B. Sun, D. Zhu, C. Tian, and C. Luo, “Complete Coverage Autonomous
+Underwater Vehicles Path Planning Based on Glasius Bio-Inspired
+Neural Network Algorithm for Discrete and Centralized Programming,”
+IEEE Transactions on Cognitive and Developmental Systems , vol. 11,
+no. 1, pp. 73–84, Mar. 2019.
+[27] S. Godio, S. Primatesta, G. Guglieri, and F. Dovis, “A Bioinspired Neural
+Network-Based Approach for Cooperative Coverage Planning of UA Vs,”
+Information, vol. 12, no. 2, p. 51, Feb. 2021.
+[28] T. Dang, M. Tranzatto, S. Khattak, F. Mascarich, K. Alexis, and
+M. Hutter, “Graph-based subterranean exploration path planning using
+aerial and legged robots,” Journal of Field Robotics , vol. 37, no. 8, pp.
+1363–1388, 2020.
+[29] M. Corah and N. Michael, “Efficient Online Multi-robot Exploration
+via Distributed Sequential Greedy Assignment,” in Robotics: Science
+and Systems XIII . Robotics: Science and Systems Foundation, Jul.
+2017.
+[30] Y . Hu, J. Geng, C. Wang, J. Keller, and S. Scherer, “Off-Policy Eval-
+uation With Online Adaptation for Robot Exploration in Challenging
+Environments,” IEEE Robotics and Automation Letters , vol. 8, no. 6,
+pp. 3780–3787, Jun. 2023.
+[31] B. Yamauchi, “A frontier-based approach for autonomous exploration,”
+in Proceedings 1997 IEEE International Symposium on Computational
+Intelligence in Robotics and Automation CIRA’97. ’Towards New Com-
+putational Principles for Robotics and Automation’ . Monterey, CA,
+USA: IEEE Comput. Soc. Press, 1997, pp. 146–151.
+[32] T. Kusnur and M. Likhachev, “Complete, Decomposition-Free Coverage
+Path Planning,” in2022 IEEE 18th International Conference on Automa-
+tion Science and Engineering (CASE) , Aug. 2022, pp. 1431–1437.
+[33] E. Galceran, R. Campos, N. Palomeras, D. Ribas, M. Carreras, and
+P. Ridao, “Coverage Path Planning with Real-time Replanning and
+Surface Reconstruction for Inspection of Three-dimensional Underwater
+Structures using Autonomous Underwater Vehicles: Coverage Path Plan-
+ning with Real-time Replanning and Surface Reconstruction,” Journal
+of Field Robotics , vol. 32, no. 7, pp. 952–983, Oct. 2015.
+[34] E. M. Arkin, M. A. Bender, E. D. Demaine, S. P. Fekete, J. S. B.
+Mitchell, and S. Sethia, “Optimal Covering Tours with Turn Costs,”
+SIAM Journal on Computing , vol. 35, no. 3, pp. 531–566, 2005.
+[35] B. Korte and J. Vygen, Combinatorial Optimization: Theory and Algo-
+rithms, 3rd ed., ser. Algorithms and Combinatorics. Berlin Heidelberg:
+Springer-Verlag, 2006.
+[36] N. Karmarkar, “A new polynomial-time algorithm for linear program-
+ming,” Combinatorica, vol. 4, no. 4, pp. 373–395, 1984.
+[37] M. Saha, T. Roughgarden, J.-C. Latombe, and G. S ´anchez-Ante, “Plan-
+ning Tours of Robotic Arms among Partitioned Goals,”The International
+Journal of Robotics Research , vol. 25, no. 3, pp. 207–223, Mar. 2006.
+[38] T. Achterberg, “SCIP: Solving constraint integer programs,” Mathemat-
+ical Programming Computation , vol. 1, no. 1, pp. 1–41, Jul. 2009.
+[39] S. L. Smith and F. Imeson, “GLNS: An effective large neighborhood
+search heuristic for the Generalized Traveling Salesman Problem,”
+Computers & Operations Research , vol. 87, pp. 1–19, 2017.

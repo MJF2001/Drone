@@ -1,0 +1,70 @@
+                                                                                                                                                                   15
+
+
+                                                                                    variants using each ILP achieve better coverage performance
+                                                                                    than a greedy replanner and state-of-the-art coverage planners
+                                                                                    used  for  online  replanning  [6],  [18],  [32].  Moreover,  we
+                                                                                    alsocomparedOARP-Replanwithofflineplanningapproaches
+                                                                                    (treating all obstacles as known) [7], [8] where we observed an
+    (a) Neo robot in Scenario 1                 (b) Scenario 2 obstacles            improvement in total coverage time. Finally, we demonstrated
+Fig. 17: Snapshots from experiments using the Avidbots Neo robot                    the proposed approach by replanning coverage paths for an
+                                                                                    industrial-level cleaning robot.
+                                                                                       In this work, we focus only on the case of new obstacles
+                                                                                    in the environment. The case where an obstacle is observed
+                                                                                    and later removed from the environment (including dynamic
+                                                                                    obstacles) is left for future work. This would involve detecting
+                                                                                    areas in the environment that could be free at a later time due
+                                                                                    to an obstacle removal and returning to cover them without
+                                                                                    long  detours.  Another  future  direction  involves  replanning
+     (a) Initial Path           (b) Scenario 1              (c) Scenario 2          using  predictions  about  environment  occupancy  to  balance
+                                                                                    coverage and exploration, which are competing objectives. To
+Fig. 18: Robot experiment results of replanning an initial coverage                 balance them, the coverage planner must determine when to
+path using OARP-Replan. The final robot path (pink curves) and the                  replan the coverage path, perhaps even delaying a replan until
+covered area (blue) are shown for both scenarios.                                   more information about an obstacle is collected. Removing
+narrow region (bottom right of the environment in Fig. 18(b)).                      the axis-parallel constraint and allowing multiple directions of
+In scenario 2 (Fig. 17(b) / Fig. 18(c)), the robot encounters                       coverage may also improve coverage paths for non-orthogonal
+a large obstacle that it must observe over time. Later in the                       environments.
+
+task, the robot observes a part of the obstacle that causes a                                                  ACKNOWLEDGMENT
+narrow coverage region (top right of the environment in Fig.
+18(c)). OARP-Replan allows the robot to cover this region                              This work was supported by Canadian Mitacs Accelerate
+by re-orienting the coverage ranks. We provide recordings of                        Project IT16435 and Avidbots Corp, Kitchener, ON, Canada.
+these experiments in our multimedia attachment.
+   To implement OARP-Replan, we require an occupancy map                                                            REFERENCES
+that uses the LIDAR scan collected by the robot to identify
+grid cells that correspond to static obstacles. However, this                        [1]C. Hofner and G. Schmidt, “Path planning and guidance techniques
+occupancy map must differentiate between a static obstacle                                for an autonomous mobile cleaning robot,” Robotics and Autonomous
+and a noisy LIDAR scan. We do this by checking consecutive                                Systems, vol. 14, no. 2, pp. 199–212, 1995.
+                                                                                     [2]M. Kapanoglu, M. Alikalfa, M. Ozkan, A. Yazıcı, and O. Parlaktuna, “A
+LIDAR  readings  for  obstacles  that  block  grid  cells  in  the                        pattern-based genetic algorithm for multi-robot coverage path planning
+occupancy  grid  and  has  not  moved  for  some  time.  While                            minimizing  completion  time,”  Journal  of  Intelligent  Manufacturing,
+this step increases the time between detecting an obstacle and                            vol. 23, no. 4, pp. 1035–1045, Aug. 2012.
+                                                                                     [3]I. A. Hameed, “Intelligent coverage path planning for agricultural robots
+replanning, it is necessary to prevent faulty replanning of the                           and  autonomous  machines  on  three-dimensional  terrain,” Journal  of
+coverage path as a result of LIDAR scan noise/fluctuations.                               Intelligent and Robotic Systems: Theory and Applications, vol. 74, no.
+   Note that without replanning (i.e. GD replan with the local                            3-4, pp. 965–983, 2014.
+                                                                                     [4]E. Galceran and M. Carreras, “A survey on coverage path planning for
+planner), the coverage path for the narrow regions will have                              robotics,”Robotics and Autonomous Systems, vol. 61, no. 12, pp. 1258–
+short ranks with turns occurring in quick succession. The Neo                             1276, 2013.
+robot cannot drive such paths without manual assistance. The                         [5]E. M. Arkin, S. P. Fekete, and J. S. Mitchell, “Approximation algorithms
+                                                                                          for lawn mowing and milling,” Computational Geometry, vol. 17, no.
+proposed replanning approach aims to reduce such instances                                1-2, pp. 25–50, 2000.
+where manual assistance is required to continue coverage.                            [6]M. Ramesh, F. Imeson, B. Fidan, and S. L. Smith, “Optimal Partitioning
+                                                                                          of Non-Convex Environments for Minimum Turn Coverage Planning,”
+                                                                                          IEEE Robotics and Automation Letters, vol. 7, no. 4, pp. 9731–9738,
+                            IX.  CONCLUSION                                               Oct. 2022.
+   We  proposed  an  anytime  coverage  replanning  approach                         [7]R.  B    ¨ahnemann,  N.  Lawrance,  J.  J.  Chung,  M.  Pantic,  R.  Siegwart,
+                                                                                          and  J.  Nieto,  “Revisiting  Boustrophedon  Coverage  Path  Planning  as
+called  OARP-Replan  to  replan  coverage  paths  for  environ-                           a  Generalized  Traveling  Salesman  Problem,”  in  Field  and  Service
+ments  with  unknown  static  obstacles.  OARP-Replan  solves                             Robotics, ser. Springer Proceedings in Advanced Robotics.   Singapore:
+thisproblemintwostages:(i)rankreplanning,and(ii)touring.                                  Springer, 2021, pp. 277–290.
+                                                                                     [8]S. Agarwal and S. Akella, “Area Coverage With Multiple Capacity-
+The first stage replans the ranks (straight-line paths) of an                             Constrained Robots,” IEEE Robotics and Automation Letters, vol. 7,
+obstructed coverage path, while the second stage computes                                 no. 2, pp. 3734–3741, Apr. 2022.
+a  tour  of  the  replanned  ranks  to  obtain  the  new  path.  We                  [9]R. Bormann, F. Jordan, J. Hampp, and M. H    ¨agele, “Indoor Coverage
+                                                                                          Path Planning: Survey, Implementation, Analysis,” in 2018 IEEE Inter-
+proposed two integer linear programs (ILPs) that each solve                               national Conference on Robotics and Automation (ICRA), May 2018,
+the rank replanning stage so that the resulting touring stage                             pp. 1718–1725.
+is completed within a time budget τ. Simulations on maps                            [10]C. S. Tan, R. Mohd-Mokhtar, and M. R. Arshad, “A Comprehensive
+                                                                                          Review of Coverage Path Planning in Robotics Using Classical and
+of  real-world  environments  showed  that  the  OARP-Replan                              Heuristic Algorithms,”IEEE Access, vol. 9, pp. 119310–119342, 2021.

@@ -1,0 +1,61 @@
+                                                                                                                                                      11
+
+
+                                                                              ˆT(m) of the runtime needed to compute a tour for m ranks.
+                                                                              The inverse of  ˆT(m) is then used to compute the replanning
+                                                                              budget, i.e. ¯m = ˆT−1(τ).
+                                                                                 The runtime estimate ˆT(m) includes (i) the estimated time
+                                                                              to compute transition paths  ˆTtrans(m), and (ii) the estimated
+                                                                              time to solve the GTSP  ˆTGTSP(m). Transition path computa-
+                                                                              tion is included as it is a time-intensive process, especially for
+                                                                              large maps. Formally,
+                                                                                                ˆT(m) = ˆTtrans(m)+ ˆTGTSP(m).
+
+                                                                                 We  use  data  collected  from  previous  coverage  planning
+Fig. 10: Data used to estimate TOUR-REPLAN runtime, where we                  runs to estimate each function. Our solver of choice, GLNS,
+plot the number of ranks (x-axis) and the time taken to compute all           typically computes a tour in O(m2) time for m ranks [39].
+transitions and replan GTSP (y-axis). The red line shows the cubic            Therefore, we estimate  ˆTGTSP  by fitting a cubic polynomial
+polynomial fit to the data.                                                   through the data as shown in Fig. 10, where we plot the time
+                                                                              to compute the tour for different rank counts (m values). For
+                                                                              ˆTtrans(m), we use the following map-specific linear estimator.
+occupied by new obstacles. For the varying clutter dataset, we                Lettavg be the average time to compute the transition paths for
+chose the base environment to be the one used in Fig. 1(a) and                one rank in the given map. We compute ˆTtrans(m) as follows:
+wetestwith2to20%areaoccupied.Duetotheconfidentiality                                                    ˆTtrans(m) =tavgm.
+of  the  environments,  we  are  unable  to  share  the  complete
+dataset,  but  we  have  created  anonymized  environments  for               Under-estimating the replan runtime will result in robot stop-
+visualization, as seen in Figs. 1, 12, and 16. Fig. 12 shows an               page, as the robot must wait for the new path to be computed.
+examplebaseenvironmentcontainingthreeunknownobstacles                         Using the above estimator with OARP-Replan in our simula-
+(red boxes) for which the initial coverage path (dark path)                   tions, we observed little to no such robot stoppage. Therefore,
+needs replanning.                                                             we use this simple estimator for the rest of the paper as it
+  Implementation: We test the two variants of OARP-Replan                     works well for OARP-Replan. Regardless, this estimator may
+(Algorithm 1) based on which RANK-REPLAN method is                            be inaccurate in cases where the time to compute transition
+used: (i) OARP-Replan-1 which uses ILP-1, and (ii) OARP-                      path  differs  significantly  from tavg  (e.g.  time  to  compute
+Replan-2  which  uses  ILP-2.  Both  approaches  were  imple-                 transitions  increase  when  a  large  number  of  obstacles  are
+mented in Python. For each ILP, we solve the corresponding                    addedtoanenvironment).Whileothersophisticatedestimators
+linear relaxation using the free SCIP solver [38]. Then, we                   canbeusedwithOARP-Replantohandlethis,wedonotfocus
+compute a tour of the replanned ranks by solving the GTSP                     on this for this paper.
+formulation  from  Section  VI,  for  which  we  use  the  open-
+source GLNS solver [39]. Table I shows the robot parameters                   B. Comparisons with online approaches
+used to compute the transition time between ranks. The robot                     In this section, we compare the total coverage time (drive
+is also equipped with a radial sensor in simulation (radius in                time + stop time) of our two proposed OARP-Replan ap-
+Table I) that detects new obstacles and runs OARP-Replan.                     proaches  against  online  coverage  planning/replanning  ap-
+  Metrics: Our main metric of interest is the time taken by                   proaches.  Our  baseline  approaches  are  as  follows:  (i)  the
+the robot to complete coverage, i.e. total coverage time. This                OARP approach as proposed in [6], (ii) the heuristic (HR)
+is computed as a sum of drive time and stoppage time, where                   approach from [18], (iii) the online search-based (SB) cover-
+stoppages occur when the robot is waiting for a new path to be                age planning approach from [32], and (iv) GD replan, i.e. the
+computed.TableIshowstherobotparametersusedtocompute                           practical case of following a turn-minimizing coverage path
+the path drive time using the dynamics model from Section                     with a local planner. The first two approaches minimize turns
+VI. To measure stoppage, we compute the minimum excess                        in the path but they are offline planners. So we modify them
+time taken by the algorithm to compute the replanned path as                  to be usable online for replanning as follows:
+follows:
+                                                                               (i)while the robot is following the path and detects new
+Minimum stoppage time = max({0,[Time to plan transitions]                           obstacle  encounters,  the  planning  approach  is  used  to
+                                 +[Time to find GTSP tour]                          replan the ranks for the remaining coverage path, and
+                                 −[Time to obstacle encounter]}.              (ii)the tour of the resulting ranks is computed by solving
+                                                                                    the GTSP as formulated in Section VI, where unchanged
+  Replan runtime estimator:In eachsimulation run, therobot                          parts of the coverage path are preserved.
+conducts many replans of the coverage path depending on the                   For OARP, we replan coverage ranks by solving the linear
+obstacles it observes. For each replan, we compute a timeτ to                 relaxation of ILP-0 from Section V (identical to the LP in [6]).
+reach the next obstacle encounter along the current path using                WerefertothisonlinevariantofOARPasOARP-Original.For
+the robot model from Section VI. Using τ, we then determine                   the HR approach, we solve Algorithm 1 from [18] to replan
+a budget  ¯m for rank replanning using an estimator function                  ranks.Thelattertwoapproaches(SBandGD)aredesignedfor

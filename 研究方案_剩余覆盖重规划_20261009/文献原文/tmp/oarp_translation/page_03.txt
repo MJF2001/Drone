@@ -1,0 +1,60 @@
+                                                                                                                                                        3
+
+
+Replan,thatconstrainstheruntimetoreplanthecoveragepath,                       vertical) during coverage. The OARP approach uses a three-
+which solves the problem in two stages: (i) rank replanning,                  step  framework  to  plan  coverage  paths:  (i)  decompose  the
+and (ii) touring. In Section V, we describe the rank replanning               environment W  into an Integral Orthogonal Polygon (IOP),
+stage where we use ILPs to replan the ranks of the coverage                   which is a set of square grid cells of size l, (ii) place the
+path such that the overall runtime is constrained. In Section                 minimumnumberofaxis-parallel(horizontalorvertical)ranks
+VI,  we  describe  the  touring  stage  where  we  formulate  a               (straight-line paths) to cover the IOP, and (iii) compute a tour
+Generalized Traveling Salesman Problem (GTSP) to compute                      of the ranks to construct the coverage path. Here, the IOP
+a tour of the replanned ranks to obtain the replanned path.                   forms the environment subsetfW  that we look to cover. To
+In Section VII, we provide simulation results on a range of                   place the minimum number of ranks in the IOP, OARP solves
+real-world environments and compare our proposed approach                     a linear program (LP) to compute the coverage orientation of
+against state-of-the-art coverage planning methods in online                  each cell in the IOP. Once the ranks are obtained, a tour of
+and offline settings. In Section VIII, we present experimental                the ranks is computed by solving a Generalized Travelling
+results of testing our replanning approach using an industrial-               Salesman Problem (GTSP) that minimizes the cost of transi-
+level autonomous cleaning robot.                                              tioning (driving) between ranks. The resulting coverage path is
+                                                                              represented as a series of ranks connected by cost-minimizing
+                         II.  PRELIMINARIES                                   transition paths, which are collision-free dynamically feasible
+  We  first  review  the  coverage  planning  problem  and  our               paths  to  traverse  between  ranks.  Note  that,  unlike  ranks,
+previously proposed coverage planning approach, namely the                    transition paths do not have to be axis-parallel.
+optimal axis-parallel rank partitioning (OARP) approach [6].                                      III.  PROBLEM DEFINITION
+
+A. The Coverage Planning Problem                                                 In this section, we define the problem of replanning the
+  Consider a 2D non-convex environment with known ob-                         coverage path.
+
+stacles,  where W ⊆ R2  is  a  closed  and  bounded  set  that                A. Coverage Replanning Problem
+represents  all  free  points  within  the  environment.  We  now                Let us consider the case where our robot is trying to follow
+consider a robot with a state composed of its positionx∈W,                    its initial coverage pathP but it observes a setO of previously
+wherex is a vector inR2, and a heading θ∈ [0,2π) radians.                     unknown obstacles. In other words, the actual environment is
+The robot is carrying a coverage tool with a footprint given by               W ⊆W\O. We assume the robot is equipped with a sensor
+A⊆R2.Inthiswork,similarto[6],[18],[34],weassumethat                           that  can  observe  its  environment  within  a  sensor  footprint
+the coverage tool is a square of widthl > 0. LetA(x,θ)⊆W                      relative to the robot’s position, e.g., an optical range sensor.
+represent the placement of the tool with respect to the robot’s               Suppose,  at  position xi,  the  robot  detects  a  new  obstacle
+state. In reality, a square tool may not be able to cover the                 interrupting the path. Let τ  be the time in which the robot
+entire environment, so we look to cover an approximation of                   would reach the obstacle along its current path fromxi. While
+the environmentfW ⊆ W  that the tool can reach. Consider                      the  robot  might  be  able  to  continue  along P  for  time τ,
+a set P of all possible paths in the environment, where each                  the subsequent path must be replanned. One solution is to
+path P ∈P is given by a sequence of poses, i.e. position and                  solve the full CPP for the new environment               W. While this
+heading pairs (x,θ). We now formally define the coverage                      methodwouldgiveustheoptimalcoveragepath,ithasamajor
+planning problem (CPP) of interest as follows.                                drawback. If solving CPP takes longer than τ, the robot may
+Problem  1  (Coverage Planning Problem (CPP)).  Given an                      have to stop and wait for a new path, which is undesirable. To
+approximationfW  of  a  2D  environment W  and  a  robot                      address this, we instead solve the coverage replanning problem
+carrying a coverage tool of footprint A, plan a path P  from                  that takes into account a time budget τ.
+the setP of all possible paths which solves                                      Let Pr be the remaining path after the first interruption by
+                     min                                                      the obstacle. Let Wr ⊆fW be the area covered by Pr, where
+                     P∈P    J(P)                                              (1)O∩Wr̸=∅. The replanning problem is to plan a new coverage
+                    s.t.  [         A(x,θ) =fW,                       (2)     path P′r  before τ  such that it covers the same areas as Pr
+                           (x,θ)∈P                                            without colliding intoO. We are now ready to pose the main
+where J(P) is the cost of the path P.                                         problem we look to solve in this paper.
+  In this paper, we consider the path costJ(P) to be the time                 Problem 2 (Coverage Replanning Problem (CRP)).  Given a
+for the robot to cover the given environment along P.                         path P  coveringfW, a set of newly observed obstacles O, a
+                                                                              time τ  until the first such obstacle is encountered along P,
+                                                                              the remaining path Pr after the first encounter, and the area
+B. Optimal Axis-Parallel Rank Partitioning (OARP)                             Wr⊆fW covered by Pr, find a new coverage path P′r  within
+  We now briefly describe the coverage planning approach                      time τ which solves
+from our previous work [6], namely the Optimal Axis-Parallel                                    min
+Rank Partitioning (OARP) approach. The focus of the OARP                                        P′r∈P    J(P′r)                                                 (3)
+approach is to plan optimal coverage paths in which the cover-                                 s.t.  [          A(x,θ) =Wr\O.                  (4)
+age tool moves only in axis-parallel directions (horizontal and                                       (x,θ)∈P′r

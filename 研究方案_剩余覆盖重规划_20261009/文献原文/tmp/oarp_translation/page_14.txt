@@ -1,0 +1,66 @@
+                                                                                                                                                       14
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                (a)                                  (b)
+                        (a)                                   (b)             Fig. 16: Robot operating system (ROS) simulation of covering an
+Fig. 15: Comparison results with offline planning approaches. (a)             exampleenvironmentwithunknownobstacles.(a)Aninitialcoverage
+Coverage time comparisons between OARP-Replan and offline base-               path for the base environment (b) replanning the path online using
+lines.(b)ViolinplotofpercentcoverageachievedbytheOARP-based                   OARP-Replan.
+approaches (with data points plotted). BCD-Offline and LC-Offline
+are omitted as they are exact approaches that achieve 100% coverage.
+                                                                              OARP-Replan (i.e. OARP-Replan-1). This is to demonstrate
+increasing complexity, which is given by the number of hole                   the  real-world  applicability  of  our  replanning  approach  in
+vertices (e.g., one square hole consists of 4 vertices). We also              contrast  to  GD  replanning.  We  generated  an  anonymized
+use robot parameters similar to that of the UAV from [7]: a                   environment as shown in Fig. 16, for which an initial coverage
+tool width of 3 m, maximum velocity of 3 m/s, and linear                      path was planned (Fig. 16(a)). We added new obstacles to
+acceleration of±1 m/s2 (turning time omitted to match [7]).                   the  environment  that  occupied  10%  of  the  initial  area.  As
+Additionally, OARP-Replan is provided with an initial path                    the robot observes new obstacles blocking this path, the robot
+for the unobstructed base environment (a square), and a radial                replans the path either using OARP-Replan or GD replan. The
+range sensor similar to previous sections to identify obstacles.              replanning is done while driving and the robot switches to the
+  Fig. 15(a) shows the results of comparing the total coverage                new path when available. The robot is also equipped with a
+times of using all approaches. We observe that OARP-Replan                    localplannertotraversethepathandmakesmallchangesifthe
+outperforms  BCD-Offline  and  LC-Offline  across  all  maps,                 path goes close to the walls. Fig. 16(b) shows a snapshot of the
+with an improvement of about 25% on average from BCD-                         robot replanning the coverage path using OARP-Replan. We
+Offline. We believe this improvement to be due to the optimal                 use the robot parameters from Table I for this simulation with
+coverage  lines  produced  by  both  OARP-based  methods,  as                 some changes to use the default Turtlebot controller in ROS:
+BCD-Offline paths tend to overlap closer to cell boundaries                   we set maximum velocity to 0.3 m/s and linear acceleration
+and obstacles. We also observe that OARP-Offline exhibits                     to 1 m/s2. With these parameters, we observed that OARP-
+the best performance with an average improvement of 31% in                    Replan covered the environment 16.5% faster than GD replan
+coverage time from BCD-Offline. However, note that OARP-                      along a path that was 12.2% shorter. This difference is mainly
+Offline is equivalent to OARP-Replan when provided with all                   due to the reduction in long detours where the robot travels
+obstacle information a-priori and unlimited solver time. We                   around obstacles many times. We included recordings of this
+conclude that using OARP-Replan with a simple initial path                    case study in our video attachment.
+is a competitive alternative to using BCD-Offline with com-
+plete obstacle information. However, if obstacle information                                      VIII.  ROBOT EXPERIMENTS
+is available beforehand, OARP-Offline is a better alternative                    In this section, we present the results of testing OARP-
+as it computes paths with the fastest coverage times.                         Replan (i.e. OARP-Replan-1) on an Avidbots Neo robot (Fig.
+  One thing to note is that both BCD-Offline and LC-Offline                   17(a)) covering a partially unknown environment. The robot’s
+are exact approaches that aim to cover the entire environment                 task is to cover a test environment for which an initial path
+(100% coverage). In contrast, the OARP-based approaches use                   is provided (Fig. 18(a)). The robot has tricycle dynamics and
+grid approximations that may not cover the environment fully.                 is equipped with a local planner to make small changes to
+To address this, we plot the percent coverage achieved by both                difficult  parts  of  the  initial  path.  However,  the  robot  may
+OARP-based methods (they cover the same grid) in Fig. 15(b),                  encounter large obstacles during coverage (Fig. 17(b)) which
+where we observe that the OARP-based approaches achieve                       may result in narrow regions that the robot cannot reach along
+about  96%  coverage  on  average  across  all  environments,                 its current path. Therefore, a replan of the coverage path is
+with  missed  coverage  usually  occurring  close  to  obstacles              necessary to reach such regions and maximize the coverage
+and boundaries. Therefore, we recommend OARP-Replan for                       of the environment.
+covering environments with unknown obstacles where small                         We  conducted  our  experiments  using  two  test  scenarios.
+amounts of missed coverage is acceptable.                                     Fig. 18 shows the results of applying OARP-Replan in both
+E. Simulation case study                                                      scenarios. In scenario 1 (Fig. 17(a) / Fig. 18(b)), the robot
+                                                                              observes an obstacle that interrupts a large number of ranks in
+  This section provides a case study of a Turtlebot 3 replan-                 the initial path. The path is replanned using OARP-Replan,
+ning coverage paths in a ROS simulation using GD replan and                   which  computes  horizontal  ranks  to  comfortably  cover  the

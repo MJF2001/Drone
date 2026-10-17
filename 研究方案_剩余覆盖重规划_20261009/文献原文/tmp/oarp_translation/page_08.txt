@@ -1,0 +1,59 @@
+                                                                                                                                                        8
+
+
+budget  ¯m,  the  additional  term  helps  prevent  rank  changes             Remark 1 (Linear Relaxation). The linear relaxation of ILP-
+that do not improve the number of ranks in the solution. The                  1 is obtained by replacing the integrality constraints for the
+resulting ILP is as follows:                                                  decision variables with real-valued constraints as follows:
+         ILP-1:                                                                                   0≤zij ≤ 1  ∀1≤i,j≤n,
+
+   xH,xV,yH,yV    m+ϵ mnew                                            (23)min                     0≤yH,yV ≤1,
+                s.t.   Eqs. (8), (9), (10),                                                       xH,xV ≥0.
+                      Eqs. (16), (17), (19) (20),  ∀1≤i≤n,                     We observed that solving this relaxation consistently gives
+                      mnew≤ ¯m,                                             (24)integral  solutions  despite  the  constraints  not  being  totally
+                      zij ∈{0,1}  ∀1≤i,j≤n,                 (25)              unimodular  (TUM).  Our  reasoning  for  this  is  that  (i)  the
+                      xH,xV ∈{0,1}n,                                (26)      constraints of ILP-0 is TUM (following the proof from [6]),
+                      yH,yV ∈{0,1}2n.                               (27)      and  (ii)  perfect  matching  on  a  bipartite  graph  (e.g.  graph
+                                                                              partitioned as left endpoints (yiL  variables) and right end-
+We now show that we can configure ILP-1 to solve the rank                     points (yiR variables)) can be solved using a linear program
+replanning stage (Problem 3(i)) optimally, i.e. the solution (i)              (LP) [35]. For our experiments, we simply solve the linear
+minimizes the number of ranksm, (ii) subject to the constraint                relaxation as LPs can be solved in polynomial time [36].
+that mnew≤ ¯m.
+Proposition  1.  If ϵ < 1/¯m, then ILP-1 computes optimal                     C. On reducing ILP variables
+solutions to Problem 3(i).
+Proof. Based on our criteria of optimality, Problem 3(i) can                     In the previous section, we formulated ILP-1 which solves
+be simplified as follows:                                                     the rank replanning step optimally. However, one drawback
+                                                                              of ILP-1 is that it adds a large number of decision variables
+                      P1:    min   m                                          (O(n2)) to the base ILP, which affects the runtime of the ILP.
+                                s.t.   mnew≤ ¯m.                              In this section, we propose another ILP extension, namely
+                                                                              ILP-2, that uses fewer decision variables and can be more
+  Any solution to ILP-1 must satisfy Eq. 24 and is therefore a                successfully used for large environments. Instead of matching
+feasible solution to P1. What remains to be shown is whether                  rank  endpoints  to  count  the  number  of  new  ranks  mnew,
+ILP-1  computes  the  solution  with  minimum m,  i.e.,  there                we formulate a bound for mnew  using the number of rank
+exists an ϵ > 0 such ILP-1 returns an optimizer to P1. To                     endpoints that have changed. Specifically, we look to identify
+show this, consider the simplified version of ILP-1:                          and count two types of changes: (i) added endpoints and (ii)
+                      P2:    min   m+ϵ mnew                                   extended endpoints (i.e. endpoints removed when ranks from
+                               s.t.   mnew≤ ¯m.                               the initial solution are merged). Fig. 8 illustrates cases where
+                                                                              the ranks are changed with the introduction of obstacles and
+Note that since the constraints of P1 and P2 are the same, they               the corresponding added and extended rank endpoints.
+share the same feasible solution space. Let m∗ and m∗∗ be                        Wefirstanalyzethehorizontalrankstopresentourapproach
+the number of ranks corresponding to the optimizers to P1 and                 and extend the same approach to vertical ranks. Consider a
+P2 respectively, where m∗new and m∗∗new are the corresponding                 binary vector ¯yH ∈ {0,1}2n  that indicates if a cell was a
+values of mnew. Clearly, m∗≤m∗∗.                                              horizontal (left or right) endpoint for a rank in the initial path.
+  Let us assume, by way of contradiction, that m∗ ̸= m∗∗.                     We take this vector as an input to the ILP. We look to compare
+Since m is an integer, we have m∗∗− m∗ ≥ 1. Since the                         vectorsyH and ¯yH to identify added and extended endpoints.
+optimizer of P1 is feasible for P2, we have the following:                       An added endpoint represents an endpoint inyH but not in
+                    m∗+ϵ m∗new≥m**+ϵ m∗∗neq                                   ¯yH. This helps count the first four of the five possible rank
+                                                                              changes illustrated in Fig. 8, as each rank after the change has
+               ϵ (m∗new−m**new)≥m**−m*≥ 1.                                    at least one added endpoint. Let αH ∈ R be the number of
+From the constraints of P1 and P2, we have the following:                     added horizontal endpoints, which we compute as follows:
+
+                   (m∗new−m**new)≤m∗new≤ ¯m.                                                          αH = (1−¯yH)TyH.
+
+Combining the inequalities, we get:                                              However, in the case of a merged rank (Fig. 8), the new
+                             ϵ ¯m≥ 1                                          rank may not contain any added endpoints. To account for
+                                 ϵ≥ 1/¯m.                                     this, we also count extended endpoints that count cells that
+                                                                              were endpoints in ¯yH  and are not endpoints in yH  while
+Following this, for values of ϵ < 1/¯m, our assumption that                   still maintaining the same coverage orientation (horizontal in
+m∗̸=m∗∗ is contradicted, which proves our proposition. We                     this case). Suppose a cell ci was a left endpoint in ¯yH, i.e.
+choose ϵ = 1/(¯m+1) for the rest of this work.                                ¯yiL = 1. The cell is considered an extended endpoint ifyiL = 0
+                                                                              and the cell is still covered horizontally (xiH = 1). We use

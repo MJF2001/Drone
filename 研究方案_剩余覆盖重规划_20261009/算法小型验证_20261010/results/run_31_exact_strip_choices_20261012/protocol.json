@@ -1,0 +1,48 @@
+{
+  "input_sha256": {
+    "D:\\0A无人机仿真02\\问题分析+文献分析\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\results\\run_21_micro_global_optimum\\snapshots.json": "cff385db9368f78784db900e18b1652fb105f130e927b730d954dde85cfeff72",
+    "D:\\0A无人机仿真02\\问题分析+文献分析\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\results\\run_21_micro_global_optimum\\results.json": "2b033a890c816082902ba2383ccb5c2a23ded0890f2e55f2e14aa186616b22ed",
+    "D:\\0A无人机仿真02\\问题分析+文献分析\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\results\\run_26_unified_new_maps\\snapshots.json": "ee1287e0332c15e2933b301a7b1a5b3808b363bbc07601cad2402edeb586f0fa"
+  },
+  "script_sha256": "15262138fef37fb13f1e692a6e5dfc0e9edaf1eb13514fb91f97a7e40b7115f8",
+  "model": "fixed maximal contiguous pending strips; full service once even if incidentally covered; start and return included",
+  "reference": "blocks sorted by row then coordinate; alternating direction by block index",
+  "variants": [
+    [
+      "fixed",
+      false,
+      false,
+      true
+    ],
+    [
+      "direction",
+      false,
+      true,
+      true
+    ],
+    [
+      "order",
+      true,
+      false,
+      true
+    ],
+    [
+      "joint",
+      true,
+      true,
+      true
+    ],
+    [
+      "prefix_only",
+      true,
+      true,
+      false
+    ]
+  ],
+  "max_blocks": 12,
+  "micro": "all 48 states, horizontal and vertical partitions",
+  "medium": "all 24 run26 states, horizontal partition; exclude over12 blocks before solving",
+  "tie_rule": "prefix_only minimizes prefix then return among prefix-optimal solutions",
+  "independent_check": "exhaustive permutations and directions for all partitions with <=5 blocks",
+  "note": "not a fair-time benchmark; no global optimality claim except within frozen strip model"
+}

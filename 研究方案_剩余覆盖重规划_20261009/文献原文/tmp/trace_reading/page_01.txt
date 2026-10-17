@@ -1,0 +1,64 @@
+                                                                                                                                                        1
+       TRACE: Coverage Path Planning for Unknown
+     Environments Using Hierarchical Coverage Tree
+
+             Zongyuan Shen1, Haodong Liu1, Gao Wang1, Shancheng Zhao1, Dehua Zhou1, Yaming Ou2,
+                          Zhongqiang Ren3, Yikui Zhai4, and C. L. Philip Chen5,Life Fellow, IEEE
+
+
+
+
+  Abstract—This paper presents a novel online coverage path                   CPP methods that can incrementally discover the workspace
+planning (CPP) algorithm, called TRACE, for real-time coverage                through onboard sensing while simultaneously adapting the
+of unknown environments. TRACE is built upon a hierarchical                   coverage path according to newly acquired information.
+coveragetreethatprovidesa globalrepresentationoftheevolving                      Various methods have been developed for online CPP. One
+connectivity  of  the  uncovered  space.  As  the  environment  is            line  of  works  generates  coverage  trajectories  by  selecting
+incrementally revealed and covered, newly discovered obstacles
+and covered cells may fragment the remaining uncovered space                  the next target cell in the robot’s local neighborhood using
+into disconnected regions. TRACE recursively expands the cor-                 lightweight deterministic rules [11]–[14], potential fields [15]–
+responding tree nodes to explicitly represent these regions and               [18], or reward functions [19]. Although such strategies are
+organize them for subsequent coverage planning. Based on the                  computationally efficient, they do not explicitly account for
+updated tree, an incremental global tour is maintained to guide               the global structure and evolution of the remaining uncovered
+the coverage process. TRACE locally refines only the affected
+portionswhilepreservingthevisitingorderofunchangedregions,                    space. In complex environments, locally reasonable decisions
+thereby reducing the computational burden of global replanning                may  fragment  the  remaining  uncovered  space  into  discon-
+andmaintainingaconsistentcoverageprogression.Guidedbythe                      nected regions, causing some regions to be bypassed and later
+global tour, a local planner generates back-and-forth coverage                revisited through long return paths. To mitigate this problem,
+paths and switches to global-tour-aware planning to efficiently               some methods [20]–[22] incorporate connectivity preservation
+complete the target regions. Theoretical analysis establishes the
+computational  complexity  and  complete  coverage  property  of              into  target  selection  by  evaluating  whether  visiting  a  can-
+TRACE,andderivesanapproximationboundfortheincremental                         didate cell would disconnect the remaining uncovered area.
+global tour refinement. The performance of TRACE is evaluated                 By avoiding connectivity-breaking decisions, these methods
+through extensive high-fidelity simulations and real-robot exper-             reduce fragmentation-induced redundant travel. However, they
+iments using a mobile robot. Comparative evaluations against six              still rely on local feasibility checks and may fail when all
+existing CPP methods demonstrate significant improvements in
+coverage time, path length, overlap ratio, and number of turns.               locally available candidates would disconnect the uncovered
+  Index Terms—Coverage path planning, motion and path plan-                   area.  In  such  cases,  fragmented  residual  regions  may  still
+ning, unknown environments, autonomous robots.                                emerge, resulting in considerable redundant travel. Another
+                                                                              line of works explicitly handles fragmented regions after they
+                         I.  INTRODUCTION                                     emerge, either by organizing disconnected regions within the
+                                                                              currently obstacle-free space for subsequent coverage [23] or
+  Coverage path planning (CPP) is a fundamental problem in                    by covering potentially isolated regions near the robot before
+robotics that aims to generate a trajectory allowing a robot                  they are bypassed [1]. However, their detection and handling
+to  completely  cover  a  target  workspace  while  minimizing                of fragmentation are still largely driven by local environmental
+task-related costs such as path length, overlap ratio, number                 information.Asaresult,fragmentedregionsarisingawayfrom
+of  turns,  and  coverage  time  [1].  CPP  has  a  broad  range              robot  vicinity  may  not  be  explicitly  considered  when  they
+of applications, including agricultural operations (e.g., weed-               emerge,whichcanleadtoadditionalbacktrackingandreduced
+ing  [2]  and  harvesting  [3]);  household  services  (e.g.,  floor          coverage efficiency in complex environments.
+cleaning [4] and lawn mowing [5]); environmental monitoring                      In this regard, this paper presents TRACE, a novel online
+(e.g., underwater mapping [6] and oil spill cleaning [7]); and                CPP algorithm that maintains a global representation of the
+industrial tasks (e.g., quality inspection [8], crack filling [9],            evolving uncovered space using a hierarchical coverage tree,
+and  spray  painting  [10]).  In  many  practical  applications,              which tracks connectivity changes of the remaining uncovered
+however, complete environmental information is unavailable                    regions and guides the subsequent coverage process. As the
+prior to deployment. Therefore, it is essential to develop online             environment  is  incrementally  revealed  and  covered,  newly
+                                                                              discovered obstacles and newly covered cells may alter the
+  1College   of   Information   Science   and   Technology,   Jinan   University,connectivity  of  the  residual  region  associated  with  a  leaf
+Guangzhou 510632, China.                                                      node. If a residual region is split into multiple disconnected
+  2School  of  Artificial  Intelligence,  University  of  Chinese  Academy  of
+Sciences, Beijing 100049, China.                                              components,  the  corresponding  leaf  node  is  expanded  into
+  3Global College, Shanghai Jiao Tong University, Shanghai 200240, China.     multiple child nodes, each representing one of these compo-
+  4School  of  Electronics  and  Information  Engineering,  Wuyi  University,
+Jiangmen 529000, China.                                                       nents. Throughout this process, the tree progressively evolves
+
+  5School of Computer Science and Engineering, South China University of      from a coarse representation of the entire workspace into a
+Technology, Guangzhou 510006, China.                                          hierarchicalrepresentationoftheremaininguncoveredregions.

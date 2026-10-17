@@ -1,0 +1,61 @@
+                                                                                                                                                          2
+
+
+The  resulting  leaf  nodes  represent  candidate  regions  to  be                A large class of online CPP methods generates coverage
+considered  in  subsequent  coverage  planning.  Based  on  the                paths by selecting target cells in the robot’s local neighbor-
+updated hierarchical coverage tree, a global tour is maintained                hood. Gabriely and Rimon [11] proposed the spanning tree
+to  determine  the  visiting  order  of  the  remaining  candidate             covering (STC) algorithm, which constructs a spanning tree
+regions. Rather than replanning the entire tour whenever the                   over  a  two-resolution  grid  and  generates  a  coverage  path
+tree changes, TRACE incrementally refines only the portions                    by circumnavigating the tree. Gonzalez et al. [12] proposed
+affected  by  tree  expansion.  Specifically,  when  a  leaf  node             the backtracking spiral algorithm (BSA), which follows the
+is expanded, its position in the current tour is replaced by                   boundary  of  uncovered  and  obstacle  regions  to  generate  a
+an optimized visiting sequence of the newly generated child                    spiral coverage path. Ferranti et al. [13] developed the brick-
+nodes,  while  the  relative  order  of  the  unaffected  nodes  is            and-mortar (BM) algorithm, which progressively enlarges in-
+preserved. This incremental update reduces the computational                   accessible regions by selecting the neighboring uncovered cell
+burden of global replanning while avoiding unnecessary re-                     with the most surrounding inaccessible cells. Viet et al. [14]
+ordering of unaffected regions and maintaining a consistent                    proposed  the  BA∗  algorithm,  which  follows  a  predefined
+coverage progression. Guided by the updated global tour, the                   directional priority to generate a back-and-forth coverage path.
+local planner progressively covers the selected target region                  Luo and Yang [15] proposed the bio-inspired neural network
+using  a  back-and-forth  strategy  and  switches  to  a  global-              (BINN) algorithm, where each grid cell is associated with a
+tour-aware strategy once the region becomes fully explored.                    neural activity such that uncovered cells provide excitatory
+This adaptive local planning scheme improves local coverage                    inputs  while  obstacle  cells  provide  inhibitory  inputs.  The
+efficiency while maintaining consistency with the global tour.                 neighboring cell with the highest neural activity is selected as
+In summary, our contributions are as follows:                                  the target. Later variants [16], [17] simplified the neural activ-
+   •A  hierarchical  coverage  tree  globally  represents  the                 ity update to reduce computational time. Song and Gupta [18]
+      evolving connectivity of the uncovered space and sup-                    proposed theε    ∗ algorithm, which constructs a multi-level po-
+      ports efficient coverage path planning.                                  tential field for online coverage. The robot normally selects the
+   •A global tour planning method locally refines changed                      neighboring cell with the highest potential at the lowest level
+      tour segments while preserving unchanged visiting or-                    and switches to higher-level fields when escaping dead-ends.
+      ders, providing global guidance for subsequent coverage.                 Hassan and Liu [19] proposed the predator-prey CPP (PPCPP)
+   •A local path planning method provides efficient dead-end                   algorithm, which evaluates neighboring cells using a reward
+      recovery and global-tour-aware coverage path generation,                 function combining predation avoidance, motion smoothness,
+      reducing redundant travel and facilitating efficient transi-             andboundarycoverage,andselectsthecellwiththehighestre-
+      tions between successive target regions.                                 wardasthetarget.Thesemethodsarecomputationallyefficient
+   •Comparative evaluations of proposed algorithm through                      and suitable for real-time operation; however, their decisions
+      high-fidelity simulations and real-robot experiments.                    are  mainly  based  on  local  information  and  may  generate
+   The remaining paper is organized as follows. Section II re-                 myopic decision, leading to dead-ends, fragmented uncovered
+views the related work. Section III describes the CPP problem.                 regions, and redundant travel in complex environments.
+Section IV presents the details of the TRACE algorithm. Sec-                      To  improve  the  coverage  efficiency,  several  methods  in-
+tion V provides the algorithm analysis. Section VI shows the                   corporate the connectivity of uncovered region into coverage
+comparative evaluation results of TRACE. Finally, Section VII                  decision-making. Li et al. [20] adapted the spiral direction
+concludes the paper with recommendations for future work.                      to  select  target  cells  that  preserve  the  connectivity  of  the
+                                                                               uncovered  region,  while  Huo  et  al.  [21]  similarly  avoided
+                                                                               target cells whose visitation would cause disconnection. Li et
+                        II.  RELATEDWORK                                       al. [22] extended this idea to the subarea level by partitioning
+                                                                               the environment into stripe-shaped regions and prioritizing the
+   Detailed  surveys  of  existing  CPP  methods  are  presented               coverageofsubareaswhoseremovalpreservestheconnectivity
+in[24],[25].CPPmethodscanbeclassifiedasofflineoronline                         of the remaining uncovered space. However, these methods
+according  to  the  availability  of  environmental  knowledge.                still rely on local feasibility checks. When all candidate targets
+Offline methods assume that the environment is known and                       would  disconnect  the  uncovered  area,  fragmented  regions
+generate coverage paths before deployment. For example, Cao                    may  still  be  produced,  leading  to  considerable  redundant
+et al. [26] sampled candidate viewpoints from a prior map and                  travel.  Other  methods  instead  handle  disconnected  regions
+then locally selected viewpoints for detailed coverage, Shen et                once they arise. Shen et al. [23] proposed the CAP algorithm,
+al. [27] utilized a graph neural network to generate coverage                  which identifies disconnected subareas around the robot and
+paths from occupancy grid maps, Ramesh et al. [28] formu-                      computes  a  global  traversal  tour  to  guide  their  subsequent
+lated turn-minimizing coverage as an optimization problem,                     coverage. Shen et al. [1] proposed the C∗ algorithm, which
+and Lu et al. [29] partitioned the workspace into rectangular                  performs back-and-forth coverage while identifying potential
+subareas for coverage planning. However, their performance                     disconnected regions near the robot that may otherwise be
+candegradeifthepriorinformationisincompleteand/orincor-                        bypassed. These regions are covered in situ using TSP-based
+rect. In contrast, online CPP methods generate coverage paths                  local  trajectories  before  the  robot  resumes  back-and-forth
+in real time using environmental information acquired during                   coverage.  However,  fragmented  regions  arising  away  from
+navigation, thus they are suitable for unknown environments.                   robot  vicinity  may  not  be  explicitly  considered  when  they

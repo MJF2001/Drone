@@ -1,0 +1,65 @@
+                                                                                                                                                            6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                Fig. 5: The directed graphs GL,GR,GT, and GB for the example
+Fig. 4: Integral orthogonal polygon (IOP) of an environment where               IOP.
+each grid cell is either oriented horizontally (orange) or vertically
+(purple). The left, right, top, and bottom rank endpoints are also              that we will extend in the rest of this section:
+shown (see legend). Each cell ci (zoomed-in cell) has four endpoint
+indicator  variables.  If  the  cell  is  an  endpoint  (e.g. ci  is  a  right                    ILP-0:
+endpoint), the corresponding variable is active (yiR = 1).
+                                                                                           xH,xV,yH,yV    m                                                    (7)min
+                                                                                                        s.t. ATL   ATRTxH−yH ≤0         (8)
+variables for the left and top endpoints. Fig. 4 also illustrates                                              ATT   ATBTxV −yV ≤0         (9)
+the endpoint variables and rank endpoints for the oriented grid
+cells.                                                                                                         xH +xV =1                             (10)
+   LetxH,xV,yL,yR,yT,yB be n dimensional binary vec-                                                           xH,xV ∈{0,1}n                       (11)
+tors  of  the  corresponding  variables  for  all  grid  cells.  Let                                           yH,yV ∈{0,1}2n.                     (12)
+yH  =yLT   yRTT  and yV   =yTT   yBTT  be  the                              In this ILP, equations (8) and (9) ensure that, for an optimal
+vectors  of  all  horizontal  rank  and  vertical  rank  endpoints              solution  of  ILP-0,  vectors yH  and yV   correspond  to  the
+respectively, where yH,yV ∈{0,1}2n. Since each rank has                         endpoints of the optimal number of ranks covering the IOP.
+exactly two endpoints, the number of coverage ranks m is
+given by half the sum of all rank endpoints:                                    This  follows  from  the  minimization  of  m,  which  in-turn
+                                                                                minimizesyH andyV  (Eq. (6)), thereby tightening equations
+                                                                                (8)  and  (9).  Equation  (10)  ensures  that  each  cell  is  only
+                      m = 1                                                     assigned one orientation (can be either horizontal or vertical).
+                             2(1TyH +1TyV),                        (6)          For  an  in-depth  discussion  about  the  formulation  of  these
+                                                                                constraints, we refer the reader to [6].
+
+where 1 is the column vector of ones. This constitutes the                      B. Constraining new ranks
+objective of the optimization problem.                                             We now look to constrain the number of new ranksmnew to
+   To formulate the ILP constraints, we must encode the rela-                   be within the rank budget  ¯m. To compute mnew, we identify
+tionship between the orientations (x variables) and endpoints                   the new ranks in the replanned solution by comparing them
+(y variables). Following from our previous work [6], we use                     with the ranks from the initial path. This comparison requires
+directed graphs in the IOP to detect whether a neighboring                      an encoding of ranks using the ILP variables. To this end,
+cell  can  be  merged.  Let GL  and GR  be  directed  graphs                    we propose an encoding based on perfect matching [35] that
+composed of all horizontal path flows for each grid cell from                   matches the endpoints for each rank in the ILP solution. The
+its left and right neighbors respectively. For cells at the IOP                 new ranks are therefore the difference between the old and
+border,  we  add  artificial  nodes  called border  identifiers to              new endpoint matchings.
+simulate  path  flow  into  those  cells.  Similarly,  let GT  and                 To simplify the explanation of the encoding, we first look
+GB  be the graphs composed of all vertical path flows for                       at the horizontal case and simply extend the same ideas to
+each grid cell from its top and bottom neighbors respectively.                  the  vertical  case.  Consider  a  horizontal  row  of  connected
+Fig. 5 illustrates these graphs for an example IOP. From these                  (unobstructed) grid cells in the IOP as depicted in Fig. 6.
+graphs, let AL,AR,AT, and AB be matrices representing the                       Now, consider the case where the row contains a horizontal
+corresponding graphs, where each row of a matrix signifies a                    rank with a left endpoint at a cell ci. This indicates that the
+directed edge in the graph, with a −1 for a source grid cell                    rank either (i) covers cells to the right ofci or, (ii) covers only
+(outgoing edge), a+1 for a sink grid cell (incoming edge), and                  ci. In both cases, we observe that there must exist a cell to
+0s otherwise. These matrices resemble the node-arc incidence                    the right of ci (including ci) that is the right endpoint of this
+(NAI) matrices for the graphs GL,GR,GT, and GB.                                 rank. We look to identify this rank by matching its left and
+   We now pose the rank minimization ILP, namely ILP-0,                         right endpoints.

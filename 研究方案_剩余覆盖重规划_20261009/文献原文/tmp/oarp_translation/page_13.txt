@@ -1,0 +1,71 @@
+                                                                                                                                                           13
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                     (a) GD replan result                    (b) OARP-Replan-1 result                    (c) Path improvement examples
+          Fig. 12: Qualitative results of replanning an initial coverage path for the example environment with unknown obstacles.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 (a)                                    (b)                                       (a)                                   (b)
+Fig. 13: Comparison of the online replanning approaches using the               Fig. 14: Comparison of average ILP runtimes for the OARP-Replan
+varying clutter dataset: (a) Difference between total coverage time             approaches. (a) Fixed clutter dataset comparisons, with maps sorted
+and base coverage time. (b) Minimum stop time of the robot during               by base map area. (b) Varying clutter dataset comparisons. The line
+coverage (GD and SB omitted as replanning time is negligible). The              shows the average and the lighter region shows the data interval.
+line shows the average and the lighter region shows the data interval.
+
+                                                                                observed trend to be maintained with a change in tool width.
+   Fig. 14(a) and (b) show the comparison results in the fixed
+clutter  and  varying  clutter  datasets  respectively,  where  we              D. Comparisons with offline approaches
+plotted the average ILP runtimes for each map. For the fixed                       In this section, we compare the proposed OARP-Replan ap-
+clutter dataset, the maps are sorted in the order of increasing                 proach (i.e. OARP-Replan-1) against offlinecoverage planning
+size (area) of the environment, and in-turn, the number of                      approaches, which are provided with all obstacle information
+grid cells in the IOP. We observe that ILP-2’s runtime scales                   prior to coverage. In contrast, we provide OARP-Replan with
+better than ILP-1 as the environment area increases. This is                    no prior obstacle information, so it must replan the coverage
+mainly due to the reduction in the ILP variables that speed up                  pathwhenevertherobotdetectsobstacles.WecompareOARP-
+runtime. Moreover, we also observe in Fig 11(b) that using                      Replan against 3 offline approaches: (i) boustrophedon cell
+ILP-2 resulted in slightly shorter stop times for larger maps                   decomposition  (BCD)  method  [7],  (ii)  line  coverage  (LC)
+(the plot for OARP-Replan-2 is close to zero while OARP-                        approach  [8],  and  (iii)  the  offline  OARP  planner  [6].  For
+Replan-1 goes up to 100s for one map). We believe that this                     clarity, we will refer to the offline approaches asBCD-Offline,
+difference  will  be  exaggerated  when  computation  power  is                 LC-Offline, and OARP-Offline for the rest of this section. The
+constrained (e.g. low-cost robot hardware) to the point that                    BCD-OfflinealgorithmalsoresemblestheBCDapproachfrom
+it will affect coverage time. Therefore, for such applications,                 the ‘ipa   room    exploration’ ROS package, which is the most
+we recommend ILP-2 over ILP-1. A future improvement of                          effective algorithm in the package according to the adjoining
+this work could involve combining both ILPs, with ILP-2 as                      survey in [9].
+a fallback for ILP-1.                                                              While  OARP-Replan  was  developed  with  mobile  robots
+   For the varying clutter dataset, we observe that the average                 as a focus, it can also be used for coverage planning with
+runtimes of both ILPs are comparable, with ILP-1 performing                     aerial robots (fixed coverage tool width). As such, we apply
+better  overall.  Increasing  clutter  seems  to  slightly  change              the  OARP-Replan  approach  to  plan  coverage  paths  for  an
+both  ILPs’  runtimes,  and  as  such,  we  observed  no  drastic               aerial robot where the obstacles in the environment are not
+runtime difference as with the fixed clutter dataset. While this                previously known. We use the dataset from the BCD paper
+comparison was performed with a fixed tool width (grid cell                     [7] that consists of around 300 scans of environments with
+size), changing the tool width could either increase or decrease                varying numbers of obstacles or holes. The outer boundary of
+the  number  of  grid  cells  for  all  maps.  However,  since  the             each map is a square, which is then filled with the obstacles
+change in map area also has the same effect, we expect the                      observed in the scans. The maps are arranged in the order of

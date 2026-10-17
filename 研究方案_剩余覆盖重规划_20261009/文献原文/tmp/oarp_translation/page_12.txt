@@ -1,0 +1,61 @@
+                                                                                                                                                      12
+
+
+                                                                                 WhencomparingwithOARP-OriginalandtheHRapproach
+                                                                              [18], both OARP-Replan approaches achieve faster coverage
+                                                                              times, with the gap increasing as initial paths get longer (larger
+                                                                              maps).  This  is  because  both  ILP-0  and  the  HR  approach
+                                                                              do  not  limit  the  change  to  the  coverage  path,  leading  to
+                                                                              longer replanning times and resulting robot stoppages (Fig.
+                                                                              11 (b)). In contrast, OARP-Replan approaches cause little to
+                                                                              no stoppage. We expect this difference in performance to be
+                                                                              exaggerated in weaker computation setups, such as onboard
+                                                                              computers on robot platforms. The OARP-Replan approaches
+                 (a)                                  (b)                     also outperform the SB approach as a result of minimizing
+Fig. 11: Comparison of the online replanning approaches using the             the number of ranks (turns) in the coverage path. However,
+fixed clutter dataset: (a) Difference between total coverage time and         we observe that the SB approach performs well on the map
+base  coverage  time.  (b)  Minimum  stop  time  of  the  robot  during       with the longest base coverage time when compared to the
+coverage (GD and SB omitted as replanning time is negligible). The            other baselines. Note that this map is not the largest in terms
+line shows the average and the lighter region shows the data interval.        of area, so we reason that the performance of SB is more
+                                                                              closely related to map area than to base coverage time (which
+                                                                              maybeinfluencedbycomplexlayouts/geometry).Betweenthe
+online coverage planning with fast computation of coverage                    OARP-Replan approaches, OARP-Replan-1 consistently plans
+paths. As a result, these approaches have negligible stoppage                 paths with slightly shorter coverage times than OARP-Replan-
+time. The online SB approach plans the entire coverage path                   2.
+online and does not require an initial path. However, the SB                     Varying  Clutter  Dataset: We also conducted similar ex-
+approachminimizespathlengthratherthantotalcoveragetime                        periments using the varying clutter dataset, where we ran 5
+with turns.                                                                   trials for each clutter level. The map chosen for this dataset
+  Fixed Clutter Dataset: We first review the results for the                  has a base coverage time of 944s. Fig. 13 shows the results
+fixed clutter dataset. For each base environment, we ran 5                    of the coverage time comparisons. In Fig. 13(a), we plot the
+trials, where each trial was generated with a new random set of               difference between the total coverage time and base coverage
+obstacles occupying 10% of the free space in the environment.                 time. We observe that the OARP-Replan approaches outper-
+The  maps  are  sorted  in  the  order  of  base  coverage  time,             form GD replan by 18% on average, with the performance
+which is the time to cover the base environment (without the                  gap increasing with clutter level. This is because, with more
+unknown obstacles) using the initial coverage path. Fig. 11(a)                obstacles, GD replan causes many detours, while the OARP-
+and (b) show the results of the comparison where we plot                      Replan approaches tend to shorten such detours.
+the following for each method: (a) the difference between the                    In comparison with OARP-Original and the HR approach
+total coverage time (including stops) and the base coverage                   [18], the OARP-Replan approaches plan coverage paths with
+time (i.e. total − base), and (b) the minimum stop time. To                   comparable  coverage  times.  However,  both  OARP-Original
+visualize the best-case coverage time for each environment (a                 and HR experience longer stops with increasing clutter (Fig.
+lower bound), we also include the results for an offline planner              13(b)). We also observe some stoppage with using the OARP-
+(OARP) when provided with all obstacle information a-priori.                  Replan approaches in environments of 20% clutter. We believe
+We  observe  that  both  OARP-Replan  approaches  result  in                  this  is  because  we  do  not  update  our  runtime  estimator
+lower total coverage times relative to all baseline approaches,               during an experiment, making it inaccurate for highly cluttered
+and comes closest to the performance of the offline planner.                  environments (e.g. computing transitions take more time with
+In  comparison  with  GD  replan,  OARP-Replan  exhibits  an                  more obstacles). A more sophisticated estimator that updates
+average improvement of about 12% across all maps. To visu-                    itself during coverage may eliminate this stoppage. We also
+alize this improvement, we show an example map with three                     observe that the coverage time using the SB approach plateaus
+unknown obstacles (red boxes) in Figs. 12(a) and (b) where                    with increasing clutter due to SB’s rapid online computation
+the initial path was replanned using GD replan and OARP-                      of coverage paths. Although OARP-Replan outperforms SB at
+Replan-1 respectively. Fig. 12(c) shows two examples where                    all the clutter levels tested, this performance gap may decrease
+we observe qualitative differences between the approaches. In                 with higher clutter levels (> 20%).
+example 1, paths replanned using GD replan (red paths) have
+multiple long detours around the obstacle, whereas OARP-                      C. ILP runtime comparisons
+Replan-1  has  no  such  detours.  In  example  2,  GD  replan
+generates messy overlapping paths when avoiding the large                        In this section, we compare the average runtimes of the
+obstacle,  while  OARP-Replan-1  reorients  the  ranks  in  this              rank replanning ILPs for both OARP-Replan approaches. Our
+region to obtain a path with fewer overlaps. Using OARP-                      approach relies on the ILP being solved efficiently so that the
+Replan-2, we observe similar improvements in the replanned                    GTSP tour can be reliably computed within the time budget
+path for this example. Since the tour of the replanned ranks is               (preventing robot stoppages). The ILP from OARP-Original
+computed with little to no stoppage, the replanning time does                 is excluded from this comparison as it does not constrain the
+not affect the total coverage time.                                           GTSP input size.

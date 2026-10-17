@@ -1,0 +1,446 @@
+{
+  "version": "research_status_review_v1_20261015",
+  "status": "organized_not_final_experiment_freeze",
+  "organizer_sha256": "2ad047fd5d97d5bd15e7fbb68822d38e3e22341f95bafcad73362b720b50306c",
+  "activity": "Existing-file inspection, hash validation and document organization only.",
+  "solver_called": false,
+  "tests_rerun": false,
+  "holdout_generated": false,
+  "models": {
+    "radius": 0,
+    "adjacency": 4,
+    "unit_move_cost": 1,
+    "mandatory_return": true,
+    "future_events_available": false
+  },
+  "baselines": {
+    "frozen_three_version": "v2_20261012",
+    "methods": [
+      "P2_MULTI",
+      "OARP_CORE2",
+      "TREE_MST"
+    ],
+    "source_files_hash_verified": 17,
+    "candidate": "PPCPP_CORE4",
+    "candidate_version": "v0.1_20261014",
+    "candidate_files_hash_verified": 6
+  },
+  "evidence": [
+    {
+      "role": "input_preparation",
+      "directory": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\scale_inputs\\development_v0.1_20261014",
+      "completion": {
+        "base_maps": 12,
+        "counts": {
+          "generated": 432
+        },
+        "failure_reasons": {},
+        "holdout_generated": false,
+        "seconds": 6.27095589999999,
+        "solver_called": false,
+        "states": 432,
+        "status": "generation_finished_not_benchmark"
+      },
+      "completion_sha256": "1b4514eb8c3b990d599941de7fe6cd5e90ab3ec92bf0b2ba2a4762925a908cf9",
+      "manifest_sha256": "3d1b752d2c03da0c458ab32da456dbb97269c97e497c0f860cf5b97e7421787d",
+      "verified_artifact_entries": 17,
+      "interpretation": "Development evidence only; do not pool unrelated protocols or count repeats as maps."
+    },
+    {
+      "role": "runtime_preflight",
+      "directory": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\development_preflights\\v1_20261014",
+      "completion": {
+        "status": "finished_development_preflight_not_formal_benchmark",
+        "runs": 72,
+        "valid_returned_routes": 72,
+        "no_legal_output": 0,
+        "watchdog_timeouts": 0,
+        "worker_exceptions": 0,
+        "overrun_gt_10ms": 19,
+        "wall_seconds": 102.35091980000016,
+        "hashes_unchanged": true,
+        "holdout_used": false,
+        "by_budget_method": [
+          {
+            "budget": 1,
+            "method": "P2_MULTI",
+            "runs": 12,
+            "valid": 12,
+            "fallback_selected": 3,
+            "core_tours": 0,
+            "overrun_gt_10ms": 5
+          },
+          {
+            "budget": 1,
+            "method": "OARP_CORE2",
+            "runs": 12,
+            "valid": 12,
+            "fallback_selected": 4,
+            "core_tours": 8,
+            "overrun_gt_10ms": 0
+          },
+          {
+            "budget": 1,
+            "method": "TREE_MST",
+            "runs": 12,
+            "valid": 12,
+            "fallback_selected": 4,
+            "core_tours": 0,
+            "overrun_gt_10ms": 5
+          },
+          {
+            "budget": 5,
+            "method": "P2_MULTI",
+            "runs": 12,
+            "valid": 12,
+            "fallback_selected": 1,
+            "core_tours": 0,
+            "overrun_gt_10ms": 5
+          },
+          {
+            "budget": 5,
+            "method": "OARP_CORE2",
+            "runs": 12,
+            "valid": 12,
+            "fallback_selected": 1,
+            "core_tours": 11,
+            "overrun_gt_10ms": 1
+          },
+          {
+            "budget": 5,
+            "method": "TREE_MST",
+            "runs": 12,
+            "valid": 12,
+            "fallback_selected": 3,
+            "core_tours": 0,
+            "overrun_gt_10ms": 3
+          }
+        ]
+      },
+      "completion_sha256": "6205bc4ac912071581f84a8f643edde8137e1f2b92c40cb011315483f2ab5674",
+      "manifest_sha256": "fa4f194a01d7a97262439777560b07ce01762d2c65059cd56cb859dcd5260692",
+      "verified_artifact_entries": 159,
+      "interpretation": "Development evidence only; do not pool unrelated protocols or count repeats as maps."
+    },
+    {
+      "role": "parameter_selection",
+      "directory": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\development_preflights\\ppcpp_weight_grid_v0.1_20261014",
+      "completion": {
+        "status": "finished_development_tuning_not_test_benchmark",
+        "runs": 192,
+        "unit_tests": 27,
+        "core_valid": 192,
+        "selected_valid": 192,
+        "eligible_pairs": 16,
+        "worker_exceptions": 0,
+        "watchdog_timeouts": 0,
+        "overrun_gt_10ms": 0,
+        "wall_seconds": 38.370633400000315,
+        "selected_pair": {
+          "pair_index": 13,
+          "weights": [
+            2.0,
+            0.5
+          ],
+          "eligible": true,
+          "core_valid": 12,
+          "mean_ratio": 0.8686577201846255,
+          "ratio_fraction": "35066198577733769283142491587/40368257557511560184097998100"
+        },
+        "hashes_unchanged": true,
+        "holdout_used": false
+      },
+      "completion_sha256": "74accdf0a3cb3f59cde4fb7a53c0a95b694d1e6fb0b57c1892a75deca28a4e1b",
+      "manifest_sha256": "302e44c98c56192be8af520655e6aab99caf0233f5b34c771c9e4071e9c6c66a",
+      "verified_artifact_entries": 390,
+      "interpretation": "Development evidence only; do not pool unrelated protocols or count repeats as maps."
+    },
+    {
+      "role": "tuned_state_development_comparison",
+      "directory": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\development_preflights\\four_method_paired_v1_20261015",
+      "completion": {
+        "status": "finished_four_method_development_not_independent_test",
+        "runs": 288,
+        "valid": 288,
+        "watchdog_timeouts": 0,
+        "exceptions": 0,
+        "overrun_gt_10ms": 54,
+        "wall_seconds": 638.7900426999986,
+        "hashes_unchanged": true,
+        "holdout_used": false
+      },
+      "completion_sha256": "a5d935e234c9472a419a2218adf20ee074754354f7ed2560aa2dfc21f5ae3e5b",
+      "manifest_sha256": "9af83880d558015d90dea232376913683be688063d30b777893ccbc2998b7ef8",
+      "verified_artifact_entries": 579,
+      "interpretation": "Development evidence only; do not pool unrelated protocols or count repeats as maps."
+    },
+    {
+      "role": "matched_input_preparation",
+      "directory": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\scale_inputs\\matched_history_v2_20261015",
+      "completion": {
+        "status": "prepared_matched_development_inputs",
+        "attempted": 48,
+        "feasible": 48,
+        "infeasible": 0,
+        "case_ids": [
+          "small_g1_development_fixed_event_H_p25_no_change",
+          "small_g1_development_fixed_event_H_p50_no_change",
+          "small_g1_development_fixed_event_H_p75_no_change",
+          "small_g1_development_fixed_event_V_p50_no_change",
+          "small_g2_development_fixed_event_H_p25_straight",
+          "small_g2_development_fixed_event_H_p50_straight",
+          "small_g2_development_fixed_event_H_p75_straight",
+          "small_g2_development_fixed_event_V_p50_straight",
+          "small_g3_development_fixed_event_H_p25_corner",
+          "small_g3_development_fixed_event_H_p50_corner",
+          "small_g3_development_fixed_event_H_p75_corner",
+          "small_g3_development_fixed_event_V_p50_corner",
+          "small_g4_development_fixed_event_H_p25_obstacle",
+          "small_g4_development_fixed_event_H_p50_obstacle",
+          "small_g4_development_fixed_event_H_p75_obstacle",
+          "small_g4_development_fixed_event_V_p50_obstacle",
+          "medium_g1_development_fixed_event_H_p25_straight_obstacle",
+          "medium_g1_development_fixed_event_H_p50_straight_obstacle",
+          "medium_g1_development_fixed_event_H_p75_straight_obstacle",
+          "medium_g1_development_fixed_event_V_p50_straight_obstacle",
+          "medium_g2_development_fixed_event_H_p25_corner_obstacle",
+          "medium_g2_development_fixed_event_H_p50_corner_obstacle",
+          "medium_g2_development_fixed_event_H_p75_corner_obstacle",
+          "medium_g2_development_fixed_event_V_p50_corner_obstacle",
+          "medium_g3_development_fixed_event_H_p25_no_change",
+          "medium_g3_development_fixed_event_H_p50_no_change",
+          "medium_g3_development_fixed_event_H_p75_no_change",
+          "medium_g3_development_fixed_event_V_p50_no_change",
+          "medium_g4_development_fixed_event_H_p25_straight",
+          "medium_g4_development_fixed_event_H_p50_straight",
+          "medium_g4_development_fixed_event_H_p75_straight",
+          "medium_g4_development_fixed_event_V_p50_straight",
+          "large_g1_development_fixed_event_H_p25_corner",
+          "large_g1_development_fixed_event_H_p50_corner",
+          "large_g1_development_fixed_event_H_p75_corner",
+          "large_g1_development_fixed_event_V_p50_corner",
+          "large_g2_development_fixed_event_H_p25_obstacle",
+          "large_g2_development_fixed_event_H_p50_obstacle",
+          "large_g2_development_fixed_event_H_p75_obstacle",
+          "large_g2_development_fixed_event_V_p50_obstacle",
+          "large_g3_development_fixed_event_H_p25_straight_obstacle",
+          "large_g3_development_fixed_event_H_p50_straight_obstacle",
+          "large_g3_development_fixed_event_H_p75_straight_obstacle",
+          "large_g3_development_fixed_event_V_p50_straight_obstacle",
+          "large_g4_development_fixed_event_H_p25_corner_obstacle",
+          "large_g4_development_fixed_event_H_p50_corner_obstacle",
+          "large_g4_development_fixed_event_H_p75_corner_obstacle",
+          "large_g4_development_fixed_event_V_p50_corner_obstacle"
+        ],
+        "solver_called": false,
+        "holdout_used": false
+      },
+      "completion_sha256": "f91243b81fc373e67292c074f6b383a561cd48a7e4121c669e772d91d5203a3c",
+      "manifest_sha256": "0b608195ba97cfdb5db02fdfe799ebd1ffbcd50e46cd88292473280a2cf0881a",
+      "verified_artifact_entries": 99,
+      "interpretation": "Development evidence only; do not pool unrelated protocols or count repeats as maps."
+    },
+    {
+      "role": "matched_history_development_comparison",
+      "directory": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\development_preflights\\matched_history_v2_20261015",
+      "completion": {
+        "status": "finished_matched_development_not_independent_test",
+        "runs": 384,
+        "valid": 384,
+        "input_infeasible": 0,
+        "watchdog_timeouts": 0,
+        "exceptions": 0,
+        "overrun_gt_10ms": 67,
+        "wall_seconds": 920.0444451000003,
+        "hashes_unchanged": true,
+        "holdout_used": false
+      },
+      "completion_sha256": "a7e4caf294454fada43f3fad4a980e6927655da6eeb14b7d577bb45324be21aa",
+      "manifest_sha256": "ef091060e8d5260a5b45c3e0be928a92241a0e4cbccba0a0d0fbc6a7e33cc493",
+      "verified_artifact_entries": 771,
+      "interpretation": "Development evidence only; do not pool unrelated protocols or count repeats as maps."
+    }
+  ],
+  "independent_saved_route_verification": [
+    {
+      "directory": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\development_preflights\\four_method_paired_v1_20261015_verification",
+      "summary": {
+        "status": "verified_four_method_development",
+        "runs": 288,
+        "selected_route_audits": 288,
+        "ppcpp_core_audits": 72,
+        "hashes_verified": true,
+        "solver_called": false,
+        "holdout_used": false,
+        "caveat": "12 development maps already used to tune PPCPP; two repeats are not new independent maps",
+        "verifier_sha256": "3064004748f46b025e563f9a3aacda387aa8f1ce17b3af3104b347f554d15297"
+      },
+      "summary_sha256": "c6fdaf8c87b0ceab0c98d6b9ffcafc09df07da0559efa35a3336cd6e40599d46"
+    },
+    {
+      "directory": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\development_preflights\\matched_history_v2_20261015_verification",
+      "summary": {
+        "status": "verified_matched_development",
+        "runs": 384,
+        "selected_route_audits": 384,
+        "ppcpp_core_audits": 96,
+        "attempted_input_states": 48,
+        "feasible_input_states": 48,
+        "infeasible_input_states": 0,
+        "development_base_maps": 12,
+        "new_history_states": 36,
+        "min_selected_route_resource_margin": 120,
+        "hashes_verified": true,
+        "solver_called": false,
+        "holdout_used": false,
+        "verifier_sha256": "288c6f53da16da3698654660af0cd6ab270efdd751af66a5f64578945ffe8518",
+        "caveat": "New states remain on tuning-development maps. One run per method/state/budget. No independent test or timing stability claim."
+      },
+      "summary_sha256": "e88abab859277f45dfb6e93ea5f02058ad0a45345bdfce172eb93855490fd089"
+    }
+  ],
+  "historical_adaptation_evidence": {
+    "directory": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\results\\run_32c_baseline_adaptation_audit_20261012",
+    "completion": {
+      "states": 77,
+      "runs": 231,
+      "routes": 225,
+      "all_checks_passed": true,
+      "contract_rejections": 6,
+      "hashes_unchanged": true,
+      "frozen_version": "D:\\0A无人机仿真02\\问题分析+文献分析\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012",
+      "regression_tests_passed": true
+    },
+    "completion_sha256": "747e99bec218a1800c5fce95811ea24af0cde1e2982aa46616f43dc00fbc9cd4",
+    "not_rerun": true
+  },
+  "runtime_evidence": {
+    "path": "E:\\无人机研究项目_接续包_20261014\\运行环境\\验证记录_20261014\\03_runtime_verification.json",
+    "sha256": "3ccd2f0a69853f57f4cea2d00776e25d5573d1089c21ffa7c0e5f20f5f4c18ed",
+    "not_revalidated_by_execution": true
+  },
+  "excluded_input_attempt": {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\scale_inputs\\matched_history_v1_20261015\\aborted.json",
+    "sha256": "258db737fa12ff5f12f692de7cebd334eb0e6046bf430fed4a9166d0c15b4e17",
+    "record": {
+      "exclude_from_comparison": true,
+      "solver_called": false,
+      "replacement": "matched_history_v2_20261015",
+      "status": "aborted_input_preparation",
+      "reason": "In-memory tuple coordinates compared directly to JSON list coordinates"
+    },
+    "excluded": true
+  },
+  "latest_new_state_comparisons": [
+    {
+      "subset": "new_states",
+      "budget": 1,
+      "comparator": "P2_MULTI",
+      "paired_states": 36,
+      "ppcpp_shorter": 13,
+      "equal": 8,
+      "ppcpp_longer": 15,
+      "ppcpp_only_success": 0,
+      "comparator_only_success": 0,
+      "both_fail": 0,
+      "step_difference_sum": -1354,
+      "relative_difference_map_equal": -0.007644477124773906
+    },
+    {
+      "subset": "new_states",
+      "budget": 1,
+      "comparator": "OARP_CORE2",
+      "paired_states": 36,
+      "ppcpp_shorter": 28,
+      "equal": 6,
+      "ppcpp_longer": 2,
+      "ppcpp_only_success": 0,
+      "comparator_only_success": 0,
+      "both_fail": 0,
+      "step_difference_sum": -2036,
+      "relative_difference_map_equal": -0.08754192092867892
+    },
+    {
+      "subset": "new_states",
+      "budget": 1,
+      "comparator": "TREE_MST",
+      "paired_states": 36,
+      "ppcpp_shorter": 25,
+      "equal": 3,
+      "ppcpp_longer": 8,
+      "ppcpp_only_success": 0,
+      "comparator_only_success": 0,
+      "both_fail": 0,
+      "step_difference_sum": -2060,
+      "relative_difference_map_equal": -0.06237046262120621
+    },
+    {
+      "subset": "new_states",
+      "budget": 20,
+      "comparator": "P2_MULTI",
+      "paired_states": 36,
+      "ppcpp_shorter": 4,
+      "equal": 9,
+      "ppcpp_longer": 23,
+      "ppcpp_only_success": 0,
+      "comparator_only_success": 0,
+      "both_fail": 0,
+      "step_difference_sum": -80,
+      "relative_difference_map_equal": 0.0326427136055683
+    },
+    {
+      "subset": "new_states",
+      "budget": 20,
+      "comparator": "OARP_CORE2",
+      "paired_states": 36,
+      "ppcpp_shorter": 24,
+      "equal": 5,
+      "ppcpp_longer": 7,
+      "ppcpp_only_success": 0,
+      "comparator_only_success": 0,
+      "both_fail": 0,
+      "step_difference_sum": -1266,
+      "relative_difference_map_equal": -0.06331257551249486
+    },
+    {
+      "subset": "new_states",
+      "budget": 20,
+      "comparator": "TREE_MST",
+      "paired_states": 36,
+      "ppcpp_shorter": 19,
+      "equal": 3,
+      "ppcpp_longer": 14,
+      "ppcpp_only_success": 0,
+      "comparator_only_success": 0,
+      "both_fail": 0,
+      "step_difference_sum": -1340,
+      "relative_difference_map_equal": -0.033785671017812505
+    }
+  ],
+  "project_stage": "Fair baseline validation/development diagnosis; main algorithm and novelty not established.",
+  "final_holdout_status": "12 map parameter rows and 432 schedule rows defined; holdout geometry and results not generated by this work.",
+  "formal_run_cost_if_four_methods": {
+    "planned_states": 432,
+    "budgets_seconds": [
+      1,
+      5,
+      20
+    ],
+    "paired_repeats": 2,
+    "methods": 4,
+    "nominal_runs": 10368,
+    "nominal_budget_sum_hours": 24.96,
+    "actual_duration_unknown": true,
+    "run_authorized_by_this_review": false
+  },
+  "remaining_gates": [
+    "main_method_and_novelty",
+    "formal_method_roster",
+    "holdout_generation_entry_and_QA",
+    "full_matrix_runner_and_resume_accounting",
+    "final_statistics_and_failure_policy",
+    "candidate_ablation",
+    "formal_protocol_manifest",
+    "holdout_generation_and_execution"
+  ]
+}

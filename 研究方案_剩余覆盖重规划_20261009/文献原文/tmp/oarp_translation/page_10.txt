@@ -1,0 +1,61 @@
+                                                                                                                                                           10
+
+
+                                                                                          TABLE I: Robot parameters used for experiments
+
+                                                                                                  Parameter                               Value
+                                                                                                  Coverage tool width              0.8 m
+                                                                                                  Maximum linear velocity     1 m/s
+                                                                                                  Linear acceleration         ±0.5 m/s2
+                                                                                                  Angular velocity                  30◦/s
+                                                                                                  Radial sensor range               5.6 m
+
+
+                                                                                representing it as its own GTSP set, consisting of two vertices
+                                                                                representing possible traversal directions. We refer to this set
+                                                                                as a path set. The GTSP is computed on a graph containing
+                                                                                these path sets and rank sets that each represent a new rank
+                                                                                obtained from RANK-REPLAN to be added to the tour.
+                                                                                   The second challenge is that we must also take into account
+Fig.  9:  All  possible  changes  to  an  example  initial  tour  of  only      the position of the robot and the desired end of the tour. To
+horizontal ranks (orange circles). The initial tour requires replanning         address this, we add artificial start and end vertices to the
+if the ranks (i) switch orientations to form vertical ranks (purple             GTSP graph, as in Fig. 9. To ensure that the solution is a
+circles),(ii)aresplitbyobstacles,and(iii)becomeunreachabledueto                 path from the start vertex to the end vertex, we add a directed
+obstacles(blackcircle).TheresultingGTSPsetsareshownconsisting                   zero-cost edge from the end vertex to the start vertex. Solving
+of (i) path sets (yellow), (ii) rank sets for each new replanned rank,          the GTSP on this graph gives us the replanned coverage path.
+and (iii) artificial vertices representing the start and end of the initial        In this paper, we created a fully-connected auxiliary graph.
+path, with a directed zero-cost edge connecting them.                           There are alternative approaches where the auxiliary graph
+                                                                                need not be fully-connected, such as those using lazy edge
+on mnew in our ILP constraint. However, we observe in our                       evaluations  to  compute  a  tour  [37].  However,  the  above
+simulation results that the paths replanned with ranks from                     challenges must still be addressed for such a formulation using
+ILP-2 are close in cost to those from ILP-1.                                    the approach described for the fully-connected case.
+
+            VI.  THE TOUR-REPLAN SUBROUTINE                                                          VII.  SIMULATION RESULTS
+   In  this  section,  we  describe  our  approach  to  compute  a                 In  this  section,  we  evaluate  the  OARP-Replan  approach
+tour of the replanned ranks to obtain our new coverage path.                    in simulation using real-world maps. We compare the per-
+Similar to the approaches from [14] and [6], we formulate this                  formance  of  OARP-Replan  in  online  coverage  replanning
+as a Generalized Travelling Salesman Problem (GTSP) on a                        scenarios against greedy detour (GD) replan and other plan-
+fully-connected auxiliary graph representing all connections                    ning  approaches  [6],  [18],  [32].  We  also  compare  OARP-
+between ranks. Each set in the graph represents a rank and                      Replan with offline coverage planning approaches provided
+consists of two vertices to represent the directions in which                   with  complete  obstacle  information  [7],  [8],  where  OARP-
+the rank can be traversed. We call these sets as rank sets. The                 Replan  is  given  no  prior  obstacle  information.  Finally,  we
+edge costs are the transition times between two ranks, i.e. the                 demonstrate using OARP-Replan to replan coverage paths in
+time for the robot to travel from one rank endpoint to another.                 a high-fidelity ROS simulation.
+Since the transition times depend on the robot’s design and                     A. Simulation setup
+dynamics, we compute the edge costs by assuming dynamics
+similar to [6] and [18], where (i) the robot traverses a straight                  We simulate the robot covering partially known environ-
+line  with  piecewise  constant  acceleration  with  a  maximum                 ments: the base environment is known but there are unknown
+velocity and (ii) the robot stops and turns in place with a                     obstacles that the robot discovers during coverage using its
+constant angular velocity. Solving GTSP on this graph obtains                   sensor. We plan initial coverage paths for the base environ-
+a tour that covers each rank while minimizing the transition                    ments using the OARP method [6] and replan the path as new
+times between the ranks. In Section VII-A, we provide more                      obstacles are detected.
+details on the robot dynamics parameters used to compute                           Dataset: We use a dataset of 8 real-world 2D maps obtained
+transition times in our simulations.                                            from Avidbots as our base environments, with their minimum
+   However,  we  look  to  address  two  additional  challenges                 coverage path lengths ranging from 145 m to 1900 m. We
+in the tour replan. Firstly, we look to limit the size of the                   then  add  randomly  generated  obstacles  with  varying  sizes
+GTSP instance by considering only the interrupted sections of                   and  orientations  to  create  a  set  of  unknown  environments.
+the initial path. Fig 9 gives an illustration of possible path                  Specifically, we create two datasets of unknown environments:
+interruptions  caused  by  (i)  ranks  changing  orientations  (ii)             (i)fixedclutterdatasetwherethenewobstaclesoccupy10%of
+ranks split by an obstacle, and (iii) unreachable ranks. The                    the base map’s free area for all maps, and (ii)varying clutter
+ranks that are unchanged correspond with sub-sections of the                    dataset  where  starting  with  a  candidate  base  environment,
+initial path that are unchanged. We retain each such section by                 we generate unknown environments by varying the % area

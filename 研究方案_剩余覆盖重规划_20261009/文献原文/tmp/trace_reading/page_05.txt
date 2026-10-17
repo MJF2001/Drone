@@ -1,0 +1,67 @@
+                                                                                                                                                                            5
+
+
+i.e.,A(n           ℓ+1Iℓ+1 +j  ) =R(n        ℓ+1Iℓ+1 +j  ) =S   j. The center of each     Algorithm 1:Tree Update (Secs. IV-B1 and IV-B2)
+child  node  is  computed  by  following  the  same  procedure                              Input:TreeG, symbolic map of tilingΦ, changed cell set
+described in the node update step, and its symbolic state is                                         ∆T, leaf index mapΨ
+assigned according to Defn. IV.4. An edge(n         ℓi,nℓ+1Iℓ+1 +j  )is                     Output:Updated treeGand leaf index mapΨ
+then added toGto connect the parent noden              ℓi to its child node              1∆N     leaf ←∅;
+                                                                                         2foreachτ       j ∈∆Tdo
+nℓ+1Iℓ+1 +j    (Alg. 1, Line 19). The parent noden        ℓi remains in the              3       ifΨ(τ        j)̸=∅then
+tree as an internal node, while its child nodes become new                               4            ∆N     leaf ←∆N        leaf∪{Ψ(τ      j)};
+leaf nodes, thereby preserving the hierarchical decomposition                            5       end
+history. The leaf index mapΨis updated accordingly. For                                  6end
+each  cellτ∈ A(n            ℓ+1                                                          7foreachn       ℓi ∈∆N      leaf do
+                            Iℓ+1 +j  ),  its  leaf  index  is  reassigned  as            8     {R(n        ℓi),p(n     ℓi),Q(n       ℓi)}←updateNodeInfo(n                                       ℓi,Φ);
+Ψ(τ)  =n          ℓ+1Iℓ+1 +j  .  Cells  in  the  parent  subarea  that  are  not         9       ifQ(n        ℓi)̸=Cthen
+assigned to any child subarea no longer belong to a current                             10        {S  j}Jj=1 ←searchDisjointPortion(R(n                                                          ℓi));
+leaf node and are assignedΨ(τ) =∅.                                                      11            ifJ >1then
+   Fig. 2b shows an example of tree expansion. The residual                             12                   foreachτ    j ∈A(n    ℓi)do
+region associated with the root noden        11 is separated into three                 13                      Ψ(τ       j)←∅;
+disconnected components due to newly discovered obstacles                               14                   end
+and covered cells. Accordingly,n 11 is expanded into three child                        15               I  ℓ+1 ←|Nℓ+1 |;
+                                                                                        16                   forj←1toJdo
+nodesn          21,n 22, andn      23. The parent noden        11 becomes an internal   17                    n  ℓ+1        (S                                       j,ℓ+1);
+                                                                                                                  Iℓ+1 +j  ←createChildNode
+node, while its three child nodes become the new leaves of the                          18                  G.addNode(n                       ℓ+1
+tree. As coverage proceeds, Fig. 2c shows thatn      22 is further                                                                 Iℓ+1 +j  );
+expanded into child nodesn          31 andn      32. The updated hierarchical           19                  G.addEdge(n                       ℓi,nℓ+1Iℓ+1 +j  );
+                                                                                        20                          foreachτ∈S           j do
+coverage tree is subsequently used to incrementally update the                           21                            Ψ(τ)←n              ℓ+1
+global tour, as described in the next subsection.                                                                                  Iℓ+1 +j  ;
+                                                                                        22                          end
+                                                                                        23                   end
+C. Incremental Global Tour Planning                                                     24            end
+                                                                                        25      end
+   As the environment is incrementally revealed and covered,                            26end
+only  a  small  portion  of  the  hierarchical  coverage  tree  is
+typically updated at each planning step, while most remaining
+regions  stay  unchanged.  A  complete  recomputation  of  the                          not  currently  identified  as  obstacles.  The  weight  of  each
+global tour, however, may drastically alter the visiting order                          edge  is  defined  as  the  shortest-path  distance  between  the
+of  these  unchanged  regions  when  several  candidate  orders                         centers of its incident nodes overT   tr, computed using the A*
+have similar travel costs. This can lead to indecisive coverage                         algorithm [31]. The 2-opt method [32] is then employed to
+behavior,  unnecessary  backtracking,  and  reduced  execution                          obtain an approximate solutionˆπfor the TSP. The tour node
+consistency. To address these issues, the proposed algorithm                            vm is replaced by the resulting child-node sequence, yielding
+retains the visiting order of unaffected regions in the global                          γ+global   =   [v 1,...,vm−1    ,nℓ+1iˆπ(1)  ,...,nℓ+1iˆπ(J)     ,vm+1  ,...,vM].
+tour, while locally updating the affected portion.                                      The same procedure is applied to all other expanded nodes
+   LetN     active ={n     ℓi ∈ Nleaf  :Q(n      ℓi)̸=C}be the set of                   in the global tour. In this way, the visiting order outside the
+active leaf nodes whose coverage has not yet been completed.                            locallyrefinedportionsispreserved,whilethenewlygenerated
+Let the global tour before the current update be represented                            child nodes are locally arranged to reduce the travel cost. The
+as an ordered sequenceγ            −global = [v m]Mm=1   , wherev          m denotes    first element ofγ   +global is selected as the target noden        target
+them-th node in the tour. Eachv                 m is examined sequentially              for local coverage planning. An example of global tour and
+with respect to the updated hierarchical coverage tree. Ifv  m                          corresponding target node is shown in Figs. 2b and 2c.
+remains an active leaf node, its relative position in the tour is
+retained. If its coverage has been completed, it is removed                             D. Local Coverage Path Planning
+from  the  tour.  Ifv  m  has  been  expanded  and  becomes  an
+internal node, it is replaced by an optimized visiting sequence                             Given  the  target  noden        target  selected  from  the  updated
+of its newly generated child nodes. Specifically, consider the                          global tour, the local planner progressively covers its residual
+m-th tour nodev           m =n   ℓi that has been expanded intoJchild                   regionR(n             target).  At  each  planning  step,  a  target  cell  is
+nodes{n           ℓ+1i1  ,...,nℓ+1iJ  }.Letn       a andn      b denotethepredecessor   selected to guide the robot’s next coverage motion. The target-
+and successor ofv   m in the current global tour, respectively, if                      cell selection strategy is described below.
+they exist. A local tour starting fromn        a, visiting allJchild                    Remark  IV.1.IfR(n            target)is not adjacent to the robot’s
+nodes, and ending atn   b is formulated as a Traveling Salesman                         current position, the robot first follows a collision-free path to
+Problem (TSP) with fixed start and end conditions.                                      reach the target region and then proceeds with local coverage.
+   A  complete  weighted  graph  ˆG=  (   ˆN,    ˆE)is  constructed
+for  the  TSP,  where   ˆN={n        a,nℓ+1i1  ,...,nℓ+1iJ  ,nb},  and    ˆE                1) Target Cell Selection Strategy:Letτ        R denote the robot’s
+contains  an  edge  between  every  pair  of  distinct  nodes  in                       current cell. LetH(τ        R)⊆Tbe the local vicinity defined as
+ ˆN.  LetT         tr  ={τ     j ∈ T :  Φ(τ       j)̸=O}denote  the  cells              the3×3tiling centered atτ            R, as shown in Fig. 3a. Then,

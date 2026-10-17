@@ -1,0 +1,66 @@
+                                                                                                                                                          2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        (a)                                                 (b)                                                (c)
+Fig. 1: Replanning coverage paths in partially unknown environments. (a) An initial coverage path for the known base environment, (b) the
+robot (blue triangle) covers part of the environment (gray region) and observes a new obstacle (red box) interrupting the initial path (red
+path), and (c) a near-optimal replanned path (green path) computed online using the proposed approach (OARP-Replan).
+
+
+plancoveragepathswithcompleteinformationaboutallobsta-                         approach of this class is Online STC [22], which computes
+cles in the environment, whereas online approaches start with                  a spanning tree of the grid cells online to update its coverage
+little to no information about the obstacles in the environment                plan. However, given a square coverage tool of width l, STC
+and compute a path during the coverage operation.                              is generally applied to coarse grids with cells of width 2l
+   Offline  Coverage  Planning:  Offline  approaches  can  be                  and does not generalize well to finer grids with cell width l.
+further categorized into 2 sub-classes: (i) exact decomposition                Other grid-based online approaches use various local search
+approaches, and (ii) grid-based approaches. In exact decom-                    and  optimization  methods  to  determine  the  coverage  plan
+position methods, the environment is first decomposed into                     in  an  unknown  environment.  Song  et  al  [23]  proposed  an
+polygonal sub-regions or cells. Each cell is then individually                 approach using artificial potential fields (APF) to determine
+covered either by sweeping (i) back-and-forth along coverage                   a coverage path online. A similar technique to APFs is using
+parallel  lines  [11],  (ii)  along  spiral  paths  [12],  or  (iii)  a        bio-inspired neural networks to model and search the environ-
+combination  of  both  [13].  There  are  also  turn-minimizing                ment. This was originally proposed by Luo and Yang in [24]
+approaches that cover each cell in a locally optimal direction,                and has gained popularity in many recent works [25]–[27].
+generally determined using the cell’s geometry [7], [14], [15].                However, these local search-based approaches are susceptible
+These cells are however complex to compute, and as a result,                   to deadlocking, where the robot does not know where to go
+these methods do not scale well for online replanning.                         next. Deadlocks are computationally expensive to get out of
+   Grid-based  approaches  use  a  grid  approximation  of  the                and affect overall coverage time. Moreover, these approaches
+given environment and compute a path covering all the grid                     generally minimize turns by penalizing them in a local search
+cells in the approximation. This path can be computed either                   cost function, which does not guarantee minimum turns for the
+by solving the Traveling Salesman Problem (TSP) [9], using                     path overall. Our proposed approach avoids deadlocks (using
+a spanning tree of the grid cells (Spanning Tree Coverage                      an initial path) and guarantees minimum turns in the overall
+or STC) [16], or using a wavefront algorithm to determine                      path when provided with sufficient planning time.
+visitation order [17]. Turn-minimizing approaches of this class                   Online  coverage  planning  shares  similarities  with  explo-
+look to minimize the number of axis-parallel (horizontal or                    ration planning, which involves covering unknown environ-
+vertical) coverage lines or ranks in the coverage path [18],                   ments  using  sensors  [28].  Exploration  planning  algorithms
+[19]. While these methods were demonstrated to work well in                    use information theory [29], [30] and frontiers [31] to de-
+offline settings, they lack online extensions that can replan a                termine  the  next-best  scan  of  the  environment,  rather  than
+pathwithinagiventimebudget.Ourproposedmethod,OARP-                             using decompositions. Recently, a decomposition-free online
+Replan, extends the OARP approach from [6], which is an                        coverage planner was proposed that uses frontiers and search-
+offline grid-based turn-minimizing approach, to be applicable                  based planning to identify the next-best region to cover [32].
+in online replanning scenarios.                                                Online coverage replanning has also been investigated in 3D
+   Online Coverage Planning: Online coverage planning ap-                      settings for applications in underwater inspection tasks [33],
+proaches have gained recent interest, and as such, there is a                  but they involve 3D maneuvers and are not necessarily feasible
+wide range of different approaches in the literature. Initially,               for robots operating in 2D planes.
+online exact decomposition approaches were investigated [20],
+[21], but these methods involve identifying changes to exact                   B. Organization
+cells online, which does not scale well for large cluttered en-                   The rest of this paper is organized as follows. In Section
+vironments. Moreover, these methods do not aim to minimize                     II, we provide some background on the coverage planning
+turns in the coverage path.                                                    problem and the OARP approach from our previous work [6].
+   Grid-based methods work better for such environments as                     In Section III, we define the problem of replanning a coverage
+one can easily update a grid with new occupancy information.                   path within a given time budget. In Section IV, we present
+Our  proposed  approach  falls  under  this  class.  A  popular                the high-level framework of our proposed approach, OARP-

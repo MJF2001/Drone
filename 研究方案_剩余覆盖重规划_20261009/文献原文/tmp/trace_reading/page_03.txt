@@ -1,0 +1,60 @@
+                                                                                                                                                                 3
+
+
+emerge,whichcanleadtoadditionalbacktrackingandreduced
+coverage efficiency in complex environments.
+
+                    III.  PROBLEMDESCRIPTION
+   As shown in Fig. 1, consider a mobile robot equipped with:
+
+   •A range detector (e.g., LiDAR) to detect obstacles within
+      its field of view and map the environment.
+   •A  localization  device  (e.g.,  IMU)  to  provide  position
+      information of the robot.
+   •A  coverage  device  or  sensor  (e.g.,  cleaning  brush)  to
+      perform the task (e.g., floor cleaning).
+   LetX ⊂R         2 be the initially unknown area whose boundary
+is defined either by a hard border (e.g., a wall) or a soft barrier
+(e.g., user-defined buffer zone). The area is populated by static                           Fig. 1. Overview of the proposed TRACE algorithm.
+obstacles. For environment mapping and coverage planning, a
+uniform tiling ofXis constructed as defined below.                                 representing the remaining coverage regions are then extracted
+Definition III.1(Uniform Tiling).A setT={τ                              j ⊂R   2, j=from the updated tree. The global visiting order of the active
+1,...,|T|}is called a uniform tiling ofXif its elements,                           leaf nodes is maintained through incremental tour refinement,
+called cells, satisfy the following conditions:                                    where only the portions affected by tree expansion are locally
+                                                                                   updated  while  the  visiting  order  of  unaffected  regions  is
+   •Each cellτ       j is a square of identical size;                              retained (Sec. IV-C). A target node is then selected from the
+   •The interiors of any two distinct cells do not overlap, i.e.,                  updated global tour, and the local planner generates a coverage
+      int(τ   i)∩int(τ       j) =∅, i̸=j;                                          path within its subarea (Sec. IV-D). These steps are repeated
+   •The areaXis contained in the union of all cells, i.e.,                         until complete coverage of the obstacle-free space is achieved.
+      X ⊆Sτj∈T τj.
+Definition III.2(Path-Connected Region). A regionS ⊆ T                             A. Symbolic Map Update
+is said to be path-connected if, for any two cellsτ       i,τj ∈ S,                   During navigation, the robot continuously updates a sym-
+there exists a collision-free path consisting entirely of cells in                 bolic representation of the environment using onboard sensor
+Sthat connectsτ                 i andτ      j.                                     measurements. This representation jointly encodes the occu-
+   LetT     o⊂Tdenotethesubsetofcellsoccupiedbyobstacles.                          pancy and coverage status of each cell, as defined below.
+The obstacle-free cell setT    f =T \T   o constitutes the path-                   Definition  IV.1(State  Encoding  of  Cell). LetΦ  : T  →
+connected coverage space to be covered by the robot.                               {U,O,F  c,Fu}be the symbolic state encoding of the tilingT.
+Definition III.3(Coverage Path). Letτ(k)∈ T                            f  denote theAll cells are initially assigned the stateU. As environmental
+obstacle-free cell visited by the robot at discrete stepk∈Z         ≥0  .          information is acquired during navigation, a cell occupied by
+A coverage path is defined as the ordered cell sequenceΓ               K =         an obstacle is assignedO. A free cell is assignedF                                 c after it
+[τ(0),τ(1),...,τ(K)], whereτ(0)andτ(K)denote the start                             has been covered by the robot andF      u otherwise.
+and end cells, respectively.                                                          A  morphological  closing  operator  [30]  is  applied  to  the
+   LetC(τ(k))⊂ T                  f  denote the set of cells covered by the        symbolic map. This operation first dilates and then erodes the
+coverage device when the robot visits cellτ(k). The objective                      obstacle regions to smooth obstacle boundaries and suppress
+of the proposed algorithm is to generate a coverage path that                      small-scale obstacles that are typically caused by sensor noise.
+achieves complete coverage ofT   f, as defined below.                              The updated symbolic map provides the basis for the incre-
+                                                                                   mental construction of the hierarchical coverage tree.
+Definition III.4(Complete Coverage).Given a coverage path
+ΓK = [τ(0),τ(1),...,τ(K)], the coverage ofT                            f is completeB. Hierarchical Coverage Tree Construction
+if there exists a finiteK∈Z               + such thatT      f ⊆SKk=0 C(τ(k)).         Thehierarchicalcoveragetreeservesthreemainpurposes:i)
+                      IV.  TRACE ALGORITHM                                         recording the hierarchical decomposition of the search space,
+                                                                                   ii) tracking coverage progress, and iii) supporting coverage
+   This section presents the details of the proposed TRACE                         decision-making. The tree is formally defined as follows.
+algorithm, which adaptively updates the coverage path as the                       Definition IV.2(Hierarchical Coverage Tree). A hierarchical
+environmentisrevealedthroughonboardsensing.Anoverview                              coverage treeG= (N,E)is defined as a rooted tree, where:
+oftheTRACEalgorithmisshowninFig.1.Duringnavigation,
+the symbolic map is continuously updated according to sensor                          •For each levelℓ= 1,...,L, whereLis the current depth
+measurements and coverage progress (Sec. IV-A). Based on                                 of the tree, letN    ℓ ={n     ℓi :i= 1,...,I    ℓ}be the node set
+the updated map, a hierarchical coverage tree is incrementally                           at levelℓ, withN=     SLℓ=1 Nℓ. Each noden        ℓi maintains:
+constructed to represent the remaining coverage regions and                                a)associated subareaA(n            ℓi), which is assigned when
+their connectivity changes (Sec. IV-B). The active leaf nodes                                  the node is created and remains fixed thereafter;

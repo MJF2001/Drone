@@ -1,0 +1,68 @@
+                                                                                                                                                                             4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                (a) Tree initialization.                   (b) First tree expansion and global tour planning.          (c) Subsequent tree expansion and tour update.
+
+
+
+Fig. 2. Illustration of hierarchical coverage tree evolution and incremental coverage planning. (a) The entire unknown workspace is initially
+represented by the root noden        11. (b) As the environment is revealed and covered, the residual region ofn   11 is divided into three disconnected
+subareas, represented by child nodesn          21,n 22, andn      23. A global tour is then generated to guide their subsequent coverage. (c) With further
+environmental discovery and coverage progress, the residual region associated withn       22 is further divided into two disconnected subareas,
+represented by child nodesn          31 andn      32. The hierarchical coverage tree and global tour are updated accordingly.
+
+        b)residual  regionR(n                ℓi)  ={τ∈ A(n            ℓi)  :  Φ(τ)∈      ∅. At tree initialization, all cells are indexed to the root node,
+             {U,F  u}}, which contains only unknown and free-                            i.e.,Ψ(τ       j) =n   11,∀τ   j ∈T.
+             uncovered cells;                                                               1) Node Update:After each update of the symbolic mapΦ,
+        c)center positionp(n                    ℓi)of the residual region; and           the changed cells are mapped to their corresponding leaf nodes
+        d)symbolic stateQ(n                ℓi).                                          to identify the set of affected leaf nodes∆N              leaf ={Ψ(τ          j) :
+
+   •E={e         α :α= 1,...,|E|}is the edge set. Each edge                              τj ∈∆T,Ψ(τ              j)̸=∅}(Alg. 1, Lines 1-6). The information of
+      eα≡(n    ℓi,nℓ+1i′   )connects a parent noden         ℓi at levelℓto               each noden        ℓi ∈∆N      leaf is then updated according to the latest
+      one of its child nodesn         ℓ+1i′    at levelℓ+1.                              cell states (Alg. 1, Line 8). Specifically, the residual region
+Definition IV.3(Exploring Region). A regionS ⊆Tis said                                   R(n     ℓi)is refined by removing obstacles or free-covered cells.
+to be exploring if it contains at least one unknown cell, i.e.,                          The centerp(n              ℓi)is obtained by averaging the positions of
+∃τ∈Ssuch thatΦ(τ) =U. Otherwise, it is explored.                                         all cells inR(n        ℓi). Due to irregular geometry, the resulting
+                                                                                         center may fall into obstacles or other regions. In such cases,
+Definition  IV.4(State Encoding of Node). LetQ:N →                                       it is projected to the position of the nearest cell withinR(n                ℓi).
+{C,E,   ¯E}assign a symbolic stateQ(n                  ℓi)to each noden         ℓi ∈     Finally,  the  symbolic  stateQ(n            ℓi)is  updated  according  to
+N. The stateCindicates that the residual regionR(n                     ℓi)is             Defn.  IV.4.  A  node  is  assignedCif  its  residual  region  is
+empty, and thus the corresponding coverage task has been                                 empty; otherwise, it is assignedEor                ¯Edepending on whether
+completed.Incontrast,Eand         ¯Eindicatenodeswhoseresidual                           the residual region isexploredorexploring, respectively.
+regions are explored and exploring, respectively.                                           2) Tree  Expansion:Following  node  update,  the  connec-
+   As  shown  in  Fig.  2a,  since  the  environment  is  initially                      tivity of the residual regions of the affected leaf nodes may
+unknown, the tree is initialized with a single root noden        11,                     change, since newly identified obstacle cells and covered free
+whereA(n                11)  =R(n        11)  =T.  The  center  positionp(n                        11)cells have been removed. Therefore, each affected leaf node
+is computed as the average position of all cells inA(n        11).                       nℓi ∈∆N      leaf with a nonempty residual region is examined to
+The  symbolic  state  is  set  asQ(n         11)  =   ¯E.  Since  the  tree              determine whetherR(n                  ℓi)remains path-connected.
+contains only the root node, the edge set is initially empty, i.e.,                         For  each  such  node,  the  process  begins  by  selecting  an
+E=∅. During online operation, the hierarchical coverage tree                             unlabeled cell fromR(n             ℓi)and assigning it a region indexj.
+                                                                                         Starting from this cell, a flood-fill search recursively labels all
+is incrementally updated through two steps: 1) node update                               four-connected neighboring cells withinR(n                ℓi)using the same
+and 2) tree expansion, as outlined in Alg. 1.                                            indexj. The search terminates when no further eligible cells
+Definition IV.5(Changed Cell Set).Let∆T ⊆Tdenote the                                     remain, and the labeled cells form a maximal path-connected
+set of cells whose symbolic states change during the latest                              componentS                  j. This procedure is repeated until every cell in
+map update, i.e.,∆T={τ             j ∈ T: Φ  new(τ j)̸= Φ old(τ j)},                     R(n     ℓi)has been labeled, resulting inR(n          ℓi) =SJj=1 Sj, where
+whereΦ old(τ j)andΦ        new(τ j)are the symbolic maps before                          Sj∩Sj′ =∅,∀j̸=j           ′∈{1,...,J}(Alg. 1, Line 10).
+and after the latest map update, respectively.                                              IfJ=  1,R(n             ℓi)remains  path-connected  and  the  tree
+                                                                                         structure associated withn       ℓi  remains unchanged. IfJ  >1,
+DefinitionIV.6(LeafIndexMap).LetN                   leaf ⊆Nbethesetof                    R(n     ℓi)is  separated  into  several  disjoint  portions.  In  this
+leaf nodes of the tree. LetΨ :T →N      leaf∪{∅}be an indexing                           case,Jchild nodes are created at levelℓ+ 1, denoted by
+function that associates each cellτ      j ∈Twith the unique leaf                        {n  ℓ+1Iℓ+1 +j }Jj=1 , whereI          ℓ+1   is the number of existing nodes
+node whose associated subarea contains the cell. Specifically,                           at levelℓ+1(Alg. 1, Line 17). Each portion is assigned to
+Ψ(τ    j) =n   ℓi ifτ  j ∈A(n     ℓi)andn       ℓi ∈Nleaf;otherwise,Ψ(τ     j) =         one child node as its associated subarea and residual region,

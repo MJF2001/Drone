@@ -1,0 +1,34 @@
+{
+  "budgets": [
+    0.1,
+    0.5,
+    5.0
+  ],
+  "repeats": 2,
+  "methods": [
+    "P2_SHARED",
+    "STRIP_HV",
+    "TREE_MST"
+  ],
+  "cases": 24,
+  "executions": 432,
+  "reference": "P2_SHARED 20 seconds once per case; heuristic, not optimum",
+  "source_sha256": {
+    "unified_geometry.py": "b0d70871ab4b2a3d3a4ccf3edcdadf4b3db9eb2415134d5740270a76293aff53",
+    "unified_candidates.py": "d9c2b47cfa071a084d307aeb5cde6dcabda5703f7dcf44c3c1e67645bbbe0ad7",
+    "scenarios_unified.py": "c3e24c7b0f0de703b87873a732d183ff1b800b45528e0040a642d9cecc48d193",
+    "run_unified.py": "1d9c7e336e6c22637ef053f49bc612d01565fd24298e45b2b5efc37e1193364a",
+    "bfs_metric_geometry.py": "98298ca6620cf2aba0aedd5b7cfc4fbdabfdb2316e01ddeeb9be791b8a2b8933",
+    "model.py": "2eee969dc3a1c46fe1ff055080d57f56cf0144551098de4fd25280d5fc074b14",
+    "planners.py": "e820cd3674d8105e214eddf385d1ba73397b1699bacb1289c4094055b7b7a5cb",
+    "audit.py": "2f52d867e3d31dab881f549aa5af120802b253af73278ac5e7f2ec4feda38b3c",
+    "oarp_replan/tour.py": "73ff4c37827bf184b0701664d3125abe9dbf6af29138b5e0cce9e4f54f29de1a",
+    "oarp_replan/ranks.py": "5facd249166ce7533b44b66fd442c1da9fb4bb004c86a3d241c25452e561c086"
+  },
+  "snapshot_sha256": "ee1287e0332c15e2933b301a7b1a5b3808b363bbc07601cad2402edeb586f0fa",
+  "timing": "cold cache; setup, common fallback, metric, search, candidate validation inside budget; external audit outside",
+  "deadline": "cooperative soft deadline; report actual elapsed and >10ms overruns",
+  "connector": "canonical unordered-pair A* tie policy, shared BFS metric",
+  "scope": "new development parameters, not final held-out benchmark; 8 shared initial histories",
+  "selection": "all cases retained; no tuning on this batch; algorithms unchanged except shared geometry and validation"
+}
