@@ -1,0 +1,23 @@
+{
+ "generated_utc": "2026-10-18T17:10:00+00:00",
+ "policy": "Ledger rows listed here are documented test artefacts. They are mocked calls: the planner was replaced by a stub, or the end row could not be written on purpose. Nothing else may be exempted.",
+ "unpaired_start": [
+  {
+   "run_id": "BOUNDARY:ledger_end_fail",
+   "kind": "boundary",
+   "reason": "end-row write failure injection: the start row is real, the end row was made to fail on purpose to prove the batch refuses to seal. The adapter was a stub, so no planner work was lost.",
+   "replaced_by": "BOUNDARY:b2:ledger_end_fail"
+  },
+  {
+   "run_id": "BOUNDARY:b2:ledger_end_fail",
+   "kind": "boundary",
+   "reason": "same injection, second attempt after the recording change",
+   "replaced_by": null
+  }
+ ],
+ "superseded_batches": {
+  "INTEGRATION": "first planned batch; its saved results lack the per-decision trace, so it was superseded by INTEGRATION2 and kept as evidence",
+  "BOUNDARY": "first boundary attempt, superseded by BOUNDARY_b2"
+ },
+ "delivered_batch": "INTEGRATION2"
+}

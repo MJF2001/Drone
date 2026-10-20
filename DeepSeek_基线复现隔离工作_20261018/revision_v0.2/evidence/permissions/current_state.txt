@@ -1,0 +1,104 @@
+﻿# Permission state captured read-only on 2026-10-18 05:59:31 -07:00
+# This capture does NOT prove what the state was earlier; it only records what is readable now.
+
+## whoami
+desktop-52f882u\马俊飞
+
+## icacls workspace root
+D:\0A���˻�����02\�������+���׷��� Everyone:(CI)(DENY)(DC)
+                       S-1-4-1040156833-957765317:(OI)(CI)(W,D,DC)
+                       DESKTOP-52F882U\�����:(F)
+                       DESKTOP-52F882U\CodexSandboxUsers:(OI)(CI)(M)
+                       S-1-5-21-4075496180-3193778151-476515985-2375862030:(OI)(CI)(M)
+                       S-1-5-21-1286972110-3606191160-1787287276-1118820382:(OI)(CI)(M)
+                       BUILTIN\Administrators:(I)(F)
+                       BUILTIN\Administrators:(I)(OI)(CI)(IO)(F)
+                       NT AUTHORITY\SYSTEM:(I)(F)
+                       NT AUTHORITY\SYSTEM:(I)(OI)(CI)(IO)(F)
+                       NT AUTHORITY\Authenticated Users:(I)(M)
+                       NT AUTHORITY\Authenticated Users:(I)(OI)(CI)(IO)(M)
+                       BUILTIN\Users:(I)(RX)
+                       BUILTIN\Users:(I)(OI)(CI)(IO)(GR,GE)
+                       Mandatory Label\Low Mandatory Level:(OI)(CI)(NW)
+
+Successfully processed 1 files; Failed processing 0 files
+
+## icacls OUT
+D:\0A���˻�����02\�������+���׷���\DeepSeek_���߸��ָ��빤��_20261018 DESKTOP-52F882U\CodexSandboxUsers:(I)(OI)(CI)(M)
+                                                  S-1-5-21-4075496180-3193778151-476515985-2375862030:(I)(OI)(CI)(M)
+                                                  S-1-5-21-1286972110-3606191160-1787287276-1118820382:(I)(OI)(CI)(M)
+                                                  BUILTIN\Administrators:(I)(F)
+                                                  BUILTIN\Administrators:(I)(OI)(CI)(IO)(F)
+                                                  NT AUTHORITY\SYSTEM:(I)(F)
+                                                  NT AUTHORITY\SYSTEM:(I)(OI)(CI)(IO)(F)
+                                                  NT AUTHORITY\Authenticated Users:(I)(M)
+                                                  NT AUTHORITY\Authenticated Users:(I)(OI)(CI)(IO)(M)
+                                                  BUILTIN\Users:(I)(RX)
+                                                  BUILTIN\Users:(I)(OI)(CI)(IO)(GR,GE)
+
+Successfully processed 1 files; Failed processing 0 files
+
+## owner / inheritance flags
+PATH D:\0A无人机仿真02\问题分析+文献分析
+  Owner=DESKTOP-52F882U\马俊飞  AccessRulesProtected=False  AuditRulesProtected=False
+  Deny         Everyone                                             DeleteSubdirectoriesAndFiles             inherited=False flags=ContainerInherit
+  Allow        S-1-4-1040156833-957765317                           DeleteSubdirectoriesAndFiles, Write, Delete, Synchronize inherited=False flags=ContainerInherit, ObjectInherit
+  Allow        DESKTOP-52F882U\马俊飞                                  FullControl                              inherited=False flags=None
+  Allow        DESKTOP-52F882U\CodexSandboxUsers                    Modify, Synchronize                      inherited=False flags=ContainerInherit, ObjectInherit
+  Allow        S-1-5-21-4075496180-3193778151-476515985-2375862030  Modify, Synchronize                      inherited=False flags=ContainerInherit, ObjectInherit
+  Allow        S-1-5-21-1286972110-3606191160-1787287276-1118820382 Modify, Synchronize                      inherited=False flags=ContainerInherit, ObjectInherit
+  Allow        BUILTIN\Administrators                               FullControl                              inherited=True flags=None
+  Allow        BUILTIN\Administrators                               268435456                                inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        NT AUTHORITY\SYSTEM                                  FullControl                              inherited=True flags=None
+  Allow        NT AUTHORITY\SYSTEM                                  268435456                                inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        NT AUTHORITY\Authenticated Users                     Modify, Synchronize                      inherited=True flags=None
+  Allow        NT AUTHORITY\Authenticated Users                     -536805376                               inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        BUILTIN\Users                                        ReadAndExecute, Synchronize              inherited=True flags=None
+  Allow        BUILTIN\Users                                        -1610612736                              inherited=True flags=ContainerInherit, ObjectInherit
+  SACL: NOT READABLE without SeSecurityPrivilege -> mandatory integrity label not captured (PrivilegeNotHeldException)
+PATH D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_基线复现隔离工作_20261018
+  Owner=DESKTOP-52F882U\马俊飞  AccessRulesProtected=False  AuditRulesProtected=False
+  Allow        DESKTOP-52F882U\CodexSandboxUsers                    Modify, Synchronize                      inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        S-1-5-21-4075496180-3193778151-476515985-2375862030  Modify, Synchronize                      inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        S-1-5-21-1286972110-3606191160-1787287276-1118820382 Modify, Synchronize                      inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        BUILTIN\Administrators                               FullControl                              inherited=True flags=None
+  Allow        BUILTIN\Administrators                               268435456                                inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        NT AUTHORITY\SYSTEM                                  FullControl                              inherited=True flags=None
+  Allow        NT AUTHORITY\SYSTEM                                  268435456                                inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        NT AUTHORITY\Authenticated Users                     Modify, Synchronize                      inherited=True flags=None
+  Allow        NT AUTHORITY\Authenticated Users                     -536805376                               inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        BUILTIN\Users                                        ReadAndExecute, Synchronize              inherited=True flags=None
+  Allow        BUILTIN\Users                                        -1610612736                              inherited=True flags=ContainerInherit, ObjectInherit
+  SACL: NOT READABLE without SeSecurityPrivilege -> mandatory integrity label not captured (PrivilegeNotHeldException)
+PATH D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_基线复现隔离工作_20261018\sources
+  Owner=DESKTOP-52F882U\马俊飞  AccessRulesProtected=False  AuditRulesProtected=False
+  Allow        DESKTOP-52F882U\CodexSandboxUsers                    Modify, Synchronize                      inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        S-1-5-21-4075496180-3193778151-476515985-2375862030  Modify, Synchronize                      inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        S-1-5-21-1286972110-3606191160-1787287276-1118820382 Modify, Synchronize                      inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        BUILTIN\Administrators                               FullControl                              inherited=True flags=None
+  Allow        BUILTIN\Administrators                               268435456                                inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        NT AUTHORITY\SYSTEM                                  FullControl                              inherited=True flags=None
+  Allow        NT AUTHORITY\SYSTEM                                  268435456                                inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        NT AUTHORITY\Authenticated Users                     Modify, Synchronize                      inherited=True flags=None
+  Allow        NT AUTHORITY\Authenticated Users                     -536805376                               inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        BUILTIN\Users                                        ReadAndExecute, Synchronize              inherited=True flags=None
+  Allow        BUILTIN\Users                                        -1610612736                              inherited=True flags=ContainerInherit, ObjectInherit
+  SACL: NOT READABLE without SeSecurityPrivilege -> mandatory integrity label not captured (PrivilegeNotHeldException)
+PATH D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_基线复现隔离工作_20261018\revision_v0.2
+  Owner=DESKTOP-52F882U\马俊飞  AccessRulesProtected=False  AuditRulesProtected=False
+  Allow        DESKTOP-52F882U\CodexSandboxUsers                    Modify, Synchronize                      inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        S-1-5-21-4075496180-3193778151-476515985-2375862030  Modify, Synchronize                      inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        S-1-5-21-1286972110-3606191160-1787287276-1118820382 Modify, Synchronize                      inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        BUILTIN\Administrators                               FullControl                              inherited=True flags=None
+  Allow        BUILTIN\Administrators                               268435456                                inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        NT AUTHORITY\SYSTEM                                  FullControl                              inherited=True flags=None
+  Allow        NT AUTHORITY\SYSTEM                                  268435456                                inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        NT AUTHORITY\Authenticated Users                     Modify, Synchronize                      inherited=True flags=None
+  Allow        NT AUTHORITY\Authenticated Users                     -536805376                               inherited=True flags=ContainerInherit, ObjectInherit
+  Allow        BUILTIN\Users                                        ReadAndExecute, Synchronize              inherited=True flags=None
+  Allow        BUILTIN\Users                                        -1610612736                              inherited=True flags=ContainerInherit, ObjectInherit
+  SACL: NOT READABLE without SeSecurityPrivilege -> mandatory integrity label not captured (PrivilegeNotHeldException)
+
+## mandatory integrity label via fsutil (informational)
+queryfileextents is an invalid parameter.
+

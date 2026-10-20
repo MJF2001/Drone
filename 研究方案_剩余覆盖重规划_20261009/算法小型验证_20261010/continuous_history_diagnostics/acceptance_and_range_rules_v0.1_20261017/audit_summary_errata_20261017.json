@@ -1,0 +1,140 @@
+{
+  "document": "audit_summary_errata_20261017",
+  "created_date": "2026-10-17",
+  "replaces": "protocol_deviations field only in the original audit_summary.json",
+  "original_path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\old_plan_warm_global_v0.1_20261017\\audit_summary.json",
+  "original_sha256": "966d60ee5dc98964cbf8461369a420fa8a35fe79a2bfaf77cab07dec61df288b",
+  "original_is_preserved": true,
+  "original_protocol_deviations": [
+    "initial dispatch sent LITERAL into baseline dispatcher; 10 initial calls returned exceptions before stop",
+    "first recovery had string-vs-Path bug; 60 failed recovery attempts retained",
+    "corrected second recovery produced valid outputs; all incomplete/failed rows recovered once; no valid algorithm output was rerun"
+  ],
+  "corrected_protocol_deviations": [
+    "Initial batch attempted 38 jobs: 25 returned valid outputs and 13 LITERAL dispatch attempts raised ValueError before planner invocation.",
+    "Recovery batch 1 attempted 64 jobs: 0 valid and 64 str.read_text path-type exceptions before planner invocation.",
+    "Recovery batch 2 attempted the 95 incomplete/failed jobs: all 95 returned valid outputs; prior valid outputs were not rerun.",
+    "Across all batches there are 120 unique valid successes. The actual method rotation was interrupted; all 40 LITERAL outputs were produced in recovery batch 2.",
+    "Execution was serial according to the runner loops and per-attempt ledgers. These ledgers do not contain wall-clock timestamps, so exact launch times/order across batches are not established.",
+    "The first-run runner file currently differs from the protocol's sealed hash; this is a post-run source-state observation, not proof of the exact source loaded at process start."
+  ],
+  "evidence_paths": [
+    "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\acceptance_and_range_rules_v0.1_20261017\\execution_timeline_20261017.json",
+    "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\acceptance_and_range_rules_v0.1_20261017\\execution_attempt_timeline.csv",
+    "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\old_plan_warm_global_v0.1_20261017\\execution_ledger.jsonl",
+    "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\old_plan_warm_global_v0.1_20261017\\recovery\\recovery_ledger.jsonl",
+    "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\old_plan_warm_global_v0.1_20261017\\recovery2\\recovery_ledger.jsonl"
+  ],
+  "must_not_use_original_deviation_counts": "10 and 60 are superseded; corrected counts are 13 initial exceptions and 64 recovery1 exceptions.",
+  "protocol_hashes": [
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\candidate_baselines\\P2_WARM_GLOBAL\\v0.1_20261017\\p2_search_audit_warm.py",
+      "expected_sha256": "f9c8d4bc6f04cf8dfc34ee8c95614b5f96c3134eb692f5c5fe76746efe02777a",
+      "actual_sha256": "f9c8d4bc6f04cf8dfc34ee8c95614b5f96c3134eb692f5c5fe76746efe02777a",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\p2_search_audit.py",
+      "expected_sha256": "d1b93bd741b80af02c8f398b495441da570ae75f27008d512e9d873844a0385a",
+      "actual_sha256": "d1b93bd741b80af02c8f398b495441da570ae75f27008d512e9d873844a0385a",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\preparation_verification_v0.1_20261016\\cases\\small_g2_development.json",
+      "expected_sha256": "b5b4e7cce062f1376849e738cc870dd2ab849063b44a54cf2409ac2083a4ea8e",
+      "actual_sha256": "b5b4e7cce062f1376849e738cc870dd2ab849063b44a54cf2409ac2083a4ea8e",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\preparation_verification_v0.1_20261016\\cases\\small_g3_development.json",
+      "expected_sha256": "a07afb5c5d149fe00e00c47686dd676af37ac37f6e34d23fe6f4ea4feaac6dee",
+      "actual_sha256": "a07afb5c5d149fe00e00c47686dd676af37ac37f6e34d23fe6f4ea4feaac6dee",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\preparation_verification_v0.1_20261016\\cases\\small_g4_development.json",
+      "expected_sha256": "087b2e1eb46ba15d9c3167545e5340064573b9a62355484f0d2b375c415366e5",
+      "actual_sha256": "087b2e1eb46ba15d9c3167545e5340064573b9a62355484f0d2b375c415366e5",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\preparation_verification_v0.1_20261016\\cases\\medium_g1_development.json",
+      "expected_sha256": "958d77b497fb6be1efb1642a0675300ac415ff4c8754da7483fb84e77023edcc",
+      "actual_sha256": "958d77b497fb6be1efb1642a0675300ac415ff4c8754da7483fb84e77023edcc",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\preparation_verification_v0.1_20261016\\cases\\medium_g2_development.json",
+      "expected_sha256": "974f1fdf3ad05a373176ce7461c458e8ab71418e5c77270eaf2f13b3e03767e3",
+      "actual_sha256": "974f1fdf3ad05a373176ce7461c458e8ab71418e5c77270eaf2f13b3e03767e3",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\preparation_verification_v0.1_20261016\\cases\\medium_g4_development.json",
+      "expected_sha256": "924e90f8bd2509ca0aaecef32fbfccbb82df7b318ad887ebf8272ef3accfac3b",
+      "actual_sha256": "924e90f8bd2509ca0aaecef32fbfccbb82df7b318ad887ebf8272ef3accfac3b",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\preparation_verification_v0.1_20261016\\cases\\large_g1_development.json",
+      "expected_sha256": "dd2107f3f37f4211f6b52eab8eade489ec8c4ba6536fd0c7c220c23d8e1adb04",
+      "actual_sha256": "dd2107f3f37f4211f6b52eab8eade489ec8c4ba6536fd0c7c220c23d8e1adb04",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\preparation_verification_v0.1_20261016\\cases\\large_g2_development.json",
+      "expected_sha256": "fd4e0ccacfd4477b3b5a831736f2d5936b4b0822e0178c3054bce946966ab9fa",
+      "actual_sha256": "fd4e0ccacfd4477b3b5a831736f2d5936b4b0822e0178c3054bce946966ab9fa",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\preparation_verification_v0.1_20261016\\cases\\large_g3_development.json",
+      "expected_sha256": "bed7c9f8c0e84d89b664a67b3eefdfde2bb7620f9206f5d7c246b65b57392e89",
+      "actual_sha256": "bed7c9f8c0e84d89b664a67b3eefdfde2bb7620f9206f5d7c246b65b57392e89",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\preparation_verification_v0.1_20261016\\cases\\large_g4_development.json",
+      "expected_sha256": "40dabe39be57840c662e97c9c02daf6d164f6461472f17b8a62c13d8f6580655",
+      "actual_sha256": "40dabe39be57840c662e97c9c02daf6d164f6461472f17b8a62c13d8f6580655",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\run_p2_warm_global_20261017.py",
+      "expected_sha256": "f7168fe617b62c27d7db51fb885b922d6baaf7edd7604c4a2e199f02c396d68f",
+      "actual_sha256": "e8ff1d405546e0d01976a7a9cb803569092717d198fda7b22367fc4f24cbc72c",
+      "matches": false
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\candidate_baselines\\P2_WARM_GLOBAL\\v0.1_20261017\\source_provenance.json",
+      "expected_sha256": "0b631a05f1bd7bf189cd7e976020e123b37d28e1c4b7600b52c6c1600dc93932",
+      "actual_sha256": "0b631a05f1bd7bf189cd7e976020e123b37d28e1c4b7600b52c6c1600dc93932",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\baseline_suite.py",
+      "expected_sha256": "87e333952e0c8212bf22da25786d4fd65de65554d4c92ee66f699af3e4b6c951",
+      "actual_sha256": "87e333952e0c8212bf22da25786d4fd65de65554d4c92ee66f699af3e4b6c951",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\unified_geometry.py",
+      "expected_sha256": "b0d70871ab4b2a3d3a4ccf3edcdadf4b3db9eb2415134d5740270a76293aff53",
+      "actual_sha256": "b0d70871ab4b2a3d3a4ccf3edcdadf4b3db9eb2415134d5740270a76293aff53",
+      "matches": true
+    },
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\comparison_v0.1_20261016\\protocol.json",
+      "expected_sha256": "105500bbe34b87949522af8ac4273102e9dbb514f34d9040b14e26acc815a70e",
+      "actual_sha256": "105500bbe34b87949522af8ac4273102e9dbb514f34d9040b14e26acc815a70e",
+      "matches": true
+    }
+  ],
+  "protocol_hash_mismatch_count": 1,
+  "protocol_hash_mismatch": {
+    "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\run_p2_warm_global_20261017.py",
+    "expected_sha256": "f7168fe617b62c27d7db51fb885b922d6baaf7edd7604c4a2e199f02c396d68f",
+    "actual_sha256": "e8ff1d405546e0d01976a7a9cb803569092717d198fda7b22367fc4f24cbc72c",
+    "matches": false
+  }
+}

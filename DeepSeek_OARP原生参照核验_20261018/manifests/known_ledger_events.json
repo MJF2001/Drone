@@ -1,0 +1,39 @@
+{
+ "generated_utc": "2026-10-18T18:40:00+00:00",
+ "policy": "A start row may be unpaired only for a documented fault injection. A run_id may repeat only when a whole batch had to be re-run after a defect: the LAST attempt for a run_id is the delivered one, earlier attempts are superseded and kept. Every repeated id is listed here; verify_delivery.py fails on any repetition that is not listed.",
+ "unpaired_start": [
+  {
+   "run_id": "IFACE:b1:ledger_end_fail",
+   "kind": "interface",
+   "reason": "end-row write failure injection; entry.run replaced by a stub, no rank model and no GLNS call",
+   "replaced_by": null
+  }
+ ],
+ "duplicate_run_ids": [
+  "INIT:prep_rect",
+  "INIT:prep_sparse",
+  "INIT:prep_vline",
+  "N1:OARP_RANK0_FULLTOUR_SCENE",
+  "N1:OARP_REPLAN2_NATIVE_SCENE:cap0",
+  "N1:OARP_REPLAN2_NATIVE_SCENE:cap12",
+  "N1:OARP_REPLAN2_NATIVE_SCENE:cap2",
+  "N2:OARP_RANK0_FULLTOUR_SCENE",
+  "N2:OARP_REPLAN2_NATIVE_SCENE:cap0",
+  "N2:OARP_REPLAN2_NATIVE_SCENE:cap2",
+  "N3:OARP_RANK0_FULLTOUR_SCENE",
+  "N3:OARP_REPLAN2_NATIVE_SCENE:cap0",
+  "N3:OARP_REPLAN2_NATIVE_SCENE:cap2",
+  "N7:OARP_REPLAN2_NATIVE_SCENE:cap2",
+  "V2:N7:OARP_REPLAN2_NATIVE_SCENE:capmax"
+ ],
+ "duplicate_count": 15,
+ "superseded_batches": {
+  "INIT/EVENT attempts 1-3": "the closed loop was re-run after three defects (sparse-case free set, event_state coordinate types, N2 obstacle rule); all earlier attempts stay in the ledger",
+  "IFACE_b1": "first boundary attempt"
+ },
+ "known_config_collision": {
+  "case": "N7",
+  "detail": "the first attempt named both the cap=2 and the cap=2*|Q| configuration :capmax when |Q|=1, so that run id repeats; the V3 re-run names them by slot (cap2 / capmax) and is the delivered one.",
+  "requirement": "both configurations stay registered; the delivered artifacts come from V3"
+ }
+}

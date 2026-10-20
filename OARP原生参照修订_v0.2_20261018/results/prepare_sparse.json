@@ -1,0 +1,567 @@
+{
+  "request": {
+    "case_id": "prepare_sparse",
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        4,
+        0
+      ]
+    ],
+    "C": [],
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        4,
+        0
+      ]
+    ],
+    "current": [
+      2,
+      0
+    ],
+    "base": [
+      2,
+      0
+    ],
+    "resource": 1000,
+    "seed": 20261018,
+    "old_route": [],
+    "old_suffix": []
+  },
+  "method": "RANK0",
+  "cap": null,
+  "route": [
+    [
+      2,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      0,
+      0
+    ],
+    [
+      1,
+      0
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      4,
+      0
+    ],
+    [
+      3,
+      0
+    ],
+    [
+      2,
+      0
+    ]
+  ],
+  "status": "finished",
+  "audit": {
+    "valid": true,
+    "errors": [],
+    "steps": 8,
+    "Q": [
+      [
+        0,
+        0
+      ],
+      [
+        4,
+        0
+      ]
+    ],
+    "D": []
+  },
+  "candidates": [
+    {
+      "source": "greedy",
+      "route": [
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "generated": 6.700000005821494e-05,
+      "audited": 8.209999998598505e-05,
+      "accepted": 8.209999998598505e-05,
+      "audit": {
+        "valid": true,
+        "errors": [],
+        "steps": 8,
+        "Q": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "D": []
+      }
+    },
+    {
+      "source": "core",
+      "route": [
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "generated": 0.40859199999999873,
+      "audited": 0.40860720000000583,
+      "accepted": 0.40860720000000583,
+      "audit": {
+        "valid": true,
+        "errors": [],
+        "steps": 8,
+        "Q": [
+          [
+            0,
+            0
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "D": []
+      }
+    }
+  ],
+  "diagnostics": [],
+  "core_plan": {
+    "plan_id": "prepare_sparse",
+    "route": [
+      [
+        2,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        2,
+        0
+      ]
+    ],
+    "strips": [
+      {
+        "rank_id": "new:eb82b3930849",
+        "parent_rank_id": null,
+        "axis": "H",
+        "cells": [
+          [
+            0,
+            0
+          ]
+        ],
+        "visit_order": 0,
+        "reversed_direction": false,
+        "service_start": 2,
+        "service_end": 2,
+        "connector_start": 0
+      },
+      {
+        "rank_id": "new:52cd903a3552",
+        "parent_rank_id": null,
+        "axis": "H",
+        "cells": [
+          [
+            4,
+            0
+          ]
+        ],
+        "visit_order": 1,
+        "reversed_direction": true,
+        "service_start": 6,
+        "service_end": 6,
+        "connector_start": 2
+      }
+    ],
+    "packets": [
+      {
+        "start": 2,
+        "end": 2,
+        "path": [
+          [
+            0,
+            0
+          ]
+        ],
+        "kind": "rank"
+      },
+      {
+        "start": 6,
+        "end": 6,
+        "path": [
+          [
+            4,
+            0
+          ]
+        ],
+        "kind": "rank"
+      }
+    ],
+    "start": [
+      2,
+      0
+    ],
+    "end": [
+      2,
+      0
+    ],
+    "service_targets": [
+      [
+        0,
+        0
+      ],
+      [
+        4,
+        0
+      ]
+    ]
+  },
+  "core_detail": {
+    "status": "optimal",
+    "objective": 2.0,
+    "metrics": {
+      "rank_count": 2,
+      "new_rank_count": 2,
+      "added_endpoints": 4,
+      "extended_endpoints": 0,
+      "endpoint_bound": 4.0
+    },
+    "fractional_lp": false,
+    "used_integer_fallback": false,
+    "attempts": [
+      {
+        "mode": "LP",
+        "status": "optimal",
+        "variables": 0,
+        "constraints": 0
+      }
+    ],
+    "certification_repair": false,
+    "seconds": 0.04162050000002182,
+    "ranks": [
+      {
+        "axis": "H",
+        "cells": [
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "axis": "H",
+        "cells": [
+          [
+            4,
+            0
+          ]
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "kind": "rank",
+        "path": [
+          [
+            0,
+            0
+          ]
+        ],
+        "rank_keys": [
+          [
+            "H",
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        ],
+        "members": [
+          {
+            "rank_id": "new:eb82b3930849",
+            "parent_rank_id": null,
+            "axis": "H",
+            "cells": [
+              [
+                0,
+                0
+              ]
+            ],
+            "start": 0,
+            "end": 0,
+            "reverse": false
+          }
+        ]
+      },
+      {
+        "kind": "rank",
+        "path": [
+          [
+            4,
+            0
+          ]
+        ],
+        "rank_keys": [
+          [
+            "H",
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              0
+            ]
+          ]
+        ],
+        "members": [
+          {
+            "rank_id": "new:52cd903a3552",
+            "parent_rank_id": null,
+            "axis": "H",
+            "cells": [
+              [
+                4,
+                0
+              ]
+            ],
+            "start": 0,
+            "end": 0,
+            "reverse": false
+          }
+        ]
+      }
+    ],
+    "tour": {
+      "sets": [
+        [
+          0,
+          1
+        ],
+        [
+          2,
+          3
+        ],
+        [
+          4
+        ],
+        [
+          5
+        ]
+      ],
+      "matrix": [
+        [
+          35,
+          0,
+          4,
+          4,
+          35,
+          2
+        ],
+        [
+          0,
+          35,
+          4,
+          4,
+          35,
+          2
+        ],
+        [
+          4,
+          4,
+          35,
+          0,
+          35,
+          2
+        ],
+        [
+          4,
+          4,
+          0,
+          35,
+          35,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          35,
+          0
+        ],
+        [
+          35,
+          35,
+          35,
+          35,
+          0,
+          35
+        ]
+      ],
+      "order": [
+        4,
+        0,
+        3,
+        5
+      ],
+      "cost": 8,
+      "timeout": false,
+      "params": {
+        "mode": "default",
+        "trials": 5,
+        "restarts": 3,
+        "seed": 20261018,
+        "max_time": 4.594285899999932,
+        "verbose": 0
+      }
+    },
+    "core_natural": true
+  },
+  "flags": {
+    "route_valid": true,
+    "core_candidate_valid": true,
+    "fallback_selected": true,
+    "natural": false,
+    "candidate_accepted_in_time": true,
+    "call_within_budget": true,
+    "within_budget": true
+  },
+  "public_seconds": 0.40862110000000484,
+  "source": "greedy",
+  "plan_id": "prepare_sparse",
+  "attempt_id": "6e5aa8b7-f12b-470a-82ee-688c458c5712",
+  "kind": "preparation"
+}

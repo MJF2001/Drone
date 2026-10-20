@@ -1,0 +1,81 @@
+{
+ "round": "oarp_native_reference_20261018",
+ "frozen_utc": "2026-10-18T17:04:53.346975+00:00",
+ "methods": {
+  "OARP_RANK0_FULLTOUR_SCENE": {
+   "variant": 0,
+   "cap": null,
+   "old_services_passed": 0,
+   "meaning": "rank minimisation over the current Q with no change budget; every rank enters one full GTSP with both directions"
+  },
+  "OARP_REPLAN2_NATIVE_SCENE": {
+   "variant": 2,
+   "caps": [
+    0,
+    2,
+    "2*|Q|"
+   ],
+   "meaning": "model 2 against native remaining fragments; unchanged fragments keep their exact internal old connector"
+  }
+ },
+ "not_claimed": [
+  "the author's online robot system",
+  "the paper's theoretical guarantees",
+  "global optimality",
+  "the paper's main algorithm"
+ ],
+ "task": {
+  "pending": "Q = (P-C) and F",
+  "deferred": "D = (P-C) - F, kept and never completed",
+  "motion": "four-neighbour unit steps over F",
+  "resource": "route_steps <= remaining budget"
+ },
+ "timing": {
+  "public_soft_deadline_seconds": 5.0,
+  "subprocess_hard_cap_seconds": 10.0,
+  "covered": "input checks, normalisation, geometry, fallback, rank construction/solve, GTSP matrix and search, expansion, pre-return audit",
+  "ledger": "start/end writes and fsync are outside the measured algorithm time and are reported separately"
+ },
+ "candidate_boundary": "generated -> audited -> accepted; a route audited after the deadline is diagnostic only",
+ "flags": [
+  "route_valid",
+  "coverage_complete",
+  "resource_valid",
+  "returned_base",
+  "rank_status",
+  "rank_optimal",
+  "tour_status",
+  "core_candidate_valid",
+  "fallback_selected",
+  "natural",
+  "termination_reason",
+  "call_within_budget",
+  "candidate_accepted_in_time"
+ ],
+ "fallback": "frozen shared greedy (nearest pending, then base); computed before the core and never relabelled as a core result",
+ "resource": 1000,
+ "seed": 20261018,
+ "call_budget": {
+  "initial": 3,
+  "event": 32,
+  "interface": 24,
+  "defect": 16,
+  "full_total": 75,
+  "strip": 56,
+  "gtsp": 8,
+  "scip_total": 640,
+  "glns_total": 80
+ },
+ "stop_rules": {
+  "per_call": "soft deadline and the subprocess hard cap",
+  "round": "stop at 75 full calls, 56 strip items or 8 GTSP items"
+ },
+ "not_in_this_round": [
+  "real development maps",
+  "holdout",
+  "1/20/120 s matrix",
+  "parameter search",
+  "MLC implementation",
+  "improving OARP"
+ ]
+}

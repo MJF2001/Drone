@@ -1,0 +1,331 @@
+{
+ "run_id": "PREFLIGHT:pf_obstacle_small:P2_MULTI:20261018",
+ "batch": "PREFLIGHT",
+ "kind": "preflight",
+ "case_id": "pf_obstacle_small",
+ "method_id": "P2_MULTI",
+ "seed": 20261018,
+ "soft_limit_seconds": 2.0,
+ "hard_limit_seconds": 15.0,
+ "interpreter": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\运行环境\\python\\python.exe",
+ "module_paths": {
+  "baseline_suite": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_底层算法开发比较_20261018\\sources\\reference_tree\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\baseline_suite.py",
+  "p2_search_audit": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_底层算法开发比较_20261018\\sources\\reference_tree\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\p2_search_audit.py",
+  "planners": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_底层算法开发比较_20261018\\sources\\reference_tree\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\planners.py",
+  "model": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_底层算法开发比较_20261018\\sources\\reference_tree\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py",
+  "unified_geometry": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_底层算法开发比较_20261018\\sources\\reference_tree\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\unified_geometry.py",
+  "bfs_metric_geometry": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_底层算法开发比较_20261018\\sources\\reference_tree\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\bfs_metric_geometry.py",
+  "audit": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_底层算法开发比较_20261018\\sources\\reference_tree\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py"
+ },
+ "started_utc": "2026-10-18T13:44:24.228915+00:00",
+ "input": {
+  "case_id": "pf_obstacle_small",
+  "free": 23,
+  "published_targets": 8,
+  "covered": 3,
+  "pending": 4,
+  "deferred": 1,
+  "current": [
+   3,
+   1
+  ],
+  "base": [
+   0,
+   0
+  ],
+  "old_route_len": 9,
+  "remaining_resource": 92,
+  "seed": 20261018,
+  "termination": {
+   "time_limit_seconds": 2.0,
+   "natural": "method_specific",
+   "extra": {}
+  },
+  "meta": {
+   "map_id": "pf_obstacle_small",
+   "synthetic": true,
+   "authoritative_source": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_底层算法开发比较_20261018\\preflight\\inputs\\pf_obstacle_small.json",
+   "source_sha256": "3f3cfebd149d6f2772ef5c9e17192b09951870164a6ad47fe10ed3f177245a4a"
+  }
+ },
+ "status": "finished",
+ "reason": "",
+ "route_steps": 10,
+ "audit": {
+  "valid": true,
+  "errors": [],
+  "route_steps": 10,
+  "starts_at_current": true,
+  "ends_at_base": true,
+  "collisions": [],
+  "illegal_steps": [],
+  "coverage_complete": true,
+  "uncovered": [],
+  "uncovered_count": 0,
+  "covered_physical": [
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    2,
+    2
+   ],
+   [
+    3,
+    1
+   ],
+   [
+    4,
+    1
+   ],
+   [
+    4,
+    2
+   ]
+  ],
+  "covered_physical_count": 7,
+  "ledger_size": 3,
+  "coverage_claimed_without_visit": [],
+  "deferred_untouched": [
+   [
+    3,
+    2
+   ]
+  ],
+  "deferred_visited": [],
+  "resource": {
+   "limit": 92,
+   "used": 10,
+   "ok": true
+  },
+  "distinct_cells": 9,
+  "revisited_positions": 2,
+  "direction_changes": 6,
+  "target_visits": 8
+ },
+ "resource_check": {
+  "limit": 92,
+  "used": 10,
+  "ok": true,
+  "source": "recomputed_from_route"
+ },
+ "termination": {
+  "natural": true,
+  "reason": "",
+  "engine_natural": true,
+  "within_budget": true,
+  "budget_overrun_seconds": 0.0
+ },
+ "fallback_used": true,
+ "fallback_steps": 10,
+ "final_source": "common_fallback",
+ "best_candidate_source": "common_fallback",
+ "stage_seconds": {
+  "adapter_call": 0.001639699999941513,
+  "_instrumented": [
+   "adapter_call",
+   "engine:fallback",
+   "engine:H_generate",
+   "engine:H_raw",
+   "engine:H_nearest",
+   "engine:H_NN_raw",
+   "engine:H_scan_opt",
+   "engine:H_scan_expand",
+   "engine:H_NN_opt",
+   "engine:H_NN_expand",
+   "engine:V_generate",
+   "engine:V_raw",
+   "engine:V_nearest",
+   "engine:V_NN_raw",
+   "engine:V_scan_opt",
+   "engine:V_scan_expand",
+   "engine:V_NN_opt",
+   "engine:V_NN_expand",
+   "engine:H_scan_deep",
+   "engine:H_scan_deep_expand",
+   "engine:H_NN_deep",
+   "engine:H_NN_deep_expand",
+   "engine:V_scan_deep",
+   "engine:V_scan_deep_expand",
+   "engine:V_NN_deep",
+   "engine:V_NN_deep_expand",
+   "engine:reverse_H_raw",
+   "engine:reverse_H_opt",
+   "engine:reverse_H_expand",
+   "engine:reverse_V_raw",
+   "engine:reverse_V_opt",
+   "engine:reverse_V_expand",
+   "engine:perturb_H_raw",
+   "engine:perturb_H_opt",
+   "engine:perturb_H_expand",
+   "engine:perturb_V_raw",
+   "engine:perturb_V_opt",
+   "engine:perturb_V_expand",
+   "engine:shuffle_0_raw",
+   "engine:shuffle_0_opt",
+   "engine:shuffle_0_expand",
+   "engine:shuffle_1_raw",
+   "engine:shuffle_1_opt",
+   "engine:shuffle_1_expand"
+  ],
+  "_missing": [],
+  "_total": 0.001639699999941513,
+  "_stopped": true,
+  "engine:fallback": 0.00012509999942267314,
+  "engine:H_generate": 2.0899999071843922e-05,
+  "engine:H_raw": 1.6499998309882358e-05,
+  "engine:H_nearest": 8.289999823318794e-05,
+  "engine:H_NN_raw": 1.469999915570952e-05,
+  "engine:H_scan_opt": 4.4699998397845775e-05,
+  "engine:H_scan_expand": 1.4299999747890979e-05,
+  "engine:H_NN_opt": 1.799999881768599e-05,
+  "engine:H_NN_expand": 1.2699998478638008e-05,
+  "engine:V_generate": 1.559999873279594e-05,
+  "engine:V_raw": 6.539999958476983e-05,
+  "engine:V_nearest": 1.2000000424450263e-05,
+  "engine:V_NN_raw": 1.21000011858996e-05,
+  "engine:V_scan_opt": 3.319999814266339e-05,
+  "engine:V_scan_expand": 1.2000000424450263e-05,
+  "engine:V_NN_opt": 1.599999814061448e-05,
+  "engine:V_NN_expand": 1.1100000847363845e-05,
+  "engine:H_scan_deep": 1.559999873279594e-05,
+  "engine:H_scan_deep_expand": 1.2000000424450263e-05,
+  "engine:H_NN_deep": 1.4899997040629387e-05,
+  "engine:H_NN_deep_expand": 1.21000011858996e-05,
+  "engine:V_scan_deep": 1.559999873279594e-05,
+  "engine:V_scan_deep_expand": 1.1800002539530396e-05,
+  "engine:V_NN_deep": 1.5199999324977398e-05,
+  "engine:V_NN_deep_expand": 1.1600001016631722e-05,
+  "engine:reverse_H_raw": 1.6400001186411828e-05,
+  "engine:reverse_H_opt": 3.35000004270114e-05,
+  "engine:reverse_H_expand": 1.3199998647905886e-05,
+  "engine:reverse_V_raw": 1.170000177808106e-05,
+  "engine:reverse_V_opt": 1.6699999832781032e-05,
+  "engine:reverse_V_expand": 1.2000000424450263e-05,
+  "engine:perturb_H_raw": 6.0900001699337736e-05,
+  "engine:perturb_H_opt": 3.110000034212135e-05,
+  "engine:perturb_H_expand": 1.2499996955739334e-05,
+  "engine:perturb_V_raw": 1.3100001524435356e-05,
+  "engine:perturb_V_opt": 2.9000002541579306e-05,
+  "engine:perturb_V_expand": 1.1399999493733048e-05,
+  "engine:shuffle_0_raw": 2.550000135670416e-05,
+  "engine:shuffle_0_opt": 2.9400001949397847e-05,
+  "engine:shuffle_0_expand": 2.3399999918183312e-05,
+  "engine:shuffle_1_raw": 0.00014589999773306772,
+  "engine:shuffle_1_opt": 4.3700001697288826e-05,
+  "engine:shuffle_1_expand": 1.3199998647905886e-05,
+  "_engine_overlapping_dropped": "H_NN_deep_passes,H_NN_passes,H_scan_deep_passes,H_scan_passes,V_NN_deep_passes,V_NN_passes,V_scan_deep_passes,V_scan_passes,perturb_H_passes,perturb_V_passes,reverse_H_passes,reverse_V_passes,shuffle_0_passes,shuffle_1_passes"
+ },
+ "errors": [],
+ "core_version": "v2_20261012",
+ "adapter_version": "dev_compare_20261018",
+ "source_sha256": "a873f4a28f86b6ee1094480749026f9e619c4560854643e727419a05262774b4",
+ "call_total_seconds": 0.009307299998909002,
+ "within_budget": true,
+ "budget_overrun_seconds": 0.0,
+ "ledger_write_error": null,
+ "route": [
+  [
+   3,
+   1
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   0,
+   0
+  ]
+ ],
+ "meta": {
+  "frozen_methods": [
+   "P2_MULTI",
+   "OARP_CORE2",
+   "TREE_MST"
+  ],
+  "engine_status": "finished",
+  "engine_reason": null,
+  "improvements": [
+   {
+    "seconds": 0.00018450000061420724,
+    "steps": 10,
+    "source": "common_fallback"
+   }
+  ],
+  "core_finished": true,
+  "core_status": null,
+  "core_steps": null,
+  "active_stage": "shuffle_1_expand",
+  "engine_seconds": 0.0013711999999941327,
+  "shared_fallback_names": [
+   "old_suffix",
+   "common_fallback",
+   "common_old_suffix",
+   "common_GD_adapter"
+  ],
+  "solver": null,
+  "rank_cap": null,
+  "rank_status": null,
+  "block_count": null,
+  "environment": {
+   "ok": true,
+   "code": "solvable_environment"
+  },
+  "engine_stage_instrumentation": "engine_events",
+  "snapshot_description": {
+   "targets": 7,
+   "covered": 3,
+   "radius": 0,
+   "distance_budget": 92
+  },
+  "adapter_version": "dev_compare_20261018",
+  "core_version": "v2_20261012",
+  "source_sha256": "a873f4a28f86b6ee1094480749026f9e619c4560854643e727419a05262774b4",
+  "call_total_seconds": 0.009307299998909002,
+  "within_budget": true,
+  "budget_overrun_seconds": 0.0
+ },
+ "finished_utc": "2026-10-18T13:44:24.245916+00:00"
+}

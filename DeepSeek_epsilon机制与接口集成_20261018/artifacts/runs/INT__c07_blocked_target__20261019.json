@@ -1,0 +1,629 @@
+{
+ "run_id": "INT:c07_blocked_target:20261019",
+ "kind": "integration",
+ "case_id": "c07_blocked_target",
+ "seed": 20261019,
+ "soft_limit_seconds": 10.0,
+ "hard_limit_seconds": 15.0,
+ "max_control_iterations": 20000,
+ "started_utc": "2026-10-18T16:40:51.377349+00:00",
+ "request": {
+  "case_id": "c07_blocked_target",
+  "free": 22,
+  "published_targets": 23,
+  "covered": 0,
+  "pending": 22,
+  "deferred": 1,
+  "current": [
+   0,
+   0
+  ],
+  "base": [
+   0,
+   0
+  ],
+  "old_route_len": 0,
+  "remaining_resource": 250,
+  "seed": 20261019,
+  "termination": {
+   "time_limit_seconds": 10.0,
+   "natural": "method_natural_termination",
+   "extra": {}
+  },
+  "meta": {
+   "case_note": "one published target is inside the wall: it becomes deferred, never completed",
+   "expected": {
+    "status": "success",
+    "coverage_complete": true,
+    "deferred_min": 1
+   }
+  }
+ },
+ "status": "finished",
+ "reason": "FN_no_positive_potential",
+ "route_steps": 30,
+ "audit": {
+  "valid": true,
+  "errors": [],
+  "route_steps": 30,
+  "starts_at_current": true,
+  "ends_at_base": true,
+  "collisions": [],
+  "illegal_steps": [],
+  "coverage_complete": true,
+  "uncovered": [],
+  "uncovered_count": 0,
+  "covered_physical": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    0,
+    3
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    1,
+    3
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    2,
+    2
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    4,
+    0
+   ],
+   [
+    4,
+    1
+   ],
+   [
+    4,
+    2
+   ],
+   [
+    4,
+    3
+   ],
+   [
+    5,
+    0
+   ],
+   [
+    5,
+    1
+   ],
+   [
+    5,
+    2
+   ],
+   [
+    5,
+    3
+   ]
+  ],
+  "covered_physical_count": 22,
+  "ledger_size": 0,
+  "coverage_claimed_without_visit": [],
+  "deferred_untouched": [
+   [
+    3,
+    1
+   ]
+  ],
+  "deferred_visited": [],
+  "resource": {
+   "limit": 250,
+   "used": 30,
+   "ok": true
+  },
+  "distinct_cells": 22,
+  "revisited_positions": 9,
+  "direction_changes": 11,
+  "target_visits": 31
+ },
+ "resource_check": {
+  "limit": 250,
+  "used": 30,
+  "ok": true,
+  "source": "recomputed_from_route"
+ },
+ "termination": {
+  "natural": true,
+  "reason": "FN_no_positive_potential",
+  "engine_natural": true
+ },
+ "errors": [],
+ "stage_seconds": {
+  "maps_build": 0.0001024999946821481,
+  "etm_and_return": 0.010073000004922505,
+  "audit": 0.00011180000001331791
+ },
+ "route": [
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   0,
+   0
+  ]
+ ],
+ "meta": {
+  "core_version": "epsilon_star_core_integrated_v1_20261018",
+  "adapter_version": "epsilon_star_adapter_integrated_v1_20261018",
+  "adaptation_class": "epsilon_star_core_adapted_task_control",
+  "control_mode": "task",
+  "ledgers": {
+   "control": "MAPS state; U = control-pending, updated only at WT",
+   "physical": "recomputed by the independent audit from the route"
+  },
+  "engine": {
+   "terminal": "FN_no_positive_potential",
+   "credit_mode": "task",
+   "iterations": 45,
+   "moves": 30,
+   "tasks": 22,
+   "extremum_escapes": 0,
+   "levels_used": {
+    "-1": 1,
+    "0": 44
+   },
+   "rules": {
+    "FN_no_positive_potential": 1,
+    "line6_task_here": 22,
+    "line8_argmax_potential": 22
+   },
+   "physically_covered_targets": 22,
+   "control_tasked_targets": 22,
+   "steps": 30,
+   "events": {
+    "index_first_physical_complete": 22,
+    "time_first_physical_complete": 0.010172000002057757,
+    "index_control_fn": 22,
+    "time_control_fn": 0.010227899998426437,
+    "index_return_start": 22,
+    "index_return_end": 30,
+    "time_return_end": 0.010250899998936802,
+    "extra_steps_physical_to_fn": 0,
+    "return_steps": 8,
+    "control_tasked": 22,
+    "decision_count": 45
+   },
+   "connector": {
+    "row_builds": 21,
+    "cached_paths": 23,
+    "cached_rows": 21
+   },
+   "turn_cost": 1.0,
+   "travel_cost": 1.0,
+   "initial_heading": null,
+   "failures": []
+  },
+  "events": {
+   "index_first_physical_complete": 22,
+   "time_first_physical_complete": 0.010172000002057757,
+   "index_control_fn": 22,
+   "time_control_fn": 0.010227899998426437,
+   "index_return_start": 22,
+   "index_return_end": 30,
+   "time_return_end": 0.010250899998936802,
+   "extra_steps_physical_to_fn": 0,
+   "return_steps": 8,
+   "control_tasked": 22,
+   "decision_count": 45
+  },
+  "connector": {
+   "row_builds": 21,
+   "cached_paths": 23,
+   "cached_rows": 21
+  },
+  "maps": {
+   "bounding_box": [
+    0,
+    5,
+    0,
+    3
+   ],
+   "L": 1,
+   "cells_per_level": {
+    "1": 4
+   },
+   "block_sizes": {
+    "1": [
+     [
+      3,
+      2
+     ]
+    ]
+   },
+   "bmax": 6,
+   "forbidden_cells": 0,
+   "unexplored_level0": 22,
+   "counters": {
+    "level0_refresh": 0,
+    "coarse_block_updates": 0,
+    "neighbourhood_calls": 0
+   }
+  },
+  "environment": {
+   "ok": true,
+   "code": "solvable_environment"
+  },
+  "parameters": {
+   "travel_cost": 1.0,
+   "turn_cost": 1.0,
+   "turn_cost_units": "per degree from the heading",
+   "max_control_iterations": 20000,
+   "initial_heading": null
+  },
+  "candidate": {
+   "generated": true,
+   "audited": true,
+   "accepted": true,
+   "post_deadline": false
+  },
+  "not_scorable_reason": "",
+  "errors": [],
+  "deadline": {
+   "soft_deadline_seconds": 10.0,
+   "soft_deadline_hit": false,
+   "soft_deadline_checks": 109,
+   "soft_deadline_elapsed_seconds": 0.010381699998106342,
+   "semantics": "cooperative; one stage may overrun slightly and is reported"
+  },
+  "route": {
+   "completion_steps": 30
+  },
+  "ledger": {
+   "run_id": "INT:c07_blocked_target:20261019",
+   "batch": "INTEGRATION",
+   "kind": "integration",
+   "call_total_seconds": 0.012771400004567113
+  }
+ },
+ "covered_physical": [
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   5,
+   3
+  ]
+ ],
+ "pending_remaining": [
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   5,
+   3
+  ]
+ ],
+ "deferred_remaining": [
+  [
+   3,
+   1
+  ]
+ ],
+ "finished_utc": "2026-10-18T16:40:51.417351+00:00"
+}

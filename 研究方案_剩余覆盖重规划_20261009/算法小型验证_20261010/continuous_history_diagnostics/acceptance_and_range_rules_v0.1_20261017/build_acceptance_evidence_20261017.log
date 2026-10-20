@@ -1,0 +1,79 @@
+{
+  "status": "PASS",
+  "attempts": 197,
+  "unique_valid": 120,
+  "batch_method_counts": {
+    "initial": {
+      "LITERAL": 13,
+      "P2_MULTI": 12,
+      "P2_WARM_GLOBAL": 13
+    },
+    "recovery1": {
+      "LITERAL": 30,
+      "P2_MULTI": 17,
+      "P2_WARM_GLOBAL": 17
+    },
+    "recovery2": {
+      "LITERAL": 40,
+      "P2_MULTI": 28,
+      "P2_WARM_GLOBAL": 27
+    }
+  },
+  "hash_mismatch": [
+    {
+      "path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\run_p2_warm_global_20261017.py",
+      "expected_sha256": "f7168fe617b62c27d7db51fb885b922d6baaf7edd7604c4a2e199f02c396d68f",
+      "actual_sha256": "e8ff1d405546e0d01976a7a9cb803569092717d198fda7b22367fc4f24cbc72c",
+      "matches": false
+    }
+  ],
+  "warm_calls": 40,
+  "warm_groups": [
+    {
+      "budget_seconds": 1,
+      "calls": 20,
+      "warm_stage_termination_counts": {
+        "no_improving_2opt_move": 10,
+        "deadline": 10
+      },
+      "warm_stage_status_counts": {
+        "completed": 10,
+        "deadline": 10
+      },
+      "warm_optimize_stage_seconds_mean": 0.6254570899993268,
+      "warm_optimize_stage_seconds_median": 0.8203051499986032,
+      "warm_optimize_stage_seconds_max": 0.9902490000022226,
+      "recorded_swaps": 28,
+      "completed_sequence_cost_logs": 28,
+      "swaps_without_completed_sequence_cost_log": 0,
+      "calls_with_later_warm_expansion_skipped": 10
+    },
+    {
+      "budget_seconds": 20,
+      "calls": 20,
+      "warm_stage_termination_counts": {
+        "no_improving_2opt_move": 16,
+        "deadline": 4
+      },
+      "warm_stage_status_counts": {
+        "completed": 16,
+        "deadline": 4
+      },
+      "warm_optimize_stage_seconds_mean": 5.888927645000512,
+      "warm_optimize_stage_seconds_median": 1.0711516500050493,
+      "warm_optimize_stage_seconds_max": 19.93348340000375,
+      "recorded_swaps": 48,
+      "completed_sequence_cost_logs": 48,
+      "swaps_without_completed_sequence_cost_log": 0,
+      "calls_with_later_warm_expansion_skipped": 4
+    }
+  ],
+  "cross_batch_elapsed_changes": 80,
+  "artifacts": [
+    "audit_summary_errata_20261017.json",
+    "execution_timeline_20261017.json",
+    "execution_attempt_timeline.csv",
+    "warm_overhead_analysis_20261017.json",
+    "acceptance_evidence_matrix_20261017.csv"
+  ]
+}

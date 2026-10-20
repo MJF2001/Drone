@@ -1,0 +1,148 @@
+{
+ "run_id": "INT2:c12_bad_input:20261019",
+ "kind": "integration",
+ "case_id": "c12_bad_input",
+ "seed": 20261019,
+ "soft_limit_seconds": 10.0,
+ "hard_limit_seconds": 15.0,
+ "max_control_iterations": 20000,
+ "started_utc": "2026-10-18T16:42:32.407367+00:00",
+ "request": {
+  "case_id": "c12_bad_input",
+  "free": 9,
+  "published_targets": 2,
+  "covered": 2,
+  "pending": 0,
+  "deferred": 0,
+  "current": [
+   5,
+   5
+  ],
+  "base": [
+   0,
+   0
+  ],
+  "old_route_len": 0,
+  "remaining_resource": 50,
+  "seed": 20261019,
+  "termination": {
+   "time_limit_seconds": 10.0,
+   "natural": "method_natural_termination",
+   "extra": {}
+  },
+  "meta": {
+   "case_note": "current outside free must be rejected with a named reason, not crash",
+   "expected": {
+    "status": "input_precondition_unmet",
+    "coverage_complete": false
+   }
+  }
+ },
+ "status": "input_precondition_unmet",
+ "reason": "current_not_free",
+ "route_steps": null,
+ "audit": {
+  "valid": false,
+  "errors": [
+   "empty_route"
+  ],
+  "route_steps": null,
+  "coverage_complete": false,
+  "uncovered": [],
+  "uncovered_count": 0,
+  "covered_physical": [],
+  "deferred_untouched": [],
+  "deferred_visited": [],
+  "resource": {
+   "limit": 50,
+   "used": null,
+   "ok": false
+  },
+  "direction_changes": null,
+  "revisited_positions": null,
+  "illegal_steps": [],
+  "collisions": [],
+  "coverage_claimed_without_visit": [],
+  "starts_at_current": false,
+  "ends_at_base": false,
+  "covered_physical_count": 0,
+  "ledger_size": 2,
+  "distinct_cells": 0,
+  "target_visits": 0
+ },
+ "resource_check": {
+  "limit": 50,
+  "used": null,
+  "ok": false,
+  "source": "recomputed_from_route"
+ },
+ "termination": {
+  "natural": false,
+  "reason": "current_not_free",
+  "engine_natural": false
+ },
+ "errors": [
+  "input:current_not_free:(5, 5)"
+ ],
+ "stage_seconds": {
+  "_sum": 0
+ },
+ "route": [],
+ "meta": {
+  "core_version": "epsilon_star_core_integrated_v1_20261018",
+  "adapter_version": "epsilon_star_adapter_integrated_v1_20261018",
+  "adaptation_class": "epsilon_star_core_adapted_task_control",
+  "control_mode": "task",
+  "ledgers": {
+   "control": "MAPS state; U = control-pending, updated only at WT",
+   "physical": "recomputed by the independent audit from the route"
+  },
+  "engine": {},
+  "events": {},
+  "connector": {},
+  "maps": {},
+  "environment": {
+   "ok": false,
+   "code": "current_not_free"
+  },
+  "parameters": {
+   "travel_cost": 1.0,
+   "turn_cost": 1.0,
+   "turn_cost_units": "per degree from the heading",
+   "max_control_iterations": 20000,
+   "initial_heading": null
+  },
+  "candidate": {
+   "generated": false,
+   "audited": true,
+   "accepted": false,
+   "post_deadline": false
+  },
+  "not_scorable_reason": "input_precondition_unmet",
+  "errors": [
+   "(5, 5)",
+   "input:current_not_free:(5, 5)"
+  ],
+  "deadline": {
+   "soft_deadline_seconds": 10.0,
+   "soft_deadline_hit": false,
+   "soft_deadline_checks": 0,
+   "soft_deadline_elapsed_seconds": 4.0400002035312355e-05,
+   "semantics": "cooperative; one stage may overrun slightly and is reported"
+  },
+  "route": {
+   "completion_steps": null
+  },
+  "ledger": {
+   "run_id": "INT2:c12_bad_input:20261019",
+   "batch": "INTEGRATION",
+   "kind": "integration",
+   "call_total_seconds": 0.002281000000948552
+  }
+ },
+ "covered_physical": [],
+ "pending_remaining": [],
+ "deferred_remaining": [],
+ "finished_utc": "2026-10-18T16:42:32.436879+00:00",
+ "decision_count": 2
+}

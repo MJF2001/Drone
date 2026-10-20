@@ -1,0 +1,86 @@
+"""Summarize saved evidence only. Never imports a planner."""
+import hashlib,json
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent
+WORK=ROOT.parent
+def load(p):return json.loads(p.read_text(encoding='utf-8'))
+def main():
+    protocol=load(ROOT/'protocol.json')
+    rows=[dict(load(ROOT/'results'/f"{j['plan_id']}.json"),job=j) for j in protocol['planned']]
+    totals={}
+    for budget in (1,20,120):
+        rs=[r for r in rows if r['job']['budget']==budget]
+        totals[str(budget)]={'n':len(rs),'timely':sum(r['flags']['within_budget'] for r in rs),
+            'legal':sum(r['flags']['route_valid'] for r in rs),'total_seconds':sum(r['public_seconds'] for r in rs),
+            'total_steps':sum(len(r['route'])-1 for r in rs) if all(r['flags']['route_valid'] for r in rs) else None}
+    oldroot=WORK/'OARP新版道路复验_汇报用_20261018'
+    oldprotocol=load(oldroot/'protocol.json')
+    oldrows={(j['case'],j['seed']):load(oldroot/'results'/f"{j['plan_id']}.json") for j in oldprotocol['planned']}
+    newlong=[r for r in rows if r['job']['budget']==120]
+    matching=[r['route']==oldrows[r['job']['case'],r['job']['seed']]['core_plan']['route'] for r in newlong]
+    assert all(matching)
+    old_seconds=sum(r['public_seconds'] for r in oldrows.values())
+    old_steps=sum(len(r['route'])-1 for r in oldrows.values())
+    stages={}
+    for r in newlong:
+        for name,value in r['stage_seconds'].items():stages[name]=stages.get(name,0.0)+value
+    evidence={'totals':totals,'old_120_final_steps':old_steps,'old_120_seconds':old_seconds,
+        'new_120_matches_old_saved_core_route':sum(matching),'old_vs_new_public_seconds_reduction':1-totals['120']['total_seconds']/old_seconds,
+        'new_120_stage_seconds':stages,'actual_full_calls':60,'mocked_tests':8,'automatic_retries':0,
+        'old_sources_protected':len(load(ROOT/'protection.json')),
+        'result_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (ROOT/'results').glob('*.json')}}
+    (ROOT/'summary.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2),encoding='utf-8')
+    text='''# OARP 独立运行修订与三档复测
+
+本轮将 OARP 整体条带适配版改为独立运行。计分路线只来自其条带划分与访问顺序求解，不再构造全局贪心保底，也不再把旧路线作为候选。它仍是四邻接单位步数、指定剩余任务和返航约束下的场景适配版，不等同于完整复现原论文的 OARP-Replan 在线控制器。
+
+## 修改范围
+
+去掉入口中“先构造贪心，再求 OARP，最后比较候选”的流程。独立入口不接收旧路线，FULL 核心不读取旧路线；每次调用的距离缓存初始为空。条带划分代码 ranks.py、条带访问代码 tour.py、GLNS 参数、BFS 顺序与距离查询实现保持原样。增加条带划分、连接矩阵、求解、重建、候选审核和最终审核的计时。此次没有同时优化距离实现。
+
+原 OARP-Replan 的 GD 是时间不足时沿旧路线的局部绕行，与这里移除的全局最近目标贪心不同。本轮独立 FULL 对照不实现该控制机制。
+
+## 实验条件
+
+相同 10 个开发状态、两个种子 20261018/20261019、1/20/120 秒公共预算，共 60 项，均在运行前冻结。每项硬看门狗为预算加 15 秒，无自动重试。依赖预加载在公共入口之外，另存 bootstrap_seconds；父进程全过程另存 supervisor 耗时。这沿用旧对照的计时边界，公共耗时包括本次几何缓存建立和最终审核，不是冷进程启动耗时。
+
+## 汇总结果
+
+| 每次预算 | 预算内合法完成 | 20 次总步数 | 20 次合计公共耗时 |
+|---|---:|---:|---:|
+'''
+    for budget in (1,20,120):
+        s=totals[str(budget)];steps=str(s['total_steps']) if s['total_steps'] is not None else '—（有失败，不作全批排名）'
+        text+=f"| {budget}秒 | {s['timely']}/20 | {steps} | {s['total_seconds']:.6f}秒 |\n"
+    text+='\n1 秒档的两个失败均为 large_g3；阶段记录显示截止发生在条带连接矩阵计算中，未启动 GLNS。20 秒和 120 秒档全部合法完成。失败输出不记作零步。\n\n'
+    text+=f"120 秒档的 20 次路线与旧版本保存的 **OARP 核心路线 20/20 逐格相同**。本轮最终总步数为 {totals['120']['total_steps']}，旧候选池最终输出为 {old_steps}；差别仅在 small_g4 两个种子：旧版采用 46 步旧尾段，本轮自身核心为 48 步。这 4 步不能通过保留旧候选来隐藏。旧版小图中有部分贪心候选与核心等长，本轮全部只认核心。\n\n"
+    text+=f"120 秒档公共总耗时由 {old_seconds:.6f} 秒降为 {totals['120']['total_seconds']:.6f} 秒，减少 {evidence['old_vs_new_public_seconds_reduction']:.2%}。这是同输入、同算法参数、不同批次的封装修正结果，不将它称为 OARP 算法创新。\n\n"
+    text+='## 逐状态结果\n\n每格为两个种子的合计“步数／公共耗时秒”。— 表示两次都没有及时的合法完整输出。\n\n| 状态 | 1秒 | 20秒 | 120秒 |\n|---|---:|---:|---:|\n'
+    cases=sorted({j['case'] for j in protocol['planned']},key=lambda c:({'small':0,'medium':1,'large':2}[c.split('_')[0]],c))
+    for case in cases:
+        cells=[]
+        for budget in (1,20,120):
+            rs=[r for r in rows if r['job']['case']==case and r['job']['budget']==budget]
+            steps=str(sum(len(r['route'])-1 for r in rs)) if all(r['flags']['within_budget'] for r in rs) else '—'
+            cells.append(f"{steps} / {sum(r['public_seconds'] for r in rs):.6f}")
+        text+=f"| {case.removesuffix('_development')} | "+' | '.join(cells)+' |\n'
+    text+='''
+## 验证与边界
+
+先用相同入口和假引擎复现“贪心挡住核心”的调用顺序问题，修订前 8 项失败，修订后 8 项通过。这些检查不调用实际规划器，覆盖无历史输入、旧路线不能取代核心、核心失败不能返回保底、生成/审核跨截止、最后审核计时和资源拒绝。
+
+正式运行只有 60 项，不追加求解，不使用留出。独立检查器按 run_id 联结计划、账本、结果和父进程记录，重算路线、目标、资源和条带；每项仅可接受一个核心候选。旧批次、原修订和历史比较共 681 项文件哈希保持一致，依赖和条带/访问求解源码保持一致。正式封存统计以 verification_summary.json 为准；命令为：
+
+```powershell
+& '..\\.remote_Drone\\运行环境\\python\\python.exe' -B -X utf8 '.\\seal.py' --check
+```
+
+GLNS 是启发式求解，本轮没有增加精确最优认证。`core_complete` 表示该实现按当前终止配置完成并及时返回，不代表全局路径最优。比较其他方法时需保留其原框架是否选用保底的信息，不能将其所有最终输出自动当作核心产出。
+
+## 后续工作
+
+先使用本轮独立数据替换汇报中的 OARP 列。若继续优化实现，应优先核验连接矩阵中的距离查询和 BFS 缓存，单独验证等价性，再评价加速。底层方法的条带划分与实际路长目标是否一致，仍需作为算法研究问题单独对照。本轮不继续启动改进实验。
+'''
+    (ROOT/'修订与复测报告.md').write_text(text,encoding='utf-8')
+    print(json.dumps(totals,ensure_ascii=False,indent=2))
+if __name__=='__main__':main()

@@ -1,0 +1,30 @@
+"""Fixed two-stage PLUS1 then ALL under public absolute deadlines."""
+import time
+from model import DeadlineExceeded,NoPath
+from fixed_scope_candidate import solve as fixed_solve
+
+def solve(s,initial,method,budget,seed):
+ t0=time.perf_counter();d=t0+budget;d1=t0+budget/2;events=[];acceptances=[];stages=[];best=None;winner=None
+ def run(stage,scope,deadline):
+  nonlocal best,winner
+  entry=time.perf_counter();available=max(0,deadline-entry);record=dict(stage=stage,scope=scope,entry_public_elapsed=entry-t0,available_seconds=available,deadline_public_elapsed=deadline-t0,status='running',best_candidate_id=None,raw=None);stages.append(record)
+  if available<=0:record.update(status='skipped',skip_reason='deadline_reached',end_public_elapsed=time.perf_counter()-t0,seconds=0);return
+  def observe(event):
+   nonlocal best,winner
+   e=dict(event);e.update(candidate_id=len(events),stage=stage,source_scope=event.get('source_scope'),stage_scope=scope,source=stage+':'+event['label'],accepted=False,rejection_reason=None);events.append(e)
+   at=time.perf_counter();e['decision_public_elapsed']=at-t0
+   if not e['valid']:e['rejection_reason']='invalid'
+   elif at>deadline or at>d:e['rejection_reason']='stage_deadline' if at>deadline else 'total_deadline'
+   else:
+    k=record['best_candidate_id']
+    if k is None or e['steps']<events[k]['steps']:record['best_candidate_id']=e['candidate_id']
+    if best is None or len(e['route'])<len(best):
+     best=tuple(e['route']);winner=e;e.update(accepted=True,accepted_public_elapsed=at-t0)
+     acceptances.append(dict(public_seconds=at-t0,seconds=at-t0,steps=e['steps'],source=e['source'],stage=stage,route_sha256=e['route_sha256'],candidate_id=e['candidate_id']))
+    else:e['rejection_reason']='not_shorter'
+  try:
+   record['raw']=fixed_solve(s,initial,'LITERAL',available,seed,scope_name=scope,absolute_deadline=deadline,public_t0=t0,on_candidate=observe);record['status']='returned'
+  except (DeadlineExceeded,NoPath,ValueError) as exc:record.update(status='planning_failure',reason=repr(exc))
+  record['end_public_elapsed']=time.perf_counter()-t0;record['seconds']=record['end_public_elapsed']-record['entry_public_elapsed']
+ run('local','R_PLUS1',d1);switch=time.perf_counter();run('all','R_ALL',d);end=time.perf_counter()
+ return dict(method=method,budget=budget,seed=seed,route=best or (),source=winner['source'] if winner else None,selected_candidate_id=winner['candidate_id'] if winner else None,core_route=(best or ()) if winner and winner.get('patch') is not None else (),core_patch=winner.get('patch') or () if winner else (),public_t0=t0,absolute_deadline=d,first_deadline=d1,first_deadline_public_elapsed=d1-t0,switch_public_elapsed=switch-t0,first_stage_overrun=max(0,switch-d1),seconds=end-t0,overrun_gt_10ms=end-t0>budget+.01,candidate_events=events,acceptances=acceptances,stages=stages,status='finished' if best else 'no_output',solver_subcalls=sum(r['status']!='skipped' for r in stages))

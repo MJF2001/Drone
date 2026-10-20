@@ -1,0 +1,101 @@
+{
+ "round": "deepseek_development_comparison_20261018",
+ "generated_utc": "2026-10-18T13:43:21.802936+00:00",
+ "purpose": "decide where P2's route quality and computing cost stand under the same complete residual task, and whether the short-budget gap comes from an unfinished construction/search or from a quality gap after natural termination",
+ "not_claimed": [
+  "P2 is sufficient",
+  "any method is the domain best",
+  "TRACE/LKH are represented",
+  "the micro fixtures are a performance set"
+ ],
+ "model": {
+  "grid": "four-neighbour, equal unit steps, arriving on a target cell covers it",
+  "task": "complete the same current checkable residual targets Q=(P-C) and F and return to the same base",
+  "history": "the real coverage ledger and the real old remaining route are inputs for every method; no SEED/PLUS1 style scope selection this round",
+  "information": "only the currently published map is visible"
+ },
+ "seeds": [
+  20261018,
+  20261019
+ ],
+ "seed_meaning": "the seed is passed to every method; P2/OARP/GLNS use it for their randomised stages, TREE_MST and PPCPP_CORE4 are deterministic and ignore it. Two seeds are not a statistical power claim.",
+ "batches": [
+  {
+   "batch": "LONG120",
+   "soft_limit_seconds": 120.0,
+   "hard_limit_seconds": 135.0,
+   "calls": 100
+  },
+  {
+   "batch": "BUDGET1",
+   "soft_limit_seconds": 1.0,
+   "hard_limit_seconds": 15.0,
+   "calls": 100
+  },
+  {
+   "batch": "BUDGET20",
+   "soft_limit_seconds": 20.0,
+   "hard_limit_seconds": 35.0,
+   "calls": 100
+  }
+ ],
+ "batch_execution_order": [
+  "LONG120",
+  "BUDGET1",
+  "BUDGET20"
+ ],
+ "method_order_rule": "for case index i and seed index j the method order is ORDER rotated left by (i+j) mod 5; ORDER = P2_MULTI -> TREE_MST -> OARP_CORE2 -> PPCPP_CORE4 -> EPSILON_STAR",
+ "preflight": {
+  "inputs": [
+   "pf_open_small",
+   "pf_obstacle_small"
+  ],
+  "soft_limit_seconds": 2.0,
+  "hard_limit_seconds": 15.0,
+  "seed": 20261018,
+  "calls": 10,
+  "purpose": "runner / records / legality only, no performance screening"
+ },
+ "call_budget": {
+  "preparation": 60,
+  "preflight": 10,
+  "development": 300,
+  "total": 370
+ },
+ "wall_clock_cap_hours": 6,
+ "timing": {
+  "call_total_seconds": "public entry to the finished pre-return output check, including input validation, preprocessing, construction, search, connector, return and the audit",
+  "adapter_call_seconds": "the adapter's own measure, a subset of call_total",
+  "excluded": "ledger disk writes, the external post-hoc audit and the process start-up",
+  "process_startup": "recorded per task by the parent as wall minus call_total"
+ },
+ "budget_verdict": "a call counts as in-budget only when call_total_seconds <= the public soft limit; later calls keep their produced route but are reported with within_budget=false and the overrun in seconds",
+ "taxonomy": {
+  "natural_complete_valid": "the engine's own termination was reached and the route is legal, complete and within the resource",
+  "truncated_with_valid_candidate": "a time/iteration cap fired but a legal complete route was already produced",
+  "no_valid_route": "no legal complete route was produced",
+  "input_precondition_rejected": "the method's own input precondition was not met",
+  "environment_infeasible": "the base or an outstanding target is unreachable (reported by the independent reachability check, not by the planner)"
+ },
+ "stop_rules": {
+  "hard_cap": "the parent kills a task at the per-batch hard cap and records a hard_timeout end row; the route is not used",
+  "wall_clock": "no new task starts after 6 h from the batch start; the remaining list is kept as not started",
+  "no_retry": "a failed task is not retried, a successful task is not rerun, and a task that never started gets no fabricated failure row",
+  "early_stop": "if LONG120 shows a runner or semantic defect the later two batches are not started"
+ },
+ "cache_policy": {
+  "per_batch_cache": "each batch runs with its own TEMP/TMP and cache directory under NEW/tmp/cache/<batch>",
+  "graph_independent_dependency": "OARP_CORE2 reads the frozen runtime_profile.json (an offline calibration constant); it is graph independent and is disclosed, not recomputed",
+  "no_cross_method_sharing": "no distance matrix, route or optimisation state is shared between methods or batches"
+ },
+ "ledger": {
+  "two_phase": true,
+  "seal": "prefix bytes + lines + SHA256 per batch",
+  "kinds": [
+   "preparation",
+   "preflight",
+   "development"
+  ]
+ },
+ "frozen_at": "before any development run"
+}

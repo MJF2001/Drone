@@ -1,0 +1,130 @@
+run_micro v0.3  batch=v03_formal_20261018_062201 kind=formal
+cases=17 methods=6 planned_calls=102
+task_set_sha256=5f19b389abdfd3de9cd18e2f30aa41efc50a9e3fe25bdf106dca2c2b6bd4c29e
+interpreter=D:\0A无人机仿真02\问题分析+文献分析\.remote_Drone\运行环境\python\python.exe
+module resolution: {"problem": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\revision_v0.2\\src_v02\\problem.py", "result": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\revision_v0.2\\src_v02\\result.py", "finalize": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\revision_v0.3\\src_v03\\finalize.py", "deadline": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\revision_v0.2\\src_v02\\deadline.py", "audit_independent": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\src\\audit_independent.py", "epsilon_core.maps": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\revision_v0.2\\src_v02\\epsilon_core\\maps.py", "epsilon_core.etm": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\revision_v0.2\\src_v02\\epsilon_core\\etm.py", "adapters.registry": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\revision_v0.3\\src_v03\\adapters\\registry.py", "adapters.epsilon_star": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\revision_v0.3\\src_v03\\adapters\\epsilon_star.py", "adapters.cstar": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\revision_v0.2\\src_v02\\adapters\\cstar.py", "adapters.reference_methods": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\revision_v0.2\\src_v02\\adapters\\reference_methods.py", "cstar_core.planner": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\src\\cstar_core\\planner.py", "model": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\sources\\reference_tree\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py", "baseline_suite": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_基线复现隔离工作_20261018\\sources\\reference_tree\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\baseline_suite.py"}
+
+[m01_pure_obstacle] pending=4 deferred=0 env=solvable_environment soft=['covered_target_now_blocked', 'old_route_crosses_blocked']
+    P2_MULTI       finished                           steps=8  0.005s natural=1 valid
+    OARP_CORE2     finished                           steps=8  0.012s natural=1 valid
+    TREE_MST       planned                            steps=8  0.003s natural=1 valid
+    PPCPP_CORE4    finished                           steps=8  0.016s natural=1 valid
+    EPSILON_STAR   finished                           steps=10  0.003s natural=1 valid
+    CSTAR          finished                           steps=32  0.011s natural=1 valid
+[m02_extension_only] pending=10 deferred=0 env=solvable_environment soft=[]
+    P2_MULTI       finished                           steps=16  0.009s natural=1 valid
+    OARP_CORE2     finished                           steps=18  0.011s natural=1 valid
+    TREE_MST       planned                            steps=16  0.003s natural=1 valid
+    PPCPP_CORE4    finished                           steps=22  0.003s natural=1 valid
+    EPSILON_STAR   finished                           steps=20  0.004s natural=1 valid
+    CSTAR          finished                           steps=36  0.009s natural=1 valid
+[m03_corner_extension_and_obstacle] pending=10 deferred=1 env=solvable_environment soft=['covered_target_now_blocked', 'old_route_crosses_blocked']
+    P2_MULTI       finished                           steps=20  0.008s natural=1 valid
+    OARP_CORE2     finished                           steps=22  0.012s natural=1 valid
+    TREE_MST       planned                            steps=20  0.004s natural=1 valid
+    PPCPP_CORE4    finished                           steps=22  0.003s natural=1 valid
+    EPSILON_STAR   finished                           steps=24  0.005s natural=1 valid
+    CSTAR          finished                           steps=50  0.013s natural=1 valid
+[m04_two_events] pending=9 deferred=1 env=solvable_environment soft=[]
+    P2_MULTI       finished                           steps=17  0.008s natural=1 valid
+    OARP_CORE2     finished                           steps=17  0.012s natural=1 valid
+    TREE_MST       planned                            steps=17  0.003s natural=1 valid
+    PPCPP_CORE4    finished                           steps=17  0.003s natural=1 valid
+    EPSILON_STAR   finished                           steps=19  0.004s natural=1 valid
+    CSTAR          finished                           steps=37  0.010s natural=1 valid
+[m05_no_change] pending=2 deferred=0 env=solvable_environment soft=[]
+    P2_MULTI       finished                           steps=8  0.003s natural=1 valid
+    OARP_CORE2     finished                           steps=8  0.007s natural=1 valid
+    TREE_MST       planned                            steps=8  0.002s natural=1 valid
+    PPCPP_CORE4    finished                           steps=8  0.002s natural=1 valid
+    EPSILON_STAR   finished                           steps=8  0.002s natural=1 valid
+    CSTAR          finished                           steps=26  0.006s natural=1 valid
+[m06_empty_pending] pending=0 deferred=0 env=nothing_pending soft=[]
+    P2_MULTI       finished                           steps=1  0.002s natural=1 valid
+    OARP_CORE2     finished                           steps=1  0.002s natural=1 valid
+    TREE_MST       planned                            steps=1  0.002s natural=1 valid
+    PPCPP_CORE4    finished                           steps=1  0.002s natural=1 valid
+    EPSILON_STAR   finished                           steps=1  0.002s natural=1 valid
+    CSTAR          finished                           steps=1  0.002s natural=1 valid
+[m07_start_equals_base] pending=6 deferred=0 env=solvable_environment soft=[]
+    P2_MULTI       finished                           steps=10  0.004s natural=1 valid
+    OARP_CORE2     finished                           steps=10  0.008s natural=1 valid
+    TREE_MST       planned                            steps=10  0.003s natural=1 valid
+    PPCPP_CORE4    finished                           steps=10  0.002s natural=1 valid
+    EPSILON_STAR   finished                           steps=12  0.003s natural=1 valid
+    CSTAR          finished                           steps=26  0.006s natural=1 valid
+[m08_base_pending] pending=7 deferred=0 env=solvable_environment soft=[]
+    P2_MULTI       finished                           steps=8  0.004s natural=1 valid
+    OARP_CORE2     finished                           steps=10  0.009s natural=1 valid
+    TREE_MST       planned                            steps=10  0.002s natural=1 valid
+    PPCPP_CORE4    finished                           steps=8  0.002s natural=1 valid
+    EPSILON_STAR   finished                           steps=8  0.003s natural=1 valid
+    CSTAR          finished                           steps=8  0.004s natural=1 valid
+[m09_pass_base_early] pending=4 deferred=0 env=solvable_environment soft=[]
+    P2_MULTI       finished                           steps=8  0.003s natural=1 valid
+    OARP_CORE2     finished                           steps=8  0.009s natural=1 valid
+    TREE_MST       planned                            steps=8  0.002s natural=1 valid
+    PPCPP_CORE4    finished                           steps=8  0.002s natural=1 valid
+    EPSILON_STAR   finished                           steps=8  0.003s natural=1 valid
+    CSTAR          finished                           steps=28  0.007s natural=1 valid
+[m10_transit_coverage] pending=3 deferred=0 env=solvable_environment soft=[]
+    P2_MULTI       finished                           steps=9  0.003s natural=1 valid
+    OARP_CORE2     finished                           steps=9  0.007s natural=1 valid
+    TREE_MST       planned                            steps=9  0.003s natural=1 valid
+    PPCPP_CORE4    finished                           steps=9  0.002s natural=1 valid
+    EPSILON_STAR   finished                           steps=9  0.002s natural=1 valid
+    CSTAR          finished                           steps=29  0.008s natural=1 valid
+[m11_covered_corridor_blocks] pending=11 deferred=1 env=solvable_environment soft=['covered_target_now_blocked', 'old_route_crosses_blocked']
+    P2_MULTI       finished                           steps=16  0.009s natural=1 valid
+    OARP_CORE2     finished                           steps=18  0.012s natural=1 valid
+    TREE_MST       planned                            steps=18  0.004s natural=1 valid
+    PPCPP_CORE4    finished                           steps=18  0.003s natural=1 valid
+    EPSILON_STAR   finished                           steps=26  0.004s natural=1 valid
+    CSTAR          finished                           steps=48  0.013s natural=1 valid
+[m12_resource_tight] pending=5 deferred=0 env=solvable_environment soft=[]
+    P2_MULTI       no_legal_route_within_resource     steps=None  0.004s natural=0 NOT-VALID:empty_route
+    OARP_CORE2     no_legal_route_within_resource     steps=None  0.008s natural=0 NOT-VALID:empty_route
+    TREE_MST       no_legal_route_within_resource     steps=None  0.003s natural=0 NOT-VALID:empty_route
+    PPCPP_CORE4    no_legal_route_within_resource     steps=None  0.002s natural=0 NOT-VALID:empty_route
+    EPSILON_STAR   resource_exceeded                  steps=12  0.003s natural=0 NOT-VALID:distance_budget_exceeded
+    CSTAR          resource_exceeded                  steps=34  0.007s natural=0 NOT-VALID:distance_budget_exceeded
+[m13_deferred_target] pending=3 deferred=1 env=solvable_environment soft=['old_route_crosses_blocked']
+    P2_MULTI       finished                           steps=12  0.003s natural=1 valid
+    OARP_CORE2     finished                           steps=12  0.008s natural=1 valid
+    TREE_MST       planned                            steps=12  0.002s natural=1 valid
+    PPCPP_CORE4    finished                           steps=12  0.002s natural=1 valid
+    EPSILON_STAR   finished                           steps=12  0.003s natural=1 valid
+    CSTAR          finished                           steps=28  0.007s natural=1 valid
+[m14_base_unreachable] pending=1 deferred=0 env=base_unreachable soft=['old_route_crosses_blocked']
+    P2_MULTI       environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+    OARP_CORE2     environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+    TREE_MST       environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+    PPCPP_CORE4    environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+    EPSILON_STAR   environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+    CSTAR          environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+[m15_target_sealed] pending=4 deferred=2 env=target_unreachable soft=['old_route_crosses_blocked']
+    P2_MULTI       environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+    OARP_CORE2     environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+    TREE_MST       environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+    PPCPP_CORE4    environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+    EPSILON_STAR   environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+    CSTAR          environment_infeasible             steps=None  0.002s natural=0 NOT-VALID:empty_route
+[m16_no_old_route] pending=2 deferred=0 env=solvable_environment soft=[]
+    P2_MULTI       finished                           steps=5  0.003s natural=1 valid
+    OARP_CORE2     input_precondition_unmet           steps=None  0.004s natural=0 NOT-VALID:empty_route
+    TREE_MST       planned                            steps=5  0.002s natural=1 valid
+    PPCPP_CORE4    finished                           steps=5  0.002s natural=1 valid
+    EPSILON_STAR   finished                           steps=5  0.002s natural=1 valid
+    CSTAR          finished                           steps=25  0.006s natural=1 valid
+[m17_start_pending] pending=9 deferred=0 env=solvable_environment soft=[]
+    P2_MULTI       finished                           steps=10  0.006s natural=1 valid
+    OARP_CORE2     input_precondition_unmet           steps=None  0.002s natural=0 NOT-VALID:empty_route
+    TREE_MST       planned                            steps=12  0.003s natural=1 valid
+    PPCPP_CORE4    finished                           steps=14  0.003s natural=1 valid
+    EPSILON_STAR   finished                           steps=14  0.003s natural=1 valid
+    CSTAR          finished                           steps=16  0.004s natural=1 valid
+
+registered=102 planned=102 missing=0 extra=0
+ledger_write_failures=0
+hard problems=0
+ledger sealed: bytes=59119 lines=205 sha256=9026d2bb45d167cd...

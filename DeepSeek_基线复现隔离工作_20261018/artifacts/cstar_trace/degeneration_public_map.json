@@ -1,0 +1,668 @@
+{
+ "generated_by": "tests/test_cstar_micro.py",
+ "default_mode": "public_map",
+ "what": "public_map mode: frontier sampling limit on the micro fixtures",
+ "graded_route": "C* route + fixed base return only. completion_tsp is False by default; any completion pass is an added mechanism under method_version 'cstar_adapt_v0.1_20261018+completion' and is never part of this evidence.",
+ "finding_1_ring_only": "With the whole published map observed at k=0, no free cell is adjacent to unknown inside the published region, so sample_front() returns only the boundary ring (plus the rings around blocked cells). The interior is never sampled: 0 interior samples on all 15 solvable fixtures. It is still swept, because Def. III.8 keeps both lap ends and expansion re-creates one long same-lap edge per column; the executed C* route therefore becomes a boustrophedon over the published region. This is a full-area sweep, so under a target-only task it over-covers; a longer route is a task-definition mismatch, not evidence that C* is weak.",
+ "finding_2_disconnected": "A free pocket two cells behind a blocked ring is published-free, is a frontier sample, and cannot be connected to any lap: the RCG loses P3 and validate() raises. The historical outer loop cannot run. The graded answer is the honest one: C* route = [current], base return only, status=coverage_incomplete, errors=[coverage_omitted:3]. No post-processing is appended to the graded route.",
+ "fixture_table": [
+  {
+   "case_id": "m01_pure_obstacle",
+   "free_cells": 23,
+   "sampled_cells": 17,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 6,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 17,
+   "rcg_edges": 22,
+   "iterations": 19,
+   "cstar_steps": 27,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m02_extension_only",
+   "free_cells": 28,
+   "sampled_cells": 18,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 10,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 18,
+   "rcg_edges": 23,
+   "iterations": 20,
+   "cstar_steps": 30,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m03_corner_extension_and_obstacle",
+   "free_cells": 38,
+   "sampled_cells": 23,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 15,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 23,
+   "rcg_edges": 30,
+   "iterations": 24,
+   "cstar_steps": 41,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m04_two_events",
+   "free_cells": 31,
+   "sampled_cells": 21,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 10,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 21,
+   "rcg_edges": 28,
+   "iterations": 23,
+   "cstar_steps": 31,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m05_no_change",
+   "free_cells": 20,
+   "sampled_cells": 14,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 6,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 14,
+   "rcg_edges": 17,
+   "iterations": 15,
+   "cstar_steps": 20,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m07_start_equals_base",
+   "free_cells": 20,
+   "sampled_cells": 14,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 6,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 14,
+   "rcg_edges": 17,
+   "iterations": 14,
+   "cstar_steps": 19,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m08_base_pending",
+   "free_cells": 8,
+   "sampled_cells": 8,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 0,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 8,
+   "rcg_edges": 16,
+   "iterations": 8,
+   "cstar_steps": 9,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m09_pass_base_early",
+   "free_cells": 24,
+   "sampled_cells": 16,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 8,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 16,
+   "rcg_edges": 20,
+   "iterations": 18,
+   "cstar_steps": 26,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m10_transit_coverage",
+   "free_cells": 21,
+   "sampled_cells": 16,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 5,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 16,
+   "rcg_edges": 21,
+   "iterations": 18,
+   "cstar_steps": 23,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m11_covered_corridor_blocks",
+   "free_cells": 33,
+   "sampled_cells": 23,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 10,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 23,
+   "rcg_edges": 28,
+   "iterations": 27,
+   "cstar_steps": 36,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m12_resource_tight",
+   "free_cells": 24,
+   "sampled_cells": 16,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 8,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 16,
+   "rcg_edges": 20,
+   "iterations": 18,
+   "cstar_steps": 26,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m13_deferred_target",
+   "free_cells": 20,
+   "sampled_cells": 16,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 4,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 16,
+   "rcg_edges": 20,
+   "iterations": 18,
+   "cstar_steps": 22,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m16_no_old_route",
+   "free_cells": 20,
+   "sampled_cells": 14,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 6,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 14,
+   "rcg_edges": 17,
+   "iterations": 17,
+   "cstar_steps": 21,
+   "completion_steps": 0,
+   "coverage_complete": true
+  },
+  {
+   "case_id": "m17_start_pending",
+   "free_cells": 12,
+   "sampled_cells": 10,
+   "sampled_interior_cells": 0,
+   "unsampled_free_cells": 2,
+   "boundary_ring_only": true,
+   "rcg_connected": true,
+   "rcg_nodes": 10,
+   "rcg_edges": 12,
+   "iterations": 12,
+   "cstar_steps": 13,
+   "completion_steps": 0,
+   "coverage_complete": true
+  }
+ ],
+ "probe_deep_lap_sweep": {
+  "free_cells": 81,
+  "sampled_cells": 32,
+  "sampled_interior_cells": 0,
+  "unsampled_free_cells": 49,
+  "rcg_connected": true,
+  "rcg_status": "graph_exhausted",
+  "components": null,
+  "rcg_nodes": 32,
+  "rcg_edges": 39,
+  "iterations": 32,
+  "cstar_steps": 80,
+  "completion_steps": 0,
+  "base_return_steps": 8,
+  "status": "finished",
+  "errors": [],
+  "method_version": "cstar_adapt_v0.1_20261018",
+  "fallback_used": false,
+  "final_source": "cstar_rcg+base_return",
+  "coverage_complete": true,
+  "coverage_omitted": 0,
+  "route": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    0,
+    3
+   ],
+   [
+    0,
+    4
+   ],
+   [
+    0,
+    5
+   ],
+   [
+    0,
+    6
+   ],
+   [
+    0,
+    7
+   ],
+   [
+    0,
+    8
+   ],
+   [
+    1,
+    8
+   ],
+   [
+    1,
+    7
+   ],
+   [
+    1,
+    6
+   ],
+   [
+    1,
+    5
+   ],
+   [
+    1,
+    4
+   ],
+   [
+    1,
+    3
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    2,
+    2
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    2,
+    4
+   ],
+   [
+    2,
+    5
+   ],
+   [
+    2,
+    6
+   ],
+   [
+    2,
+    7
+   ],
+   [
+    2,
+    8
+   ],
+   [
+    3,
+    8
+   ],
+   [
+    3,
+    7
+   ],
+   [
+    3,
+    6
+   ],
+   [
+    3,
+    5
+   ],
+   [
+    3,
+    4
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    3,
+    2
+   ],
+   [
+    3,
+    1
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    4,
+    0
+   ],
+   [
+    4,
+    1
+   ],
+   [
+    4,
+    2
+   ],
+   [
+    4,
+    3
+   ],
+   [
+    4,
+    4
+   ],
+   [
+    4,
+    5
+   ],
+   [
+    4,
+    6
+   ],
+   [
+    4,
+    7
+   ],
+   [
+    4,
+    8
+   ],
+   [
+    5,
+    8
+   ],
+   [
+    5,
+    7
+   ],
+   [
+    5,
+    6
+   ],
+   [
+    5,
+    5
+   ],
+   [
+    5,
+    4
+   ],
+   [
+    5,
+    3
+   ],
+   [
+    5,
+    2
+   ],
+   [
+    5,
+    1
+   ],
+   [
+    5,
+    0
+   ],
+   [
+    6,
+    0
+   ],
+   [
+    6,
+    1
+   ],
+   [
+    6,
+    2
+   ],
+   [
+    6,
+    3
+   ],
+   [
+    6,
+    4
+   ],
+   [
+    6,
+    5
+   ],
+   [
+    6,
+    6
+   ],
+   [
+    6,
+    7
+   ],
+   [
+    6,
+    8
+   ],
+   [
+    7,
+    8
+   ],
+   [
+    7,
+    7
+   ],
+   [
+    7,
+    6
+   ],
+   [
+    7,
+    5
+   ],
+   [
+    7,
+    4
+   ],
+   [
+    7,
+    3
+   ],
+   [
+    7,
+    2
+   ],
+   [
+    7,
+    1
+   ],
+   [
+    7,
+    0
+   ],
+   [
+    8,
+    0
+   ],
+   [
+    8,
+    1
+   ],
+   [
+    8,
+    2
+   ],
+   [
+    8,
+    3
+   ],
+   [
+    8,
+    4
+   ],
+   [
+    8,
+    5
+   ],
+   [
+    8,
+    6
+   ],
+   [
+    8,
+    7
+   ],
+   [
+    8,
+    8
+   ],
+   [
+    7,
+    8
+   ],
+   [
+    6,
+    8
+   ],
+   [
+    5,
+    8
+   ],
+   [
+    4,
+    8
+   ],
+   [
+    3,
+    8
+   ],
+   [
+    2,
+    8
+   ],
+   [
+    1,
+    8
+   ],
+   [
+    0,
+    8
+   ]
+  ],
+  "route_steps": 88
+ },
+ "probe_free_pocket": {
+  "free_cells": 57,
+  "sampled_cells": 57,
+  "sampled_interior_cells": 0,
+  "unsampled_free_cells": 0,
+  "rcg_connected": false,
+  "rcg_status": "rcg_disconnected",
+  "components": [
+   56,
+   1
+  ],
+  "rcg_nodes": 57,
+  "rcg_edges": 87,
+  "iterations": 1,
+  "cstar_steps": 0,
+  "completion_steps": 0,
+  "base_return_steps": 8,
+  "status": "coverage_incomplete",
+  "errors": [
+   "coverage_omitted:3",
+   "cstar_rcg_disconnected:RCG lost connectivity: 56/57"
+  ],
+  "method_version": "cstar_adapt_v0.1_20261018",
+  "fallback_used": false,
+  "final_source": "cstar_start_only+base_return",
+  "coverage_complete": false,
+  "coverage_omitted": 3,
+  "route": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    0,
+    3
+   ],
+   [
+    0,
+    4
+   ],
+   [
+    0,
+    5
+   ],
+   [
+    0,
+    6
+   ],
+   [
+    0,
+    7
+   ],
+   [
+    0,
+    8
+   ]
+  ],
+  "route_steps": 8
+ }
+}

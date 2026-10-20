@@ -1,0 +1,146 @@
+{
+ "rows": 300,
+ "engine_stop": {
+  "P2_MULTI": {
+   "budget_truncated": 28,
+   "natural_converged": 32
+  },
+  "TREE_MST": {
+   "budget_truncated": 20,
+   "natural_converged": 40
+  },
+  "OARP_CORE2": {
+   "natural_converged": 49,
+   "internal_timelimit": 6,
+   "core_failed": 5
+  },
+  "PPCPP_CORE4": {
+   "natural_converged": 60
+  },
+  "EPSILON_STAR": {
+   "budget_truncated": 18,
+   "natural_converged": 42
+  }
+ },
+ "route_success": {
+  "no_route": 18,
+  "legal_in_budget": 234,
+  "legal_over_budget": 48
+ },
+ "route_origin": {
+  "EPSILON_STAR::core": 60,
+  "OARP_CORE2::core": 46,
+  "OARP_CORE2::shared_fallback": 14,
+  "P2_MULTI::core": 52,
+  "P2_MULTI::shared_fallback": 8,
+  "PPCPP_CORE4::core": 48,
+  "PPCPP_CORE4::shared_fallback": 12,
+  "TREE_MST::core": 32,
+  "TREE_MST::shared_fallback": 28
+ },
+ "natural_claimed_vs_found": {
+  "recorded_natural_true": 234,
+  "found_natural": 223,
+  "overclaimed": 11,
+  "overclaimed_runs": [
+   "BUDGET1:large_g2_development:OARP_CORE2:20261018 (internal_timelimit)",
+   "BUDGET1:large_g2_development:OARP_CORE2:20261019 (internal_timelimit)",
+   "BUDGET1:large_g3_development:OARP_CORE2:20261018 (core_failed)",
+   "BUDGET1:large_g3_development:OARP_CORE2:20261019 (core_failed)",
+   "BUDGET1:large_g4_development:OARP_CORE2:20261018 (core_failed)",
+   "BUDGET1:large_g4_development:OARP_CORE2:20261019 (core_failed)",
+   "BUDGET1:medium_g1_development:OARP_CORE2:20261018 (internal_timelimit)",
+   "BUDGET1:medium_g1_development:OARP_CORE2:20261019 (internal_timelimit)",
+   "BUDGET1:medium_g2_development:OARP_CORE2:20261018 (internal_timelimit)",
+   "BUDGET1:medium_g2_development:OARP_CORE2:20261019 (core_failed)",
+   "BUDGET1:small_g2_development:OARP_CORE2:20261019 (internal_timelimit)"
+  ]
+ },
+ "speed": {
+  "TREE_MST": {
+   "all_legal_pairs": {
+    "n": 60,
+    "min": 0.0913,
+    "p25": 0.1527,
+    "median": 0.2271,
+    "p75": 0.9938,
+    "max": 1.0084
+   },
+   "both_in_budget_pairs": {
+    "n": 32,
+    "min": 0.0913,
+    "p25": 0.1278,
+    "median": 0.15395,
+    "p75": 0.1663,
+    "max": 0.2412
+   }
+  },
+  "OARP_CORE2": {
+   "all_legal_pairs": {
+    "n": 60,
+    "min": 0.0052,
+    "p25": 0.0192,
+    "median": 0.09695000000000001,
+    "p75": 0.2283,
+    "max": 0.8757
+   },
+   "both_in_budget_pairs": {
+    "n": 32,
+    "min": 0.0052,
+    "p25": 0.0172,
+    "median": 0.09515,
+    "p75": 0.2121,
+    "max": 0.3084
+   }
+  },
+  "PPCPP_CORE4": {
+   "all_legal_pairs": {
+    "n": 60,
+    "min": 0.0013,
+    "p25": 0.004,
+    "median": 0.0411,
+    "p75": 0.069,
+    "max": 0.4045
+   },
+   "both_in_budget_pairs": {
+    "n": 32,
+    "min": 0.0013,
+    "p25": 0.003,
+    "median": 0.0411,
+    "p75": 0.0651,
+    "max": 0.2224
+   }
+  },
+  "EPSILON_STAR": {
+   "all_legal_pairs": {
+    "n": 42,
+    "min": 0.0359,
+    "p25": 0.1209,
+    "median": 0.20305,
+    "p75": 0.4432,
+    "max": 0.6527
+   },
+   "both_in_budget_pairs": {
+    "n": 32,
+    "min": 0.0359,
+    "p25": 0.1118,
+    "median": 0.1646,
+    "p75": 0.2072,
+    "max": 0.4705
+   }
+  }
+ },
+ "p2_long120_timeline": {
+  "rows": 20,
+  "first_t_median": 0.0066820000000000004,
+  "best_t_median": 4.331483,
+  "call_total_median": 18.218114
+ },
+ "p2_long120_call_total_sum": 971.783,
+ "stage_cost_lists_total": {
+  "LONG120": 1963.246,
+  "BUDGET20": 549.376,
+  "BUDGET1": 55.204
+ },
+ "marginal_rows": 767
+}

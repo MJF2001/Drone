@@ -1,0 +1,526 @@
+{
+ "run_id": "INT:c01_open4x4_interior:20261018",
+ "kind": "integration",
+ "case_id": "c01_open4x4_interior",
+ "seed": 20261018,
+ "soft_limit_seconds": 10.0,
+ "hard_limit_seconds": 15.0,
+ "max_control_iterations": 20000,
+ "started_utc": "2026-10-18T16:40:47.585680+00:00",
+ "request": {
+  "case_id": "c01_open4x4_interior",
+  "free": 16,
+  "published_targets": 16,
+  "covered": 0,
+  "pending": 16,
+  "deferred": 0,
+  "current": [
+   1,
+   1
+  ],
+  "base": [
+   0,
+   0
+  ],
+  "old_route_len": 0,
+  "remaining_resource": 200,
+  "seed": 20261018,
+  "termination": {
+   "time_limit_seconds": 10.0,
+   "natural": "method_natural_termination",
+   "extra": {}
+  },
+  "meta": {
+   "case_note": "interior start with pending cells on both sides; the paper's L5/L6 and the control/physical split must both be visible",
+   "expected": {
+    "status": "success",
+    "coverage_complete": true,
+    "min_line5_or_line6": 1,
+    "min_tasks": 1,
+    "must_show_tasking": true
+   }
+  }
+ },
+ "status": "finished",
+ "reason": "FN_no_positive_potential",
+ "route_steps": 24,
+ "audit": {
+  "valid": true,
+  "errors": [],
+  "route_steps": 24,
+  "starts_at_current": true,
+  "ends_at_base": true,
+  "collisions": [],
+  "illegal_steps": [],
+  "coverage_complete": true,
+  "uncovered": [],
+  "uncovered_count": 0,
+  "covered_physical": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    0,
+    3
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    1,
+    3
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    2,
+    2
+   ],
+   [
+    2,
+    3
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    3,
+    1
+   ],
+   [
+    3,
+    2
+   ],
+   [
+    3,
+    3
+   ]
+  ],
+  "covered_physical_count": 16,
+  "ledger_size": 0,
+  "coverage_claimed_without_visit": [],
+  "deferred_untouched": [],
+  "deferred_visited": [],
+  "resource": {
+   "limit": 200,
+   "used": 24,
+   "ok": true
+  },
+  "distinct_cells": 16,
+  "revisited_positions": 9,
+  "direction_changes": 11,
+  "target_visits": 25
+ },
+ "resource_check": {
+  "limit": 200,
+  "used": 24,
+  "ok": true,
+  "source": "recomputed_from_route"
+ },
+ "termination": {
+  "natural": true,
+  "reason": "FN_no_positive_potential",
+  "engine_natural": true
+ },
+ "errors": [],
+ "stage_seconds": {
+  "maps_build": 9.339999814983457e-05,
+  "etm_and_return": 0.006982699997024611,
+  "audit": 0.0001233000002685003
+ },
+ "route": [
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   0,
+   0
+  ]
+ ],
+ "meta": {
+  "core_version": "epsilon_star_core_integrated_v1_20261018",
+  "adapter_version": "epsilon_star_adapter_integrated_v1_20261018",
+  "adaptation_class": "epsilon_star_core_adapted_task_control",
+  "control_mode": "task",
+  "ledgers": {
+   "control": "MAPS state; U = control-pending, updated only at WT",
+   "physical": "recomputed by the independent audit from the route"
+  },
+  "engine": {
+   "terminal": "FN_no_positive_potential",
+   "credit_mode": "task",
+   "iterations": 35,
+   "moves": 24,
+   "tasks": 16,
+   "extremum_escapes": 0,
+   "levels_used": {
+    "-1": 1,
+    "0": 34
+   },
+   "rules": {
+    "FN_no_positive_potential": 1,
+    "line5_up_down_unexplored": 3,
+    "line6_task_here": 16,
+    "line8_argmax_potential": 15
+   },
+   "physically_covered_targets": 16,
+   "control_tasked_targets": 16,
+   "steps": 24,
+   "events": {
+    "index_first_physical_complete": 18,
+    "time_first_physical_complete": 0.007063599994580727,
+    "index_control_fn": 18,
+    "time_control_fn": 0.007123600000340957,
+    "index_return_start": 18,
+    "index_return_end": 24,
+    "time_return_end": 0.007143399998312816,
+    "extra_steps_physical_to_fn": 0,
+    "return_steps": 6,
+    "control_tasked": 16,
+    "decision_count": 35
+   },
+   "connector": {
+    "row_builds": 15,
+    "cached_paths": 17,
+    "cached_rows": 15
+   },
+   "turn_cost": 1.0,
+   "travel_cost": 1.0,
+   "initial_heading": null,
+   "failures": []
+  },
+  "events": {
+   "index_first_physical_complete": 18,
+   "time_first_physical_complete": 0.007063599994580727,
+   "index_control_fn": 18,
+   "time_control_fn": 0.007123600000340957,
+   "index_return_start": 18,
+   "index_return_end": 24,
+   "time_return_end": 0.007143399998312816,
+   "extra_steps_physical_to_fn": 0,
+   "return_steps": 6,
+   "control_tasked": 16,
+   "decision_count": 35
+  },
+  "connector": {
+   "row_builds": 15,
+   "cached_paths": 17,
+   "cached_rows": 15
+  },
+  "maps": {
+   "bounding_box": [
+    0,
+    3,
+    0,
+    3
+   ],
+   "L": 1,
+   "cells_per_level": {
+    "1": 4
+   },
+   "block_sizes": {
+    "1": [
+     [
+      2,
+      2
+     ]
+    ]
+   },
+   "bmax": 4,
+   "forbidden_cells": 0,
+   "unexplored_level0": 16,
+   "counters": {
+    "level0_refresh": 0,
+    "coarse_block_updates": 0,
+    "neighbourhood_calls": 0
+   }
+  },
+  "environment": {
+   "ok": true,
+   "code": "solvable_environment"
+  },
+  "parameters": {
+   "travel_cost": 1.0,
+   "turn_cost": 1.0,
+   "turn_cost_units": "per degree from the heading",
+   "max_control_iterations": 20000,
+   "initial_heading": null
+  },
+  "candidate": {
+   "generated": true,
+   "audited": true,
+   "accepted": true,
+   "post_deadline": false
+  },
+  "not_scorable_reason": "",
+  "errors": [],
+  "deadline": {
+   "soft_deadline_seconds": 10.0,
+   "soft_deadline_hit": false,
+   "soft_deadline_checks": 87,
+   "soft_deadline_elapsed_seconds": 0.007286200001544785,
+   "semantics": "cooperative; one stage may overrun slightly and is reported"
+  },
+  "route": {
+   "completion_steps": 24
+  },
+  "ledger": {
+   "run_id": "INT:c01_open4x4_interior:20261018",
+   "batch": "INTEGRATION",
+   "kind": "integration",
+   "call_total_seconds": 0.009892699999909382
+  }
+ },
+ "covered_physical": [
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   3,
+   3
+  ]
+ ],
+ "pending_remaining": [
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   0,
+   3
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   1
+  ],
+  [
+   3,
+   2
+  ],
+  [
+   3,
+   3
+  ]
+ ],
+ "deferred_remaining": [],
+ "finished_utc": "2026-10-18T16:40:47.622680+00:00"
+}

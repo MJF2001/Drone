@@ -1,0 +1,215 @@
+{
+ "generated_by": "tools/reproduce_review_counterexamples.py",
+ "r1": {
+  "case": "R1 empty task, resource 1, return needs 2 steps",
+  "rows": [
+   {
+    "method": "P2_MULTI",
+    "status": "no_legal_route_within_resource",
+    "reason": "resource_exceeds_direct_return:2>1",
+    "route_steps": null,
+    "audit_valid": false,
+    "audit_errors": [
+     "empty_route"
+    ],
+    "natural": false,
+    "success": false
+   },
+   {
+    "method": "OARP_CORE2",
+    "status": "no_legal_route_within_resource",
+    "reason": "resource_exceeds_direct_return:2>1",
+    "route_steps": null,
+    "audit_valid": false,
+    "audit_errors": [
+     "empty_route"
+    ],
+    "natural": false,
+    "success": false
+   },
+   {
+    "method": "TREE_MST",
+    "status": "no_legal_route_within_resource",
+    "reason": "resource_exceeds_direct_return:2>1",
+    "route_steps": null,
+    "audit_valid": false,
+    "audit_errors": [
+     "empty_route"
+    ],
+    "natural": false,
+    "success": false
+   },
+   {
+    "method": "PPCPP_CORE4",
+    "status": "no_legal_route_within_resource",
+    "reason": "resource_exceeds_direct_return:2>1",
+    "route_steps": null,
+    "audit_valid": false,
+    "audit_errors": [
+     "empty_route"
+    ],
+    "natural": false,
+    "success": false
+   },
+   {
+    "method": "EPSILON_STAR",
+    "status": "resource_exceeded",
+    "reason": "resource_exceeded",
+    "route_steps": 2,
+    "audit_valid": false,
+    "audit_errors": [
+     "distance_budget_exceeded"
+    ],
+    "natural": false,
+    "success": false
+   },
+   {
+    "method": "CSTAR",
+    "status": "resource_exceeded",
+    "reason": "resource_exceeded",
+    "route_steps": 2,
+    "audit_valid": false,
+    "audit_errors": [
+     "distance_budget_exceeded"
+    ],
+    "natural": false,
+    "success": false
+   }
+  ]
+ },
+ "r2": {
+  "case": "R2 epsilon-star, 5x5, time_limit_seconds=1e-9, real clock",
+  "status": "deadline_before_complete_route",
+  "reason": "deadline_before_complete_route",
+  "route_steps": null,
+  "natural": false,
+  "deadline": {
+   "soft_deadline_seconds": 1e-09,
+   "soft_deadline_hit": true,
+   "soft_deadline_checks": 0,
+   "soft_deadline_elapsed_seconds": 2.5000008463393897e-06,
+   "semantics": "cooperative; one stage may overrun slightly and is reported"
+  },
+  "adapter_call_seconds": 7.069999992381781e-05
+ },
+ "r3": {
+  "case": "R3 end-to-end time is non-zero and fixed after stop",
+  "rows": [
+   {
+    "method": "P2_MULTI",
+    "adapter_call": 0.007545399999798974,
+    "total": 0.007545399999798974,
+    "instrumented": [
+     "adapter_call",
+     "engine:fallback",
+     "engine:H_generate",
+     "engine:H_raw",
+     "engine:H_nearest",
+     "engine:H_NN_raw",
+     "engine:H_scan_opt",
+     "engine:H_scan_expand",
+     "engine:H_NN_opt",
+     "engine:H_NN_expand",
+     "engine:V_generate",
+     "engine:V_raw",
+     "engine:V_nearest",
+     "engine:V_NN_raw",
+     "engine:V_scan_opt",
+     "engine:V_scan_expand",
+     "engine:V_NN_opt",
+     "engine:V_NN_expand",
+     "engine:H_scan_deep",
+     "engine:H_scan_deep_expand",
+     "engine:H_NN_deep",
+     "engine:H_NN_deep_expand",
+     "engine:V_scan_deep",
+     "engine:V_scan_deep_expand",
+     "engine:V_NN_deep",
+     "engine:V_NN_deep_expand",
+     "engine:reverse_H_raw",
+     "engine:reverse_H_opt",
+     "engine:reverse_H_expand",
+     "engine:reverse_V_raw",
+     "engine:reverse_V_opt",
+     "engine:reverse_V_expand",
+     "engine:perturb_H_raw",
+     "engine:perturb_H_opt",
+     "engine:perturb_H_expand",
+     "engine:perturb_V_raw",
+     "engine:perturb_V_opt",
+     "engine:perturb_V_expand",
+     "engine:shuffle_0_raw",
+     "engine:shuffle_0_opt",
+     "engine:shuffle_0_expand",
+     "engine:shuffle_1_raw",
+     "engine:shuffle_1_opt",
+     "engine:shuffle_1_expand"
+    ],
+    "missing": []
+   },
+   {
+    "method": "OARP_CORE2",
+    "adapter_call": 0.010528300001169555,
+    "total": 0.010528300001169555,
+    "instrumented": [
+     "adapter_call"
+    ],
+    "missing": [
+     "internal_stage_split"
+    ]
+   },
+   {
+    "method": "TREE_MST",
+    "adapter_call": 0.0018636999993759673,
+    "total": 0.0018636999993759673,
+    "instrumented": [
+     "adapter_call"
+    ],
+    "missing": [
+     "internal_stage_split"
+    ]
+   },
+   {
+    "method": "PPCPP_CORE4",
+    "adapter_call": 0.0007595999995828606,
+    "total": 0.0007595999995828606,
+    "instrumented": [
+     "adapter_call"
+    ],
+    "missing": [
+     "internal_stage_split"
+    ]
+   },
+   {
+    "method": "EPSILON_STAR",
+    "adapter_call": 0.00203479999981937,
+    "total": 0.00203479999981937,
+    "instrumented": [
+     "environment",
+     "maps_constructed_seconds",
+     "etm_seconds",
+     "return_seconds",
+     "adapter_call"
+    ],
+    "missing": [
+     "per_decision_timing"
+    ]
+   },
+   {
+    "method": "CSTAR",
+    "adapter_call": 0.0075849000022572,
+    "total": 0.0075849000022572,
+    "instrumented": [
+     "environment",
+     "public_map",
+     "cstar_loop",
+     "connector_and_base_return",
+     "adapter_call"
+    ],
+    "missing": [
+     "per_decision_timing"
+    ]
+   }
+  ]
+ }
+}

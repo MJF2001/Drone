@@ -1,0 +1,8 @@
+﻿item,status,evidence
+A1 existing independent audit,pass,"prior 120-route audit, warm sequence audit, 416-item deliverable check; repeated by verify_acceptance_range_20261017.py --check"
+A2 independent read-only checker,pass,verify_acceptance_range_20261017.py; fixture suite; new 40-core/range rows and exact hash checks
+"A3 tests, warm-off and preflights",partial,"25 regression tests reproduced post-hoc with seven counted range-engine planner calls; five additional frozen/warm micro-solver calls cover warm-off and edge cases. Total new synthetic planner calls: 12; no development-map calls. Six formal smoke preflights survive only as a scalar in completion_final.json, without individual rows/logs; original multi-case warm-off log not found."
+"A4 errata, timeline, overhead and 69/70",pass_with_limits,audit_summary_errata_20261017.json; execution_timeline_20261017.json; warm_overhead_analysis_20261017.json; complete 80-row cross-batch pair CSV. Exact wall-clock batch timestamps and launch-time source hash not recorded; no overhead percentage available.
+A5 scope to B gate,pass_disclosed,"No damaged input, invalid route, or incorrect R_PLUS1 core found; all ten frozen state/range inputs matched independent reconstruction. Continue B with A3 gap disclosed."
+B1-B4 current ten-state diagnosis,pass,"range_details_final.json; 10-state overview, 40 ranges, 40 LITERAL results; B planner calls=0."
+C delivery/hash/hand-off,pass,source_manifest_after.json: 424/424 initial paths match; old_evidence_sha256_20261017.json: 416/416 delivered paths match; new_evidence_sha256_20261017.json covers the supplement and handoff; handoff created at the reserved path.

@@ -1,0 +1,489 @@
+{
+ "run_id": "INT:c06_sparse_history:20261019",
+ "kind": "integration",
+ "case_id": "c06_sparse_history",
+ "seed": 20261019,
+ "soft_limit_seconds": 10.0,
+ "hard_limit_seconds": 15.0,
+ "max_control_iterations": 20000,
+ "started_utc": "2026-10-18T16:40:50.837295+00:00",
+ "request": {
+  "case_id": "c06_sparse_history",
+  "free": 30,
+  "published_targets": 11,
+  "covered": 3,
+  "pending": 8,
+  "deferred": 0,
+  "current": [
+   2,
+   2
+  ],
+  "base": [
+   0,
+   0
+  ],
+  "old_route_len": 0,
+  "remaining_resource": 120,
+  "seed": 20261019,
+  "termination": {
+   "time_limit_seconds": 10.0,
+   "natural": "method_natural_termination",
+   "extra": {}
+  },
+  "meta": {
+   "case_note": "real coverage history C is kept; non-target free cells stay passable",
+   "expected": {
+    "status": "success",
+    "coverage_complete": true,
+    "covered_must_stay": true
+   }
+  }
+ },
+ "status": "finished",
+ "reason": "FN_no_positive_potential",
+ "route_steps": 32,
+ "audit": {
+  "valid": true,
+  "errors": [],
+  "route_steps": 32,
+  "starts_at_current": true,
+  "ends_at_base": true,
+  "collisions": [],
+  "illegal_steps": [],
+  "coverage_complete": true,
+  "uncovered": [],
+  "uncovered_count": 0,
+  "covered_physical": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    3
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    2,
+    4
+   ],
+   [
+    3,
+    0
+   ],
+   [
+    3,
+    3
+   ],
+   [
+    4,
+    2
+   ],
+   [
+    5,
+    0
+   ],
+   [
+    5,
+    4
+   ]
+  ],
+  "covered_physical_count": 11,
+  "ledger_size": 3,
+  "coverage_claimed_without_visit": [],
+  "deferred_untouched": [],
+  "deferred_visited": [],
+  "resource": {
+   "limit": 120,
+   "used": 32,
+   "ok": true
+  },
+  "distinct_cells": 22,
+  "revisited_positions": 11,
+  "direction_changes": 12,
+  "target_visits": 12
+ },
+ "resource_check": {
+  "limit": 120,
+  "used": 32,
+  "ok": true,
+  "source": "recomputed_from_route"
+ },
+ "termination": {
+  "natural": true,
+  "reason": "FN_no_positive_potential",
+  "engine_natural": true
+ },
+ "errors": [],
+ "stage_seconds": {
+  "maps_build": 0.00010789999942062423,
+  "etm_and_return": 0.0033215000003110617,
+  "audit": 0.00011829999857582152
+ },
+ "route": [
+  [
+   2,
+   2
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   0,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   3
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   3,
+   4
+  ],
+  [
+   4,
+   4
+  ],
+  [
+   4,
+   3
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   5,
+   4
+  ],
+  [
+   5,
+   3
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   0,
+   0
+  ]
+ ],
+ "meta": {
+  "core_version": "epsilon_star_core_integrated_v1_20261018",
+  "adapter_version": "epsilon_star_adapter_integrated_v1_20261018",
+  "adaptation_class": "epsilon_star_core_adapted_task_control",
+  "control_mode": "task",
+  "ledgers": {
+   "control": "MAPS state; U = control-pending, updated only at WT",
+   "physical": "recomputed by the independent audit from the route"
+  },
+  "engine": {
+   "terminal": "FN_no_positive_potential",
+   "credit_mode": "task",
+   "iterations": 32,
+   "moves": 32,
+   "tasks": 8,
+   "extremum_escapes": 1,
+   "levels_used": {
+    "-1": 1,
+    "0": 30,
+    "1": 1
+   },
+   "rules": {
+    "FN_no_positive_potential": 1,
+    "line16_I_unexplored_in_block": 1,
+    "line6_task_here": 8,
+    "line8_argmax_potential": 22
+   },
+   "physically_covered_targets": 9,
+   "control_tasked_targets": 8,
+   "steps": 32,
+   "events": {
+    "index_first_physical_complete": 23,
+    "time_first_physical_complete": 0.003440000000409782,
+    "index_control_fn": 23,
+    "time_control_fn": 0.0034897000005003065,
+    "index_return_start": 23,
+    "index_return_end": 32,
+    "time_return_end": 0.003508900001179427,
+    "extra_steps_physical_to_fn": 0,
+    "return_steps": 9,
+    "control_tasked": 8,
+    "decision_count": 32
+   },
+   "connector": {
+    "row_builds": 15,
+    "cached_paths": 24,
+    "cached_rows": 15
+   },
+   "turn_cost": 1.0,
+   "travel_cost": 1.0,
+   "initial_heading": null,
+   "failures": []
+  },
+  "events": {
+   "index_first_physical_complete": 23,
+   "time_first_physical_complete": 0.003440000000409782,
+   "index_control_fn": 23,
+   "time_control_fn": 0.0034897000005003065,
+   "index_return_start": 23,
+   "index_return_end": 32,
+   "time_return_end": 0.003508900001179427,
+   "extra_steps_physical_to_fn": 0,
+   "return_steps": 9,
+   "control_tasked": 8,
+   "decision_count": 32
+  },
+  "connector": {
+   "row_builds": 15,
+   "cached_paths": 24,
+   "cached_rows": 15
+  },
+  "maps": {
+   "bounding_box": [
+    0,
+    5,
+    0,
+    4
+   ],
+   "L": 1,
+   "cells_per_level": {
+    "1": 4
+   },
+   "block_sizes": {
+    "1": [
+     [
+      3,
+      2
+     ],
+     [
+      3,
+      3
+     ]
+    ]
+   },
+   "bmax": 6,
+   "forbidden_cells": 0,
+   "unexplored_level0": 8,
+   "counters": {
+    "level0_refresh": 0,
+    "coarse_block_updates": 0,
+    "neighbourhood_calls": 0
+   }
+  },
+  "environment": {
+   "ok": true,
+   "code": "solvable_environment"
+  },
+  "parameters": {
+   "travel_cost": 1.0,
+   "turn_cost": 1.0,
+   "turn_cost_units": "per degree from the heading",
+   "max_control_iterations": 20000,
+   "initial_heading": null
+  },
+  "candidate": {
+   "generated": true,
+   "audited": true,
+   "accepted": true,
+   "post_deadline": false
+  },
+  "not_scorable_reason": "",
+  "errors": [],
+  "deadline": {
+   "soft_deadline_seconds": 10.0,
+   "soft_deadline_hit": false,
+   "soft_deadline_checks": 99,
+   "soft_deadline_elapsed_seconds": 0.003644100004748907,
+   "semantics": "cooperative; one stage may overrun slightly and is reported"
+  },
+  "route": {
+   "completion_steps": 32
+  },
+  "ledger": {
+   "run_id": "INT:c06_sparse_history:20261019",
+   "batch": "INTEGRATION",
+   "kind": "integration",
+   "call_total_seconds": 0.005848699998750817
+  }
+ },
+ "covered_physical": [
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   5,
+   4
+  ]
+ ],
+ "pending_remaining": [
+  [
+   0,
+   0
+  ],
+  [
+   1,
+   3
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   4
+  ],
+  [
+   3,
+   0
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   5,
+   4
+  ]
+ ],
+ "deferred_remaining": [],
+ "finished_utc": "2026-10-18T16:40:50.868807+00:00"
+}

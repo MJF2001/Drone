@@ -1,0 +1,50 @@
+{
+ "method": {
+  "method_id": "EPSILON_STAR",
+  "core_version": "epsilon_star_core_integrated_v1_20261018",
+  "adapter_version": "epsilon_star_adapter_integrated_v1_20261018",
+  "adaptation_class": "epsilon_star_core_adapted_task_control",
+  "parameters": {
+   "control_mode": "task",
+   "travel_cost": 1.0,
+   "turn_cost": 1.0,
+   "turn_cost_units": "per degree from the heading",
+   "max_control_iterations": 20000,
+   "initial_heading": null
+  },
+  "source_sha256": "5c8932a0ec4074a4e2fbc24140da0c720e75be77ebd5b0309d793fdc6f4ae85f",
+  "source_files": {
+   "core.maps": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_epsilon机制与接口集成_20261018\\src\\core\\maps.py",
+   "core.etm": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_epsilon机制与接口集成_20261018\\src\\core\\etm.py",
+   "adapters.epsilon_star": "D:\\0A无人机仿真02\\问题分析+文献分析\\DeepSeek_epsilon机制与接口集成_20261018\\src\\adapters\\epsilon_star.py"
+  }
+ },
+ "fixed": {
+  "control_mode": "task",
+  "travel_cost": 1.0,
+  "turn_cost": 1.0,
+  "turn_cost_units": "per degree",
+  "max_control_iterations": 20000,
+  "initial_heading": null
+ },
+ "reused_protections": {
+  "input": "sources/v01/problem.py (validate_inputs) through src/inputs.py, with one documented re-admission: resource 0 with an empty task at the base",
+  "deadline": "sources/v02/deadline.py",
+  "finalize": "sources/v03/finalize.py",
+  "grading": "sources/v03/grading.py",
+  "audit": "sources/v01/audit_independent.py",
+  "connector": "sources/v01/common_geometry.py",
+  "ledger": "src/adapters/registry.py (local copy of the v0.3 two-phase recorder)"
+ },
+ "not_implemented": [
+  "Remark 3.2 flood fill (not needed on a published map)",
+  "continuous motion / continuous-time feedback",
+  "physics-based forbidden buffer (radius 0 here)"
+ ],
+ "evidence_strength": {
+  "kept": "tiling rule, potentials, neighbourhoods, Algorithm 1 branches, Eq. (5)",
+  "adapted": "four-neighbour steps, graph distance, supercover reachability, Q-only positive potential, return leg",
+  "interpretation": "7x5 continuation of stopped blocks, 9x3 single-axis split",
+  "unknown": "the paper gives no numeric travel/turn cost"
+ }
+}

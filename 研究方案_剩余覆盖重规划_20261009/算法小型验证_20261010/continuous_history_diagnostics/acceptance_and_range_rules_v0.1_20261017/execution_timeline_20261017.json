@@ -1,0 +1,200 @@
+{
+  "created_date": "2026-10-17",
+  "repository_head": "5e366a58b7272a7a4723c077b10820c68664dfe2",
+  "attempt_count": 197,
+  "unique_valid_successes": 120,
+  "duplicate_valid_successes": 0,
+  "batch_summaries": [
+    {
+      "batch": "initial",
+      "attempts": 38,
+      "valid": 25,
+      "exceptions": 13,
+      "watchdog_timeouts": 0,
+      "method_counts": {
+        "LITERAL": 13,
+        "P2_MULTI": 12,
+        "P2_WARM_GLOBAL": 13
+      },
+      "worker_status_counts": {
+        "exception": 13,
+        "returned": 25
+      },
+      "exception_groups": [
+        {
+          "type": "ValueError",
+          "message": "LITERAL",
+          "phase": "before_planner_dispatch",
+          "count": 13
+        }
+      ],
+      "sequence_first": [
+        "c00_r0_b1_P2_MULTI",
+        "c00_r0_b1_LITERAL",
+        "c00_r0_b1_P2_WARM_GLOBAL",
+        "c00_r0_b20_P2_MULTI",
+        "c00_r0_b20_LITERAL",
+        "c00_r0_b20_P2_WARM_GLOBAL"
+      ],
+      "sequence_last": [
+        "c02_r1_b20_P2_MULTI",
+        "c02_r1_b1_P2_WARM_GLOBAL",
+        "c02_r1_b1_LITERAL",
+        "c02_r1_b1_P2_MULTI",
+        "c03_r0_b20_P2_WARM_GLOBAL",
+        "c03_r0_b20_LITERAL"
+      ],
+      "ledger_path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\old_plan_warm_global_v0.1_20261017\\execution_ledger.jsonl",
+      "ledger_sha256": "d88e2423ee82249d0d8246340ed88f83ab2eda90775b4df9fbde1351405093c4",
+      "reported_serial_process_seconds_sum": 43.83017299998028
+    },
+    {
+      "batch": "recovery1",
+      "attempts": 64,
+      "valid": 0,
+      "exceptions": 64,
+      "watchdog_timeouts": 0,
+      "method_counts": {
+        "LITERAL": 30,
+        "P2_MULTI": 17,
+        "P2_WARM_GLOBAL": 17
+      },
+      "worker_status_counts": {
+        "exception": 64
+      },
+      "exception_groups": [
+        {
+          "type": "AttributeError",
+          "message": "'str' object has no attribute 'read_text'",
+          "phase": "input_path_resolution_before_planner",
+          "count": 64
+        }
+      ],
+      "sequence_first": [
+        "c00_r0_b1_LITERAL",
+        "c00_r0_b20_LITERAL",
+        "c00_r1_b20_LITERAL",
+        "c00_r1_b1_LITERAL",
+        "c01_r0_b20_LITERAL",
+        "c01_r0_b1_LITERAL"
+      ],
+      "sequence_last": [
+        "c06_r1_b1_P2_MULTI",
+        "c07_r0_b20_P2_WARM_GLOBAL",
+        "c07_r0_b20_LITERAL",
+        "c07_r0_b20_P2_MULTI",
+        "c07_r0_b1_P2_WARM_GLOBAL",
+        "c07_r0_b1_LITERAL"
+      ],
+      "ledger_path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\old_plan_warm_global_v0.1_20261017\\recovery\\recovery_ledger.jsonl",
+      "ledger_sha256": "b5968b8249e199ebc9925bb07978795416805c3e68c21eb3bfdf92aa59f9dd5a",
+      "reported_serial_process_seconds_sum": 38.400805600009335
+    },
+    {
+      "batch": "recovery2",
+      "attempts": 95,
+      "valid": 95,
+      "exceptions": 0,
+      "watchdog_timeouts": 0,
+      "method_counts": {
+        "LITERAL": 40,
+        "P2_MULTI": 28,
+        "P2_WARM_GLOBAL": 27
+      },
+      "worker_status_counts": {
+        "returned": 95
+      },
+      "exception_groups": [],
+      "sequence_first": [
+        "c00_r0_b1_LITERAL",
+        "c00_r0_b20_LITERAL",
+        "c00_r1_b20_LITERAL",
+        "c00_r1_b1_LITERAL",
+        "c01_r0_b20_LITERAL",
+        "c01_r0_b1_LITERAL"
+      ],
+      "sequence_last": [
+        "c09_r1_b1_P2_MULTI",
+        "c09_r1_b1_LITERAL",
+        "c09_r1_b1_P2_WARM_GLOBAL",
+        "c09_r1_b20_P2_MULTI",
+        "c09_r1_b20_LITERAL",
+        "c09_r1_b20_P2_WARM_GLOBAL"
+      ],
+      "ledger_path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\old_plan_warm_global_v0.1_20261017\\recovery2\\recovery_ledger.jsonl",
+      "ledger_sha256": "9faaf14331625b9b79121ca46960340ace93ad07a9e87f94466f81eaa3a75ee6",
+      "reported_serial_process_seconds_sum": 754.7042987000241
+    }
+  ],
+  "serial_execution_evidence": {
+    "initial_runner": "run_p2_warm_global_20261017.py iterates the job sequence with a blocking subprocess.run in a single for loop.",
+    "recovery_runner_1": "resume_p2_warm_global_20261017.py uses a single blocking job loop.",
+    "recovery_runner_2": "resume2_p2_warm_global_20261017.py uses a single blocking job loop.",
+    "exact_wall_clock_timestamps": "not present in the saved ledgers; batch order is recoverable from ledger order, exact launch times are not."
+  },
+  "attempt_timeline_csv": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\acceptance_and_range_rules_v0.1_20261017\\execution_attempt_timeline.csv",
+  "formal_smoke_preflight": {
+    "reported_attempt_count": 6,
+    "saved_individual_preflight_rows": 0,
+    "completion_evidence_path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\old_plan_warm_global_v0.1_20261017\\completion_final.json",
+    "status": "count survives, individual case IDs/results/logs were not found in the 70 deliverable tree; cannot reconstruct each preflight input/result without inventing evidence."
+  },
+  "posthoc_regression_call_counts": {
+    "exact_25_test_suite": {
+      "tests": 25,
+      "passed": true,
+      "range_engine_planner_calls": 7,
+      "formal_development_map_calls": 0,
+      "log": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\acceptance_and_range_rules_v0.1_20261017\\counted_25_regression_run_20261017.log"
+    },
+    "warm_edge_fixture_suite": {
+      "tests": 5,
+      "candidate_solver_calls": 4,
+      "frozen_P2_calls": 1,
+      "total_planner_calls": 5,
+      "formal_development_map_calls": 0,
+      "log": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\acceptance_and_range_rules_v0.1_20261017\\posthoc_warm_regressions_20261017.log"
+    },
+    "total_posthoc_synthetic_planner_calls": 12
+  },
+  "runner_source_hashes": {
+    "protocol_expected": "f7168fe617b62c27d7db51fb885b922d6baaf7edd7604c4a2e199f02c396d68f",
+    "current_after_run": "e8ff1d405546e0d01976a7a9cb803569092717d198fda7b22367fc4f24cbc72c",
+    "runner_path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\run_p2_warm_global_20261017.py",
+    "other_protected_hashes_match": 16
+  },
+  "recovery_source_hashes": {
+    "resume1_path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\resume_p2_warm_global_20261017.py",
+    "resume1_current_sha256": "1e36b4790c06a5120fc62225c43c33acad49fe88018628a9709e6be3d28b0a10",
+    "resume2_path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\resume2_p2_warm_global_20261017.py",
+    "resume2_current_sha256": "bc9929f11b816d4907da7ac1a5b92f0da0241a63e8ab36d863ecc990f6f8c194",
+    "limitation": "These are current file hashes. The execution ledger does not record source hashes at each process start."
+  },
+  "method_rotation_fact": "Initial batch and recovery1 were interrupted; recovery2 contains all 40 LITERAL result rows. This is an execution-schedule deviation, not a validity defect by itself.",
+  "cross_batch_69_70": {
+    "paired_rows": 80,
+    "rows_with_any_route_or_stage_record_change": 22,
+    "route_step_changed_rows": 14,
+    "route_content_changed_rows": 14,
+    "source_changed_rows": 14,
+    "stage_status_changed_rows": 14,
+    "elapsed_seconds_differed_rows": 80,
+    "seconds_delta_70_minus_69_mean": 0.5665643750000526,
+    "seconds_delta_70_minus_69_median": 0.01877004999823839,
+    "seconds_delta_70_minus_69_min": -0.03643139999257983,
+    "seconds_delta_70_minus_69_max": 5.120744800000466,
+    "large_g1_budget20": {
+      "69_P2_steps": 941,
+      "70_P2_steps": 1073,
+      "69_LITERAL_steps": 939,
+      "70_LITERAL_steps": 941,
+      "70_warm_steps": 1243,
+      "70_P2_active_stage": "H_scan_opt",
+      "70_warm_active_stage": "warm_optimize",
+      "interpretation": "Across-batch difference cannot be attributed to the new warm mechanism; P2/LITERAL also shifted under different elapsed execution conditions."
+    },
+    "all_80_rows_path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\acceptance_and_range_rules_v0.1_20261017\\cross_batch_69_70_all_pairs.csv",
+    "changed_route_or_stage_rows_path": "D:\\0A无人机仿真02\\问题分析+文献分析\\.remote_Drone\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\continuous_history_diagnostics\\acceptance_and_range_rules_v0.1_20261017\\cross_batch_69_70_changed_pairs.csv"
+  },
+  "source_evidence_note": "The run protocol has a single runner SHA mismatch. Post-hoc on-disk hashes do not establish which code bytes were loaded at initial process start."
+}

@@ -1,0 +1,671 @@
+
+===== PDF page 87; printed page 70 =====
+Chapter 5
+
+CPP with Approximation Guarantees
+
+
+
+
+We now shift our focus to improving the coverage replanning by analysing the length of
+OARP coverage paths and establishing an approximation factor for the OARP approach.
+We then propose an improved approximation algorithm to connect axis-parallel coverage
+lines into a minimum-length tour.  The proposed approach can also be used lazily, i.e.,
+without evaluating all possible transition paths. This offers a speed-up that can be useful
+to replan more of the coverage path upon detecting unknown obstacles.
+
+5.1   Introduction
+
+For general environments, CPP is an NP-hard problem [8], thus optimal planning ap-
+proaches do not scale well with increasing problem complexity.  So, as we discussed in
+Chapter3, CPP algorithms [22,5,88,74] usually follow the following framework, where
+they: (i) decompose the environment into sub-regions, (ii) compute an optimal set of par-
+allel straight-line paths or coverage lines to cover each sub-region, and then (iii) compute
+a cost-minimizing tour of the coverage lines to form a coverage path. In this chapter, we
+refer to this approach as the line-touring framework. This framework is commonly used to
+minimize the number of turns in the coverage path as (i) turns take time to execute while
+adding little to no new coverage, and (ii) tools like cleaning attachments miss coverage
+during turns [5,88,74,7].
+   Whilethisframeworkmakestheproblemmoretractable, it, ingeneral, computespaths
+with suboptimal length.  This is acceptable as long as the computed solution is “good
+enough” with a known approximation factor.  While approximation algorithms for CPP
+
+                                                  70
+
+===== PDF page 88; printed page 71 =====
+have been studied [8,29], an approximation factor for the line-touring framework has not
+beenanalyzed. Inthiswork, westudytheline-touringframeworkappliedtogriddecompo-
+sitions,wheretheenvironmentisrepresentedasasetofsquaregridcells. Eachcoverageline
+covers a rank, i.e., a group of grid cells aligned along an axis-parallel (horizontal/vertical)
+straight line. As such, one can obtain the coverage lines for a grid decomposition by par-
+titioning it into these ranks.  We refer to this variation of the line-touring framework as
+rank-touring [88,74,31].
+    In this chapter, we show that the rank-touring framework achieves an approximation
+factor of (1+1.5γ) for path length, where γ > 1 is the approximation factor to solve the
+metric traveling salesman problem (metric-TSP). Following this, we propose a (1.5+ϵ)-
+approximation algorithm, namely Minimum Length Coverage Approx (MLC-Approx), for
+minimum-length CPP in connected grid environments with holes. Here, ϵ≪ 1 is a small
+term proportional to the number of ranks.  Building upon the rank-touring framework,
+MLC-Approx relaxes the turn minimization objective to compute paths with near-optimal
+length, while still achieving fewer turns than a TSP planner.
+Chapter contributions: Our specific contributions are as follows:
+
+   1.We show that the rank-touring framework for minimum-length CPP achieves an
+      approximation factor of (1+1.5γ), where γ > 1 is the approximation factor to solve
+      metric-TSP,
+
+   2.For grid environments with holes, we propose a (1  .5+ϵ)-approximation algorithm
+      for minimum-length CPP, which also minimizes the number of turns as a secondary
+      objective,
+
+   3.We propose a lazy variation of the (1  .5+ϵ)-approximation algorithm that achieves
+      the same result with improved runtime.
+
+    We also evaluate MLC-Approx using maps of real-world environments and compare
+against state-of-the-art approaches that employ the rank-touring [88,74], and line-touring
+[9] frameworks.
+    Recent turn-minimizing approximate approaches have applied the rank-touring frame-
+work to minimize turns in the coverage path [88,74].  In [74], the authors proposed the
+optimal axis-parallel rank partitioning (OARP) approach that guarantees the minimum
+number of axis-parallel ranks in the resulting coverage path.  In this work, we provide
+an approximation factor for these approaches and propose an algorithm with a tighter
+guarantee.
+
+                                                    71
+
+===== PDF page 89; printed page 72 =====
+Organization: In Section5.2we define CPP and the minimum-length rank-based CPP
+problem that we look to solve in this paper. In Section5.3, we establish an approximation
+factor of (1 + 1.5γ) for the rank-touring framework to solve the minimum-length CPP
+problem. In Section5.4, we propose MLC-Approx and show that it achieves an improved
+approximationfactorof(1.5+ϵ),whereϵ≪ 1. InSection5.5,weintroducealazyvariation
+of MLC-Approx to improve CPP computation time. In Section5.6, we provide simulation
+results where we compare MLC-Approx with baseline approaches that follow the same
+framework. Section5.7concludes the paper.
+
+5.2   Problem Definition
+
+5.2.1   Rank-touring Framework
+
+We start by clarifying the notation for the rank-touring framework we will use in this
+chapter.  As discussed in previous chapters, the rank-touring framework starts by par-
+titioning the IOPfW  into non-overlapping axis-parallel (i.e., horizontal/vertical)  ranks
+R ={r1,r2,...,rm}, where each rank ri ∈ R is a set of grid cells that can be covered in
+a straight-line sweep using a square tool of width l.  Let PR be the set of coverage lines
+that each correspond to a rank in R. For example, the coverage line of a horizontal rank
+ri is a path connecting the centers of its leftmost and rightmost grid cells. The framework
+then computes a cost-minimizing tour of the paths in PR to obtain a coverage path for the
+IOP. The resulting coverage path P is a sequence of coverage lines in PR and collision-free
+transition paths connecting two coverage lines at their endpoints. The aim of the tour is
+to minimize the cost J(P) associated with the transition paths.
+
+5.2.2   Rank-based Coverage with Minimum Length
+
+For this work, we consider the primary cost J(P) of the coverage path P to be the path
+length L(P), with the number of turns Θ(P) as a secondary cost. To minimize Θ(P), we
+partitionfW into axis-parallel ranks R such that the number of ranks m is minimized. We
+refer to this partition as the minimum rank partition offW.
+    The minimum rank partition offW can be computed using approaches in the literature
+[74,88].  From this partition, one can obtain the coverage lines          PR and a coverage path
+P forfW using the framework. In this work, we will focus on minimizing the length L(P)
+
+
+                                                   72
+
+===== PDF page 90; printed page 73 =====
+of this path resulting from a minimum rank partition R and develop an approximation
+scheme for this problem.
+
+Problem5.1 (Minimum-lengthRank-basedCoverage). Given an approximationfW of the
+environmentW, a coverage tool of width l and a minimum rank partition R offW, compute
+a coverage path P ∈P that solves:
+
+                                     min
+                                      P∈P    L(P)
+                                     s.t.  [       A(x,θ) =fW.
+                                            (x,θ)∈P
+
+    Unliketherank-touringframework,oursolutionapproachtothisproblemallowschanges
+to the ranks (e.g., breaking) to compute near-optimal solutions in the search space.  Re-
+garding the number of turns Θ(P), we focus on rank changes that add the fewest turns
+to the resulting P. Note that using the minimum rank partition R also helps to minimize
+Θ(P) as it reduces the number of coverage lines.
+
+5.3   Approximation Factor for Rank-Touring
+
+We first analyze the optimality of the rank-touring framework to plan minimum-length
+coverage paths for the environment’s IOPfW (Problem5.1).  Since it is a step-wise ap-
+proach, the framework may remove optimal paths from its solution space. So, we obtain
+an approximation factor that quantifies the length of the resulting path in comparison to
+the optimal coverage path length forfW.
+    Given a coverage tool of width l, let n be the number of grid cells infW, and R =
+{r1,...,rm}beanyrankpartitionoffW (doesnotnecessarilyminimizem). Eachri∈Risa
+horizontal/verticalrankthatcontainsni≤ngridcells. SinceRisapartition,Pmi=1ni =n.
+LetPR ={p1,...,pm}bethesetofcoveragelinesobtainedfromtheranksR,wherepi∈PR
+is the coverage line corresponding to ri ∈ R.  Since pi is a straight line covering ni grid
+cells (i.e., connecting the centers of the end grid cells in a row), the coverage line will have
+the length
+
+                                          L(pi) = (ni−1)l.                                                 (5.1)
+
+Let P∗ be the optimal coverage path forfW of length L(P∗).   To lower-bound L(P∗),
+consider the length of a coverage path that covers every cell without any overlap (e.g., cells
+
+                                                   73
+
+===== PDF page 91; printed page 74 =====
+Figure 5.1: An IOP where a rank-touring algorithm (left) computes a path of length 5/3 times
+the optimal coverage path length (right).
+
+
+arranged in a loop). This gives
+
+                                      L(P∗)≥ Areal    = nl2l   =nl.                                          (5.2)
+
+We now derive an approximation factor for the rank-touring framework.  Our derivation
+assumes access to an approximation algorithm to solve the metric traveling salesman prob-
+lem (metric-TSP), where the edge costs of the graph satisfy the triangle inequality. Let γ
+be the approximation factor of this TSP solver.
+
+Theorem 5.1. Given an IOPfW, the rank-touring framework computes a coverage path
+P of length L(P) satisfying
+                                       L(P)≤ (1+1.5γ)L(P∗),
+where P∗ is the optimal coverage path offW.
+
+Proof. Let R ={r1,...,rm} be a rank partition offW, and let PR ={p1,...,pm} be the
+resulting coverage line set.  The rank-touring framework computes a coverage path P by
+connectingthecoveragelinesinPR usingasetoftransitionpathsPT. Theresultinglength
+of P is                                                     mX
+                           L(P) =L(PR)+L(PT) =                 L(pi)+L(PT).
+                                                           i=1
+
+
+
+                                                    74
+
+===== PDF page 92; printed page 75 =====
+We bound L(P) by bounding the above sum of path lengths.  Following Eqs.  (5.1) and
+(5.2), we have
+                                  mX
+                                     L(pi) = (n−m)l≤nl≤L(P∗).
+                                 i=1
+Now, consider a tour Te of length L(Te) over the endpoints of PR computed by the γ-
+approximation metric-TSP solver using collision-free paths infW.  Note that Te does not
+necessarilyconnectthecoveragelinesetPR toformacoveragepath. LetT∗e betheoptimal
+TSP tour of these endpoints. Then, we have
+
+                                      L(Te)≤γL(T∗e)≤γL(P∗).
+
+The second inequality follows as T∗e covers fewer grid cells than P∗ (covers all cells). Con-
+sider the weighted graph  ¯G induced by Te, where the edge costs are the path lengths
+between endpoints.  To this, we add edges corresponding to the coverage lines PR.  The
+resulting  ¯G has a total edge cost ≤ (1+γ)L(P∗) and all of its vertices have odd degree.
+However, the edges of Te form two perfect matchings of the endpoints of PR. Let M∗ be
+the matching with cost ≤ L(Te)/2.  Adding the edges of M∗ to  ¯G gives a graph with all
+even degree vertices containing an Eulerian cycle of cost ≤ (1+1.5γ)L(P∗). This proves
+the theorem, as this cycle’s cost is a bound on L(P).
+
+    Obtaining a tight example for this bound is non-trivial without considering environ-
+ments with unrealistic perturbations.  However, we provide an algorithm for which this
+factor must be at least 5/3.
+
+Proposition 5.1. There exists an IOPfW for which a rank-touring algorithm computes a
+coverage path of length 5/3 times the optimal coverage path length.
+
+Proof. Consider the IOP in Fig.5.1, where           d is its height measured between the center
+points of the top and bottom grid cells.  We can stack copies of this IOP vertically to
+obtain a new IOP with an arbitrarily large d. Now, consider a rank-touring algorithm that
+(i) partitions the IOP into the minimum number of horizontal ranks, and (ii) computes a
+minimum-length tour connecting the coverage lines.  The resulting coverage path, shown
+in Fig.5.1(left), has length 5          d for a large d. However, the IOP allows a Hamiltonian cycle
+(right of Fig.5.1) with length 3          d+3l≈ 3d, i.e., the optimal coverage path. Therefore, the
+algorithm computes a coverage path of length 5/3 times the optimal.
+
+
+
+
+                                                     75
+
+===== PDF page 93; printed page 76 =====
+           (a)   Coverage   ranks   (orange)   with      (b)  Sub-tour  merging  with  spanning
+           matching edges (green)                        tree
+
+Figure 5.2:  MLC-Approx stages:  (a) obtain coverage lines (orange) from the minimum rank
+partition and compute min-length perfect matching paths (green), and (b) identify the resulting
+sub-tours(coloredpaths)andevaluatepossiblemerges(blacklines)asdeterminedbyanordering
+(dotted green lines).
+
+5.4   A (1.5+ϵ)-Approximation Algorithm
+
+We now present a (1.5+ϵ)-approximation algorithm for Problem5.1, called the Minimum
+Length Coverage Approx (MLC-Approx) algorithm.  MLC-Approx modifies the touring
+step in the rank-touring framework to improve the guarantee on the path length. Instead
+of connecting ranks at their endpoints, MLC-Approx allows the breaking and merging of
+neighboring ranks while minimizing the path length added to the final coverage path. We
+consider that the IOP is connected, i.e., there exists a path between every pair of grid cells
+with axis-parallel motions.
+
+5.4.1   General Framework
+
+A pseudocode of the coverage planning approach is given in Algorithm2.  We start by
+computing the minimum rank partition R of the IOPfW and obtain the resulting coverage
+lines PR for the IOP. For this, we use the approach proposed in [74], which utilizes a linear
+program (LP) to compute the optimal partition in polynomial time. Fig.5.2(a) shows the
+resulting set of coverage lines for an example IOP.
+
+
+                                                    76
+
+===== PDF page 94; printed page 77 =====
+    Let V be the set of all the rank endpoints, where each v∈V corresponds to the center
+of a grid cell at one end of a rank. We compute a perfect matching ofV that minimizes the
+length of the paths connecting the endpoints in the matching (Line1).  For this, we use
+a transition graph G = (V,E) where the edges E represent collision-free transition paths
+between two endpoints with the edge weights being the lengths of the transition paths.
+The result is a set M of matching paths connecting pairs of rank endpoints. Together, the
+matching paths M and the coverage lines PR form a setT  of sub-tours, i.e., closed paths
+that collectively cover all cells in the IOP, where |T| ≥ 1 (Line2).  Fig.5.2shows an
+example set of sub-tours, where the coverage lines (orange) and matching paths (green)
+together form a set of sub-tours (colored paths in Fig.5.2(b)) covering the IOP.
+
+Algorithm 2 MLC-Approx
+Input: Environment IOPfW, Coverage lines PR from rank partition, Transition Graph
+    G = (V,E) of rank endpoints
+Output: Coverage Path P
+ 1: M ← A min-length perfect matching of V  using G
+ 2: T ← Sub-tours obtained from combining PR and M
+ 3: ST ←SubtourOrdering(T)   ▷ Ordering of adjacent sub-tour pairs to be merged
+ 4: for (Si,Sj)∈ST do
+ 5:       Merge Si with Sj                                                                    ▷ See Section5.4.2
+ 6: end for
+ 7: P ← Final tour after merging all sub-tours
+ 8: return P
+
+    We now look to merge the sub-tours in T  into a single coverage path P. For this, we
+use the connectivity of the IOP and the resulting adjacency of the sub-tours.
+Definition 5.1 (Adjacent Sub-tours). Two sub-tours are adjacent if they each cover grid
+cells that are axis-parallel (horizontal/vertical) neighbors of each other.
+
+    Since the IOP is connected, every sub-tour inT  is adjacent to at least one other sub-
+tour.  Therefore, we use a sub-routine named SubtourOrdering(T) to determine an
+ordering of adjacent sub-tour pairs that can be merged to obtain P  (Line3).   In our
+implementation of SubtourOrdering(T), we compute a spanning tree in an adjacency
+graph G′ = (V′,E′), where each sub-tour is represented by a vertex v ∈ V′ and edges
+e∈ E′ connect two adjacent sub-tours. Fig.5.2(b) shows the spanning tree of sub-tours
+in an example environment. We use the edges of this spanning tree to determine pairs of
+adjacent sub-tours that can be merged in any order to obtain P (Lines4-7). In the next
+sub-section, we address how two sub-tours are merged in MLC-Approx.
+
+                                                     77
+
+===== PDF page 95; printed page 78 =====
+            (a)                         (b)                          (c)                         (d)
+
+Figure 5.3: Corner junction merging: (a) Corner junction formed by 4 grid cells. (b) Edge swap
+to merge two sub-tours at the junction. (c & d) Modifying sub-tour S to allow an edge swap by
+removing the red edges and adding the green edges.
+
+5.4.2   Sub-tour Merging
+
+We propose two strategies to merge adjacent sub-tours, namely double edge merging and
+corner junction merging. In both strategies, we exploit the layout of the adjacent (neigh-
+boring) grid cells covered by two sub-tours to determine a merging strategy that limits
+the path length added. For the rest of this section, let the two sub-tours to be merged be
+represented by S and  ¯S.  With some abuse of notation, we say that a grid cell ci ∈ S if
+sub-tour S covers the cell ci.
+    Double Edge Merging: Asimplestrategytomergesub-toursistoadda double edge
+between the two adjacent grid cells ci∈S and ¯ci∈ ¯S. Specifically, we add a traversal path
+from ci to ¯ci and another path from ¯ci to ci.  During coverage, the coverage tool follows
+this double edge, where it moves from sub-tour S to sub-tour ¯S, covers ¯S, and returns to
+finish coveringS. Given that the coverage tool width is l, the length added to the coverage
+path using this strategy is 2l. Additionally, since we consider the IOP to be connected, all
+sub-tours arising from the perfect matching can be merged using double edges to form a
+single tour.
+    Corner Junction Merging: We now consider a strategy to reduce the length added
+during the merge. Consider the case where two adjacent grid cells ci,cj ∈S share a corner
+with two adjacent grid cells ¯ci, ¯cj ∈ ¯S. We refer to these four grid cells as a corner junction
+(Fig.5.3).  Now, we evaluate a set of possible merges within this junction that limits
+the path length added. First, consider the case where sub-tour S has an edge (ci,cj) and
+sub-tour ¯S has an adjacent and parallel edge (¯ci, ¯cj) connecting the corresponding pairs of
+cells (Fig.5.3(a)). In this case, we simply perform an         edge swap, where we replace these
+edges with new ones (ci, ¯ci) and (cj, ¯cj) that merge the sub-tours (Fig.5.3(b)). This swap
+
+                                                      78
+
+===== PDF page 96; printed page 79 =====
+adds no path length to the resulting merged sub-tour.
+    Now, consider the case where sub-tour S has no edge (ci,cj) parallel to (¯ci, ¯cj).  In-
+stead, let ci−1,ci+1 be the cells covered by sub-tour S before and after ci respectively.
+Also, let cj−1 be the cell covered by sub-tour S before cj.  Fig.5.3(c) shows an example
+junction.  For now, assume that an edge (¯ci, ¯cj) exists in sub-tour ¯S (we will remove this
+assumption later). To merge the sub-tours, we first modify sub-tour S by removing three
+edges, namely (ci−1,ci),(ci,ci+1), and (cj−1,cj), and replacing them with three new edges
+(ci−1,ci+1),(cj−1,ci), and (ci,cj) (Fig.5.3(d)). The path resulting from these edge swaps
+is still a closed sub-tour, but more importantly, there is now an edge connecting ci and cj
+in the sub-tour. We now merge the sub-tours using the edge swap from before. For edge
+(cj−1,ci), let L(cj−1,ci) be the length of the edge (the shortest obstacle free path between
+the cells).  WLOG, we assume that L(cj−1,ci) ≤ L(ci+1,cj).  Specifically, between two
+choices for the above sub-tour modification, we chose the one with the least added length.
+While this added length can be computed after the sub-tour modification is made, we
+speed up this process by obtaining a bound on the added length that is easier to compute.
+Proposition 5.2. Given two sub-tours S and ¯S with a corner junction as defined above,
+merging the sub-tours at the corner junction when there is no edge (ci,cj) results in added
+length of at most L(cj−1,ci).
+
+Proof. The length of the edges added by the modification is:
+                             L+ =L(ci−1,ci+1)+L(cj−1,ci)+L(ci,cj).
+Similarly, the length removed by the modification is:
+                             L− =L(ci−1,ci)+L(ci,ci+1)+L(cj−1,cj).
+However, following the triangle inequality, we also have:
+                               L(ci−1,ci+1)≤L(ci−1,ci)+L(ci,ci+1).
+
+Subtracting L− from L+, we have the added path length:
+                        L+−L− =L(ci−1,ci+1)+L(cj−1,ci)+L(ci,cj)−
+                                   L(ci−1,ci)−L(ci,ci+1)−L(cj−1,cj)).
+Following the inequality and that L(cj−1,cj)≥L(ci,cj) =l, we can rewrite the above as:
+                                         L+−L−≤L(cj−1,ci),
+
+which proves the proposition.
+
+                                                     79
+
+===== PDF page 97; printed page 80 =====
+    Following this, we identify a sub-tour modification that minimizes the added length
+by checking the length of the “cross path” (i.e., the corresponding L(cj−1,ci)) added.  If
+L(cj−1,ci) > 2l, we use the double edge strategy for the merge using one of two grid cell
+pairs in the corner junction.  For the case when sub-tour  ¯S also does not have an edge
+(¯ci, ¯cj) between its adjacent cells, we modify ¯S as above to create an edge at the junction.
+We check if the total length added by modifying both subtours is greater than 2l, at which
+point we simply defer to the double edge strategy.
+    The above strategies enable the merging of two sub-tours at any set of adjacent cells
+or corner junctions, while ensuring that the path length added by each merge does not
+exceed 2l. In Line5of Algorithm2, we choose the merge with the least (potentially zero)
+added path length.
+
+5.4.3   Approximation on Path Length
+
+We now show that the above approach yields the following approximation factor on the
+resulting coverage path length.
+
+Theorem5.2. Given a connected IOP with n grid cells, and a rank partition R containing
+m ranks, the coverage path P obtained using MLC-Approx has length L(P) satisfying
+
+                                     L(P)≤ (1.5+m/n)L(P∗),
+
+where P∗ is the optimal coverage path of the IOP.
+
+Proof. Let L(PR) be the total length of the coverage lines PR obtained from the ranks R.
+Recall that
+
+                                          L(PR) = (n−m)l.
+
+LetL(M) be the total length of the matching paths M computed by MLC-Approx to form
+the sub-tours. Now, let T∗V be the optimal TSP tour of the rank endpoints V. Since M is
+a minimum-length perfect matching of V, we have
+
+                                   L(M)≤ 0.5L(T∗V)≤ 0.5L(P∗).
+
+Now, we consider the length added to the path from merging adjacent sub-tours. We have
+the number of sub-tours to be at most m, i.e., the number of ranks.  Since we limit the
+
+
+                                                    80
+
+===== PDF page 98; printed page 81 =====
+length added from each merge to 2l (double edge strategy), the total path length added is
+2ml. Putting it all together, we have the following for the total path length:
+
+                   L(P) =L(PR)+L(M)+2ml
+                          ≤ (n−m)l+0.5L(P∗)+2ml
+                          =nl+0.5L(P∗)+ml = (1+m/n)nl+0.5L(P∗).
+
+Following that L(P∗)≥nl (Eq.5.2), we obtain
+
+                                    L(P)≤ (1.5+m/n)L(P∗),
+
+which proves the theorem.
+
+   In Theorem5.2, we observe an additive                   m/n term in the approximation factor.  This
+termhaslittleeffectas(i)usingaminimumrankpartition(i.e., minimizingm), weobserve
+that m/n≪ 1 is a small number, and (ii) many of the sub-tour merges can be performed
+with the corner junction strategy, which adds little to no additional length. With this, we
+see that the approximation guarantee is closer to 1.5.
+
+5.4.4   Turn Minimization
+
+While the use of a minimum rank partition minimizes the number of ranks in the coverage
+path, we must also minimize the turns added during the sub-tour merges. To do this, we
+usea weighted sub-touradjacencygraphtocomputetheorderinginLine3ofMLC-Approx
+(Algorithm2), where the edge weights are given by the minimum number of turns added
+by merging two adjacent sub-tours.  We then compute a minimum spanning tree (MST)
+in this graph to determine the sub-tour pairs to be merged. When merging two adjacent
+sub-tours (as per MST edge), we pick the merge strategy that minimizes the number of
+added turns.  Typically, this leads to merges occurring at the ends of ranks, as they add
+fewer additional turns to the final coverage path.
+
+5.5   MLC-Approx with Lazy Evaluations
+
+Forlargemaps,computingafully-connectedtransitiongraphG = (V,E)toperformperfect
+matching of all rank endpoints can be computationally expensive, as it requires planning
+collision-free paths between all combinations of endpoints (O(V 2) operations).  However,
+
+                                                  81
+
+===== PDF page 99; printed page 82 =====
+                                     Table 5.1: Statistics for dataset maps.
+
+                    Statistic                                  Min   Max   Mean   Std Dev
+                    Grid Cells                               610    3262     2079           953
+                    Minimum Number of Ranks   39        290      147            73
+                    TSP Path Length (m)            489    2640     1675           776
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                              (a)                                                        (b)
+
+Figure 5.4:  Path length comparisons.  (a) Average path lengths for each map.  (b) % length
+difference from TSP across all maps.
+
+
+
+
+
+                                                           82
+
+===== PDF page 100; printed page 83 =====
+                (a)                                  (b)                                  (c)
+
+Figure 5.5: Coverage paths for an example environment generated using (a) OARP, (b) TSP, and
+(c) the proposed MLC-Approx.
+
+we exploit the use of perfect matching to employ a lazy strategy, where we do not require
+exploring all the paths in the transition graph.
+    We start with a fully-connected transition graph  ˜G = (V, ˜E), where  ˜E is the set of
+Euclidean  edges (may have collisions) between each pair of endpoints in V.   We then
+replace Line1in MLC-Approx with the following. We iteratively compute a matching           ˜M
+using  ˜G, where  ˜M may contain both Euclidean and collision-free edges. For all Euclidean
+edgesin  ˜M, thecorrespondingedgein ˜E isreplacedwithacollision-freeedge, andtheedge
+cost is updated accordingly. This process is repeated until  ˜M has no Euclidean edges, i.e.,˜M = M. While the lazy approach may still require O(V 2) edge replacements, we observe
+
+that this number is far less in practice. Since the length of the Euclidean edge is a lower
+bound on the length of the collision-free path, the final matching M is optimal.
+    Forsomecomplexenvironments,onemayadditionallyusea difference threshold heuris-
+tic to reduce the number of matching iterations.  If the length difference between a Eu-
+clidean edge and its replacement exceeds this threshold, we preemptively replace all other
+incident edges. This still only replaces a fraction of the edges while reducing the number
+of iterations, improving runtime.
+
+5.6   Simulation Results
+
+While the approximation factor is the focus of this paper, we explore how MLC-Approx
+performs in practice compared to state-of-the-art approaches. We conduct simulations us-
+
+                                                     83
+
+===== PDF page 101; printed page 84 =====
+ing a dataset of 10 real-world environments for which the statistics are given in Table5.1.
+The dataset, which is available at the link https://github.com/megalphian/MLC-Maps,
+includes a combination of street maps from [83] and anonymized maps of real-world en-
+vironments provided by our industry partner, Avidbots. To implement MLC-Approx, we
+obtain the minimum number of axis-parallel ranks for each map’s IOP by solving the LP
+from [74].   The map dataset is sorted in increasing order of complexity as determined
+by the number of ranks computed by the LP for each map.  We compute the minimum-
+length perfect matching using the lazy approach (Section5.5). We then use the strategies
+from Sections5.4.2and5.4.4to merge the resulting sub-tours into a coverage path while
+minimizing turns added to the path.
+
+5.6.1   Path Length Comparisons
+
+WecompareMLC-Approxagainstthreebaselineapproaches: (i)theOARPapproachfrom
+[74],(ii)theturn-minimizingcoverage(TMC)approachfrom[88],and(iii)theboustrophe-
+don cell decomposition (BCD) approach from [9].  OARP and TMC are turn-minimizing
+CPP approaches that use the rank-touring framework.  TMC computes ranks using an
+iterative heuristic that can be run for a long time to find high-quality solutions. To stan-
+dardize the comparison, the runtime of this heuristic is limited to that of OARP’s rank
+partitioningstep. Allapproachesaretestedoneachdatasetmapfor5trials. Foreachmap,
+the grid-based approaches (MLC-Approx, OARP, and TMC) must cover the same grid ap-
+proximation as determined by a tool width l = 0.8 m (to match our industry partner’s
+robot). For OARP and TMC, a GTSP solver [80] is used to compute a minimum-length
+tour connecting the ranks, where the solver is given a fully-connected transition graph.
+In addition to these baselines, we also perform an ablation analysis by comparing the full
+MLC-Approx approach with a variant that only uses double edge (DE) merging. We will
+refer to this as MLC-DE-Only.
+    To compare against an optimal planner, we compute a coverage path for each map by
+solving the Euclidean Travelling Salesman Problem (TSP) of the grid cells. The TSP path
+will always have the shortest length (does not minimize turns), so the length difference to
+TSP gives the gap to the optimal path length.  The LKH3 solver [41] was used to solve
+TSPwiththeEuclideandistancebetweengridcellsastheedgecosts(mayhavecollisions).
+Fig.5.4(a) reports the average path lengths across trials for each approach and map, and
+Fig.5.4(b) compares the             % length difference from TSP for all approaches. MLC-Approx
+outperforms all benchmarks and comes closest to the TSP length. We attribute this to the
+sub-tourmergingstrategies(Section5.4.2)thatre-usepathlengthinsteadofaddinglength
+to connect ranks.  We see this effect in Fig.5.5, where the MLC-Approx path has fewer
+
+                                                    84
+
+===== PDF page 102; printed page 85 =====
+overlapping transition paths (green lines) than the OARP path, resulting in an overall
+shorter path. MLC-Approx also outperforms BCD, mainly because BCD paths have many
+overlapping sections as it aims to cover 100% of the environment.  However, we observe
+that grid-based approaches achieve an average coverage of 96% of the environments in our
+dataset. So, while MLC-Approx does not cover the entire environment, it covers most of
+the reachable regions.
+    MLC-Approx path lengths are also closer to TSP than MLC-DE-Only, supporting our
+earlier claim that most sub-tours are merged with corner junction merging, which adds
+little to no length. As such, MLC-Approx path lengths are closer to the optimal than the
+(1.5+m/n)L(P∗) bound.
+
+5.6.2   Turns Comparisons
+
+WenowcomparethenumberofturnsinthecoveragepathsgeneratedbyMLC-Approx. For
+the ablation analysis, we also include a variant of MLC-Approx without turn minimization
+(Section5.4.4), which we refer to as MLC-NoTurnMin.  Fig.5.6(a) shows the number of
+turnsforeachCPPapproachtocovereachmap,averagedacrosstrials. WhileMLC-Approx
+has fewer turns compared to MLC-NoTurnMin, MLC-Approx has more turns than the
+other turn-minimizing approaches. This is because sub-tour merges often add turns to the
+path as a result of breaking ranks to re-use path length. We analyze this tradeoff between
+length and turns by comparing the number of turns per 100 meters of path length, i.e., a
+measure of path ”straightness”.  Fig.5.6(b) shows this comparison, where MLC-Approx
+paths have comparable straightness to the turn-minimizing baselines.  In comparison to
+TSP, MLC-Approx paths have significantly fewer turns despite having comparable path
+lengths.  While this comparison is not entirely fair, we use it to show that MLC-Approx
+approaches TSP-like path lengths with comparable straightness (turns/length tradeoff) to
+that of turn-minimizing approaches.  While one can also compare against angular-metric
+TSP [6], we found that, while it provides good solutions for smaller maps of   ∼ 100 grid
+cells, it scales poorly for the large maps in our dataset.
+    BCD achieves the fewest turns for some maps due to the presence of non-orthogonal
+boundaries in these maps (e.g., walls oriented at different angles).  Unlike grid-based ap-
+proaches, BCD is not limited to covering in axis-parallel directions, and so its paths align
+better with the environment. A future improvement of MLC-Approx is allowing multiple
+coverage directions while retaining its guarantees.
+
+
+
+
+                                                    85
+
+===== PDF page 103; printed page 86 =====
+                          (a)                                                (b)
+
+Figure 5.6:  Turn comparisons.  (a) Number of turns (bold - fewest turns).  (b) Coverage path
+straightness as denoted by the number of turns per 100 meters of path length.
+
+5.6.3   Runtime Improvements with Lazy Evaluations
+
+WedemonstratetheruntimeimprovementsfromusingMLC-Approxwithlazyevaluations.
+For the lazy method, we used a difference threshold of 8 meters (10 timesl) for all maps to
+standardize the comparison. Since perfect matching can typically be computed efficiently,
+the runtime bottleneck for MLC-Approx is the number of edge evaluations, i.e., computing
+collision-free paths connecting ranks. We plan these paths using a visibility graph planner
+[69]. Atworst, bothlazyMLC-Approxandnon-lazyapproaches[88,74]evaluateall              O(V 2)
+edgesinthetransitiongraph. However,weplotthenumberofedgeevaluationsforlazyand
+non-lazyMLC-ApproxinFig.5.7(a), whereweobservethatlazyMLC-Approxevaluatesa
+small fraction of all edges. This results in a runtime performance boost compared to non-
+lazyapproaches. Fig.5.7(b)showstheresultsofcomparingtheruntimesofeachapproach,
+where lazy MLC-Approx achieves the fastest runtimes among all baselines.  As discussed
+in Section5.5, lazy MLC-Approx computes an optimal matching of rank endpoints, so it
+does not sacrifice the path quality.
+    Here,theTSPplannerappearstobefasterthannon-lazyapproacheswhilehavingmore
+edges to evaluate. This is because we used Euclidean distances for the TSP costs, which
+are quicker to compute than visibility graph paths. Using a visibility planner, the runtime
+to compute a complete graph for TSP rises to a prohibitive amount (multiple hours).
+
+                                                    86
+
+===== PDF page 104; printed page 87 =====
+                           (a)                                              (b)
+
+Figure 5.7:  Runtime comparisons.   (a) Number of edge evaluations (i.e., obstacle-free paths
+planned) by MLC-Approx with/without lazy.  (b) Runtimes for each map (red arrow - exceeds
+5000s).
+5.7   Summary
+
+This chapter studied minimum-length coverage path planning (CPP) for robots using grid
+decompositions of environments. The rank-touring framework introduced by recent CPP
+approaches [7,88,74] guarantees a coverage path of length (1+1           .5γ) times the optimal,
+where γ ≥ 1 is the approximation factor for metric-TSP. To improve this bound, we pro-
+posed the MLC-Approx algorithm, which modifies the rank-touring framework to achieve
+an approximation factor of (1.5+ϵ), where ϵ≪ 1 is proportional to the number of ranks
+(straight-line paths).  Empirically, MLC-Approx plans coverage paths with near-optimal
+lengths in comparison with state-of-the-art CPP approaches [74,88,9].   MLC-Approx
+paths also have comparable “straightness” to turn-minimizing CPP planners, which is de-
+sirable for path tracking. A lazy variation of MLC-Approx was also proposed for efficient
+computation of these paths.
+    ThecoretechniquesofMLC-Approx(matchingandsub-tourmerging)areapplicableto
+anyrank-touringapproachthatminimizesranks. Forreal-worlddeployment,MLC-Approx
+paths should be tracked using a local planner similar to the setup from [74]. Moreover, for
+replanning coverage paths, the lazy MLC-Approx approach offers a runtime speed-up in
+comparison with OARP to compute coverage paths. In combination with OARP-Replan,
+one may be able to replan more of the coverage path using MLC-Approx as a replacement
+for the GTSP transition planner.  A future improvement to MLC-Approx is to enable a
+configurable trade-off between path length and number of turns.
+
+                                                    87

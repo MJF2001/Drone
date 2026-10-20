@@ -1,0 +1,491 @@
+{
+  "request": {
+    "case_id": "N7",
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ]
+    ],
+    "C": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ]
+    ],
+    "current": [
+      0,
+      2
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "resource": 998,
+    "seed": 20261018,
+    "old_route": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "old_suffix": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ]
+  },
+  "method": "REPLAN2",
+  "cap": 2,
+  "route": [
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      3
+    ],
+    [
+      0,
+      2
+    ],
+    [
+      0,
+      1
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "status": "finished",
+  "audit": {
+    "valid": true,
+    "errors": [],
+    "steps": 4,
+    "Q": [
+      [
+        0,
+        3
+      ]
+    ],
+    "D": []
+  },
+  "candidates": [
+    {
+      "source": "old_suffix",
+      "route": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "generated": 1.059999999597494e-05,
+      "audited": 2.3599999963153095e-05,
+      "accepted": 2.3599999963153095e-05,
+      "audit": {
+        "valid": true,
+        "errors": [],
+        "steps": 4,
+        "Q": [
+          [
+            0,
+            3
+          ]
+        ],
+        "D": []
+      }
+    },
+    {
+      "source": "greedy",
+      "route": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "generated": 6.180000002586894e-05,
+      "audited": 7.259999995312683e-05,
+      "accepted": 7.259999995312683e-05,
+      "audit": {
+        "valid": true,
+        "errors": [],
+        "steps": 4,
+        "Q": [
+          [
+            0,
+            3
+          ]
+        ],
+        "D": []
+      }
+    },
+    {
+      "source": "core",
+      "route": [
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "generated": 0.3790275000000065,
+      "audited": 0.3790397000000212,
+      "accepted": 0.3790397000000212,
+      "audit": {
+        "valid": true,
+        "errors": [],
+        "steps": 4,
+        "Q": [
+          [
+            0,
+            3
+          ]
+        ],
+        "D": []
+      }
+    }
+  ],
+  "diagnostics": [],
+  "core_plan": {
+    "plan_id": "N7_capmax",
+    "route": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "strips": [
+      {
+        "rank_id": "rank0-0/fragment0",
+        "parent_rank_id": "rank0-0",
+        "axis": "V",
+        "cells": [
+          [
+            0,
+            3
+          ]
+        ],
+        "visit_order": 0,
+        "reversed_direction": false,
+        "service_start": 1,
+        "service_end": 1,
+        "connector_start": 0
+      }
+    ],
+    "packets": [
+      {
+        "start": 1,
+        "end": 1,
+        "path": [
+          [
+            0,
+            3
+          ]
+        ],
+        "kind": "path"
+      }
+    ],
+    "start": [
+      0,
+      2
+    ],
+    "end": [
+      0,
+      0
+    ],
+    "service_targets": [
+      [
+        0,
+        3
+      ]
+    ]
+  },
+  "core_detail": {
+    "status": "optimal",
+    "objective": 1.0,
+    "metrics": {
+      "rank_count": 1,
+      "new_rank_count": 0,
+      "added_endpoints": 0,
+      "extended_endpoints": 0,
+      "endpoint_bound": 0.0
+    },
+    "fractional_lp": false,
+    "used_integer_fallback": false,
+    "attempts": [
+      {
+        "mode": "LP",
+        "status": "optimal",
+        "variables": 0,
+        "constraints": 0
+      }
+    ],
+    "certification_repair": false,
+    "seconds": 0.023807899999951587,
+    "ranks": [
+      {
+        "axis": "V",
+        "cells": [
+          [
+            0,
+            3
+          ]
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "kind": "path",
+        "path": [
+          [
+            0,
+            3
+          ]
+        ],
+        "members": [
+          {
+            "rank_id": "rank0-0/fragment0",
+            "parent_rank_id": "rank0-0",
+            "axis": "V",
+            "cells": [
+              [
+                0,
+                3
+              ]
+            ],
+            "start": 0,
+            "end": 0,
+            "reverse": false
+          }
+        ],
+        "rank_keys": [
+          [
+            "V",
+            [
+              0,
+              3
+            ],
+            [
+              0,
+              3
+            ]
+          ]
+        ]
+      }
+    ],
+    "tour": {
+      "sets": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "matrix": [
+        [
+          20,
+          0,
+          20,
+          3
+        ],
+        [
+          0,
+          20,
+          20,
+          3
+        ],
+        [
+          1,
+          1,
+          20,
+          2
+        ],
+        [
+          20,
+          20,
+          0,
+          20
+        ]
+      ],
+      "order": [
+        2,
+        0,
+        3
+      ],
+      "cost": 4,
+      "timeout": false,
+      "params": {
+        "mode": "default",
+        "trials": 5,
+        "restarts": 3,
+        "seed": 20261018,
+        "max_time": 4.623010700000009,
+        "verbose": 0
+      }
+    },
+    "core_natural": true
+  },
+  "flags": {
+    "route_valid": true,
+    "core_candidate_valid": true,
+    "fallback_selected": true,
+    "natural": false,
+    "candidate_accepted_in_time": true,
+    "call_within_budget": true,
+    "within_budget": true
+  },
+  "public_seconds": 0.37905289999991965,
+  "source": "old_suffix",
+  "plan_id": "N7_capmax",
+  "attempt_id": "bbe175b9-0151-44f5-82cc-865721351791",
+  "kind": "event"
+}

@@ -1,0 +1,20 @@
+--- historical_LITERAL
++++ fixed_scope_candidate
+@@ -42,7 +42,7 @@
+     assert len(pre)<=len(literal_pre) and len(post)<=len(literal_post)
+     return pre,post
+ 
+-def solve(s,initial,method,budget,seed):
++def solve(s,initial,method,budget,seed,scope_name="R_PLUS1"):
+     begin=time.perf_counter();deadline=begin+budget;best=source=core=patch_best=None
+     detail=dict(range_plan=None,responsibilities=None,outside=None,acceptances=[],core_acceptances=[],stages={});active='contract'
+     def offer(route,label,patch=None):
+@@ -66,7 +66,7 @@
+             if p in left and p in s.free:visits.append(p);left.remove(p)
+         visits.extend(sorted(left,key=lambda p:(p[1],p[0] if p[1]%2==0 else -p[0])))
+         offer(g.expand(visits),'common_fallback');detail['stages']['fallback_end']=time.perf_counter()-begin
+-        active='range_plan';plan=range_plan(s,initial,deadline);detail['range_plan']=plan;cfg=plan['plans']['R_PLUS1']
++        active='range_plan';plan=range_plan(s,initial,deadline);detail['range_plan']=plan;cfg=plan['plans'][scope_name]
+         assigned=responsibilities(s,cfg,deadline);detail['responsibilities']=assigned;detail['stages']['plan_end']=time.perf_counter()-begin
+         active='outside';pre,post=outside_segments(s,cfg,assigned,g,method,deadline);l,r=cfg['left'],cfg['right']
+         outside_steps=len(pre)+len(post)-2

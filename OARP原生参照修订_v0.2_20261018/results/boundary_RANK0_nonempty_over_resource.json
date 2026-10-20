@@ -1,0 +1,357 @@
+{
+  "request": {
+    "case_id": "boundary_RANK0_nonempty_over_resource",
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ]
+    ],
+    "P": [
+      [
+        2,
+        0
+      ]
+    ],
+    "C": [],
+    "current": [
+      0,
+      0
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "resource": 1,
+    "seed": 20261018,
+    "old_route": [],
+    "old_suffix": []
+  },
+  "method": "RANK0",
+  "cap": 0,
+  "route": [],
+  "status": "no_legal_candidate",
+  "audit": {
+    "valid": false,
+    "errors": [
+      "empty"
+    ],
+    "steps": null,
+    "Q": [
+      [
+        2,
+        0
+      ]
+    ],
+    "D": []
+  },
+  "candidates": [],
+  "diagnostics": [
+    {
+      "source": "greedy",
+      "route": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "generated": 5.020000003241876e-05,
+      "audited": 6.410000003143068e-05,
+      "accepted": null,
+      "audit": {
+        "valid": false,
+        "errors": [
+          "resource"
+        ],
+        "steps": 4,
+        "Q": [
+          [
+            2,
+            0
+          ]
+        ],
+        "D": []
+      }
+    },
+    {
+      "source": "core",
+      "route": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "generated": 0.39526069999999436,
+      "audited": 0.39527369999996154,
+      "accepted": null,
+      "audit": {
+        "valid": false,
+        "errors": [
+          "resource"
+        ],
+        "steps": 4,
+        "Q": [
+          [
+            2,
+            0
+          ]
+        ],
+        "D": []
+      }
+    }
+  ],
+  "core_plan": {
+    "plan_id": "boundary_RANK0_nonempty_over_resource",
+    "route": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "strips": [
+      {
+        "rank_id": "new:a94f30aad3f6",
+        "parent_rank_id": null,
+        "axis": "H",
+        "cells": [
+          [
+            2,
+            0
+          ]
+        ],
+        "visit_order": 0,
+        "reversed_direction": false,
+        "service_start": 2,
+        "service_end": 2,
+        "connector_start": 0
+      }
+    ],
+    "packets": [
+      {
+        "start": 2,
+        "end": 2,
+        "path": [
+          [
+            2,
+            0
+          ]
+        ],
+        "kind": "rank"
+      }
+    ],
+    "start": [
+      0,
+      0
+    ],
+    "end": [
+      0,
+      0
+    ],
+    "service_targets": [
+      [
+        2,
+        0
+      ]
+    ]
+  },
+  "core_detail": {
+    "status": "optimal",
+    "objective": 1.0,
+    "metrics": {
+      "rank_count": 1,
+      "new_rank_count": 1,
+      "added_endpoints": 2,
+      "extended_endpoints": 0,
+      "endpoint_bound": 2.0
+    },
+    "fractional_lp": false,
+    "used_integer_fallback": false,
+    "attempts": [
+      {
+        "mode": "LP",
+        "status": "optimal",
+        "variables": 0,
+        "constraints": 0
+      }
+    ],
+    "certification_repair": false,
+    "seconds": 0.03807050000000345,
+    "ranks": [
+      {
+        "axis": "H",
+        "cells": [
+          [
+            2,
+            0
+          ]
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "kind": "rank",
+        "path": [
+          [
+            2,
+            0
+          ]
+        ],
+        "rank_keys": [
+          [
+            "H",
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ]
+        ],
+        "members": [
+          {
+            "rank_id": "new:a94f30aad3f6",
+            "parent_rank_id": null,
+            "axis": "H",
+            "cells": [
+              [
+                2,
+                0
+              ]
+            ],
+            "start": 0,
+            "end": 0,
+            "reverse": false
+          }
+        ]
+      }
+    ],
+    "tour": {
+      "sets": [
+        [
+          0,
+          1
+        ],
+        [
+          2
+        ],
+        [
+          3
+        ]
+      ],
+      "matrix": [
+        [
+          15,
+          0,
+          15,
+          2
+        ],
+        [
+          0,
+          15,
+          15,
+          2
+        ],
+        [
+          2,
+          2,
+          15,
+          0
+        ],
+        [
+          15,
+          15,
+          0,
+          15
+        ]
+      ],
+      "order": [
+        2,
+        0,
+        3
+      ],
+      "cost": 4,
+      "timeout": false,
+      "params": {
+        "mode": "default",
+        "trials": 5,
+        "restarts": 3,
+        "seed": 20261018,
+        "max_time": 4.606549100000052,
+        "verbose": 0
+      }
+    },
+    "core_natural": true
+  },
+  "flags": {
+    "route_valid": false,
+    "core_candidate_valid": false,
+    "fallback_selected": false,
+    "natural": false,
+    "candidate_accepted_in_time": false,
+    "call_within_budget": true,
+    "within_budget": false
+  },
+  "public_seconds": 0.3952802999999676,
+  "source": null,
+  "plan_id": "boundary_RANK0_nonempty_over_resource",
+  "attempt_id": "0ab0848c-256a-4c4d-8f75-d5177ba2f4a1",
+  "kind": "boundary"
+}

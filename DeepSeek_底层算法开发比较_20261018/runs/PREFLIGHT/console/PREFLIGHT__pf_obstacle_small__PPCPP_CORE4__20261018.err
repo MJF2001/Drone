@@ -1,0 +1,31 @@
+Traceback (most recent call last):
+  File "D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_底层算法开发比较_20261018\src\run_task.py", line 72, in main
+    result = registry.run(args.method, request)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_底层算法开发比较_20261018\src\adapters\registry.py", line 253, in run
+    result = METHODS[method_id]["adapter"](request, clock, **adapter_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_底层算法开发比较_20261018\src\adapters\registry.py", line 175, in <lambda>
+    _call_reference(name, request, clock, **kw))(_name)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_底层算法开发比较_20261018\src\adapters\registry.py", line 170, in _call_reference
+    return reference_methods.run_reference(method_id, request, clock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_底层算法开发比较_20261018\sources\v02\adapters\reference_methods.py", line 103, in run_reference
+    raw = _call(method_id, snapshot, history_targets, budget, request.seed)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_底层算法开发比较_20261018\sources\v02\adapters\reference_methods.py", line 252, in _call
+    loader = bootstrap.load_ppcpp_candidate()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'bootstrap' has no attribute 'load_ppcpp_candidate'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_底层算法开发比较_20261018\src\run_task.py", line 129, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "D:\0A无人机仿真02\问题分析+文献分析\DeepSeek_底层算法开发比较_20261018\src\run_task.py", line 100, in main
+    __import__("datetime").datetime.timezone.utc).isoformat()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'datetime.datetime' has no attribute 'timezone'. Did you mean: 'astimezone'?

@@ -1,0 +1,47 @@
+--- 71_fixed_scope
++++ timed_fixed_scope
+@@ -42,18 +42,29 @@
+     assert len(pre)<=len(literal_pre) and len(post)<=len(literal_post)
+     return pre,post
+ 
+-def solve(s,initial,method,budget,seed,scope_name="R_PLUS1"):
+-    begin=time.perf_counter();deadline=begin+budget;best=source=core=patch_best=None
+-    detail=dict(range_plan=None,responsibilities=None,outside=None,acceptances=[],core_acceptances=[],stages={});active='contract'
++def solve(s,initial,method,budget,seed,scope_name="R_PLUS1",absolute_deadline=None,public_t0=None,on_candidate=None):
++    begin=time.perf_counter();public_t0=begin if public_t0 is None else public_t0;deadline=min(begin+budget,absolute_deadline) if absolute_deadline is not None else begin+budget;best=source=core=patch_best=None;active_cfg=None
++    detail=dict(range_plan=None,responsibilities=None,outside=None,acceptances=[],core_acceptances=[],candidate_events=[],entry_public_elapsed=begin-public_t0,public_t0=public_t0,absolute_deadline=deadline,stages={});active='contract'
+     def offer(route,label,patch=None):
+         nonlocal best,source,core,patch_best
+         tick(deadline);route=tuple(route)
+-        valid=single_cell_audit(s,route)['valid'];at=time.perf_counter()-begin;tick(deadline)
++        valid=bool(route) and single_cell_audit(s,route)['valid']
++        checked=time.perf_counter()
++        event=dict(label=label,source_scope=scope_name if patch is not None else None,
++            route=route,patch=tuple(patch) if patch is not None else None,cfg=active_cfg if patch is not None else None,
++            valid=bool(valid),validation_complete_public_elapsed=checked-public_t0,
++            public_elapsed=checked-public_t0,before_deadline=checked<=deadline,accepted=False,
++            route_sha256=digest(route),steps=len(route)-1)
++        detail['candidate_events'].append(event)
++        if on_candidate is not None:on_candidate(event)
++        tick(deadline)
++        at=time.perf_counter();tick(deadline)
+         if valid:
+-            record=dict(seconds=at,steps=len(route)-1,label=label,route_sha256=digest(route))
++            record=dict(seconds=at-begin,public_seconds=at-public_t0,steps=len(route)-1,label=label,route_sha256=digest(route))
+             if patch is not None and (core is None or len(route)<len(core)):
+                 core=route;patch_best=tuple(patch);detail['core_acceptances'].append(record)
+-            if best is None or len(route)<len(best):best=route;source=label;detail['acceptances'].append(record)
++            if best is None or len(route)<len(best):
++                best=route;source=label;detail['acceptances'].append(record);event['accepted']=True;event['accepted_public_elapsed']=at-public_t0
+         return valid
+     try:
+         check_contract(s,initial,budget)
+@@ -66,7 +77,7 @@
+             if p in left and p in s.free:visits.append(p);left.remove(p)
+         visits.extend(sorted(left,key=lambda p:(p[1],p[0] if p[1]%2==0 else -p[0])))
+         offer(g.expand(visits),'common_fallback');detail['stages']['fallback_end']=time.perf_counter()-begin
+-        active='range_plan';plan=range_plan(s,initial,deadline);detail['range_plan']=plan;cfg=plan['plans'][scope_name]
++        active='range_plan';plan=range_plan(s,initial,deadline);detail['range_plan']=plan;cfg=plan['plans'][scope_name];active_cfg=cfg
+         assigned=responsibilities(s,cfg,deadline);detail['responsibilities']=assigned;detail['stages']['plan_end']=time.perf_counter()-begin
+         active='outside';pre,post=outside_segments(s,cfg,assigned,g,method,deadline);l,r=cfg['left'],cfg['right']
+         outside_steps=len(pre)+len(post)-2

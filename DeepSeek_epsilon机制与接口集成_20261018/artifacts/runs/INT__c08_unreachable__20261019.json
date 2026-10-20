@@ -1,0 +1,329 @@
+{
+ "run_id": "INT:c08_unreachable:20261019",
+ "kind": "integration",
+ "case_id": "c08_unreachable",
+ "seed": 20261019,
+ "soft_limit_seconds": 10.0,
+ "hard_limit_seconds": 15.0,
+ "max_control_iterations": 20000,
+ "started_utc": "2026-10-18T16:40:51.909587+00:00",
+ "request": {
+  "case_id": "c08_unreachable",
+  "free": 18,
+  "published_targets": 18,
+  "covered": 0,
+  "pending": 18,
+  "deferred": 0,
+  "current": [
+   0,
+   0
+  ],
+  "base": [
+   0,
+   0
+  ],
+  "old_route_len": 0,
+  "remaining_resource": 200,
+  "seed": 20261019,
+  "termination": {
+   "time_limit_seconds": 10.0,
+   "natural": "method_natural_termination",
+   "extra": {}
+  },
+  "meta": {
+   "case_note": "the right component is reachable only through one cell; the left component's targets are unreachable from the start",
+   "expected": {
+    "status": "environment_infeasible",
+    "coverage_complete": false
+   }
+  }
+ },
+ "status": "environment_infeasible",
+ "reason": "target_unreachable",
+ "route_steps": null,
+ "audit": {
+  "valid": false,
+  "errors": [
+   "empty_route"
+  ],
+  "route_steps": null,
+  "coverage_complete": false,
+  "uncovered": [
+   [
+    0,
+    0
+   ],
+   [
+    0,
+    1
+   ],
+   [
+    0,
+    2
+   ],
+   [
+    1,
+    0
+   ],
+   [
+    1,
+    1
+   ],
+   [
+    1,
+    2
+   ],
+   [
+    2,
+    0
+   ],
+   [
+    2,
+    1
+   ],
+   [
+    2,
+    2
+   ],
+   [
+    4,
+    0
+   ],
+   [
+    4,
+    1
+   ],
+   [
+    4,
+    2
+   ],
+   [
+    5,
+    0
+   ],
+   [
+    5,
+    1
+   ],
+   [
+    5,
+    2
+   ],
+   [
+    6,
+    0
+   ],
+   [
+    6,
+    1
+   ],
+   [
+    6,
+    2
+   ]
+  ],
+  "uncovered_count": 18,
+  "covered_physical": [],
+  "deferred_untouched": [],
+  "deferred_visited": [],
+  "resource": {
+   "limit": 200,
+   "used": null,
+   "ok": false
+  },
+  "direction_changes": null,
+  "revisited_positions": null,
+  "illegal_steps": [],
+  "collisions": [],
+  "coverage_claimed_without_visit": [],
+  "starts_at_current": false,
+  "ends_at_base": false,
+  "covered_physical_count": 0,
+  "ledger_size": 0,
+  "distinct_cells": 0,
+  "target_visits": 0
+ },
+ "resource_check": {
+  "limit": 200,
+  "used": null,
+  "ok": false,
+  "source": "recomputed_from_route"
+ },
+ "termination": {
+  "natural": false,
+  "reason": "target_unreachable",
+  "engine_natural": false
+ },
+ "errors": [
+  "target_unreachable"
+ ],
+ "stage_seconds": {},
+ "route": [],
+ "meta": {
+  "core_version": "epsilon_star_core_integrated_v1_20261018",
+  "adapter_version": "epsilon_star_adapter_integrated_v1_20261018",
+  "adaptation_class": "epsilon_star_core_adapted_task_control",
+  "control_mode": "task",
+  "ledgers": {
+   "control": "MAPS state; U = control-pending, updated only at WT",
+   "physical": "recomputed by the independent audit from the route"
+  },
+  "engine": {},
+  "events": {},
+  "connector": {},
+  "maps": {},
+  "environment": {
+   "ok": false,
+   "code": "target_unreachable",
+   "cells": [
+    [
+     4,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ],
+    [
+     5,
+     0
+    ],
+    [
+     5,
+     1
+    ],
+    [
+     5,
+     2
+    ],
+    [
+     6,
+     0
+    ],
+    [
+     6,
+     1
+    ],
+    [
+     6,
+     2
+    ]
+   ],
+   "count": 9
+  },
+  "parameters": {
+   "travel_cost": 1.0,
+   "turn_cost": 1.0,
+   "turn_cost_units": "per degree from the heading",
+   "max_control_iterations": 20000,
+   "initial_heading": null
+  },
+  "candidate": {
+   "generated": false,
+   "audited": true,
+   "accepted": false,
+   "post_deadline": false
+  },
+  "not_scorable_reason": "",
+  "errors": [
+   "target_unreachable"
+  ],
+  "deadline": {
+   "soft_deadline_seconds": 10.0,
+   "soft_deadline_hit": false,
+   "soft_deadline_checks": 0,
+   "soft_deadline_elapsed_seconds": 7.420000474667177e-05,
+   "semantics": "cooperative; one stage may overrun slightly and is reported"
+  },
+  "route": {
+   "completion_steps": null
+  },
+  "ledger": {
+   "run_id": "INT:c08_unreachable:20261019",
+   "batch": "INTEGRATION",
+   "kind": "integration",
+   "call_total_seconds": 0.002246999996714294
+  }
+ },
+ "covered_physical": [],
+ "pending_remaining": [
+  [
+   0,
+   0
+  ],
+  [
+   0,
+   1
+  ],
+  [
+   0,
+   2
+  ],
+  [
+   1,
+   0
+  ],
+  [
+   1,
+   1
+  ],
+  [
+   1,
+   2
+  ],
+  [
+   2,
+   0
+  ],
+  [
+   2,
+   1
+  ],
+  [
+   2,
+   2
+  ],
+  [
+   4,
+   0
+  ],
+  [
+   4,
+   1
+  ],
+  [
+   4,
+   2
+  ],
+  [
+   5,
+   0
+  ],
+  [
+   5,
+   1
+  ],
+  [
+   5,
+   2
+  ],
+  [
+   6,
+   0
+  ],
+  [
+   6,
+   1
+  ],
+  [
+   6,
+   2
+  ]
+ ],
+ "deferred_remaining": [],
+ "finished_utc": "2026-10-18T16:40:51.937584+00:00"
+}

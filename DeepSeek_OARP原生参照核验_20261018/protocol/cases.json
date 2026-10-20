@@ -1,0 +1,374 @@
+{
+ "seed": 20261018,
+ "resource": 1000,
+ "note": "coordinates are Cartesian (x, y); the rectangle is x=0..3, y=0..2; every case is a deterministic input",
+ "preparations": [
+  {
+   "name": "prep_rect",
+   "free": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "published": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     1,
+     1
+    ],
+    [
+     1,
+     2
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     2,
+     1
+    ],
+    [
+     2,
+     2
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     3,
+     1
+    ],
+    [
+     3,
+     2
+    ]
+   ],
+   "covered": [],
+   "current": [
+    0,
+    0
+   ],
+   "base": [
+    0,
+    0
+   ],
+   "prefix_targets": 6
+  },
+  {
+   "name": "prep_vline",
+   "free": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     3
+    ]
+   ],
+   "published": [
+    [
+     0,
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     2
+    ],
+    [
+     0,
+     3
+    ]
+   ],
+   "covered": [],
+   "current": [
+    0,
+    0
+   ],
+   "base": [
+    0,
+    0
+   ],
+   "prefix_targets": 3
+  },
+  {
+   "name": "prep_sparse",
+   "free": [
+    [
+     0,
+     0
+    ],
+    [
+     1,
+     0
+    ],
+    [
+     2,
+     0
+    ],
+    [
+     3,
+     0
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "published": [
+    [
+     0,
+     0
+    ],
+    [
+     4,
+     0
+    ]
+   ],
+   "covered": [],
+   "current": [
+    0,
+    0
+   ],
+   "base": [
+    2,
+    0
+   ],
+   "prefix_targets": 1
+  }
+ ],
+ "events": [
+  {
+   "case_id": "N1",
+   "prep": "prep_rect",
+   "kind": "no_change",
+   "expect": "normalized fragments equal the remaining native strips",
+   "new_obstacles": [],
+   "new_targets": [],
+   "new_free": []
+  },
+  {
+   "case_id": "N2",
+   "prep": "prep_rect",
+   "kind": "obstacle_target",
+   "rule": "first cell in (y,x) order among uncovered, not current/base, whose removal keeps Q and the base reachable",
+   "new_obstacles": "select",
+   "new_targets": [],
+   "new_free": []
+  },
+  {
+   "case_id": "N3",
+   "prep": "prep_rect",
+   "kind": "obstacle_connector",
+   "rule": "first cell in route-index order among the native remaining connector annotations, not current/base, not a pending service cell, whose removal keeps Q completable",
+   "new_obstacles": "select",
+   "new_targets": [],
+   "new_free": []
+  },
+  {
+   "case_id": "N4",
+   "prep": "prep_rect",
+   "kind": "extend_straight",
+   "new_obstacles": [],
+   "new_targets": [
+    [
+     4,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ]
+   ],
+   "new_free": [
+    [
+     4,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ]
+   ]
+  },
+  {
+   "case_id": "N5",
+   "prep": "prep_rect",
+   "kind": "extend_corner",
+   "new_obstacles": [],
+   "new_targets": [
+    [
+     4,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     3
+    ]
+   ],
+   "new_free": [
+    [
+     4,
+     2
+    ],
+    [
+     4,
+     3
+    ],
+    [
+     3,
+     3
+    ]
+   ]
+  },
+  {
+   "case_id": "N6",
+   "prep": "prep_rect",
+   "kind": "extend_plus_obstacle",
+   "rule": "N4 extension published together with the N2 obstacle, and the obstacle is chosen only from the old initial map",
+   "new_obstacles": "select_n2",
+   "new_targets": [
+    [
+     4,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ]
+   ],
+   "new_free": [
+    [
+     4,
+     0
+    ],
+    [
+     4,
+     1
+    ],
+    [
+     4,
+     2
+    ]
+   ]
+  },
+  {
+   "case_id": "N7",
+   "prep": "prep_vline",
+   "kind": "no_change",
+   "expect": "the remaining vertical strip keeps axis V and its rank id",
+   "new_obstacles": [],
+   "new_targets": [],
+   "new_free": []
+  },
+  {
+   "case_id": "N8",
+   "prep": "prep_sparse",
+   "kind": "new_target",
+   "expect": "Q becomes disconnected while F stays connected; the new target is served through passable cells",
+   "new_obstacles": [],
+   "new_targets": [
+    [
+     2,
+     1
+    ]
+   ],
+   "new_free": [
+    [
+     2,
+     1
+    ]
+   ]
+  }
+ ]
+}

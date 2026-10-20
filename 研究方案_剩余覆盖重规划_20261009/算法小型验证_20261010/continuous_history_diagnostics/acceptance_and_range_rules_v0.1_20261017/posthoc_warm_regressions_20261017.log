@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "posthoc": true,
+  "formal_map_calls": 0,
+  "candidate_planner_calls": 4,
+  "frozen_P2_planner_calls": 1,
+  "total_planner_calls": 5,
+  "results": [
+    {
+      "case": "warm_off_frozen_P2_equivalence",
+      "planner_calls": 2,
+      "frozen_steps": 4,
+      "warm_module_multi_steps": 4,
+      "route_equal": true,
+      "valid": true,
+      "budget_seconds": 30.0
+    },
+    {
+      "case": "empty_targets_returns_to_base",
+      "planner_calls": 1,
+      "steps": 2,
+      "source": "old_suffix",
+      "valid": true,
+      "sequence_empty": true
+    },
+    {
+      "case": "disconnected_base_rejected",
+      "planner_calls": 1,
+      "status": "environment_infeasible",
+      "route_empty": true,
+      "reason": "infeasible input"
+    },
+    {
+      "case": "invalid_radius_rejected_before_planner",
+      "planner_calls": 0,
+      "exception": "ValueError",
+      "reason": "one-cell downward footprint required"
+    },
+    {
+      "case": "deadline_keeps_accepted_legal_fallback",
+      "planner_calls": 1,
+      "status": "deadline",
+      "source": "old_suffix",
+      "steps": 4,
+      "valid": true,
+      "injection": "DeadlineExceeded at first warm 2-opt distance check"
+    }
+  ],
+  "limitations": [
+    "All fixtures are synthetic micro snapshots; no development-map performance job was run.",
+    "Deadline behavior is deterministic exception injection at a solver boundary, not a wall-clock timing claim.",
+    "The warm-off comparison is one tiny fixed-seed case and supplements, rather than reconstructs, the missing historical multi-case log."
+  ]
+}

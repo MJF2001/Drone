@@ -1,0 +1,85 @@
+test_audit_crossing_deadline_excluded (__main__.EntryTests.test_audit_crossing_deadline_excluded) ... FAIL
+test_engine_starts_without_greedy_or_history (__main__.EntryTests.test_engine_starts_without_greedy_or_history) ... FAIL
+test_expired_engine_does_not_use_old_route (__main__.EntryTests.test_expired_engine_does_not_use_old_route) ... FAIL
+test_final_audit_in_total_time (__main__.EntryTests.test_final_audit_in_total_time) ... FAIL
+test_generation_after_deadline_excluded (__main__.EntryTests.test_generation_after_deadline_excluded) ... FAIL
+test_missing_core_produces_no_fallback (__main__.EntryTests.test_missing_core_produces_no_fallback) ... FAIL
+test_over_resource_core_rejected (__main__.EntryTests.test_over_resource_core_rejected) ... FAIL
+test_shorter_old_route_cannot_replace_core (__main__.EntryTests.test_shorter_old_route_cannot_replace_core) ... FAIL
+
+======================================================================
+FAIL: test_audit_crossing_deadline_excluded (__main__.EntryTests.test_audit_crossing_deadline_excluded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\0A无人机仿真02\问题分析+文献分析\OARP独立基线复测_v0.1_20261018\test_independent_entry.py", line 56, in test_audit_crossing_deadline_excluded
+    self.assertEqual(len(calls),1);self.assertEqual(r['route'],[]);self.assertFalse(r['flags']['within_budget'])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_engine_starts_without_greedy_or_history (__main__.EntryTests.test_engine_starts_without_greedy_or_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\0A无人机仿真02\问题分析+文献分析\OARP独立基线复测_v0.1_20261018\test_independent_entry.py", line 32, in test_engine_starts_without_greedy_or_history
+    r,calls=self.run_case();self.assertEqual(len(calls),1);self.assertEqual(r['source'],'core')
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_expired_engine_does_not_use_old_route (__main__.EntryTests.test_expired_engine_does_not_use_old_route)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\0A无人机仿真02\问题分析+文献分析\OARP独立基线复测_v0.1_20261018\test_independent_entry.py", line 73, in test_expired_engine_does_not_use_old_route
+    r,calls=self.run_case(req,engine);self.assertEqual(len(calls),1);self.assertEqual(r['route'],[])
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_final_audit_in_total_time (__main__.EntryTests.test_final_audit_in_total_time)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\0A无人机仿真02\问题分析+文献分析\OARP独立基线复测_v0.1_20261018\test_independent_entry.py", line 64, in test_final_audit_in_total_time
+    self.assertEqual(len(calls),1);self.assertTrue(r['flags']['route_valid'])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_generation_after_deadline_excluded (__main__.EntryTests.test_generation_after_deadline_excluded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\0A无人机仿真02\问题分析+文献分析\OARP独立基线复测_v0.1_20261018\test_independent_entry.py", line 47, in test_generation_after_deadline_excluded
+    self.assertEqual(len(calls),1);self.assertEqual(r['route'],[])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_missing_core_produces_no_fallback (__main__.EntryTests.test_missing_core_produces_no_fallback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\0A无人机仿真02\问题分析+文献分析\OARP独立基线复测_v0.1_20261018\test_independent_entry.py", line 42, in test_missing_core_produces_no_fallback
+    self.assertEqual(len(calls),1);self.assertEqual(r['route'],[]);self.assertFalse(r['flags']['route_valid'])
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_over_resource_core_rejected (__main__.EntryTests.test_over_resource_core_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\0A无人机仿真02\问题分析+文献分析\OARP独立基线复测_v0.1_20261018\test_independent_entry.py", line 68, in test_over_resource_core_rejected
+    r,calls=self.run_case(req);self.assertEqual(len(calls),1);self.assertEqual(r['route'],[])
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_shorter_old_route_cannot_replace_core (__main__.EntryTests.test_shorter_old_route_cannot_replace_core)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\0A无人机仿真02\问题分析+文献分析\OARP独立基线复测_v0.1_20261018\test_independent_entry.py", line 38, in test_shorter_old_route_cannot_replace_core
+    r,calls=self.run_case(req,engine);self.assertEqual(len(calls),1);self.assertEqual(r['audit']['steps'],4)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.003s
+
+FAILED (failures=8)
