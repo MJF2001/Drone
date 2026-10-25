@@ -1,0 +1,16 @@
+{
+  "sizes": [
+    "small",
+    "medium",
+    "large"
+  ],
+  "geometry": "archived initial I maps, all targets initially uninspected, own plans from base",
+  "seed": 20261020,
+  "max_core": 18,
+  "max_post": 18,
+  "profile": "OFF",
+  "worker_change": "only initial non-task base may have empty H; core/post/audit unchanged",
+  "checkpoint": "Each view stops at first saved vertex reached by an axial edge after >=30% actual service credit, with pending tasks; no additional flight forced. Last one-unit incoming direction is real traversed direction. Progress-based per-session event, NOT same wall time.",
+  "obstacle": "Same cell for all four: never physically traversed in any prefix; open cell intersects all four old unexecuted routes, with remaining service after intersection, remaining task/base reachable. Lexicographic first qualified cell, selected before replanning without outcomes. Stop world if unavailable.",
+  "comparison": "Complete flight and cumulative planning time; initial raw/post share core. After divergent histories each view gets own core+post, unused counterfactual view not charged as flight. Raw branch time excludes diagnostic unused post. Native20s,post18soft/20total,4096candidates,parent150s. Preserve deadlines and failure; no result-driven retries."
+}

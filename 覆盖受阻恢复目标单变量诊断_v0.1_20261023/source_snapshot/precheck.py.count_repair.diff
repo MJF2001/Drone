@@ -1,0 +1,50 @@
+--- precheck_count_v01.py.txt
++++ precheck.py
+@@ -7,7 +7,8 @@
+ from recovery_diag_hook import Diagnostic,norm,KEYS
+ from recovery_diag_compare import semantic,claim_destination
+ import recovery_diag_decision_audit as A
+-COUNTS=Counter(hook_attempts=0,hook_expected_rejections=0,audit_attempts=0,audit_expected_rejections=0,exclusive_claim_attempts=0,explanatory_stub_distance_calls=0)
++COUNTS=Counter(hook_attempts=0,finish_stub_attempts=0,hook_expected_rejections=0,audit_attempts=0,audit_expected_rejections=0,exclusive_claim_attempts=0,explanatory_stub_distance_calls=0)
++AUDIT_ATTEMPTS=[]
+ def fixture(tamper_second=False):
+  c={'name':'FIXED_PURE_STUB_NOT_EXPERIMENT','free':[[x,y] for x in range(5) for y in range(3)],'targets':[[0,2],[4,0],[4,2]],'covered':[[0,0]],'published_targets':[[0,0],[0,2],[4,0],[4,2]],'deferred_targets':[],'current':[0,0],'previous':[-1,0],'base':[0,0],'initial_targets':[[0,0],[0,2],[4,0],[4,2]],'predator':[-1,0],'old_route':[],'distance_budget':200}
+  if not tamper_second:segments=[[[x,0] for x in range(5)],[[4,0],[4,1],[4,2]],[[x,2] for x in range(4,-1,-1)],[[0,2],[0,1],[0,0]]]
+@@ -30,7 +31,10 @@
+  try:fn();raise RuntimeError('hook should reject')
+  except AssertionError:COUNTS['hook_expected_rejections']+=1
+ def audit(c,n,s):
+- COUNTS['audit_attempts']+=1;return A.audit(c,n,s,True)
++ COUNTS['audit_attempts']+=1;counts=Counter();passed=False
++ try:
++  result=A.audit(c,n,s,True,observer_counts=counts);passed=True;return result
++ finally:AUDIT_ATTEMPTS.append({'passed':passed,'counts':dict(counts)})
+ def reject_audit(c,n,s,contains=None):
+  try:audit(c,n,s);raise RuntimeError('audit should reject')
+  except AssertionError as ex:
+@@ -71,7 +75,7 @@
+      reject_hook(lambda:choose(d,[],[[0,0]],(0,0),(-1,0),p,(0,2),g))
+     early=deepcopy(s);early['trace_record']=1;reject_hook(lambda:choose(Diagnostic(early,True),[],[[0,0]],(0,0),(-1,0),p,(0,2),g))
+     reject_hook(lambda:choose(Diagnostic(s,True),[s['original_trace'][0]],[[0,0]],(0,0),(-1,0),p,(0,2),g))
+-    reject_hook(lambda:Diagnostic(s,True).finish({'status':'core_complete','trace':[]}))
++    COUNTS['finish_stub_attempts']+=1;reject_hook(lambda:Diagnostic(s,True).finish({'status':'core_complete','trace':[]}))
+    elif name=='invalid_goal_pending_state_rejection':
+     c,n,s=fixture();g=GeometryStub(c);p=ps(s['pending'])
+     reject_hook(lambda:choose(Diagnostic(s,True),[],[[0,0]],(0,0),(-1,0),p,(4,2),g))
+@@ -90,7 +94,7 @@
+      reject_audit(c,n,s)
+    else:
+     d=Diagnostic(fixture()[2],False).export();assert set(d['counts'])==set(KEYS) and all(type(v) is int and v==0 for v in d['counts'].values())
+-    out=H/'pure_precheck_files/stub_not_formal.json';out.parent.mkdir(exist_ok=True);COUNTS['exclusive_claim_attempts']+=1;claim_destination(out)
++    out=H/'pure_precheck_files'/('round_'+str(read(H/'preparation_repairs.json')['used']+1)+'_stub_not_formal.json');out.parent.mkdir(exist_ok=True);COUNTS['exclusive_claim_attempts']+=1;claim_destination(out)
+     payload={'kind':'fixed pure synthetic record, not core/post','counts':d['counts'],'native_profile_detail':None,'saved_receipt':audit_receipts[0]};dump(out,payload);assert read(out)==payload and norm(payload)==payload
+     COUNTS['exclusive_claim_attempts']+=1
+     try:claim_destination(out);raise RuntimeError('overwrote existing file')
+@@ -98,6 +102,6 @@
+     assert read(out)==payload and not list((H/'outputs').glob('*'))
+    records.append({'id':name,'passed':True,'real_core':0,'real_post':0})
+  except BaseException as ex:records.append({'id':name,'passed':False,'reason':repr(ex),'traceback':traceback.format_exc()})
+- result={'passed':len(records)==8 and all(x['passed'] for x in records),'cases':records,'pure_counts':dict(COUNTS),'saved_independent_stub_receipts':audit_receipts,'real_core':0,'real_post':0,'real_N_R_P2':0,'preparation_repairs':read(H/'preparation_repairs.json')['used']}
++ result={'passed':len(records)==8 and all(x['passed'] for x in records),'cases':records,'pure_counts':dict(COUNTS),'all_independent_stub_attempts_including_rejections':AUDIT_ATTEMPTS,'saved_independent_stub_receipts':audit_receipts,'real_core':0,'real_post':0,'real_N_R_P2':0,'preparation_repairs':read(H/'preparation_repairs.json')['used']}
+  dump(H/'prechecks.json',result);print(json.dumps(result,ensure_ascii=False));assert result['passed']
+ if __name__=='__main__':main()

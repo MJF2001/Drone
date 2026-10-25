@@ -1,0 +1,1 @@
+# SYNTHETIC reference p2_adapter.py

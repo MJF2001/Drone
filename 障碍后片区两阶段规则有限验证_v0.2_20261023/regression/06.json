@@ -1,0 +1,616 @@
+{
+  "id": 6,
+  "coverage": "activated OTHER to TAIL; release list/tuple; every decision in direct mixed raw",
+  "expected": "handwritten fixed route passes in all three representations",
+  "passed": true,
+  "audits": [
+    {
+      "passed": true,
+      "check": {
+        "index": 0,
+        "Q": [
+          [
+            2,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            7,
+            0
+          ]
+        ],
+        "counts": {
+          "S": 1,
+          "R": 2
+        },
+        "q0": [
+          2,
+          0
+        ],
+        "representatives": {
+          "S": [
+            2,
+            0
+          ],
+          "R": [
+            6,
+            0
+          ]
+        },
+        "conditions": [
+          {
+            "other": "R",
+            "d_R_B": 6,
+            "d_R_S": 4,
+            "d_S_B": 2,
+            "d_X_R": 2,
+            "d_X_S": 2,
+            "on_return": true,
+            "detour_strict": true
+          }
+        ],
+        "activated": true,
+        "reason": "activated",
+        "S": "S",
+        "S_pending_at_activation": [
+          [
+            2,
+            0
+          ]
+        ]
+      },
+      "S": "S",
+      "phase": "TAIL",
+      "transitions": [
+        {
+          "index": 0,
+          "phase": "OTHER",
+          "Q_S": 1,
+          "Q_other": 2
+        },
+        {
+          "index": 3,
+          "phase": "TAIL",
+          "Q_S": 1,
+          "Q_other": 0
+        }
+      ],
+      "release_pending": [
+        [
+          2,
+          0
+        ]
+      ],
+      "decisions": [
+        {
+          "index": 0,
+          "end": 2,
+          "kind": "recovery",
+          "phase": "OTHER",
+          "Q": [
+            [
+              2,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "allowed": [
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "goal": [
+            6,
+            0
+          ],
+          "new_tasks": [
+            [
+              6,
+              0
+            ]
+          ]
+        },
+        {
+          "index": 2,
+          "end": 3,
+          "kind": "local",
+          "phase": "OTHER",
+          "Q": [
+            [
+              2,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "allowed": [
+            [
+              7,
+              0
+            ]
+          ],
+          "goal": [
+            7,
+            0
+          ],
+          "new_tasks": [
+            [
+              7,
+              0
+            ]
+          ]
+        },
+        {
+          "index": 3,
+          "end": 8,
+          "kind": "recovery",
+          "phase": "TAIL",
+          "Q": [
+            [
+              2,
+              0
+            ]
+          ],
+          "allowed": [
+            [
+              2,
+              0
+            ]
+          ],
+          "goal": [
+            2,
+            0
+          ],
+          "new_tasks": [
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        {
+          "index": 8,
+          "end": 10,
+          "kind": "return",
+          "phase": "TAIL",
+          "Q": [],
+          "allowed": [],
+          "goal": [
+            0,
+            0
+          ],
+          "new_tasks": []
+        }
+      ],
+      "counts": {
+        "BFS_calls": 7,
+        "BFS_popped": 126
+      },
+      "seconds": 0.0006613999139517546,
+      "connector_tie_scope": "frozen deterministic path implementation bound; independent BFS shortestness"
+    },
+    {
+      "passed": true,
+      "check": {
+        "index": 0,
+        "Q": [
+          [
+            2,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            7,
+            0
+          ]
+        ],
+        "counts": {
+          "S": 1,
+          "R": 2
+        },
+        "q0": [
+          2,
+          0
+        ],
+        "representatives": {
+          "S": [
+            2,
+            0
+          ],
+          "R": [
+            6,
+            0
+          ]
+        },
+        "conditions": [
+          {
+            "other": "R",
+            "d_R_B": 6,
+            "d_R_S": 4,
+            "d_S_B": 2,
+            "d_X_R": 2,
+            "d_X_S": 2,
+            "on_return": true,
+            "detour_strict": true
+          }
+        ],
+        "activated": true,
+        "reason": "activated",
+        "S": "S",
+        "S_pending_at_activation": [
+          [
+            2,
+            0
+          ]
+        ]
+      },
+      "S": "S",
+      "phase": "TAIL",
+      "transitions": [
+        {
+          "index": 0,
+          "phase": "OTHER",
+          "Q_S": 1,
+          "Q_other": 2
+        },
+        {
+          "index": 3,
+          "phase": "TAIL",
+          "Q_S": 1,
+          "Q_other": 0
+        }
+      ],
+      "release_pending": [
+        [
+          2,
+          0
+        ]
+      ],
+      "decisions": [
+        {
+          "index": 0,
+          "end": 2,
+          "kind": "recovery",
+          "phase": "OTHER",
+          "Q": [
+            [
+              2,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "allowed": [
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "goal": [
+            6,
+            0
+          ],
+          "new_tasks": [
+            [
+              6,
+              0
+            ]
+          ]
+        },
+        {
+          "index": 2,
+          "end": 3,
+          "kind": "local",
+          "phase": "OTHER",
+          "Q": [
+            [
+              2,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "allowed": [
+            [
+              7,
+              0
+            ]
+          ],
+          "goal": [
+            7,
+            0
+          ],
+          "new_tasks": [
+            [
+              7,
+              0
+            ]
+          ]
+        },
+        {
+          "index": 3,
+          "end": 8,
+          "kind": "recovery",
+          "phase": "TAIL",
+          "Q": [
+            [
+              2,
+              0
+            ]
+          ],
+          "allowed": [
+            [
+              2,
+              0
+            ]
+          ],
+          "goal": [
+            2,
+            0
+          ],
+          "new_tasks": [
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        {
+          "index": 8,
+          "end": 10,
+          "kind": "return",
+          "phase": "TAIL",
+          "Q": [],
+          "allowed": [],
+          "goal": [
+            0,
+            0
+          ],
+          "new_tasks": []
+        }
+      ],
+      "counts": {
+        "BFS_calls": 7,
+        "BFS_popped": 126
+      },
+      "seconds": 0.0006402999861165881,
+      "connector_tie_scope": "frozen deterministic path implementation bound; independent BFS shortestness"
+    },
+    {
+      "passed": true,
+      "check": {
+        "index": 0,
+        "Q": [
+          [
+            2,
+            0
+          ],
+          [
+            6,
+            0
+          ],
+          [
+            7,
+            0
+          ]
+        ],
+        "counts": {
+          "S": 1,
+          "R": 2
+        },
+        "q0": [
+          2,
+          0
+        ],
+        "representatives": {
+          "S": [
+            2,
+            0
+          ],
+          "R": [
+            6,
+            0
+          ]
+        },
+        "conditions": [
+          {
+            "other": "R",
+            "d_R_B": 6,
+            "d_R_S": 4,
+            "d_S_B": 2,
+            "d_X_R": 2,
+            "d_X_S": 2,
+            "on_return": true,
+            "detour_strict": true
+          }
+        ],
+        "activated": true,
+        "reason": "activated",
+        "S": "S",
+        "S_pending_at_activation": [
+          [
+            2,
+            0
+          ]
+        ]
+      },
+      "S": "S",
+      "phase": "TAIL",
+      "transitions": [
+        {
+          "index": 0,
+          "phase": "OTHER",
+          "Q_S": 1,
+          "Q_other": 2
+        },
+        {
+          "index": 3,
+          "phase": "TAIL",
+          "Q_S": 1,
+          "Q_other": 0
+        }
+      ],
+      "release_pending": [
+        [
+          2,
+          0
+        ]
+      ],
+      "decisions": [
+        {
+          "index": 0,
+          "end": 2,
+          "kind": "recovery",
+          "phase": "OTHER",
+          "Q": [
+            [
+              2,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "allowed": [
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "goal": [
+            6,
+            0
+          ],
+          "new_tasks": [
+            [
+              6,
+              0
+            ]
+          ]
+        },
+        {
+          "index": 2,
+          "end": 3,
+          "kind": "local",
+          "phase": "OTHER",
+          "Q": [
+            [
+              2,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "allowed": [
+            [
+              7,
+              0
+            ]
+          ],
+          "goal": [
+            7,
+            0
+          ],
+          "new_tasks": [
+            [
+              7,
+              0
+            ]
+          ]
+        },
+        {
+          "index": 3,
+          "end": 8,
+          "kind": "recovery",
+          "phase": "TAIL",
+          "Q": [
+            [
+              2,
+              0
+            ]
+          ],
+          "allowed": [
+            [
+              2,
+              0
+            ]
+          ],
+          "goal": [
+            2,
+            0
+          ],
+          "new_tasks": [
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        {
+          "index": 8,
+          "end": 10,
+          "kind": "return",
+          "phase": "TAIL",
+          "Q": [],
+          "allowed": [],
+          "goal": [
+            0,
+            0
+          ],
+          "new_tasks": []
+        }
+      ],
+      "counts": {
+        "BFS_calls": 7,
+        "BFS_popped": 126
+      },
+      "seconds": 0.0006214999593794346,
+      "connector_tie_scope": "frozen deterministic path implementation bound; independent BFS shortestness"
+    }
+  ],
+  "seconds": 0.003402200061827898,
+  "observed_main_external_BFS_calls": 21
+}

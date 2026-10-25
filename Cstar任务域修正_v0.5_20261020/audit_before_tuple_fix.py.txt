@@ -1,0 +1,37 @@
+"""Independent current-task-domain auditor, imports no planner."""
+import sys
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent.parent
+sys.path.insert(0,str(ROOT/'Cstar历史适配验收_20261019/专项验收_v0.3'))
+from audit_special import ledger,prune_checks
+def pts(xs):return set(map(tuple,xs))
+def audit(c,r,budget):
+    ledger(c,r);success=r['status']=='task_complete';service=pts(c['targets'])-pts(c['covered'])-{tuple(c['current'])}
+    assert pts(r['initial_service'])==service
+    assert r['knowledge_scope'] in ('closed_current_task_domain','diagnostic_legacy_boundary_unknown')
+    completed,partial=prune_checks(r,success)
+    for rec in r['prune_audits']:
+        for snapshot in (rec['before'],rec['after']):
+            assert all(n[2]=='Cl' for n in snapshot['nodes'] if tuple(n[:2]) not in service)
+    holes=0
+    for event in r['events']:
+        if event['type']!='tsp':continue
+        holes+=1;dense=pts(event['dense_nodes']);start=tuple(event['start']);goal=tuple(event['goal'])
+        assert dense-{start,goal}<=service,'non-task TSP visit requirement'
+        assert dense<=pts(event['order']) and tuple(event['order'][0])==start
+        nodes={tuple(n[:2]):n[2] for n in event['graph_before_tour']['nodes']};edges={p:set() for p in nodes}
+        for a,b in event['graph_before_tour']['edges']:a,b=tuple(a),tuple(b);edges[a].add(b);edges[b].add(a)
+        outside=lambda p:any(nodes[q]=='Op' and q not in dense for q in edges[p])
+        if r['knowledge_scope']=='closed_current_task_domain':
+            case=1 if outside(goal) else 2 if outside(start) else 3;assert case==event['case']
+        if event['case'] in (1,2):assert tuple(event['order'][-1])==(goal if event['case']==1 else start)
+        else:assert event['end'] is None
+        assert all(n[2]=='Cl' for n in event['graph_before_tour']['nodes'] if tuple(n[:2]) not in service)
+        path=r['diagnostic_route'];assert tuple(path[event['step']])==start
+        if 'moved_steps' in event:assert path[event['step']+event['moved_steps']]==event['order'][-1]
+    if success:
+        route=list(map(tuple,r['route']));f=pts(c['free']);assert route and route[0]==tuple(c['current']) and route[-1]==tuple(c['base'])
+        assert set(route)<=f and pts(c['targets'])<=pts(c['covered'])|set(route)
+        assert len(route)-1<=c['distance_budget'] and not r['pending'] and r['seconds']<budget
+    else:assert not r['route']
+    return dict(accepted=success,status=r['status'],steps=len(r['route'])-1 if success else None,seconds=r['seconds'],prunes=completed,interrupted_prunes=partial,hole_tours=holes)

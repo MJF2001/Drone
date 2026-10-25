@@ -1,0 +1,157 @@
+[
+  {
+    "label": "唯一探索性决策假设；阅数后提出，未经干预",
+    "observable_condition": "存在未检四邻格，同时存在初始已完成历史四邻格；PPCPP local分支只给未检格评分，不允许此时先走历史格。",
+    "phase": "两个已保存31x21、p30输入的事件起点共同状态；原seed逐项保留。",
+    "decision_to_test_later": "只检验一次先走指定历史邻格是否改变完整后续成本；其后恢复原PPCPP。此为固定状态因果探针，尚非可部署选择器。",
+    "support": [
+      {
+        "pair_id": "31x21_maze_p30__r0",
+        "seed": 20261020,
+        "delta": {
+          "L": 8,
+          "C": -125,
+          "R": 133
+        },
+        "current": [
+          5,
+          2
+        ],
+        "PPCPP_next": [
+          5,
+          3
+        ],
+        "saved_P2_next": [
+          5,
+          1
+        ],
+        "trace_pointer": "$.result.raw.branches.P0.trace[0]"
+      },
+      {
+        "pair_id": "31x21_maze_p30__r1",
+        "seed": 20261021,
+        "delta": {
+          "L": 8,
+          "C": -125,
+          "R": 133
+        },
+        "current": [
+          5,
+          2
+        ],
+        "PPCPP_next": [
+          5,
+          3
+        ],
+        "saved_P2_next": [
+          5,
+          1
+        ],
+        "trace_pointer": "$.result.raw.branches.P0.trace[0]"
+      },
+      {
+        "pair_id": "31x21_maze_p30__r2",
+        "seed": 20261022,
+        "delta": {
+          "L": 8,
+          "C": -125,
+          "R": 133
+        },
+        "current": [
+          5,
+          2
+        ],
+        "PPCPP_next": [
+          5,
+          3
+        ],
+        "saved_P2_next": [
+          5,
+          1
+        ],
+        "trace_pointer": "$.result.raw.branches.P0.trace[0]"
+      },
+      {
+        "pair_id": "31x21_serpentine_p30__r0",
+        "seed": 20261020,
+        "delta": {
+          "L": 70,
+          "C": -185,
+          "R": 255
+        },
+        "current": [
+          5,
+          2
+        ],
+        "PPCPP_next": [
+          5,
+          3
+        ],
+        "saved_P2_next": [
+          5,
+          1
+        ],
+        "trace_pointer": "$.result.raw.branches.P0.trace[0]"
+      },
+      {
+        "pair_id": "31x21_serpentine_p30__r1",
+        "seed": 20261021,
+        "delta": {
+          "L": 70,
+          "C": -185,
+          "R": 255
+        },
+        "current": [
+          5,
+          2
+        ],
+        "PPCPP_next": [
+          5,
+          3
+        ],
+        "saved_P2_next": [
+          5,
+          1
+        ],
+        "trace_pointer": "$.result.raw.branches.P0.trace[0]"
+      },
+      {
+        "pair_id": "31x21_serpentine_p30__r2",
+        "seed": 20261022,
+        "delta": {
+          "L": 70,
+          "C": -185,
+          "R": 255
+        },
+        "current": [
+          5,
+          2
+        ],
+        "PPCPP_next": [
+          5,
+          3
+        ],
+        "saved_P2_next": [
+          5,
+          1
+        ],
+        "trace_pointer": "$.result.raw.branches.P0.trace[0]"
+      }
+    ],
+    "denominators": {
+      "timely_events_pairs": 24,
+      "timely_event_states": 8,
+      "timely_event_geometries": 5,
+      "support_pairs": 6,
+      "support_states": 2,
+      "support_geometries": 2,
+      "all_legal_events_pairs": 36,
+      "all_legal_event_states": 12,
+      "all_legal_event_geometries": 6
+    },
+    "boundary": "2族2几何，未达2族3几何描述性重复条件；支持不是因果。其他12个主视图正差配对无此首分叉证据；6同长配对也不支持普遍阻碍。",
+    "evidence": "原始local候选和P2字面下一格直接记录；只凭冻结源码说明未检候选门；P2为何走该格未知。",
+    "future_single_variable_test": "如负责人另行批准：只在这两个原始输入和既定seed上做一次动作干预，指定动作使用本轮封存的P2历史邻格，仅作为诊断处理而非给在线算法P2预知；控制组原版，处理组仅该一步改变，其余保持原版/同历史previous/预算/截止。预登记动作与停止条件后才可运行，不扩地图和窗口、不重启局部P2、不加终点奖励。审查完整合法覆盖、遮挡暂缓、返航、L/C/R、历史重复、90/180转弯及完整入口时间，失败/反向/迟到全保留。",
+    "not_proven": "只改一步会否收益、收益幅度、何时应走历史格、在线判别规则与计算开销均未知；不能归因全部8或70步，更不能直接归因133或255步返航差。"
+  }
+]

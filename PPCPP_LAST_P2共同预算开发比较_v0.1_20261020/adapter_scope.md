@@ -1,0 +1,5 @@
+# P2薄适配范围
+
+p2_adapter.solve逐项对应冻结baseline_suite.solve的P2分支：begin、check_contract、remaining、multi/seed调用、仅捕获精确infeasible input的ValueError、seconds/method/budget/seed/fallback/超限标记不改。省略且仅省略外部independent_audit字段和assert，该审计在本轮计时外用双指标执行；原offer的single_cell_audit仍留在冻结内核。外层run_payload添加与LAST相同的解码/验证/Snapshot和原raw完整JSON编码，不改原生deadline路线。三方法同输入，保底/旧后缀利用是方法差异，不抹掉。
+
+原baseline_suite.solve本体和p2_search_audit均不修改；适配器是透明重写薄包装，不称原函数直接字节调用。9固定夹具原包装与适配完整非时间结果门槛通过，比较仅去时间/外部审核字段；截止钩子另验保底保留与无接受不补全。正式不作插桩。

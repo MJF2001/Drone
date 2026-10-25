@@ -1,0 +1,310 @@
+{
+  "tests": [
+    {
+      "case": 1,
+      "passed": true,
+      "exception": null,
+      "route": [
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "pending": [
+        [
+          5,
+          3
+        ]
+      ],
+      "intervention": {
+        "enabled": true,
+        "trigger_count": 1,
+        "deadline": 20,
+        "action": [
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            1
+          ]
+        ],
+        "route_index_before": 0,
+        "before": {
+          "current": [
+            5,
+            2
+          ],
+          "previous": [
+            4,
+            2
+          ],
+          "pending": [
+            [
+              5,
+              3
+            ]
+          ],
+          "distance_used": 0,
+          "distance_remaining": 20
+        },
+        "route_index_after": 1,
+        "after": {
+          "current": [
+            5,
+            1
+          ],
+          "previous": [
+            5,
+            2
+          ],
+          "pending": [
+            [
+              5,
+              3
+            ]
+          ],
+          "distance_used": 1,
+          "distance_remaining": 19
+        },
+        "added_steps": 1,
+        "added_new_capture_credit": 0
+      },
+      "regular_started": true
+    },
+    {
+      "case": 2,
+      "passed": true,
+      "exception": "ValueError:not_adjacent",
+      "route": [
+        [
+          5,
+          2
+        ]
+      ],
+      "pending": [
+        [
+          5,
+          3
+        ]
+      ],
+      "intervention": {
+        "enabled": true,
+        "trigger_count": 0
+      },
+      "regular_started": false
+    },
+    {
+      "case": 3,
+      "passed": true,
+      "exception": "ValueError:not_free",
+      "route": [
+        [
+          5,
+          2
+        ]
+      ],
+      "pending": [
+        [
+          5,
+          3
+        ]
+      ],
+      "intervention": {
+        "enabled": true,
+        "trigger_count": 0
+      },
+      "regular_started": false
+    },
+    {
+      "case": 4,
+      "passed": true,
+      "exception": "ValueError:not_initial_history",
+      "route": [
+        [
+          5,
+          2
+        ]
+      ],
+      "pending": [
+        [
+          5,
+          3
+        ]
+      ],
+      "intervention": {
+        "enabled": true,
+        "trigger_count": 0
+      },
+      "regular_started": false
+    },
+    {
+      "case": 5,
+      "passed": true,
+      "exception": "ValueError:no_pending_neighbor",
+      "route": [
+        [
+          5,
+          2
+        ]
+      ],
+      "pending": [
+        [
+          8,
+          8
+        ]
+      ],
+      "intervention": {
+        "enabled": true,
+        "trigger_count": 0
+      },
+      "regular_started": false
+    },
+    {
+      "case": 6,
+      "passed": true,
+      "exception": "Deadline:",
+      "route": [
+        [
+          5,
+          2
+        ]
+      ],
+      "pending": [
+        [
+          5,
+          3
+        ]
+      ],
+      "intervention": {
+        "enabled": true,
+        "trigger_count": 0
+      },
+      "regular_started": false
+    },
+    {
+      "case": 7,
+      "passed": true,
+      "exception": "Deadline:",
+      "route": [
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "pending": [
+        [
+          5,
+          3
+        ]
+      ],
+      "intervention": {
+        "enabled": true,
+        "trigger_count": 1,
+        "deadline": 20,
+        "action": [
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            1
+          ]
+        ],
+        "route_index_before": 0,
+        "before": {
+          "current": [
+            5,
+            2
+          ],
+          "previous": [
+            4,
+            2
+          ],
+          "pending": [
+            [
+              5,
+              3
+            ]
+          ],
+          "distance_used": 0,
+          "distance_remaining": 20
+        },
+        "route_index_after": 1,
+        "after": {
+          "current": [
+            5,
+            1
+          ],
+          "previous": [
+            5,
+            2
+          ],
+          "pending": [
+            [
+              5,
+              3
+            ]
+          ],
+          "distance_used": 1,
+          "distance_remaining": 19
+        },
+        "added_steps": 1,
+        "added_new_capture_credit": 0
+      },
+      "regular_started": false
+    },
+    {
+      "case": 8,
+      "passed": true,
+      "actual_wrapper_stub_solve_calls": 1,
+      "result": {
+        "raw": {
+          "status": "deadline",
+          "route": [],
+          "branches": {},
+          "trace": [],
+          "selected": null,
+          "reason": "shared_entry_deadline"
+        },
+        "entry_seconds": 20,
+        "phase_seconds": {
+          "encoding": 0
+        },
+        "eligible": false,
+        "budget": 20,
+        "method": "PPCPP",
+        "seed": 20261020,
+        "injection_events": [
+          {
+            "stage": "entry",
+            "seconds": 0
+          },
+          {
+            "stage": "encode_before",
+            "seconds": 0
+          },
+          {
+            "stage": "encode_after",
+            "seconds": 20
+          }
+        ]
+      }
+    }
+  ],
+  "passed": true,
+  "force_helper_stub_invocations": 7,
+  "entry_wrapper_stub_invocations": 1,
+  "real_core_calls": 0,
+  "real_planner_entries": 0
+}

@@ -1,0 +1,853 @@
+[
+  {
+    "id": "g0_empty",
+    "input": {
+      "name": "g0_empty",
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "targets": [],
+      "covered": [],
+      "published_targets": [],
+      "deferred_targets": [],
+      "initial_targets": [],
+      "current": [
+        2,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "previous": null,
+      "predator": [
+        -1,
+        0
+      ],
+      "old_route": [],
+      "distance_budget": 1000
+    },
+    "request": {
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "start": [
+        2,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "tasks": [],
+      "last": null,
+      "resource": 1000,
+      "seconds": 60,
+      "max_states": 1000000
+    },
+    "expected": 2
+  },
+  {
+    "id": "g1_single",
+    "input": {
+      "name": "g1_single",
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "targets": [
+        [
+          2,
+          0
+        ]
+      ],
+      "covered": [],
+      "published_targets": [
+        [
+          2,
+          0
+        ]
+      ],
+      "deferred_targets": [],
+      "initial_targets": [
+        [
+          2,
+          0
+        ]
+      ],
+      "current": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "previous": null,
+      "predator": [
+        -1,
+        0
+      ],
+      "old_route": [],
+      "distance_budget": 1000
+    },
+    "request": {
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "tasks": [
+        [
+          2,
+          0
+        ]
+      ],
+      "last": null,
+      "resource": 1000,
+      "seconds": 60,
+      "max_states": 1000000
+    },
+    "expected": 4
+  },
+  {
+    "id": "g2_start_credit",
+    "input": {
+      "name": "g2_start_credit",
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "targets": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "covered": [],
+      "published_targets": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "deferred_targets": [],
+      "initial_targets": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "current": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "previous": null,
+      "predator": [
+        -1,
+        0
+      ],
+      "old_route": [],
+      "distance_budget": 1000
+    },
+    "request": {
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "tasks": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "last": null,
+      "resource": 1000,
+      "seconds": 60,
+      "max_states": 1000000
+    },
+    "expected": 2
+  },
+  {
+    "id": "g3_return_collect",
+    "input": {
+      "name": "g3_return_collect",
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "covered": [],
+      "published_targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "deferred_targets": [],
+      "initial_targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "current": [
+        3,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "previous": null,
+      "predator": [
+        -1,
+        0
+      ],
+      "old_route": [],
+      "distance_budget": 1000
+    },
+    "request": {
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "start": [
+        3,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "tasks": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "last": null,
+      "resource": 1000,
+      "seconds": 60,
+      "max_states": 1000000
+    },
+    "expected": 3
+  },
+  {
+    "id": "g4_fixed_detour",
+    "input": {
+      "name": "g4_fixed_detour",
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "targets": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "covered": [],
+      "published_targets": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "deferred_targets": [],
+      "initial_targets": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "current": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "previous": null,
+      "predator": [
+        -1,
+        0
+      ],
+      "old_route": [],
+      "distance_budget": 1000
+    },
+    "request": {
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "tasks": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "last": [
+        1,
+        0
+      ],
+      "resource": 1000,
+      "seconds": 60,
+      "max_states": 1000000
+    },
+    "expected": 4
+  },
+  {
+    "id": "g5_historical_transit",
+    "input": {
+      "name": "g5_historical_transit",
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "covered": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "published_targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "deferred_targets": [],
+      "initial_targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "current": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "previous": null,
+      "predator": [
+        -1,
+        0
+      ],
+      "old_route": [],
+      "distance_budget": 1000
+    },
+    "request": {
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "tasks": [
+        [
+          3,
+          0
+        ]
+      ],
+      "last": null,
+      "resource": 1000,
+      "seconds": 60,
+      "max_states": 1000000
+    },
+    "expected": 6
+  },
+  {
+    "id": "g6_obstacle_detour",
+    "input": {
+      "name": "g6_obstacle_detour",
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "targets": [
+        [
+          2,
+          0
+        ]
+      ],
+      "covered": [],
+      "published_targets": [
+        [
+          2,
+          0
+        ]
+      ],
+      "deferred_targets": [],
+      "initial_targets": [
+        [
+          2,
+          0
+        ]
+      ],
+      "current": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "previous": null,
+      "predator": [
+        -1,
+        0
+      ],
+      "old_route": [],
+      "distance_budget": 1000
+    },
+    "request": {
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "tasks": [
+        [
+          2,
+          0
+        ]
+      ],
+      "last": null,
+      "resource": 1000,
+      "seconds": 60,
+      "max_states": 1000000
+    },
+    "expected": 12
+  },
+  {
+    "id": "g7_fixed_impossible",
+    "input": {
+      "name": "g7_fixed_impossible",
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "covered": [],
+      "published_targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "deferred_targets": [],
+      "initial_targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "current": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "previous": null,
+      "predator": [
+        -1,
+        0
+      ],
+      "old_route": [],
+      "distance_budget": 1000
+    },
+    "request": {
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "tasks": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "last": [
+        1,
+        0
+      ],
+      "resource": 1000,
+      "seconds": 60,
+      "max_states": 1000000
+    },
+    "expected": null
+  }
+]

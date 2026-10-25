@@ -1,0 +1,107 @@
+"""Eight fixed pure identities. Does not call solve/run_payload/engine.process."""
+from common import *
+import sys,ast,importlib.util,importlib,traceback
+from copy import deepcopy
+from collections import Counter
+from types import SimpleNamespace
+from recovery_diag_hook import Diagnostic,norm,KEYS
+from recovery_diag_compare import semantic,claim_destination
+import recovery_diag_decision_audit as A
+COUNTS=Counter(hook_attempts=0,finish_stub_attempts=0,hook_expected_rejections=0,audit_attempts=0,audit_expected_rejections=0,exclusive_claim_attempts=0,explanatory_stub_distance_calls=0)
+AUDIT_ATTEMPTS=[]
+def fixture(tamper_second=False):
+ c={'name':'FIXED_PURE_STUB_NOT_EXPERIMENT','free':[[x,y] for x in range(5) for y in range(3)],'targets':[[0,2],[4,0],[4,2]],'covered':[[0,0]],'published_targets':[[0,0],[0,2],[4,0],[4,2]],'deferred_targets':[],'current':[0,0],'previous':[-1,0],'base':[0,0],'initial_targets':[[0,0],[0,2],[4,0],[4,2]],'predator':[-1,0],'old_route':[],'distance_budget':200}
+ if not tamper_second:segments=[[[x,0] for x in range(5)],[[4,0],[4,1],[4,2]],[[x,2] for x in range(4,-1,-1)],[[0,2],[0,1],[0,0]]]
+ else:segments=[[[x,0] for x in range(5)],[[x,0] for x in range(4,-1,-1)]+[[0,1],[0,2]],[[x,2] for x in range(5)],[[4,2],[4,1]]+[[x,0] for x in range(4,-1,-1)]]
+ route=[c['current']];pending=ps(c['targets']);trace=[];records=[]
+ for i,seg in enumerate(segments):
+  event={'index':len(route)-1,'current':route[-1],'pending_count':len(pending),'kind':'return' if i==3 else 'recovery','goal':seg[-1]}
+  if i!=3:event['previous']=route[-2] if len(route)>1 else c['previous'];records.append({'trace_record':i,'event':deepcopy(event),'pending':[list(p) for p in sorted(pending)],'segment':seg})
+  trace.append(event);route.extend(seg[1:]);pending-=ps(seg)
+ spec={'trace_record':0,'current':[0,0],'previous':[-1,0],'pending':[[0,2],[4,0],[4,2]],'default_goal':[0,2],'alternative_goal':[4,0],'original_trace':[dict(trace[0],goal=[0,2])],'original_route_prefix':[[0,0]]}
+ r={'status':'core_complete','route':route,'trace':trace,'predator':[-1,0],'initial_previous':[-1,0],'accepted_seconds':.001,'budget':20,'fallback_selected':False}
+ tr={'trace_record':0,'route_index':0,'current':[0,0],'previous':[-1,0],'pending':spec['pending'],'default_goal':[0,2],'alternative_goal':[4,0],'default_distance':2,'alternative_distance':4,'chosen_goal':[4,0],'actual_recovery_path':segments[0]}
+ return c,{'raw':{'branches':{'P0':r}},'diagnostic':{'target_intervention_enabled':True,'core_detail_profile_enabled':False,'counts':{'matched':1,'applied':1,'explanatory_distance_queries':2},'trigger':tr,'decision_states':records}},spec
+class GeometryStub:
+ def __init__(self,c):self.s=SimpleNamespace(free=ps(c['free']));self.reachable=ps(c['free'])
+ def distance(self,a,b):COUNTS['explanatory_stub_distance_calls']+=1;return sum(abs(x-y) for x,y in zip(a,b))
+def choose(d,trace,route,current,previous,pending,default,g):
+ COUNTS['hook_attempts']+=1;return d.choose(trace,route,current,previous,pending,default,g)
+def reject_hook(fn):
+ try:fn();raise RuntimeError('hook should reject')
+ except AssertionError:COUNTS['hook_expected_rejections']+=1
+def audit(c,n,s):
+ COUNTS['audit_attempts']+=1;counts=Counter();passed=False
+ try:
+  result=A.audit(c,n,s,True,observer_counts=counts);passed=True;return result
+ finally:AUDIT_ATTEMPTS.append({'passed':passed,'counts':dict(counts)})
+def reject_audit(c,n,s,contains=None):
+ try:audit(c,n,s);raise RuntimeError('audit should reject')
+ except AssertionError as ex:
+  if contains:assert contains in str(ex),(contains,str(ex))
+  COUNTS['audit_expected_rejections']+=1
+def main():
+ assert not (H/'prechecks.json').exists()
+ names=['input_sources_freezes','minimal_diff_unique_import_controlflow','normalization_strict_semantics','precise_once_trigger_guards','invalid_goal_pending_state_rejection','independent_one_exception_only','fixed_small_route_safety_responsibility_return','json_counts_exclusive_save_report_chain'];records=[];audit_receipts=[]
+ try:
+  for name in names:
+   if name=='input_sources_freezes':
+    for p,d in read(H/'input_freeze.json')['files'].items():assert sha(H/p)==d
+    for p,d in read(H/'source_guards.json').items():assert sha(p)==d
+    for c in read(H/'selection.json')['selected']:
+     x=read(H/c['input']);s=read(H/c['spec']);assert sha(H/c['input'])==s['source_E']['sha256'] and x==read(s['source_E']['path']);assert len(ps(x['targets'])-ps(x['covered']))==s['initial_U']
+     assert ps(s['pending'])==ps(x['targets'])-ps(x['covered'])-ps(s['original_route_prefix'])
+     assert ps(x['targets'])==ps(x['published_targets'])&ps(x['free']) and not ps(x['published_targets'])-ps(x['free'])-ps(x['covered'])
+   elif name=='minimal_diff_unique_import_controlflow':
+    spec=importlib.util.spec_from_file_location('_pure_control_recovery_diag',ROOT/'中心区计时插桩影响核查_v0.1_20261022/run_check.py');C=importlib.util.module_from_spec(spec);spec.loader.exec_module(C);C.B.load_native()
+    for mod in ('recovery_diag_hook','recovery_diag_native','recovery_diag_runtime','recovery_diag_candidate','recovery_diag_worker','recovery_diag_decision_audit','recovery_diag_compare'):
+     m=importlib.import_module(mod);assert Path(m.__file__).resolve()==(H/(mod+'.py')).resolve()
+    source=(H/'recovery_diag_native.py').read_text(encoding='utf-8');tree=ast.parse(source)
+    assert "goal=min(pending,key=lambda q:(g.distance(cur,q),q));tick()" in source and 'segment=g.path(cur,goal)' in source
+    assert source.index('goal=min(pending')<source.index('_diag.choose')<source.index('segment=g.path(cur,goal)')
+    assert source.count('_diag.choose(')==1 and source.count('_diag.record(')==1
+    # All generated files compile, and import above executes no solves/post tasks.
+    for p in H.glob('*.py'):compile(p.read_text(encoding='utf-8'),str(p),'exec')
+    audit_ast=ast.parse((H/'recovery_diag_decision_audit.py').read_text(encoding='utf-8'))
+    assert all((not isinstance(n,ast.ImportFrom) or n.module in ('collections',)) for n in ast.walk(audit_ast))
+   elif name=='normalization_strict_semantics':
+    a={'route':((0,0),(1,0)),'trace':[{'index':0,'goal':(1,0),'pending_count':1,'options':[{'score':2}]}],'seconds':.1,'version':'old'};b=norm(a);b.update(seconds=99,version='new');assert semantic(a)==semantic(b)
+    for key,value in [('index',1),('goal',[0,1]),('pending_count',2),('options',[{'score':3}])]:
+     z=deepcopy(b);z['trace'][0][key]=value;assert semantic(a)!=semantic(z)
+   elif name=='precise_once_trigger_guards':
+    c,n,s=fixture();g=GeometryStub(c);p=ps(s['pending'])
+    for enabled in (False,True):
+     d=Diagnostic(s,enabled);q=choose(d,[],[[0,0]],(0,0),(-1,0),p,(0,2),g);assert q==((4,0) if enabled else (0,2));assert d.counts['matched']==1 and d.counts['applied']==int(enabled)
+     reject_hook(lambda:choose(d,[],[[0,0]],(0,0),(-1,0),p,(0,2),g))
+    early=deepcopy(s);early['trace_record']=1;reject_hook(lambda:choose(Diagnostic(early,True),[],[[0,0]],(0,0),(-1,0),p,(0,2),g))
+    reject_hook(lambda:choose(Diagnostic(s,True),[s['original_trace'][0]],[[0,0]],(0,0),(-1,0),p,(0,2),g))
+    COUNTS['finish_stub_attempts']+=1;reject_hook(lambda:Diagnostic(s,True).finish({'status':'core_complete','trace':[]}))
+   elif name=='invalid_goal_pending_state_rejection':
+    c,n,s=fixture();g=GeometryStub(c);p=ps(s['pending'])
+    reject_hook(lambda:choose(Diagnostic(s,True),[],[[0,0]],(0,0),(-1,0),p,(4,2),g))
+    z=deepcopy(s);z['alternative_goal']=[1,1];reject_hook(lambda:choose(Diagnostic(z,True),[],[[0,0]],(0,0),(-1,0),p,(0,2),g))
+    reject_hook(lambda:choose(Diagnostic(s,True),[],[[0,0]],(0,0),(0,-1),p,(0,2),g))
+    reject_hook(lambda:choose(Diagnostic(s,True),[],[[0,0]],(0,0),(-1,0),p-{(4,2)},(0,2),g))
+   elif name=='independent_one_exception_only':
+    c,n,s=fixture();r=audit(c,n,s);assert r['passed'] and r['authorized_exceptions']==1;audit_receipts.append(r)
+    c,n,s=fixture(True);reject_audit(c,n,s,'unauthorized second recovery choice')
+   elif name=='fixed_small_route_safety_responsibility_return':
+    for kind in ('blocked','missing','wrong_base'):
+     c,n,s=fixture()
+     if kind=='blocked':c['free'].remove([2,0])
+     elif kind=='missing':c['targets'].append([2,1]);c['published_targets'].append([2,1])
+     else:c['base']=[1,1]
+     reject_audit(c,n,s)
+   else:
+    d=Diagnostic(fixture()[2],False).export();assert set(d['counts'])==set(KEYS) and all(type(v) is int and v==0 for v in d['counts'].values())
+    out=H/'pure_precheck_files'/('round_'+str(read(H/'preparation_repairs.json')['used']+1)+'_stub_not_formal.json');out.parent.mkdir(exist_ok=True);COUNTS['exclusive_claim_attempts']+=1;claim_destination(out)
+    payload={'kind':'fixed pure synthetic record, not core/post','counts':d['counts'],'native_profile_detail':None,'saved_receipt':audit_receipts[0]};dump(out,payload);assert read(out)==payload and norm(payload)==payload
+    COUNTS['exclusive_claim_attempts']+=1
+    try:claim_destination(out);raise RuntimeError('overwrote existing file')
+    except FileExistsError:pass
+    assert read(out)==payload and not list((H/'outputs').glob('*'))
+   records.append({'id':name,'passed':True,'real_core':0,'real_post':0})
+ except BaseException as ex:records.append({'id':name,'passed':False,'reason':repr(ex),'traceback':traceback.format_exc()})
+ result={'passed':len(records)==8 and all(x['passed'] for x in records),'cases':records,'pure_counts':dict(COUNTS),'all_independent_stub_attempts_including_rejections':AUDIT_ATTEMPTS,'saved_independent_stub_receipts':audit_receipts,'real_core':0,'real_post':0,'real_N_R_P2':0,'preparation_repairs':read(H/'preparation_repairs.json')['used']}
+ dump(H/'prechecks.json',result);print(json.dumps(result,ensure_ascii=False));assert result['passed']
+if __name__=='__main__':main()

@@ -1,0 +1,40 @@
+{
+  "status": "BLOCKED_BEFORE_DYNAMIC_IMPORT",
+  "reason": "Required worker has unguarded top-level planning/read-hook/output actions",
+  "unsafe": [
+    {
+      "file": "worker.py",
+      "sha256": "e2f15f19338aad073c6c56255b275647066bb1cbb55e4de3aaa0e7ee81bd72e9",
+      "unsafe_top_level_calls": [
+        {
+          "line": 26,
+          "target": "sys.addaudithook",
+          "expression": "sys.addaudithook(audit)",
+          "source_line": "sys.addaudithook(audit);payload=inp.read_bytes();print('ENTRY_START '+j['id'],flush=True);begin=time.perf_counter()"
+        },
+        {
+          "line": 27,
+          "target": "runtime.run_payload",
+          "expression": "runtime.run_payload(payload, 'PPCPP', 20, j['seed'])",
+          "source_line": "x=runtime.run_payload(payload,'PPCPP',20,j['seed']) if j['method']=='PPCPP' else p2_adapter.run_payload(payload,20,j['seed']);wall=time.perf_counter()-begin"
+        },
+        {
+          "line": 27,
+          "target": "p2_adapter.run_payload",
+          "expression": "p2_adapter.run_payload(payload, 20, j['seed'])",
+          "source_line": "x=runtime.run_payload(payload,'PPCPP',20,j['seed']) if j['method']=='PPCPP' else p2_adapter.run_payload(payload,20,j['seed']);wall=time.perf_counter()-begin"
+        },
+        {
+          "line": 30,
+          "target": "Path(sys.argv[2]).open",
+          "expression": "Path(sys.argv[2]).open('x', encoding='utf8')",
+          "source_line": "with Path(sys.argv[2]).open('x',encoding='utf8') as f:json.dump(dict(job=j,result=x,caller_wall_seconds=wall,entry_overrun_seconds=max(0,x['entry_seconds']-20),imports=hs,input_sha256=seal['files'][str(inp)],runtime_reads=reads,actual_core_calls=counts),f,ensure_ascii=False,allow_nan=False,separators=(',',':'))"
+        }
+      ],
+      "safe_for_dynamic_import": false
+    }
+  ],
+  "worker_import_not_attempted": true,
+  "following_stages": "C / negative fixtures / eight stubs / seals / preparation / formal not run",
+  "instruction": "v0.2 section3B: if import itself solves or writes formal results, stop and report; do not directly execute unsafe import."
+}

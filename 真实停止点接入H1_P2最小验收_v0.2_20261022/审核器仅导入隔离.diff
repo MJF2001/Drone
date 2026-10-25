@@ -1,0 +1,46 @@
+--- v0.1/audit.py
++++ v0.2/h1p2_gate_audit_v02_20261022/_audit.py
+@@ -4,27 +4,13 @@
+ from fractions import Fraction
+ from pathlib import Path
+ import importlib.util, json, sys, hashlib, time
+-from common import HERE
+-import geometry_audit as A
+-import h1_audit
++from ._common import HERE
++from . import _geometry as A
++from . import _h1 as h1_audit
+ 
+ def load_auditor():
+-    def load(name, path):
+-        spec = importlib.util.spec_from_file_location(name, path)
+-        module = importlib.util.module_from_spec(spec)
+-        sys.modules[name] = module
+-        spec.loader.exec_module(module)
+-        return module
+-    geometry = load('_stop_saved_independent_geometry', HERE/'postsrc/audit_geometry.py')
+-    before = sys.modules.get('audit_geometry')
+-    sys.modules['audit_geometry'] = geometry
+-    try:
+-        return load('_stop_saved_shortcut_auditor', HERE/'postsrc/audit_saved.py')
+-    finally:
+-        if before is None:
+-            sys.modules.pop('audit_geometry', None)
+-        else:
+-            sys.modules['audit_geometry'] = before
++    from . import _post_saved
++    return _post_saved
+ 
+ def audit_route(s, saved, counts):
+     counts['independent_route_audits'] += 1
+--- v0.1/postsrc/audit_saved.py
++++ v0.2/h1p2_gate_audit_v02_20261022/_post_saved.py
+@@ -7,7 +7,7 @@
+ from decimal import Decimal,localcontext,ROUND_FLOOR,ROUND_CEILING
+ import hashlib,json,time,math
+ from collections import Counter
+-import audit_geometry as A
++from . import _post_geometry as A
+ H=Path(__file__).resolve().parent
+ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+ def read(p):return json.loads(p.read_text(encoding='utf-8-sig'))

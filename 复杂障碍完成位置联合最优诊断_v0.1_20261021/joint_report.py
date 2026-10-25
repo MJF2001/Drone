@@ -1,0 +1,67 @@
+"""Offline reports/figures, no planning or exact-search calls."""
+import json,html,statistics
+from joint_common import H,R,read,save,csvsave,normal,sha
+from joint_generate import layouts
+def table(headers,rr):return '\n'.join(['|'+'|'.join(headers)+'|','|'+'|'.join(['---']*len(headers))+'|']+['|'+'|'.join(map(str,r))+'|' for r in rr])
+def draw(row,state,c):
+    w,h=state['w'],state['h'];u=24;pw=w*u+80;ph=h*u+130
+    svg=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{3*pw}" height="{ph}"><rect width="100%" height="100%" fill="white"/><style>text{{font-family:Arial,sans-serif;font-size:12px}}</style>',f'<text x="12" y="18">{row["id"]}: G={row["G"]}, O={row["O"]}, E={row["E"]}; fixed-category display, not a new algorithm</text>', '<text x="12" y="36">blue: before completion; red: return; green: pending; pale blue: H; gray: obstacle; gray+blue edge: covered then blocked</text>']
+    for panel,(label,data,result) in enumerate([('PPCPP',row['reference'],read(H/'outputs'/f'{row["id"]}.json')['result']['raw']),('FREE BFS',row['FREE'],read(H/'exact'/f'{row["id"]}__FREE__BFS.json')['result']),('FIXED BFS',row['FIXED'],read(H/'exact'/f'{row["id"]}__FIXED__BFS.json')['result'])]):
+        route=result['route'];ox=panel*pw+30;oy=100
+        def xy(p):return ox+(p[0]+.5)*u,oy+(h-p[1]-.5)*u
+        m=data['metrics'];svg.append(f'<text x="{ox}" y="57">{label}; L={m["length"]}, C={data["C"]}, R={data["R"]}, d={data["d_base"]}</text>');svg.append(f'<text x="{ox}" y="76">last={data["ep"]}; turn90/180={m["turns90"]}/{m["turns180"]}</text>')
+        f=set(map(tuple,c['free']));history=set(map(tuple,c['covered']))
+        for p in map(tuple,c['published_targets']):
+            x,y=xy(p);fill='#555' if p not in f else '#c2d9ec' if p in history else '#c9e8ad';stroke='#268add' if p not in f and p in history else 'white';svg.append(f'<rect x="{x-u/2}" y="{y-u/2}" width="{u}" height="{u}" fill="{fill}" stroke="{stroke}"/>')
+        for path,color in ((route[:data['C']+1],'#2259c5'),(route[data['C']:],'#d12528')):
+            coords=' '.join(f'{x},{y}' for x,y in map(xy,path));svg.append(f'<polyline points="{coords}" fill="none" stroke="{color}" stroke-width="2"/>')
+        for tag,p,color,dx,dy in [('B',c['base'],'black',-15,0),('S',c['current'],'#a700c1',4,-5),('e',data['ep'],'#ef8c00',5,12)]:
+            if p is None:continue
+            x,y=xy(p);svg.append(f'<circle cx="{x}" cy="{y}" r="4" fill="{color}" stroke="white"/><text x="{x+dx}" y="{y+dy}" fill="{color}">{tag}</text>')
+    svg.append('</svg>');(H/'figures'/f'{row["id"]}.svg').write_text('\n'.join(svg),encoding='utf8');save(H/'figures'/f'{row["id"]}.json',dict(row=row,state=state,input_sha256=sha(H/'inputs'/f'{row["id"]}.json')))
+def report():
+    a=read(H/'analysis.json');states=read(H/'states.json');byid={s['id']:s for s in states};audits=[]
+    for s in states:
+        c=read(H/'inputs'/f'{s["id"]}.json');template=layouts(s['w'],s['h'])[s['kind']];new=set(map(tuple,c['free']))-template
+        audits.append(dict(id=s['id'],connector_walk=s['opened'],newly_opened=sorted(new),already_free_points_in_walk=sorted(set(map(tuple,s['opened']))&template),before_free=len(template),after_free=len(c['free']),alias_of=s['alias_of'],actual_signature=s['actual_signature'],template_signature=s['template_signature']))
+    save(H/'geometry_opening_audit.json',audits)
+    for row in a['rows']:
+        if row['category'] in ('G0','O_only','E_only','O_and_E'):draw(row,byid[row['id']],read(H/'inputs'/f'{row["id"]}.json'))
+    movement=[]
+    for method,key in [('PPCPP','reference'),('FREE','FREE'),('FIXED','FIXED')]:
+        rr=[r[key] for r in a['rows'] if r[key] is not None];movement.append(dict(method=method,n=len(rr),totals={k:sum(r['metrics'][k] for r in rr) for k in ('length','fresh_target_steps','historical_target_steps','repeated_new_target_steps','non_target_steps','turns90','turns180')},C_sum=sum(r['C'] for r in rr),R_sum=sum(r['R'] for r in rr)))
+    save(H/'complete_metric_totals.json',movement)
+    matrix=[[r['id'],r['pending'],r['Lp'],r['Lstar'],r['Lfixed'],r['G'],r['O'],r['E'],r['category']] for r in a['rows']]
+    lines=['# 复杂障碍小图完成位置与覆盖顺序联合最优诊断','', '2026-10-21。已封存，待负责人审核。','',
+      '**本批16状态的PPCPP均已是完整含返航最短路线。保留原最后采集格后重新排顺序，可省0步；允许最后采集格一起改变，额外也可省0步。** 两套独立逐格精确搜索值一致，且保存证明经闭包审核。没有发现本小图矩阵上的联合机制收益信号；不再加图寻找正例。','',
+      '这不否定旧大图存在差距，也不证明完成位置问题普遍无价值。本批是新7×7/9×7、80%/90%真实历史、待检仅2—12格的小图；不是旧21×15/31×21早进度状态的等价复现。','',
+      '按固定ID选出的首个零差例7×7_control_p80：PPCPP采完前9步、尾段6步；自由末格最优见证10步、5步，完整均15步。较近完成位置的尾段收益被前段增加1步抵消；两条都是实际保存的合法最优路线，不是虚构固定前段的反事实。','',
+      '## 逐状态回答两问','',table(['状态','待检','Lp','L*自由','L*_ep固定','G总差','O不换末格','E固定末格损失','分类'],matrix),'',
+      '16状态总量Lp=L*=L*_ep=208步，G/O/E总和均0。事件12状态各自对照合计153步，控制4状态合计55步；不把两种任务量的绝对总路程差当障碍效果。','',
+      '## 可采即采与最优性证据','',
+      'FREE和FIXED均在完整当前F逐格移动并立即采集，到base且全部待检完成才接受。FIXED未采完其他目标前禁止首次进入原ep，不能先经过又故意不采；采完后可自由经过任何自由格。固定的是最后首次采集格，飞行终点始终基地。历史格可通行，当前格第0步采集，遮挡暂缓不算已完成。','',
+      'BFS以已采掩码和整数位置编码；独立Dijkstra以坐标与剩余掩码编码，bit次序、邻接生成、清位逻辑和固定末格过滤均独立。不同最短路径允许，比较的是最优长度。16个正式状态各2个问题，各由两实现实际搜索一次，共64正式覆盖精确搜索；不是只对比现成JSON。','',
+      '每份gzip证书含全部发现状态、父边距离、出队集合、终止节点和队列。只读核验检查父边逐格可达、任务自动置位、固定末格过滤、低层合法后继闭包和无更早目标状态；BFS首目标出队/Dijkstra最小目标settle支撑无更短路线。只读verify不调用任何求解器；它审核已保存证据，不重算覆盖最优。','',
+      '## 八门槛与实际调用','',
+      '固定8问题×两实现=16搜索：空任务2、单任务4、起点即时采集2、返航途中目标3、固定末格需绕路4、历史通路6、障碍绕路12、固定末格必经反例无解，均符合手算答案；成功路线两套指标通过。无解反例：一条线s=base=0，任务1和2却指定1为最后目标，去2必须先采1，因此FIXED无解。它不等于普通任务无解。','',
+      f'实际PPCPP=2准备+16正式=18；覆盖精确=16门槛+32正式问题×2实现=80，达到上限即停。无P2/LAST/四方向/新候选、无隐藏重试/未保存失败/留出或旧大图重跑。正式16参考全部完整合法及时，64正式精确全部optimal；门槛2份预设infeasible不混作正式失败。unresolved=0。最多发现{a["exact_execution_summary"]["max_discovered"]}状态，最长完整精确入口{a["exact_execution_summary"]["max_query_seconds"]:.6f}秒，均未达60秒/100万状态上限。','',
+      '## 几何、退化与分母','',
+      '16输入完全重复0。模板按基地锚定的平移/旋转/镜像核查：6个事件基础尺寸×布局组互不等价，另2控制组；同一模板的两进度始终只算一组。实际保通后F有14个D4结构类，但不把进度引入的保通差异升为14个独立几何。所有原始签名与合并表在analysis.geometry_audit。','',
+      '小图布局退化如实保留：room在7×7的桥数为0，9×7为2；maze/serpentine桥数随进度接入路径变化。小尺寸条墙数量有限、通道/房间短，2—12个剩余任务限制了诊断难度。所有16原始槽位、实际障碍率、自由数、暂缓、桥、度数及基地距离分布保存在states.json，不能只凭“复杂障碍”名称宣称广泛压力。','',
+      '沿用旧生成器的opened列表记录的是接入路径，包含原本已自由的接入终点；geometry_opening_audit另列真正从障碍变自由的newly_opened，避免把整条路径长度冒充移除障碍数。没有修改生成器来维持布局标签或追正例。','',
+      '## 完整分类、转弯与图','',table(['分类','数量'],[[k,v] for k,v in a['summary']['all']['categories'].items()]),'',
+      f'固定ID首例：{a["selected"]}。缺失类别：{a["missing_categories"]}，不另挑地图补正例。所有16状态均附PPCPP/FREE/FIXED三路线SVG/PNG，以便负责人检查障碍状态；类别首例不因仅有控制而换样。图可重叠，次数以CSV为准。','',
+      table(['路线','L合计','90度合计','180度合计','采完前C合计','返航R合计'],[[m['method'],m['totals']['length'],m['totals']['turns90'],m['totals']['turns180'],m['C_sum'],m['R_sum']] for m in movement]),'',
+      '全部精确路线（含独立Dijkstra的不同见证）逐状态双指标、末格、C/R、基地图距离、历史/本轮重复/非目标、覆盖/暂缓与实际时间在全部精确路线双指标.csv/analysis.json；主三路线在16状态表与各图JSON。精确只优化长度，不称转弯也最优。等长最优路线的采完时间、末格或转向可以不同，不能包装成步数收益。','',
+      '## 与旧诊断相比新增什么','',
+      '旧小图最优差距v0.2已用同语义固定最后首次采集格，24槽位中22最优、2差2步，正例来自同一几何两进度；跨几何36槽位也已发现结束约束损失，且最近基地last并不总更好。LAST已有少量收益及额外计算/转弯代价，不能将这些旧发现说成首次。','',
+      '本轮新增的是：沿压力布局规则另造复杂障碍小图、80/90真实晚进度历史、同一任务上的G=O+E严格联合最优分解，以及每个FREE/FIXED问题两套独立重新求最优与保存证明。结果全零，因此没有新增支持“必须改变末格才有改善”或“只重排顺序能改善”的正证据，也没有验证任何实用新机制。','',
+      '旧大图只读返航差1599含采集前抵消，不是可直接追回的收益；本轮全部最优也不能倒推旧大图的O/E大小。进度、任务与几何均不同，不作未经验证的跨批因果解释。','',
+      '## 来源、封存与停止','',
+      '上游最新只读verify实际通过，未重跑96路线。prep_seal在2准备前；event_seal在16实际输入/历史/顺序/精确模板生成后、16门槛及正式前。FIXED具体ep/请求在正式PPCPP后派生保存，未假称早已封存。实际导入hash、请求hash与所有原始日志/调用序列保留；相关环境继承原压力封存，Windows系统DLL不是全机镜像，参数由封存输入/代码/任务证明，不伪造独立实参receipt。','',
+      '主/独立精确源和生成器不改，首次全部门槛与正式均通过，无技术失败、未解决或被取代数据混入。普通图BFS用于几何分布与末格距离，和80次覆盖精确搜索分账；只读证明审核不增加精确搜索。最终verify实际日志见verify.log，调用账见call_ledger.json。','',
+      '**本批未达到E>0跨两族/三非等价几何的继续信号；也没有O主导的正差距。** 在此固定小图批停止，不扩图、不换进度寻找正例，不自动切换开发其他机制。范围有限，不能据此宣布普遍假设已被否定；由负责人结合旧大图证据决定研究取舍。','', '已封存，待负责人审核。']
+    with (H/'通俗结论与最优分解报告.md').open('x',encoding='utf8') as f:f.write('\n'.join(lines))
+    (H/'review_packet.md').write_text('# 审核入口\n\n先读通俗结论与最优分解报告.md、16状态最优分解.csv、protocol.md。16张三路线图均为原数据，类别首例与缺类见analysis.selected/missing_categories。\n\n原始prep/inputs/histories、outputs、requests/exact/certificates、gate_fixtures、actual_order与两阶段seal保留；两套源码exact_bfs.py/exact_dijkstra.py没有共用转移，joint_proof.py只核保存证明。\n\n一键只读：运行环境/python/python.exe -B -X utf8 本目录/joint_verify.py；不运行规划器/覆盖精确搜索。显式重新求解只可在新的空目录按同setup/prep/build/seal/gate/formal/exact流程新建批次，所有操作重新计账，不在verify中隐藏复算；本轮不自动执行。\n\n已封存，待负责人审核。\n',encoding='utf8')
+    print('Report +16 full-state figures saved; no new solver calls.',flush=True)
+if __name__=='__main__':report()

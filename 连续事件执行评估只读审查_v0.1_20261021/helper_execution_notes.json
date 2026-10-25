@@ -1,0 +1,22 @@
+{
+  "initial_review_verification": {
+    "status": "FAILED_AND_PRESERVED",
+    "log": "verify_execution.log",
+    "reason": "Verification was launched before the still-running read-only source search had written search_scope.json.",
+    "correction": "Waited for the search process to finish successfully, then reran the same verifier without code or evidence changes.",
+    "subsequent_log": "verify_second_execution.log",
+    "old_data_modified": false,
+    "planner_core_graph_calls": 0
+  },
+  "read_only_search_warning": {
+    "message": "<stdin>:4: SyntaxWarning: invalid escape sequence '\\('",
+    "effect": "None: the literal regex passed to rg retained the intended escaped opening parenthesis; search completed with exit0. Warning retained here.",
+    "source_search_stdout": "source_search_stdout.log",
+    "source_search_stderr": "source_search_stderr.log"
+  },
+  "saved_data_parse_failures": 0,
+  "old_modules_imported": 0,
+  "new_planner_calls": 0,
+  "new_graph_searches": 0,
+  "new_closed_loops": 0
+}

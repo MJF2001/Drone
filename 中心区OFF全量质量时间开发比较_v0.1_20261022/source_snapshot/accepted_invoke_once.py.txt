@@ -1,0 +1,10 @@
+def invoke_once(fn,ledger,obs):
+    assert ledger=={'started':0,'returned':0,'exceptions':0},'entry must have one exclusive owner'
+    ledger['started']+=1
+    assert sys.getprofile() is None
+    sys.setprofile(obs.profile if obs is not None else None)
+    try:
+        out=fn();ledger['returned']+=1;return out
+    except BaseException:
+        ledger['exceptions']+=1;raise
+    finally:sys.setprofile(None)

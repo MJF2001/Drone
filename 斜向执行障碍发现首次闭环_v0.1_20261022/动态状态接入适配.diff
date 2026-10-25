@@ -1,0 +1,39 @@
+--- approved_v0.2/pipeline.py
++++ closed_loop/pipeline.py
+@@ -5,7 +5,8 @@
+ import json, time
+ from common import HERE, sha
+ from exact import Expr, Refusal, point, pt, distance, certificate
+-from connector import parse, select, collect, credit_move, state_save, cells
++from connector import collect, credit_move, cells
++from public_contract import parse, select, state_save, heading as make_heading
+ import geometry
+ 
+ class PipelineStop(RuntimeError):
+@@ -90,16 +91,7 @@
+     pred['h'] = tuple(v-w for v, w in zip(q, s['S'])) if q != s['S'] else s['h']
+     pred['E'], pred['M'] = s['E']-gamma_length, s['M']+gamma_length
+     cap = pred['E'].floor()
+-    h = [v.numerator if v.denominator == 1 else str(v) for v in pred['h']]
+-    heading = {'status': 'KNOWN', 'vector': h,
+-               'source': {'kind': 'synthetic_direction_fixture', 'snapshot_id': case['id'],
+-                          'snapshot_sha256': __import__('hashlib').sha256(input_bytes).hexdigest(),
+-                          'meaning': 'paid_predicted_gamma_direction' if q != s['S'] else 'given_synthetic_incoming_direction'}}
+-    expected = case['expect']
+-    if grid(q) != expected['q'] or pt(pred['h']) != expected['h_entry'] or cells(pred['H']) != expected['H_pred']:
+-        raise PipelineStop('entry_expectation_mismatch')
+-    if cap != expected['integer_allowance']:
+-        raise PipelineStop('allowance_expectation_mismatch')
++    heading = make_heading(pred,s,case,__import__('hashlib').sha256(input_bytes).hexdigest())
+     initial = case['metadata']['initial_targets']
+     if not pred['H'] <= set(map(tuple, initial)):
+         raise PipelineStop('initial_target_history_conflict')
+@@ -110,7 +102,7 @@
+                'incoming_heading': heading}
+     request_bytes = json.dumps(request, ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode('utf-8')
+     result.update(q=grid(q), gamma=[pt(s['S']), pt(q)], gamma_length=certificate(gamma_length),
+-                  gamma_events=gamma_events, h_entry=pt(pred['h']), heading=heading, predicted_entry=state_save(pred),
++                  gamma_events=gamma_events, h_entry=None if pred['h'] is None else pt(pred['h']), heading=heading, predicted_entry=state_save(pred),
+                   core_request=request, core_request_utf8=request_bytes.decode('utf-8'),
+                   core_request_sha256=__import__('hashlib').sha256(request_bytes).hexdigest())
+     result['timing']['connector_and_contract_seconds'] = time.perf_counter()-begin

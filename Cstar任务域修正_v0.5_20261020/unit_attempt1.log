@@ -1,0 +1,39 @@
+test_current_domain_unknown_empty (__main__.Tests.test_current_domain_unknown_empty) ... ok
+test_deferred_blocked_history (__main__.Tests.test_deferred_blocked_history) ... ok
+test_empty_return (__main__.Tests.test_empty_return) ... ok
+test_flight_not_replaced_by_service (__main__.Tests.test_flight_not_replaced_by_service) ... ok
+test_inner_service_frontier (__main__.Tests.test_inner_service_frontier) ... ok
+test_native_hole_only_services_tasks (__main__.Tests.test_native_hole_only_services_tasks) ... FAIL
+test_non_target_bridge (__main__.Tests.test_non_target_bridge) ... ok
+test_padding_invariance (__main__.Tests.test_padding_invariance) ... FAIL
+test_resource_refusal (__main__.Tests.test_resource_refusal) ... ok
+test_transit_nodes_closed (__main__.Tests.test_transit_nodes_closed) ... ok
+
+======================================================================
+FAIL: test_native_hole_only_services_tasks (__main__.Tests.test_native_hole_only_services_tasks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar任务域修正_v0.5_20261020\test_v05.py", line 31, in test_native_hole_only_services_tasks
+    f={(x,y) for x in range(5) for y in range(4)};t={(x,1) for x in range(4)};c=case(f,t);r=solve(c,5,7);audit(c,r,5);self.assertEqual(r['status'],'task_complete');self.assertTrue(any(e['type']=='tsp' for e in r['events']))
+                                                                                                         ^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar任务域修正_v0.5_20261020\audit_v05.py", line 31, in audit
+    if 'moved_steps' in event:assert path[event['step']+event['moved_steps']]==event['order'][-1]
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+======================================================================
+FAIL: test_padding_invariance (__main__.Tests.test_padding_invariance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar任务域修正_v0.5_20261020\test_v05.py", line 21, in test_padding_invariance
+    r=solve(c,5,20261018);audit(c,r,5);self.assertEqual(r['status'],'task_complete');self.assertEqual(len(r['route'])-1,12)
+                          ^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar任务域修正_v0.5_20261020\audit_v05.py", line 31, in audit
+    if 'moved_steps' in event:assert path[event['step']+event['moved_steps']]==event['order'][-1]
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.025s
+
+FAILED (failures=2)

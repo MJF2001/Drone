@@ -1,0 +1,8736 @@
+[
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap1",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap1_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 7,
+        "local": 10,
+        "return": 8
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            1
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 12,
+          "goal": [
+            6,
+            2
+          ],
+          "steps": 4
+        },
+        {
+          "kind": "return",
+          "start": 17,
+          "end": 25,
+          "goal": [
+            -1,
+            0
+          ],
+          "steps": 8
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap1",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap1_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 10,
+        "sweep": 6,
+        "tsp": 10,
+        "return": 11
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 2,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 7,
+          "case": 3,
+          "start": [
+            2,
+            1
+          ],
+          "goal": [
+            2,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 12,
+          "goal": [
+            4,
+            1
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 13,
+          "goal": [
+            4,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 16,
+          "goal": [
+            5,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 17,
+          "goal": [
+            6,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 21,
+          "case": 3,
+          "start": [
+            6,
+            1
+          ],
+          "goal": [
+            6,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap1",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap1_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 5,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 10
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            7,
+            1
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            2
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            2
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 2,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            8,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap1",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap1_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 9,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 8
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            6,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 5,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            6,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap1",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap1_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 9,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 8
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            6,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 5,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            6,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap4",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap4_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 10,
+        "local": 10,
+        "return": 11
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            1
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 15,
+          "goal": [
+            9,
+            2
+          ],
+          "steps": 7
+        },
+        {
+          "kind": "return",
+          "start": 20,
+          "end": 31,
+          "goal": [
+            -1,
+            0
+          ],
+          "steps": 11
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap4",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap4_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 13,
+        "sweep": 6,
+        "tsp": 10,
+        "return": 14
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 2,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 7,
+          "case": 3,
+          "start": [
+            2,
+            1
+          ],
+          "goal": [
+            2,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 12,
+          "goal": [
+            4,
+            1
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 13,
+          "goal": [
+            4,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 16,
+          "goal": [
+            5,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 17,
+          "goal": [
+            6,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 18,
+          "goal": [
+            7,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 19,
+          "goal": [
+            8,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 20,
+          "goal": [
+            9,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 24,
+          "case": 3,
+          "start": [
+            9,
+            1
+          ],
+          "goal": [
+            9,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap4",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap4_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 8,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 13
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            10,
+            1
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            2
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            2
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 5,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            11,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap4",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap4_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 12,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 11
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            9,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 8,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            9,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap4",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap4_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 12,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 11
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            9,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 8,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            9,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap7",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap7_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 13,
+        "local": 10,
+        "return": 14
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            1
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 18,
+          "goal": [
+            12,
+            2
+          ],
+          "steps": 10
+        },
+        {
+          "kind": "return",
+          "start": 23,
+          "end": 37,
+          "goal": [
+            -1,
+            0
+          ],
+          "steps": 14
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap7",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap7_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 16,
+        "sweep": 6,
+        "tsp": 10,
+        "return": 17
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 2,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 7,
+          "case": 3,
+          "start": [
+            2,
+            1
+          ],
+          "goal": [
+            2,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 12,
+          "goal": [
+            4,
+            1
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 13,
+          "goal": [
+            4,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 16,
+          "goal": [
+            5,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 17,
+          "goal": [
+            6,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 18,
+          "goal": [
+            7,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 19,
+          "goal": [
+            8,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 20,
+          "goal": [
+            9,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 21,
+          "goal": [
+            10,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            11,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            12,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 27,
+          "case": 3,
+          "start": [
+            12,
+            1
+          ],
+          "goal": [
+            12,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap7",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap7_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 11,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 16
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            13,
+            1
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            2
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            2
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 8,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            14,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap7",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap7_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 15,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 14
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            12,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 11,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            12,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family0_gap7",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family0_gap7_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 15,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 14
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            12,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 11,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            12,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap1",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap1_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 10,
+        "local": 10,
+        "return": 13
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            1
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 15,
+          "goal": [
+            6,
+            5
+          ],
+          "steps": 7
+        },
+        {
+          "kind": "return",
+          "start": 20,
+          "end": 33,
+          "goal": [
+            -1,
+            0
+          ],
+          "steps": 13
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap1",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap1_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 10,
+        "sweep": 10,
+        "tsp": 10,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 2,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 7,
+          "case": 3,
+          "start": [
+            2,
+            1
+          ],
+          "goal": [
+            2,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 12,
+          "goal": [
+            4,
+            1
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 13,
+          "goal": [
+            4,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 16,
+          "goal": [
+            5,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 17,
+          "goal": [
+            6,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 25,
+          "case": 3,
+          "start": [
+            6,
+            5
+          ],
+          "goal": [
+            6,
+            6
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap1",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap1_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 8,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            7,
+            5
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            2
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            2
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 5,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            8,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap1",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap1_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 13,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 12
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            6,
+            5
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 9,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            6,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap1",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap1_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 13,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 12
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            6,
+            5
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 9,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            6,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap4",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap4_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 13,
+        "local": 10,
+        "return": 16
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            1
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 18,
+          "goal": [
+            9,
+            5
+          ],
+          "steps": 10
+        },
+        {
+          "kind": "return",
+          "start": 23,
+          "end": 39,
+          "goal": [
+            -1,
+            0
+          ],
+          "steps": 16
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap4",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap4_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 13,
+        "sweep": 10,
+        "tsp": 10,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 2,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 7,
+          "case": 3,
+          "start": [
+            2,
+            1
+          ],
+          "goal": [
+            2,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 12,
+          "goal": [
+            4,
+            1
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 13,
+          "goal": [
+            4,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 16,
+          "goal": [
+            5,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 17,
+          "goal": [
+            6,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 18,
+          "goal": [
+            7,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 19,
+          "goal": [
+            8,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 20,
+          "goal": [
+            9,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 28,
+          "case": 3,
+          "start": [
+            9,
+            5
+          ],
+          "goal": [
+            9,
+            6
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap4",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap4_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 11,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            10,
+            5
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            2
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            2
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 8,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            11,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap4",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap4_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 16,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            9,
+            5
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 12,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            9,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap4",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap4_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 16,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            9,
+            5
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 12,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            9,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap7",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap7_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 16,
+        "local": 10,
+        "return": 19
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            1
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 21,
+          "goal": [
+            12,
+            5
+          ],
+          "steps": 13
+        },
+        {
+          "kind": "return",
+          "start": 26,
+          "end": 45,
+          "goal": [
+            -1,
+            0
+          ],
+          "steps": 19
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap7",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap7_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 16,
+        "sweep": 10,
+        "tsp": 10,
+        "return": 21
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 2,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 7,
+          "case": 3,
+          "start": [
+            2,
+            1
+          ],
+          "goal": [
+            2,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 12,
+          "goal": [
+            4,
+            1
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 13,
+          "goal": [
+            4,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 16,
+          "goal": [
+            5,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 17,
+          "goal": [
+            6,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 18,
+          "goal": [
+            7,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 19,
+          "goal": [
+            8,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 20,
+          "goal": [
+            9,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 21,
+          "goal": [
+            10,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            11,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            12,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 31,
+          "case": 3,
+          "start": [
+            12,
+            5
+          ],
+          "goal": [
+            12,
+            6
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap7",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap7_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 14,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 21
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            13,
+            5
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            2
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            2
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 11,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            14,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap7",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap7_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 19,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            12,
+            5
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 15,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            12,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family1_gap7",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family1_gap7_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 19,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            12,
+            5
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 15,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            12,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap1",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap1_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 14,
+        "local": 10,
+        "return": 17
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            1
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 19,
+          "goal": [
+            6,
+            9
+          ],
+          "steps": 11
+        },
+        {
+          "kind": "return",
+          "start": 24,
+          "end": 41,
+          "goal": [
+            -1,
+            0
+          ],
+          "steps": 17
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap1",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap1_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 14,
+        "sweep": 5,
+        "tsp": 10,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 2,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 7,
+          "case": 3,
+          "start": [
+            2,
+            1
+          ],
+          "goal": [
+            2,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 12,
+          "goal": [
+            4,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 21,
+          "goal": [
+            5,
+            11
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 24,
+          "case": 3,
+          "start": [
+            6,
+            10
+          ],
+          "goal": [
+            6,
+            9
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap1",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap1_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 12,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 19
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            7,
+            9
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            2
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            2
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 9,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            8,
+            10
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap1",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap1_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 17,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 16
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            6,
+            9
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 13,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            6,
+            9
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap1",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap1_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 17,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 16
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            6,
+            9
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 13,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            6,
+            9
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap4",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap4_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 17,
+        "local": 10,
+        "return": 20
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            1
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 22,
+          "goal": [
+            9,
+            9
+          ],
+          "steps": 14
+        },
+        {
+          "kind": "return",
+          "start": 27,
+          "end": 47,
+          "goal": [
+            -1,
+            0
+          ],
+          "steps": 20
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap4",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap4_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 17,
+        "sweep": 5,
+        "tsp": 10,
+        "return": 21
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 2,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 7,
+          "case": 3,
+          "start": [
+            2,
+            1
+          ],
+          "goal": [
+            2,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 12,
+          "goal": [
+            4,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 21,
+          "goal": [
+            5,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            6,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            7,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            8,
+            11
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 27,
+          "case": 3,
+          "start": [
+            9,
+            10
+          ],
+          "goal": [
+            9,
+            9
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap4",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap4_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 15,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 22
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            10,
+            9
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            2
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            2
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 12,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            11,
+            10
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap4",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap4_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 20,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 19
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            9,
+            9
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 16,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            9,
+            9
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap4",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap4_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 20,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 19
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            9,
+            9
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 16,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            9,
+            9
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap7",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap7_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 20,
+        "local": 10,
+        "return": 23
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            1
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 25,
+          "goal": [
+            12,
+            9
+          ],
+          "steps": 17
+        },
+        {
+          "kind": "return",
+          "start": 30,
+          "end": 53,
+          "goal": [
+            -1,
+            0
+          ],
+          "steps": 23
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap7",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap7_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 20,
+        "sweep": 5,
+        "tsp": 10,
+        "return": 24
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 2,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 7,
+          "case": 3,
+          "start": [
+            2,
+            1
+          ],
+          "goal": [
+            2,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 12,
+          "goal": [
+            4,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 21,
+          "goal": [
+            5,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            6,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            7,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            8,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 25,
+          "goal": [
+            9,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 26,
+          "goal": [
+            10,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 27,
+          "goal": [
+            11,
+            11
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 30,
+          "case": 3,
+          "start": [
+            12,
+            10
+          ],
+          "goal": [
+            12,
+            9
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap7",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap7_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 18,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 25
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            13,
+            9
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            2
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            2
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 15,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            14,
+            10
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap7",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap7_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 23,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 22
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            12,
+            9
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 19,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            12,
+            9
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "gap_family2_gap7",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\gap_family2_gap7_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 23,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 22
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            0
+          ],
+          "target": [
+            2,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            1
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            1
+          ],
+          "target": [
+            12,
+            9
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 19,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            12,
+            9
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l0",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l0_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "local": 41,
+        "return": 6
+      },
+      "decisions": [
+        {
+          "kind": "return",
+          "start": 41,
+          "end": 47,
+          "goal": [
+            0,
+            1
+          ],
+          "steps": 6
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l0",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l0_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "tsp": 41,
+        "return": 8
+      },
+      "decisions": [
+        {
+          "type": "tsp",
+          "step": 0,
+          "case": 3,
+          "start": [
+            1,
+            1
+          ],
+          "goal": [
+            1,
+            2
+          ],
+          "end": null,
+          "targets": 42,
+          "moved_steps": 41
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l0",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l0_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 1,
+        "service": 40,
+        "interface_tail": 0,
+        "return": 8
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 41,
+          "start": [
+            1,
+            1
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 1,
+          "service": 40,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            8,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l0",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l0_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 1,
+        "service": 46,
+        "interface_tail": 0,
+        "return": 2
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 41,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "restart_direction_target",
+          "entry": 1,
+          "service": 46,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l0",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l0_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 1,
+        "service": 46,
+        "interface_tail": 0,
+        "return": 2
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 41,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "KR1_global_direction",
+          "entry": 1,
+          "service": 46,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l1",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l1_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "local": 37,
+        "recovery": 11,
+        "return": 5
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 17,
+          "end": 21,
+          "goal": [
+            5,
+            4
+          ],
+          "steps": 4
+        },
+        {
+          "kind": "recovery",
+          "start": 32,
+          "end": 35,
+          "goal": [
+            6,
+            3
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 43,
+          "end": 45,
+          "goal": [
+            5,
+            2
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 46,
+          "end": 48,
+          "goal": [
+            5,
+            1
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "return",
+          "start": 48,
+          "end": 53,
+          "goal": [
+            0,
+            1
+          ],
+          "steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l1",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l1_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "tsp": 40,
+        "retreat": 4,
+        "sweep": 2,
+        "return": 13
+      },
+      "decisions": [
+        {
+          "type": "tsp",
+          "step": 0,
+          "case": 3,
+          "start": [
+            1,
+            1
+          ],
+          "goal": [
+            1,
+            2
+          ],
+          "end": null,
+          "targets": 18,
+          "moved_steps": 17
+        },
+        {
+          "type": "retreat",
+          "step": 17,
+          "goal": [
+            3,
+            8
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 19,
+          "goal": [
+            4,
+            8
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 20,
+          "goal": [
+            5,
+            8
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 23,
+          "case": 3,
+          "start": [
+            5,
+            6
+          ],
+          "goal": [
+            5,
+            5
+          ],
+          "end": null,
+          "targets": 24,
+          "moved_steps": 23
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l1",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l1_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 3,
+        "service": 39,
+        "interface_tail": 0,
+        "return": 13
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 17,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            6,
+            3
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 1,
+          "service": 16,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            3,
+            6
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 24,
+          "start": [
+            3,
+            6
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 2,
+          "service": 23,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            8,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l1",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l1_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 6,
+        "service": 43,
+        "interface_tail": 0,
+        "return": 6
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 17,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "restart_direction_target",
+          "entry": 1,
+          "service": 20,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 24,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            5,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 5,
+          "service": 23,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            5,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l1",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l1_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 6,
+        "service": 43,
+        "interface_tail": 0,
+        "return": 6
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 17,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "KR1_global_direction",
+          "entry": 1,
+          "service": 20,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 24,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            5,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 5,
+          "service": 23,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            5,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l2",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l2_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "local": 35,
+        "recovery": 19,
+        "return": 3
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 10,
+          "end": 12,
+          "goal": [
+            5,
+            5
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 16,
+          "end": 18,
+          "goal": [
+            1,
+            3
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 21,
+          "end": 26,
+          "goal": [
+            4,
+            4
+          ],
+          "steps": 5
+        },
+        {
+          "kind": "recovery",
+          "start": 26,
+          "end": 28,
+          "goal": [
+            4,
+            2
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 38,
+          "end": 40,
+          "goal": [
+            7,
+            5
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 48,
+          "end": 54,
+          "goal": [
+            3,
+            1
+          ],
+          "steps": 6
+        },
+        {
+          "kind": "return",
+          "start": 54,
+          "end": 57,
+          "goal": [
+            0,
+            1
+          ],
+          "steps": 3
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l2",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l2_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "tsp": 46,
+        "return": 13
+      },
+      "decisions": [
+        {
+          "type": "tsp",
+          "step": 0,
+          "case": 3,
+          "start": [
+            1,
+            1
+          ],
+          "goal": [
+            1,
+            2
+          ],
+          "end": null,
+          "targets": 42,
+          "moved_steps": 46
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l2",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l2_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 3,
+        "service": 43,
+        "interface_tail": 0,
+        "return": 13
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 20,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            6,
+            3
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 1,
+          "service": 21,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            6,
+            6
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 21,
+          "start": [
+            6,
+            6
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 2,
+          "service": 22,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            8,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l2",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l2_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 4,
+        "service": 51,
+        "interface_tail": 1,
+        "return": 3
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 20,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "restart_direction_target",
+          "entry": 1,
+          "service": 25,
+          "interface_tail": 1,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 21,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            3,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 3,
+          "service": 26,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            3,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t0_l2",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t0_l2_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 4,
+        "service": 51,
+        "interface_tail": 1,
+        "return": 3
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 20,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "KR1_global_direction",
+          "entry": 1,
+          "service": 25,
+          "interface_tail": 1,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 21,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            3,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 3,
+          "service": 26,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            3,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l0",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l0_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "local": 53,
+        "return": 6
+      },
+      "decisions": [
+        {
+          "kind": "return",
+          "start": 53,
+          "end": 59,
+          "goal": [
+            0,
+            1
+          ],
+          "steps": 6
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l0",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l0_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "tsp": 53,
+        "return": 10
+      },
+      "decisions": [
+        {
+          "type": "tsp",
+          "step": 0,
+          "case": 3,
+          "start": [
+            1,
+            1
+          ],
+          "goal": [
+            1,
+            2
+          ],
+          "end": null,
+          "targets": 54,
+          "moved_steps": 53
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l0",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l0_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 1,
+        "service": 52,
+        "interface_tail": 0,
+        "return": 10
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 53,
+          "start": [
+            1,
+            1
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 1,
+          "service": 52,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            10,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l0",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l0_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 1,
+        "service": 60,
+        "interface_tail": 0,
+        "return": 2
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 53,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "restart_direction_target",
+          "entry": 1,
+          "service": 60,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l0",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l0_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 1,
+        "service": 60,
+        "interface_tail": 0,
+        "return": 2
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 53,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "KR1_global_direction",
+          "entry": 1,
+          "service": 60,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l1",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l1_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "local": 50,
+        "recovery": 9,
+        "return": 6
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 23,
+          "end": 27,
+          "goal": [
+            6,
+            3
+          ],
+          "steps": 4
+        },
+        {
+          "kind": "recovery",
+          "start": 46,
+          "end": 49,
+          "goal": [
+            7,
+            2
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 56,
+          "end": 58,
+          "goal": [
+            6,
+            2
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "return",
+          "start": 59,
+          "end": 65,
+          "goal": [
+            0,
+            1
+          ],
+          "steps": 6
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l1",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l1_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "tsp": 52,
+        "retreat": 4,
+        "sweep": 2,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "type": "tsp",
+          "step": 0,
+          "case": 3,
+          "start": [
+            1,
+            1
+          ],
+          "goal": [
+            1,
+            2
+          ],
+          "end": null,
+          "targets": 24,
+          "moved_steps": 23
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            4,
+            -1
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 25,
+          "goal": [
+            5,
+            -1
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 26,
+          "goal": [
+            6,
+            -1
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 29,
+          "case": 3,
+          "start": [
+            6,
+            1
+          ],
+          "goal": [
+            6,
+            2
+          ],
+          "end": null,
+          "targets": 30,
+          "moved_steps": 29
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l1",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l1_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 3,
+        "service": 51,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 23,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            8,
+            3
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 1,
+          "service": 22,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            1
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 30,
+          "start": [
+            4,
+            1
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 2,
+          "service": 29,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            10,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l1",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l1_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 7,
+        "service": 53,
+        "interface_tail": 0,
+        "return": 7
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 23,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "restart_direction_target",
+          "entry": 1,
+          "service": 22,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 30,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            6,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 6,
+          "service": 31,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            6,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l1",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l1_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 7,
+        "service": 53,
+        "interface_tail": 0,
+        "return": 7
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 23,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "KR1_global_direction",
+          "entry": 1,
+          "service": 22,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 30,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            6,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 6,
+          "service": 31,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            6,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l2",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l2_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "local": 47,
+        "recovery": 19,
+        "return": 3
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 10,
+          "end": 12,
+          "goal": [
+            5,
+            5
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 16,
+          "end": 18,
+          "goal": [
+            1,
+            3
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 21,
+          "end": 26,
+          "goal": [
+            4,
+            4
+          ],
+          "steps": 5
+        },
+        {
+          "kind": "recovery",
+          "start": 26,
+          "end": 28,
+          "goal": [
+            4,
+            2
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 50,
+          "end": 52,
+          "goal": [
+            7,
+            5
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 60,
+          "end": 66,
+          "goal": [
+            3,
+            1
+          ],
+          "steps": 6
+        },
+        {
+          "kind": "return",
+          "start": 66,
+          "end": 69,
+          "goal": [
+            0,
+            1
+          ],
+          "steps": 3
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l2",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l2_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "tsp": 58,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "type": "tsp",
+          "step": 0,
+          "case": 3,
+          "start": [
+            1,
+            1
+          ],
+          "goal": [
+            1,
+            2
+          ],
+          "end": null,
+          "targets": 54,
+          "moved_steps": 58
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l2",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l2_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 3,
+        "service": 55,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 20,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            7,
+            3
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 1,
+          "service": 21,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            6,
+            6
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 33,
+          "start": [
+            6,
+            6
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 2,
+          "service": 34,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            10,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l2",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l2_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 4,
+        "service": 65,
+        "interface_tail": 1,
+        "return": 3
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 20,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "restart_direction_target",
+          "entry": 1,
+          "service": 25,
+          "interface_tail": 1,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 33,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            3,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 3,
+          "service": 40,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            3,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t1_l2",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t1_l2_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 4,
+        "service": 65,
+        "interface_tail": 1,
+        "return": 3
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 20,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "KR1_global_direction",
+          "entry": 1,
+          "service": 25,
+          "interface_tail": 1,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 33,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            3,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 3,
+          "service": 40,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            3,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l0",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l0_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "local": 65,
+        "return": 6
+      },
+      "decisions": [
+        {
+          "kind": "return",
+          "start": 65,
+          "end": 71,
+          "goal": [
+            0,
+            1
+          ],
+          "steps": 6
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l0",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l0_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "tsp": 65,
+        "return": 12
+      },
+      "decisions": [
+        {
+          "type": "tsp",
+          "step": 0,
+          "case": 3,
+          "start": [
+            1,
+            1
+          ],
+          "goal": [
+            1,
+            2
+          ],
+          "end": null,
+          "targets": 66,
+          "moved_steps": 65
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l0",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l0_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 1,
+        "service": 64,
+        "interface_tail": 0,
+        "return": 12
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 65,
+          "start": [
+            1,
+            1
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 1,
+          "service": 64,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l0",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l0_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 1,
+        "service": 74,
+        "interface_tail": 0,
+        "return": 2
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 65,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "restart_direction_target",
+          "entry": 1,
+          "service": 74,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l0",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l0_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 1,
+        "service": 74,
+        "interface_tail": 0,
+        "return": 2
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 65,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "KR1_global_direction",
+          "entry": 1,
+          "service": 74,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l1",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l1_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "local": 62,
+        "recovery": 10,
+        "return": 7
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 29,
+          "end": 33,
+          "goal": [
+            7,
+            4
+          ],
+          "steps": 4
+        },
+        {
+          "kind": "recovery",
+          "start": 50,
+          "end": 53,
+          "goal": [
+            8,
+            3
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 67,
+          "end": 70,
+          "goal": [
+            7,
+            3
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "return",
+          "start": 72,
+          "end": 79,
+          "goal": [
+            0,
+            1
+          ],
+          "steps": 7
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l1",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l1_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "tsp": 64,
+        "retreat": 4,
+        "sweep": 2,
+        "return": 17
+      },
+      "decisions": [
+        {
+          "type": "tsp",
+          "step": 0,
+          "case": 3,
+          "start": [
+            1,
+            1
+          ],
+          "goal": [
+            1,
+            2
+          ],
+          "end": null,
+          "targets": 30,
+          "moved_steps": 29
+        },
+        {
+          "type": "retreat",
+          "step": 29,
+          "goal": [
+            5,
+            8
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 31,
+          "goal": [
+            6,
+            8
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 32,
+          "goal": [
+            7,
+            8
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 35,
+          "case": 3,
+          "start": [
+            7,
+            6
+          ],
+          "goal": [
+            7,
+            5
+          ],
+          "end": null,
+          "targets": 36,
+          "moved_steps": 35
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l1",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l1_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 3,
+        "service": 63,
+        "interface_tail": 0,
+        "return": 17
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 29,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            9,
+            3
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 1,
+          "service": 28,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            5,
+            6
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 36,
+          "start": [
+            5,
+            6
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 2,
+          "service": 35,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l1",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l1_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 8,
+        "service": 69,
+        "interface_tail": 0,
+        "return": 8
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 29,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "restart_direction_target",
+          "entry": 1,
+          "service": 30,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 36,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            7,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 7,
+          "service": 39,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            7,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l1",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l1_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 8,
+        "service": 69,
+        "interface_tail": 0,
+        "return": 8
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 29,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "KR1_global_direction",
+          "entry": 1,
+          "service": 30,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 36,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            7,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 7,
+          "service": 39,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            7,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l2",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l2_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "local": 57,
+        "recovery": 21,
+        "return": 3
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 10,
+          "end": 12,
+          "goal": [
+            5,
+            5
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 16,
+          "end": 18,
+          "goal": [
+            1,
+            3
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 21,
+          "end": 26,
+          "goal": [
+            4,
+            4
+          ],
+          "steps": 5
+        },
+        {
+          "kind": "recovery",
+          "start": 26,
+          "end": 28,
+          "goal": [
+            4,
+            2
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 62,
+          "end": 65,
+          "goal": [
+            7,
+            4
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 66,
+          "end": 68,
+          "goal": [
+            6,
+            4
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 72,
+          "end": 74,
+          "goal": [
+            5,
+            3
+          ],
+          "steps": 2
+        },
+        {
+          "kind": "recovery",
+          "start": 75,
+          "end": 78,
+          "goal": [
+            3,
+            1
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "return",
+          "start": 78,
+          "end": 81,
+          "goal": [
+            0,
+            1
+          ],
+          "steps": 3
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l2",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l2_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "tsp": 70,
+        "return": 17
+      },
+      "decisions": [
+        {
+          "type": "tsp",
+          "step": 0,
+          "case": 3,
+          "start": [
+            1,
+            1
+          ],
+          "goal": [
+            1,
+            2
+          ],
+          "end": null,
+          "targets": 66,
+          "moved_steps": 70
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l2",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l2_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 3,
+        "service": 67,
+        "interface_tail": 0,
+        "return": 17
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 20,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            9,
+            3
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 1,
+          "service": 21,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            6,
+            6
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 45,
+          "start": [
+            6,
+            6
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 2,
+          "service": 46,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l2",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l2_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 4,
+        "service": 79,
+        "interface_tail": 1,
+        "return": 3
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 20,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "restart_direction_target",
+          "entry": 1,
+          "service": 25,
+          "interface_tail": 1,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 45,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            3,
+            1
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 3,
+          "service": 54,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            3,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "history_t2_l2",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\history_t2_l2_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 4,
+        "service": 79,
+        "interface_tail": 1,
+        "return": 3
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 20,
+          "start": [
+            1,
+            1
+          ],
+          "target": [
+            1,
+            2
+          ],
+          "target_source": "KR1_global_direction",
+          "entry": 1,
+          "service": 25,
+          "interface_tail": 1,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            1,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 45,
+          "start": [
+            1,
+            2
+          ],
+          "target": [
+            3,
+            1
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 3,
+          "service": 54,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            3,
+            1
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h0",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h0_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 11,
+        "local": 10,
+        "return": 12
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            2
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 16,
+          "goal": [
+            10,
+            3
+          ],
+          "steps": 8
+        },
+        {
+          "kind": "return",
+          "start": 21,
+          "end": 33,
+          "goal": [
+            -1,
+            1
+          ],
+          "steps": 12
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h0",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h0_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 16,
+        "sweep": 8,
+        "tsp": 10,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 4,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 9,
+          "case": 3,
+          "start": [
+            2,
+            2
+          ],
+          "goal": [
+            2,
+            3
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 14,
+          "goal": [
+            4,
+            2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 15,
+          "goal": [
+            4,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 19,
+          "goal": [
+            5,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 20,
+          "goal": [
+            6,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 21,
+          "goal": [
+            7,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            8,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            9,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            10,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 29,
+          "case": 3,
+          "start": [
+            10,
+            2
+          ],
+          "goal": [
+            10,
+            3
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h0",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h0_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 9,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 14
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            11,
+            2
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            3
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            3
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 6,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h0",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h0_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 13,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 12
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 9,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h0",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h0_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 13,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 12
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 9,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h6",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h6_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 13,
+        "local": 10,
+        "return": 16
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            2
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 18,
+          "goal": [
+            10,
+            3
+          ],
+          "steps": 10
+        },
+        {
+          "kind": "return",
+          "start": 23,
+          "end": 39,
+          "goal": [
+            -1,
+            1
+          ],
+          "steps": 16
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h6",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h6_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 19,
+        "sweep": 12,
+        "tsp": 10,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 4,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 9,
+          "case": 3,
+          "start": [
+            2,
+            2
+          ],
+          "goal": [
+            2,
+            3
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 14,
+          "goal": [
+            4,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            5,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            6,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            7,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 25,
+          "goal": [
+            8,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 26,
+          "goal": [
+            9,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 27,
+          "goal": [
+            10,
+            11
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 36,
+          "case": 3,
+          "start": [
+            10,
+            3
+          ],
+          "goal": [
+            10,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h6",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h6_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 11,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            11,
+            2
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            3
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            3
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 8,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h6",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h6_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 16,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            3
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 12,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            3
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h6",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h6_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 16,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            3
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 12,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            3
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h10",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h10_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 21,
+        "local": 10,
+        "return": 24
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            2
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 26,
+          "goal": [
+            10,
+            3
+          ],
+          "steps": 18
+        },
+        {
+          "kind": "return",
+          "start": 31,
+          "end": 55,
+          "goal": [
+            -1,
+            1
+          ],
+          "steps": 24
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h10",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h10_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 19,
+        "sweep": 12,
+        "tsp": 10,
+        "return": 26
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 4,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 9,
+          "case": 3,
+          "start": [
+            2,
+            2
+          ],
+          "goal": [
+            2,
+            3
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 14,
+          "goal": [
+            4,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            5,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            6,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            7,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 25,
+          "goal": [
+            8,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 26,
+          "goal": [
+            9,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 27,
+          "goal": [
+            10,
+            11
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 36,
+          "case": 3,
+          "start": [
+            10,
+            3
+          ],
+          "goal": [
+            10,
+            2
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h10",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h10_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 19,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 26
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            11,
+            2
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            3
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            3
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 16,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            2
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h10",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h10_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 24,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 23
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            3
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 20,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            3
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t0_h10",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t0_h10_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 24,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 23
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            3
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 20,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            3
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h0",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h0_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 13,
+        "local": 10,
+        "return": 16
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            2
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 18,
+          "goal": [
+            10,
+            5
+          ],
+          "steps": 10
+        },
+        {
+          "kind": "return",
+          "start": 23,
+          "end": 39,
+          "goal": [
+            -1,
+            1
+          ],
+          "steps": 16
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h0",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h0_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 16,
+        "sweep": 11,
+        "tsp": 10,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 4,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 9,
+          "case": 3,
+          "start": [
+            2,
+            2
+          ],
+          "goal": [
+            2,
+            3
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 14,
+          "goal": [
+            4,
+            2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 15,
+          "goal": [
+            4,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 19,
+          "goal": [
+            5,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 20,
+          "goal": [
+            6,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 21,
+          "goal": [
+            7,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            8,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            9,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            10,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 32,
+          "case": 3,
+          "start": [
+            10,
+            5
+          ],
+          "goal": [
+            10,
+            6
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h0",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h0_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 11,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            11,
+            5
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            3
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            3
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 8,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h0",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h0_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 16,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            5
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 12,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h0",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h0_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 16,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            5
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 12,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h6",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h6_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 13,
+        "local": 10,
+        "return": 16
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            2
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 18,
+          "goal": [
+            10,
+            5
+          ],
+          "steps": 10
+        },
+        {
+          "kind": "return",
+          "start": 23,
+          "end": 39,
+          "goal": [
+            -1,
+            1
+          ],
+          "steps": 16
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h6",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h6_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 19,
+        "sweep": 9,
+        "tsp": 10,
+        "return": 17
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 4,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 9,
+          "case": 3,
+          "start": [
+            2,
+            2
+          ],
+          "goal": [
+            2,
+            3
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 14,
+          "goal": [
+            4,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            5,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            6,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            7,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 25,
+          "goal": [
+            8,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 26,
+          "goal": [
+            9,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 27,
+          "goal": [
+            10,
+            11
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 33,
+          "case": 3,
+          "start": [
+            10,
+            6
+          ],
+          "goal": [
+            10,
+            5
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h6",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h6_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 11,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            11,
+            5
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            3
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            3
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 8,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h6",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h6_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 16,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            5
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 12,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h6",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h6_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 16,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 15
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            5
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 12,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h10",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h10_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 18,
+        "local": 10,
+        "return": 21
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            2
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 23,
+          "goal": [
+            10,
+            6
+          ],
+          "steps": 15
+        },
+        {
+          "kind": "return",
+          "start": 28,
+          "end": 49,
+          "goal": [
+            -1,
+            1
+          ],
+          "steps": 21
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h10",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h10_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 19,
+        "sweep": 9,
+        "tsp": 10,
+        "return": 23
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 4,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 9,
+          "case": 3,
+          "start": [
+            2,
+            2
+          ],
+          "goal": [
+            2,
+            3
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 14,
+          "goal": [
+            4,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            5,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            6,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            7,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 25,
+          "goal": [
+            8,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 26,
+          "goal": [
+            9,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 27,
+          "goal": [
+            10,
+            11
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 33,
+          "case": 3,
+          "start": [
+            10,
+            6
+          ],
+          "goal": [
+            10,
+            5
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h10",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h10_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 16,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 23
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            11,
+            5
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            3
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            3
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 13,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            5
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h10",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h10_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 21,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 20
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            6
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 17,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t1_h10",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t1_h10_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 21,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 20
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            6
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 17,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            6
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h0",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h0_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 16,
+        "local": 10,
+        "return": 19
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            2
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 21,
+          "goal": [
+            10,
+            8
+          ],
+          "steps": 13
+        },
+        {
+          "kind": "return",
+          "start": 26,
+          "end": 45,
+          "goal": [
+            -1,
+            1
+          ],
+          "steps": 19
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h0",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h0_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 19,
+        "sweep": 6,
+        "tsp": 10,
+        "return": 20
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 4,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 9,
+          "case": 3,
+          "start": [
+            2,
+            2
+          ],
+          "goal": [
+            2,
+            3
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 14,
+          "goal": [
+            4,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            5,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            6,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            7,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 25,
+          "goal": [
+            8,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 26,
+          "goal": [
+            9,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 27,
+          "goal": [
+            10,
+            11
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 30,
+          "case": 3,
+          "start": [
+            10,
+            9
+          ],
+          "goal": [
+            10,
+            8
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h0",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h0_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 14,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 21
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            11,
+            8
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            3
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            3
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 11,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            9
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h0",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h0_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 19,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            8
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 15,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            8
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h0",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h0_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 19,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            8
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 15,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            8
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h6",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h6_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 16,
+        "local": 10,
+        "return": 19
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            2
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 21,
+          "goal": [
+            10,
+            8
+          ],
+          "steps": 13
+        },
+        {
+          "kind": "return",
+          "start": 26,
+          "end": 45,
+          "goal": [
+            -1,
+            1
+          ],
+          "steps": 19
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h6",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h6_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 19,
+        "sweep": 6,
+        "tsp": 10,
+        "return": 20
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 4,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 9,
+          "case": 3,
+          "start": [
+            2,
+            2
+          ],
+          "goal": [
+            2,
+            3
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 14,
+          "goal": [
+            4,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            5,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            6,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            7,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 25,
+          "goal": [
+            8,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 26,
+          "goal": [
+            9,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 27,
+          "goal": [
+            10,
+            11
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 30,
+          "case": 3,
+          "start": [
+            10,
+            9
+          ],
+          "goal": [
+            10,
+            8
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h6",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h6_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 14,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 21
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            11,
+            8
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            3
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            3
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 11,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            9
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h6",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h6_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 19,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            8
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 15,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            8
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h6",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h6_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 19,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            8
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 15,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            8
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h10",
+    "method": "PPCPP",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h10_20261018_PPCPP.json",
+    "detail": {
+      "costs": {
+        "recovery": 16,
+        "local": 10,
+        "return": 19
+      },
+      "decisions": [
+        {
+          "kind": "recovery",
+          "start": 0,
+          "end": 3,
+          "goal": [
+            2,
+            2
+          ],
+          "steps": 3
+        },
+        {
+          "kind": "recovery",
+          "start": 8,
+          "end": 21,
+          "goal": [
+            10,
+            8
+          ],
+          "steps": 13
+        },
+        {
+          "kind": "return",
+          "start": 26,
+          "end": 45,
+          "goal": [
+            -1,
+            1
+          ],
+          "steps": 19
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h10",
+    "method": "CSTAR",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h10_20261018_CSTAR.json",
+    "detail": {
+      "costs": {
+        "retreat": 19,
+        "sweep": 6,
+        "tsp": 10,
+        "return": 20
+      },
+      "decisions": [
+        {
+          "type": "retreat",
+          "step": 0,
+          "goal": [
+            0,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 3,
+          "goal": [
+            1,
+            -2
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 4,
+          "goal": [
+            2,
+            -2
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 9,
+          "case": 3,
+          "start": [
+            2,
+            2
+          ],
+          "goal": [
+            2,
+            3
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        },
+        {
+          "type": "retreat",
+          "step": 14,
+          "goal": [
+            4,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 22,
+          "goal": [
+            5,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 23,
+          "goal": [
+            6,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 24,
+          "goal": [
+            7,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 25,
+          "goal": [
+            8,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 26,
+          "goal": [
+            9,
+            11
+          ]
+        },
+        {
+          "type": "retreat",
+          "step": 27,
+          "goal": [
+            10,
+            11
+          ]
+        },
+        {
+          "type": "tsp",
+          "step": 30,
+          "case": 3,
+          "start": [
+            10,
+            9
+          ],
+          "goal": [
+            10,
+            8
+          ],
+          "end": null,
+          "targets": 6,
+          "moved_steps": 5
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h10",
+    "method": "TRACE",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h10_20261018_TRACE.json",
+    "detail": {
+      "costs": {
+        "entry": 14,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 21
+      },
+      "decisions": [
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            11,
+            8
+          ],
+          "target_source": "next_region_virtual_center",
+          "entry": 3,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": false,
+          "executed_endpoint": [
+            4,
+            3
+          ],
+          "virtual_end_clipped": true
+        },
+        {
+          "region_id": 2,
+          "required": 6,
+          "start": [
+            4,
+            3
+          ],
+          "target": null,
+          "target_source": "free_end",
+          "entry": 11,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": null,
+          "executed_endpoint": [
+            12,
+            9
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h10",
+    "method": "CAP_OLD",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h10_20261018_CAP_OLD.json",
+    "detail": {
+      "costs": {
+        "entry": 19,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            8
+          ],
+          "target_source": "restart_nearest_entry_target",
+          "entry": 15,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            8
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  },
+  {
+    "origin": "controlled",
+    "case_id": "barrier_t2_h10",
+    "method": "CAP_KR1",
+    "source": "E:\\无人机研究项目_接续包_20261014\\全方法受控场景归因_v0.1_20261020\\execution\\results\\barrier_t2_h10_20261018_CAP_KR1.json",
+    "detail": {
+      "costs": {
+        "entry": 19,
+        "service": 10,
+        "interface_tail": 0,
+        "return": 18
+      },
+      "decisions": [
+        {
+          "region_id": 0,
+          "required": 6,
+          "start": [
+            0,
+            1
+          ],
+          "target": [
+            2,
+            2
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 4,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            2,
+            2
+          ],
+          "virtual_end_clipped": false
+        },
+        {
+          "region_id": 1,
+          "required": 6,
+          "start": [
+            2,
+            2
+          ],
+          "target": [
+            10,
+            8
+          ],
+          "target_source": "KR1_global_nearest",
+          "entry": 15,
+          "service": 5,
+          "interface_tail": 0,
+          "tail_other_task_credit": 0,
+          "target_inside_required": true,
+          "executed_endpoint": [
+            10,
+            8
+          ],
+          "virtual_end_clipped": false
+        }
+      ]
+    }
+  }
+]

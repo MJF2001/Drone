@@ -1,0 +1,22 @@
+--- frozen_original
++++ recovery_diag_candidate.py
+@@ -1,16 +1,16 @@
+ """Only new policy: one input-selected last target; private F-e then restore F."""
+ import json,hashlib
+ from dataclasses import replace
+-from runtime import native,DeadlineExceeded,NoPath
++from recovery_diag_runtime import native,DeadlineExceeded,NoPath
+ VERSION='PPCPP_LAST_RESERVE_v0.2'
+ def append_segment(route,pending,segment,mark):
+  assert segment[0]==route[-1]
+  for q in segment[1:]:mark('alternative_move');route.append(q);pending.discard(q)
+-def solve(s,initial,mode,seed,predator,previous,begin,deadline,phases,mark,clock,geometry):
++def solve(s,initial,mode,seed,predator,previous,begin,deadline,phases,mark,clock,geometry,diagnostic=None):
+  assert mode in ('PPCPP','ONE','LAST')
+  out=dict(version=VERSION,mode=mode,status='not_started',route=(),trace=[],selected=None,e=None,branches={},reason=None)
+  try:
+-  mark('p0_before');a=clock();p0=native.solve(s,initial,deadline-clock(),seed,predator,previous,_clock=clock,_geometry=geometry);phases['p0']=clock()-a;out['branches']['P0']=p0
++  mark('p0_before');a=clock();p0=native.solve(s,initial,deadline-clock(),seed,predator,previous,_clock=clock,_geometry=geometry,_diag=diagnostic);phases['p0']=clock()-a;out['branches']['P0']=p0
+   mark('p0_done')
+   if p0['status']!='core_complete':out.update(status=p0['status'],reason='original_branch_failed');return out
+   pristine=json.dumps(p0,sort_keys=True);chosen=p0;out['selected']='P0'

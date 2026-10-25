@@ -1,0 +1,918 @@
+--- /dev/null
++++ new/exact.py
+@@ -0,0 +1,137 @@
++"""Bounded exact radical arithmetic. No floats, numerical epsilon or planners."""
++from fractions import Fraction as Q
++from math import isqrt
++
++class Refusal(ValueError):
++    pass
++class Uncertain(Refusal):
++    pass
++
++def rational(x):
++    if not isinstance(x, dict) or set(x) != {'n', 'd'}:
++        raise Refusal('rational_schema')
++    if type(x['n']) is not int or type(x['d']) is not int or x['d'] <= 0:
++        raise Refusal('rational_value')
++    if max(abs(x['n']).bit_length(), x['d'].bit_length()) > 40:
++        raise Refusal('rational_size_limit_40_bits')
++    return Q(x['n'], x['d'])
++
++def rat(x):
++    x = Q(x)
++    return {'n': x.numerator, 'd': x.denominator}
++
++def point(x, grid=False):
++    if not isinstance(x, (list, tuple)) or len(x) != 2:
++        raise Refusal('coordinate_schema')
++    if grid:
++        if any(type(y) is not int for y in x):
++            raise Refusal('grid_coordinate_value')
++        return tuple(Q(y) for y in x)
++    return tuple(rational(y) for y in x)
++
++def pt(x):
++    return [rat(v) for v in x]
++
++def squarefree(n):
++    if type(n) is not int or n < 1:
++        raise Refusal('radicand')
++    # Finite factor work; unsupported large factors are uncertain, never guessed.
++    outside, inside, p, work = 1, 1, 2, 0
++    while p*p <= n:
++        work += 1
++        if work > 100000:
++            raise Uncertain('factor_work_limit')
++        power = 0
++        while n % p == 0:
++            n //= p
++            power += 1
++        outside *= p ** (power//2)
++        if power % 2:
++            inside *= p
++        p += 1
++    return outside, inside*n
++
++class Expr:
++    def __init__(self, terms=None):
++        self.terms = {k: Q(v) for k, v in (terms or {}).items() if v}
++
++    @staticmethod
++    def number(x):
++        return Expr({1: Q(x)})
++
++    @staticmethod
++    def sqrt(q):
++        q = Q(q)
++        if q < 0:
++            raise Refusal('negative_square_length')
++        if not q:
++            return Expr()
++        a, r = squarefree(q.numerator*q.denominator)
++        return Expr({r: Q(a, q.denominator)})
++
++    @staticmethod
++    def load(x):
++        if not isinstance(x, dict) or set(x) != {'terms'} or not isinstance(x['terms'], list):
++            raise Refusal('expression_schema')
++        z = Expr()
++        for t in x['terms']:
++            if not isinstance(t, dict) or set(t) != {'r', 'c'}:
++                raise Refusal('term_schema')
++            a, r = squarefree(t['r'])
++            z = z + Expr({r: rational(t['c'])*a})
++        return z
++
++    def save(self):
++        return {'terms': [{'r': r, 'c': rat(c)} for r, c in sorted(self.terms.items())]}
++
++    def __add__(self, other):
++        z = dict(self.terms)
++        for r, c in other.terms.items():
++            z[r] = z.get(r, Q(0)) + c
++        return Expr(z)
++
++    def __sub__(self, other):
++        return self + Expr({r: -c for r, c in other.terms.items()})
++
++    def interval(self, bits=64):
++        scale = 1 << bits
++        low = high = Q(0)
++        for r, c in self.terms.items():
++            k = isqrt(r*scale*scale)
++            l = Q(k, scale)
++            u = l if k*k == r*scale*scale else Q(k+1, scale)
++            low += c*(l if c >= 0 else u)
++            high += c*(u if c >= 0 else l)
++        return low, high
++
++    def sign(self):
++        if not self.terms:
++            return 0
++        for bits in (16, 32, 64, 128, 256, 512):
++            l, u = self.interval(bits)
++            if l > 0:
++                return 1
++            if u < 0:
++                return -1
++        raise Uncertain('radical_sign_not_certified')
++
++    def floor(self):
++        if set(self.terms) <= {1}:
++            return self.terms.get(1, Q(0)) // 1
++        for bits in (16, 32, 64, 128, 256, 512):
++            l, u = self.interval(bits)
++            if l//1 == u//1:
++                return l//1
++        raise Uncertain('radical_floor_not_certified')
++
++def squared(a, b):
++    return sum((v-w)**2 for v, w in zip(a, b))
++
++def distance(a, b, counts, phase):
++    counts[phase+'_distance'] += 1
++    n = squared(a, b)
++    return Expr.sqrt(n), rat(n)
++
++def certificate(expr):
++    l, u = expr.interval()
++    return {'exact': expr.save(), 'interval_bits': 64, 'low': rat(l), 'high': rat(u)}
+--- /dev/null
++++ new/connector.py
+@@ -0,0 +1,221 @@
++"""Finite straight-entry wrapper, fixed handwritten suffix only. No native imports."""
++from collections import Counter
++from copy import deepcopy
++from functools import cmp_to_key
++from fractions import Fraction as Q
++from exact import Expr, Refusal, Uncertain, point, pt, rat, squared, distance, certificate
++import geometry as geo
++
++def cellset(x):
++    if not isinstance(x, (list, tuple)):
++        raise Refusal('cellset_schema')
++    ps = [point(p, grid=True) for p in x]
++    if len(set(ps)) != len(ps):
++        raise Refusal('duplicate_cell')
++    return set(ps)
++
++def cells(x):
++    return [[int(a), int(b)] for a, b in sorted(x)]
++
++def state_save(s):
++    return {'S': pt(s['S']), 'h': pt(s['h']), 'F': cells(s['F']), 'P': cells(s['P']),
++            'H': cells(s['H']), 'D': cells(s['D']), 'base': [int(v) for v in s['base']],
++            'E': certificate(s['E']), 'M': certificate(s['M'])}
++
++def parse(raw, c):
++    c['parse'] += 1
++    required = {'S', 'h', 'F', 'P', 'H', 'D', 'base', 'E', 'M'}
++    if not isinstance(raw, dict) or not required <= set(raw):
++        raise Refusal('missing_field')
++    s = {k: cellset(raw[k]) for k in ('F', 'P', 'H', 'D')}
++    s.update(S=point(raw['S']), h=point(raw['h']), base=point(raw['base'], True),
++             E=Expr.load(raw['E']), M=Expr.load(raw['M']))
++    if not s['F'] or len(s['F']) > 25:
++        raise Refusal('free_cell_bound')
++    # The test interface additionally bounds public target cells, protecting all loops.
++    if len(s['P']) > 25 or any(abs(v) > 100 for p in s['F'] | s['P'] for v in p):
++        raise Refusal('fixture_domain_bound')
++    if any(abs(v) > 100 for v in s['S']):
++        raise Refusal('fixture_position_bound')
++    if s['h'] == (0, 0) or s['base'] not in s['F'] or not s['H'] <= s['P']:
++        raise Refusal('state_semantics')
++    if s['D'] != s['P']-s['F']-s['H']:
++        raise Refusal('deferred_semantics')
++    if s['E'].sign() < 0 or s['M'].sign() < 0:
++        raise Refusal('negative_resource')
++    if not geo.legal(s['F'], s['S'], s['S'], c, 'input'):
++        raise Refusal('unsafe_given_stop')
++    return s
++
++def credit_move(s, a, b, c, phase):
++    events = []
++    for p in sorted(s['P'] & s['F'] - s['H']):
++        t = geo.hit(a, b, p, c, phase)
++        if t is not None and t > 0:
++            events.append((t, p))
++    events.sort()
++    for t, p in events:
++        s['H'].add(p)
++    s['D'] = s['P']-s['F']-s['H']
++    return [{'kind': 'arrival', 't': rat(t), 'cell': list(map(int, p))} for t, p in events]
++
++def collect(s, c, phase):
++    c[phase+'_collect_here'] += 1
++    p = s['S']
++    if p in s['P'] & s['F'] - s['H']:
++        s['H'].add(p)
++        s['D'] = s['P']-s['F']-s['H']
++        return [{'kind': 'collect_here', 'cell': list(map(int, p))}]
++    return []
++
++def select(s, c):
++    c['selector'] += 1
++    rows, eligible = [], []
++    for q in sorted(s['F']):
++        c['candidate_checks'] += 1
++        sq = squared(s['S'], q)
++        length, provenance = distance(s['S'], q, c, 'candidate')
++        good = geo.legal(s['F'], s['S'], q, c, 'candidate')
++        c['candidate_resource_checks'] += 1
++        affordable = (s['E']-length).sign() >= 0
++        dot = sum(h*(v-w) for h, v, w in zip(s['h'], q, s['S']))
++        row = {'q': list(map(int, q)), 'squared': rat(sq), 'dot': rat(dot),
++               'legal': good, 'affordable': affordable, 'length': certificate(length),
++               'squared_source': provenance}
++        rows.append(row)
++        if good and affordable:
++            eligible.append((q, sq, dot, length))
++        else:
++            c['candidate_rejected'] += 1
++    def compare(a, b):
++        c['candidate_comparisons'] += 1
++        if a[1] != b[1]:
++            return -1 if a[1] < b[1] else 1
++        # Equal norm and fixed h: larger exact dot means smaller angle.
++        c['angle_tie_comparisons'] += 1
++        if a[2] != b[2]:
++            return -1 if a[2] > b[2] else 1
++        c['lex_tie_comparisons'] += 1
++        return (a[0] > b[0])-(a[0] < b[0])
++    eligible.sort(key=cmp_to_key(compare))
++    return (eligible[0] if eligible else None), rows
++
++def audit_plan(s, q, response, c):
++    c['main_plan_audits'] += 1
++    if not isinstance(response, dict) or response.get('stub') != 'HANDWRITTEN_FIXED_RESPONSE':
++        raise Refusal('stub_identity')
++    if response.get('kind') not in ('native_grid', 'manual_polyline'):
++        raise Refusal('suffix_kind')
++    rawpoints = response.get('points')
++    if not isinstance(rawpoints, (tuple, list)) or not 1 <= len(rawpoints) <= 33:
++        raise Refusal('suffix_size')
++    points = [point(p, True) for p in rawpoints]
++    if points[0] != q or points[-1] != s['base']:
++        raise Refusal('suffix_endpoints')
++    if response['kind'] == 'native_grid' and any(sum(abs(x-y) for x, y in zip(a, b)) not in (0, 1)
++             for a, b in zip(points, points[1:])):
++        raise Refusal('native_nonunit')
++    if any(p not in s['F'] for p in points):
++        raise Refusal('suffix_vertex_blocked')
++    forecast = deepcopy(s)
++    events = collect(forecast, c, 'main')
++    full = [s['S']] + points   # q is explicitly retained, including zero entry.
++    sources, total = [], Expr()
++    for a, b in zip(full, full[1:]):
++        if not geo.legal(s['F'], a, b, c, 'main'):
++            raise Refusal('suffix_geometry')
++        l, src = distance(a, b, c, 'main')
++        total = total+l
++        sources.append(src)
++        events += credit_move(forecast, a, b, c, 'main')
++    if s['P'] & s['F'] - forecast['H']:
++        raise Refusal('suffix_missing_service')
++    c['main_resource_checks'] += 1
++    if (s['E']-total).sign() < 0:
++        raise Refusal('suffix_overbudget')
++    forecast['S'] = s['base']
++    for a, b in zip(full, full[1:]):
++        if a != b:
++            forecast['h'] = tuple(v-w for v, w in zip(b, a))
++    forecast['E'], forecast['M'] = s['E']-total, s['M']+total
++    return {'points': [pt(p) for p in full], 'locked_q_index': 1,
++            'length': certificate(total), 'squared_sources': sources, 'events': events,
++            'predicted_final': state_save(forecast), 'kind': response['kind']}
++
++def session(raw, response, c):
++    c['sessions'] += 1
++    out = {'status': 'started', 'raw_input': deepcopy(raw), 'fixed_response': deepcopy(response)}
++    try:
++        s = parse(raw, c)
++        out['actual_before'] = state_save(s)
++        chosen, rows = select(s, c)
++        out['candidates'] = rows
++        if chosen is None:
++            out.update(status='no_entry', reason='no_legal_affordable_straight_entry', actual_after=state_save(s))
++            return out
++        q, sq, dot, length = chosen
++        prediction = deepcopy(s)
++        predicted_events = collect(prediction, c, 'predict')
++        predicted_events += credit_move(prediction, s['S'], q, c, 'predict')
++        prediction['S'] = q
++        prediction['h'] = tuple(v-w for v, w in zip(q, s['S'])) if q != s['S'] else s['h']
++        prediction['E'], prediction['M'] = s['E']-length, s['M']+length
++        c['integer_allowance_certifications'] += 1
++        request = {'stub_only': True, 'q': list(map(int, q)), 'h_entry': pt(prediction['h']),
++                   'pending': cells(s['P'] & s['F']-prediction['H']), 'deferred': cells(prediction['D']),
++                   'predicted_H': cells(prediction['H']), 'E_pred': certificate(prediction['E']),
++                   'integer_suffix_allowance': prediction['E'].floor(), 'base': list(map(int, s['base']))}
++        out.update(q=list(map(int, q)), request=request, predicted_entry=state_save(prediction),
++                   connector_events=predicted_events, gamma=[pt(s['S']), pt(q)],
++                   gamma_length=certificate(length))
++        c['stub_responses'] += 1
++        # Return exactly the pre-registered response, no computation or fallback.
++        out['response_received'] = deepcopy(response)
++        out['plan'] = audit_plan(s, q, response, c)
++        out['status'] = 'accepted'
++    except Uncertain as e:
++        out.update(status='uncertain', reason=str(e))
++    except Refusal as e:
++        out.update(status='rejected_suffix' if 'response_received' in out else 'invalid_input', reason=str(e))
++    if 'actual_before' in out:
++        out['actual_after'] = state_save(s)
++    return out
++
++def commit(s, action, seen, c):
++    """Manually supplied prefix action; atomic validation then actual commit."""
++    c['execution_commit_calls'] += 1
++    if action['id'] in seen:
++        c['execution_duplicate_rejected'] += 1
++        return {'status': 'duplicate_rejected'}
++    t = deepcopy(s)
++    events, sources = [], []
++    kind = action['kind']
++    if kind == 'collect_here':
++        events = collect(t, c, 'execution')
++    elif kind == 'publish':
++        t['P'] |= cellset(action['P'])
++        if len(t['P']) > 25:
++            raise Refusal('fixture_target_bound')
++        t['D'] = t['P']-t['F']-t['H']
++    elif kind == 'move':
++        b = point(action['to'])
++        if any(abs(v) > 100 for v in b):
++            raise Refusal('fixture_position_bound')
++        if not geo.legal(t['F'], t['S'], b, c, 'execution'):
++            raise Refusal('execution_illegal_segment')
++        length, src = distance(t['S'], b, c, 'execution')
++        c['execution_resource_checks'] += 1
++        if (t['E']-length).sign() < 0:
++            raise Refusal('execution_overbudget')
++        sources = [src]
++        events = credit_move(t, t['S'], b, c, 'execution')
++        if b != t['S']:
++            t['h'] = tuple(v-w for v, w in zip(b, t['S']))
++        t['S'], t['E'], t['M'] = b, t['E']-length, t['M']+length
++    else:
++        raise Refusal('execution_kind')
++    seen.add(action['id'])
++    s.clear()
++    s.update(t)
++    c['execution_commits_accepted'] += 1
++    return {'status': 'committed', 'events': events, 'squared_sources': sources, 'actual': state_save(s)}
+--- /dev/null
++++ new/fixtures.py
+@@ -0,0 +1,145 @@
++"""Handwritten fixed fixtures. Building this table runs no geometry or selector."""
++from fractions import Fraction
++from copy import deepcopy
++
++def r(v):
++    q = Fraction(v)
++    return {'n': q.numerator, 'd': q.denominator}
++def p(x, y):
++    return [r(x), r(y)]
++def e(n=0, radical=None):
++    terms = [] if not n else [{'r': 1, 'c': r(n)}]
++    for root, coeff in (radical or {}).items():
++        terms.append({'r': root, 'c': r(coeff)})
++    return {'terms': terms}
++
++LINE = [[0, 0], [1, 0], [2, 0]]
++SQUARE = [[0, 0], [0, 1], [1, 0], [1, 1]]
++NINE = [[x, y] for x in range(3) for y in range(3)]
++
++def state(S=None, h=None, F=None, P=None, H=None, base=None, E=None, M=None):
++    F = deepcopy(LINE if F is None else F)
++    P = deepcopy([[0, 0], [1, 0]] if P is None else P)
++    H = deepcopy([] if H is None else H)
++    D = sorted(set(map(tuple, P))-set(map(tuple, F))-set(map(tuple, H)))
++    return {'S': p('1/4', 0) if S is None else S, 'h': p(1, 0) if h is None else h,
++            'F': F, 'P': P, 'H': H, 'D': [list(v) for v in D], 'base': [0, 0] if base is None else base,
++            'E': e(10) if E is None else E, 'M': e(3) if M is None else M}
++
++def response(points=None, kind='native_grid'):
++    return {'stub': 'HANDWRITTEN_FIXED_RESPONSE', 'kind': kind,
++            'points': [[0, 0], [1, 0], [0, 0]] if points is None else points}
++
++def move(i, x, y):
++    return {'id': i, 'kind': 'move', 'to': p(x, y)}
++def collect(i):
++    return {'id': i, 'kind': 'collect_here'}
++def primitive(a, b, legal, hits):
++    return {'a': a, 'b': b, 'expect_legal': legal, 'expect_hits': hits,
++            'role': 'standalone_predicate_not_selected_gamma'}
++
++def build():
++    cases = []
++    names = ['轴向非格心', '斜向非格心', '原格心零接入', '等距方向平局', '安全端点穿障碍',
++             '边界擦角', '自由共享边', '无合法可负担直连', '途中格心采集原语', '穿格不经中心',
++             '显式采集及发布', '预测实际隔离', '首段中断', '无任务返航', '精确资源及整数额度',
++             '后缀拒绝不改入口', '真实来向更新', '容器及输入拒绝']
++    def add(group, label, raw=None, suffix=None, status='accepted', q=(0, 0), reason=None, **extra):
++        expect = {'status': status}
++        if q is not None:
++            expect['q'] = list(q)
++        if reason:
++            expect['reason'] = reason
++        expect.update(extra.pop('expect', {}))
++        cases.append(dict(id=f'{group:02d}_{sum(x["group"] == group for x in cases)+1}', group=group,
++                          group_name=names[group-1], label=label, input=state() if raw is None else raw,
++                          suffix=response() if suffix is None else suffix, expect=expect, **extra))
++    add(1, '右侧1/4到0', expect={'h_entry': p('-1/4', 0)})
++    add(1, '1右侧1/4到1', state(S=p('5/4', 0)), response([[1, 0], [0, 0]]), q=(1, 0))
++    add(2, '斜向靠近0', state(S=p('1/4', '1/4'), F=SQUARE), expect={'h_entry': p('-1/4', '-1/4')})
++    add(2, '斜向靠近1', state(S=p('3/4', '1/4'), F=SQUARE), response([[1, 0], [0, 0]]), q=(1, 0))
++    add(3, '格心零段保留2,3', state(S=p(0, 0), h=p(2, 3)), expect={'h_entry': p(2, 3), 'gamma_H': [[0, 0]]})
++    add(3, '格心1显式预测采集', state(S=p(1, 0), h=p(-2, 1)), response([[1, 0], [0, 0]]), q=(1, 0),
++        expect={'h_entry': p(-2, 1), 'gamma_H': [[1, 0]]})
++    add(4, '等距随正来向', state(S=p('1/2', 0)), response([[1, 0], [0, 0]]), q=(1, 0))
++    add(4, '等距随负来向', state(S=p('1/2', 0), h=p(-1, 0)))
++    add(4, '等距等角按坐标', state(S=p('1/2', 0), h=p(0, 1)))
++    bent = [[0, 0], [0, 1], [1, 1], [2, 1], [2, 0]]
++    path = [[0, 0], [0, 1], [1, 1], [2, 1], [2, 0], [2, 1], [1, 1], [0, 1], [0, 0]]
++    add(5, '候选安全端点中间障碍', state(F=bent, P=[[0, 0], [2, 0]]), response(path),
++        expect={'candidate_reject': [2, 0]})
++    hole = [v for v in NINE if v != [1, 1]]
++    add(5, '手写斜后缀穿中央障碍拒绝', state(S=p(0, 0), F=hole, P=[[0, 0]]),
++        response([[0, 0], [2, 2], [0, 0]], 'manual_polyline'), status='rejected_suffix', reason='suffix_geometry',
++        expect={'candidate_reject': [2, 2]})
++    add(6, '给定停止点在外边界拒绝', state(S=p('-1/2', 0)), status='invalid_input', q=None, reason='unsafe_given_stop')
++    add(6, '两自由格仅接角不可穿', state(S=p(0, 0), F=[[0, 0], [1, 1]], P=[[0, 0]]), response([[0, 0]]),
++        expect={'candidate_reject': [1, 1]}, primitives=[primitive(p(0, 0), p(1, 1), False, [[1, 1]])])
++    # Hits are geometric intersections; the primitive's P below is just (0,0), so the
++    # forbidden endpoint (1,1) is not a service target. Freeze the correct expected list.
++    cases[-1]['primitives'][0]['expect_hits'] = []
++    add(7, '共享边内点及沿边原语', state(S=p('1/2', 0), h=p(0, 1), F=[[0, 0], [1, 0]]),
++        primitives=[primitive(p('1/2', '-1/4'), p('1/2', '1/4'), True, [])])
++    add(7, '四自由格共享顶点可过', state(S=p('1/2', '1/2'), h=p(1, 1), F=SQUARE, P=[[0, 0]]),
++        response([[1, 1], [1, 0], [0, 0]]), q=(1, 1),
++        primitives=[primitive(p('1/2', 0), p('1/2', 1), True, [])])
++    add(8, '非格心E为0无入口', state(E=e()), status='no_entry', q=None)
++    add(8, 'E为0.24小于最短0.25', state(E=e('6/25')), status='no_entry', q=None)
++    add(9, '手写长直段途中服务与重复提交', state(P=[[1, 0], [2, 0]]),
++        response([[0, 0], [1, 0], [2, 0], [1, 0], [0, 0]]),
++        primitives=[primitive(p('1/4', 0), p(2, 0), True, [[1, 0], [2, 0]])],
++        actions=[move('m9', 2, 0), move('m9', 2, 0)], actions_role='standalone_manual_prefix_not_selected_gamma',
++        expect={'final_H': [[1, 0], [2, 0]], 'final_E': e('33/4'), 'final_M': e('19/4')})
++    add(9, '手写斜线过两个任务中心', state(S=p('1/4', '1/4'), F=NINE, P=[[1, 1], [2, 2]], E=e(20)),
++        response([[0, 0], [2, 2], [0, 0]], 'manual_polyline'),
++        primitives=[primitive(p('1/4', '1/4'), p(2, 2), True, [[1, 1], [2, 2]])],
++        actions=[move('diag9', 2, 2)], actions_role='standalone_manual_prefix_not_selected_gamma',
++        expect={'final_H': [[1, 1], [2, 2]], 'final_E': e(20, {2: '-7/4'}), 'final_M': e(3, {2: '7/4'})})
++    add(10, '水平穿两格但偏离中心', state(S=p('-1/4', '1/4')),
++        primitives=[primitive(p('-1/4', '1/4'), p('5/4', '1/4'), True, [])],
++        actions=[move('off10', '5/4', '1/4')], actions_role='standalone_manual_prefix_not_selected_gamma', expect={'final_H': []})
++    add(10, '斜穿任务格不经过中心', state(S=p('1/10', '1/5'), F=SQUARE, P=[[1, 1]]),
++        response([[0, 0], [1, 0], [1, 1], [1, 0], [0, 0]]),
++        primitives=[primitive(p('1/10', '1/5'), p('6/5', '13/10'), True, [])],
++        actions=[move('offdiag10', '6/5', '13/10')], actions_role='standalone_manual_prefix_not_selected_gamma', expect={'final_H': []})
++    add(11, '发布及等候无信用随后显式采集', state(S=p(0, 0), P=[]), response([[0, 0]]),
++        actions=[{'id': 'pub', 'kind': 'publish', 'P': [[0, 0], [1, 0]]}, move('wait', 0, 0),
++                 collect('c0'), collect('c0again'), move('arrive1', 1, 0), collect('c1')],
++        expect={'action_H': [[], [], [[0, 0]], [[0, 0]], [[0, 0], [1, 0]], [[0, 0], [1, 0]]],
++                'final_H': [[0, 0], [1, 0]], 'final_E': e(9), 'final_M': e(4)})
++    add(11, '初始任务中心显式采集不离开', state(S=p(0, 0), P=[[0, 0]], F=[[0, 0]]), response([[0, 0]]),
++        actions=[collect('c'), collect('c'), move('wait', 0, 0), collect('again')],
++        expect={'final_H': [[0, 0]], 'final_E': e(10), 'final_M': e(3), 'final_h': p(1, 0)})
++    add(12, '预测有采集实际不动', expect={'gamma_H': [[0, 0]], 'actual_H': []})
++    add(12, '历史受遮挡信用及根式实际M保留', state(P=[[0, 0], [1, 0], [4, 4]], H=[[4, 4]],
++        E=e(10, {2: 1}), M=e(3, {3: '1/2'})), expect={'actual_H': [[4, 4]], 'gamma_H': [[0, 0], [4, 4]]})
++    add(13, '半程停住未到q', state(S=p('1/4', '1/4'), F=SQUARE, P=[[0, 0]]), response([[0, 0]]),
++        actions=[move('half', '1/8', '1/8')], actions_role='selected_gamma_prefix',
++        expect={'final_S': p('1/8', '1/8'), 'final_h': p('-1/8', '-1/8'), 'final_H': [],
++                'final_E': e(10, {2: '-1/8'}), 'final_M': e(3, {2: '1/8'})})
++    add(13, '半程等候再到达q不重复扣费', state(S=p('1/4', '1/4'), F=SQUARE, P=[[0, 0]]), response([[0, 0]]),
++        actions=[move('half', '1/8', '1/8'), move('wait', '1/8', '1/8'), move('end', 0, 0), collect('qcollect')],
++        actions_role='selected_gamma_prefix', expect={'final_S': p(0, 0), 'final_h': p('-1/8', '-1/8'),
++        'action_H': [[], [], [[0, 0]], [[0, 0]]], 'final_H': [[0, 0]], 'final_E': e(10, {2: '-1/4'}), 'final_M': e(3, {2: '1/4'})})
++    add(14, '任务空也从q回基地', state(S=p('5/4', 0), P=[]), response([[1, 0], [0, 0]]), q=(1, 0))
++    add(14, '只剩遮挡任务暂缓仍返航', state(S=p('5/4', 0), P=[[4, 4]]), response([[1, 0], [0, 0]]), q=(1, 0),
++        expect={'deferred': [[4, 4]]})
++    add(15, '距离恰好等于9/4', state(E=e('9/4')), expect={'allowance': 2, 'final_plan_E': e()})
++    add(15, '总距离少0.01且floor为1', state(E=e('56/25')), status='rejected_suffix', reason='suffix_overbudget', expect={'allowance': 1})
++    add(15, '根式相消后额度精确为整数2', state(S=p('1/4', '1/4'), F=SQUARE, E=e(2, {2: '1/4'})),
++        expect={'allowance': 2, 'final_plan_E': e()})
++    add(16, '后缀首点错误不选第二入口', suffix=response([[1, 0], [0, 0]]), status='rejected_suffix', reason='suffix_endpoints')
++    add(16, '后缀遗漏1号任务', suffix=response([[0, 0]]), status='rejected_suffix', reason='suffix_missing_service')
++    add(16, '后缀超额且第二入口存在也不重选', raw=state(E=e(1)), status='rejected_suffix', reason='suffix_overbudget')
++    add(17, '有理真实来向零段继承', state(S=p(0, 0), h=p('1/3', '-2/5'), P=[[0, 0]]), response([[0, 0]]),
++        actions=[move('wait', 0, 0), collect('here')], expect={'h_entry': p('1/3', '-2/5'), 'final_h': p('1/3', '-2/5')})
++    add(17, '非零进入后等候仍保留斜来向', state(S=p('1/4', '1/4'), h=p(2, 3), F=SQUARE, P=[[0, 0]]), response([[0, 0]]),
++        actions=[move('entry', 0, 0), move('wait', 0, 0)], expect={'h_entry': p('-1/4', '-1/4'), 'final_h': p('-1/4', '-1/4')})
++    add(18, '运行时tuple与保存JSON list等值', runtime_tuple=True)
++    missing = state()
++    del missing['h']
++    add(18, '缺少真实h拒绝', missing, status='invalid_input', q=None, reason='missing_field')
++    invalid = state()
++    invalid['h'][0]['n'] = 0.5
++    add(18, '浮点分子拒绝不得默转有理', invalid, status='invalid_input', q=None, reason='rational_value')
++    return cases
+--- /dev/null
++++ new/io_utils.py
+@@ -0,0 +1,35 @@
++import json
++import hashlib
++from pathlib import Path
++from datetime import datetime, timezone
++
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parent
++
++def write_json(path, data):
++    path = Path(path)
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(json.dumps(data, ensure_ascii=False, indent=2, allow_nan=False)+'\n', encoding='utf-8')
++
++def read_json(path):
++    return json.loads(Path(path).read_text(encoding='utf-8'))
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++def now():
++    return datetime.now(timezone.utc).isoformat()
++
++def tuple_coords(x):
++    # Change coordinate containers only; expression term arrays retain their schema.
++    if isinstance(x, list):
++        values = [tuple_coords(y) for y in x]
++        coordinate = len(x) == 2 and all(type(y) is int or
++                        isinstance(y, dict) and set(y) == {'n', 'd'} for y in x)
++        return tuple(values) if coordinate else values
++    if isinstance(x, dict):
++        return {k: tuple_coords(v) for k, v in x.items()}
++    return x
++
++def plain(x):
++    return json.loads(json.dumps(x, ensure_ascii=False, allow_nan=False))
+--- /dev/null
++++ new/prepare.py
+@@ -0,0 +1,82 @@
++"""Preregister and freeze; no selector/geometry/planner import or evaluation."""
++from pathlib import Path
++from collections import Counter
++import shutil
++from fixtures import build
++from io_utils import HERE, ROOT, write_json, sha, now
++
++def main():
++    registration = HERE/'门槛事前登记.json'
++    if registration.exists():
++        raise SystemExit('Already registered; refusing overwrite')
++    cases = build()
++    groups = Counter(x['group'] for x in cases)
++    assert len(groups) == 18 and len(cases) <= 54 and max(groups.values()) <= 3
++    for case in cases:
++        assert len(case['input']['F']) <= 25 and len(case['suffix']['points']) <= 33
++        assert len(case.get('actions', [])) <= 8 and len(case.get('primitives', [])) <= 2
++    n = len(cases)
++    bounds = {'sessions': n, 'stub_responses': n, 'selector': n, 'parse': 2*n,
++              'candidate_checks': 25*n, 'candidate_geometry': 25*n, 'candidate_distance': 25*n,
++              'candidate_resource_checks': 25*n, 'candidate_rejected': 25*n,
++              'candidate_comparisons': 25*24*n, 'angle_tie_comparisons': 25*24*n, 'lex_tie_comparisons': 25*24*n,
++              'input_geometry': 2*n, 'main_plan_audits': n, 'main_geometry': 33*n, 'main_distance': 33*n,
++              'main_resource_checks': n, 'integer_allowance_certifications': n, 'execution_resource_checks': 8*n,
++              'primitive_geometry': 2*n, 'primitive_distance': 2*n,
++              'execution_commit_calls': 8*n, 'execution_commits_accepted': 8*n, 'execution_duplicate_rejected': 8*n,
++              'execution_geometry': 8*n, 'execution_distance': 8*n,
++              'predict_service_intersections': 25*n, 'main_service_intersections': 33*25*n,
++              'primitive_service_intersections': 2*25*n, 'execution_service_intersections': 8*25*n,
++              'predict_collect_here': n, 'main_collect_here': n, 'execution_collect_here': 8*n,
++              'independent_session_audits': n, 'independent_execution_audits': n, 'independent_primitive_audits': n,
++              'independent_execution_commit_checks': 8*n,
++              'independent_saved_choice_comparisons': 25*n,
++              'independent_geometry': (3+25+33+8+2)*n,
++              'independent_distance': (25+1+33+8+2)*n,
++              'independent_service_intersections': (1+33+8+2)*25*n,
++              'independent_forbidden_box_checks': (3+25+33+8+2)*n*201*201,
++              'primary_domain_points': (2+25+33+2+8)*n*2000}
++    data = {'registered_utc': now(), 'round_limit': 3, 'all_round_session_cap': 162,
++            'all_round_stub_cap': 162, 'this_round_slots': n, 'groups': dict(groups),
++            'max_F': 25, 'max_P': 25, 'max_suffix_edges': 32, 'cases': cases,
++            'per_round_counter_upper_bounds': bounds,
++            'read_only_verify_upper_bounds': {k: v for k, v in bounds.items() if k.startswith('independent_')},
++            'zero_required': ['native_planner', 'PPCPP', 'P2', 'BFS', 'A_star', 'visibility_graph', 'detector', 'closed_loop'],
++            'clarification': '40 sessions are not all computations. Direct geometry and technical polylines counted separately.'}
++    write_json(registration, data)
++    (HERE/'根进度_执行前快照.md').write_bytes((ROOT/'当前进度与下一步.md').read_bytes())
++    source_dir = HERE/'source_snapshot'
++    source_dir.mkdir()
++    names = ['真实停止点首连接与距离账本纯桩验收执行稿_给sol_20261022.md', 'AGENTS.md',
++             '任意方向合法直达有限诊断_v0.1_20261022/geometry.py',
++             '任意方向合法直达有限诊断_v0.1_20261022/audit_geometry.py',
++             'PPCPP真实来向H1最小验收_v0.2_20261022/00_通俗报告与三栏结果.md',
++             '真实停止点来向适配审查_v0.1_20261022/02_推荐合同与方向首连接.md']
++    bindings = []
++    for index, name in enumerate(names):
++        src = ROOT/name
++        target = source_dir/f'{index:02d}_{src.name}'
++        shutil.copyfile(src, target)
++        bindings.append({'source': name, 'copy': str(target.relative_to(HERE)), 'sha256': sha(src)})
++    write_json(HERE/'source_bindings.json', bindings)
++    old = []
++    for dirname in ('PPCPP真实来向H1最小验收_v0.1_20261022', 'PPCPP真实来向H1最小验收_v0.2_20261022'):
++        for f in sorted((ROOT/dirname).rglob('*')):
++            if f.is_file():
++                old.append({'path': str(f.relative_to(ROOT)), 'sha256': sha(f)})
++    write_json(HERE/'旧H1两版只读哈希.json', old)
++    table = ['# 18类事前预期（运行前冻结）', '', '|槽|类|手工夹具|预期|q|', '|---|---|---|---|---|']
++    for case in cases:
++        table.append(f'|{case["id"]}|{case["group_name"]}|{case["label"]}|{case["expect"]}|{case["expect"].get("q", "—")}|')
++    (HERE/'18类事前预期.md').write_text('\n'.join(table)+'\n', encoding='utf-8')
++    files = [p for p in HERE.iterdir() if p.is_file() and p.suffix == '.py']+[registration, HERE/'01_接口与数值合同.md']
++    write_json(HERE/'round_1_freeze.json', {'utc': now(), 'files': {p.name: sha(p) for p in files},
++               'expectations_cannot_change': True, 'geometry_or_selector_calls_so_far': 0})
++    print({'registered_slots': n, 'groups': dict(groups), 'old_files_bound': len(old), 'no_test_executed': True,
++           'candidate_geometry_cap': bounds['candidate_geometry'], 'main_geometry_cap': bounds['main_geometry'],
++           'independent_geometry_cap': bounds['independent_geometry'],
++           'primary_service_cap': sum(v for k, v in bounds.items() if k.endswith('_service_intersections') and not k.startswith('independent')),
++           'execution_commits_cap': bounds['execution_commit_calls']})
++
++if __name__ == '__main__':
++    main()
+--- /dev/null
++++ new/run_gate.py
+@@ -0,0 +1,165 @@
++"""Run only frozen session slots; all primary/independent geometry separately counted."""
++from pathlib import Path
++from collections import Counter
++from copy import deepcopy
++import traceback
++import shutil
++from exact import point, pt, rat, distance, certificate
++import geometry as geo
++from connector import session, parse, commit, state_save
++import independent as ind
++from io_utils import HERE, write_json, read_json, sha, now, tuple_coords, plain
++
++def expect_case(case, out):
++    exp = case['expect']
++    assert out['status'] == exp['status'], (case['id'], out['status'], exp['status'])
++    for key in ('q', 'reason'):
++        if key in exp:
++            assert out.get(key) == exp[key], (key, out.get(key), exp[key])
++    if 'h_entry' in exp:
++        assert out['request']['h_entry'] == exp['h_entry']
++    if 'allowance' in exp:
++        assert out['request']['integer_suffix_allowance'] == exp['allowance']
++    if 'gamma_H' in exp:
++        assert out['predicted_entry']['H'] == exp['gamma_H']
++    if 'actual_H' in exp:
++        assert out['actual_after']['H'] == exp['actual_H']
++    if 'deferred' in exp:
++        assert out['request']['deferred'] == exp['deferred']
++    if 'candidate_reject' in exp:
++        row = next(r for r in out['candidates'] if r['q'] == exp['candidate_reject'])
++        assert row['legal'] is False
++    if 'final_plan_E' in exp:
++        assert ind.load(out['plan']['predicted_final']['E']['exact']) == ind.load(exp['final_plan_E'])
++    if 'actual_before' in out:
++        assert out['actual_before'] == out['actual_after'], 'actual_changed_during_planning'
++    if 'q' in out:
++        assert 'response_received' in out
++
++def check_ledger_expectations(case, records, final):
++    exp = case['expect']
++    for key in ('H', 'S', 'h'):
++        if 'final_'+key in exp:
++            assert final[key] == exp['final_'+key], (case['id'], key, final[key], exp['final_'+key])
++    for key in ('E', 'M'):
++        if 'final_'+key in exp:
++            assert ind.load(final[key]['exact']) == ind.load(exp['final_'+key])
++    if 'action_H' in exp:
++        assert [x['result']['actual']['H'] for x in records] == exp['action_H']
++
++def main():
++    import sys
++    rnd = int(sys.argv[1]) if len(sys.argv) > 1 else 1
++    reg = read_json(HERE/'门槛事前登记.json')
++    assert 1 <= rnd <= reg['round_limit']
++    target = HERE/'repair_rounds'/f'round_{rnd}'
++    if target.exists():
++        raise SystemExit('Round exists, refusing rerun/overwrite')
++    freeze_path = HERE/f'round_{rnd}_freeze.json'
++    frozen = read_json(freeze_path)
++    for name, digest in frozen['files'].items():
++        assert sha(HERE/name) == digest, ('freeze_changed', name)
++    target.mkdir(parents=True)
++    for source in HERE.glob('*.py'):
++        shutil.copyfile(source, target/source.name)
++    shutil.copyfile(HERE/'门槛事前登记.json', target/'expectations.json')
++    shutil.copyfile(freeze_path, target/'freeze.json')
++    c, ic, rows = Counter(), Counter(), []
++    prior_rows = {}
++    if rnd > 1:
++        prior = read_json(HERE/'repair_rounds'/f'round_{rnd-1}'/'result.json')
++        prior_rows = {r['id']: r for r in prior['rows']}
++    for case in reg['cases']:
++        old = prior_rows.get(case['id'])
++        if old and old['gate_status'] == 'passed':
++            oldpath = old.get('evidence_path', str(Path('repair_rounds')/f'round_{rnd-1}'/'outputs'/f'{case["id"]}.json'))
++            rows.append({'id': case['id'], 'group': case['group'], 'gate_status': 'passed',
++                         'status': old['status'], 'reason': old.get('reason'), 'reused': True,
++                         'evidence_path': oldpath, 'evidence_sha256': sha(HERE/oldpath),
++                         'primary_counts': {}, 'independent_counts': {}})
++            print(case['id'], 'reused_prior_pass_no_execution', flush=True)
++            continue
++        before, before_i = c.copy(), ic.copy()
++        result = {'case_id': case['id'], 'group': case['group'], 'started_utc': now()}
++        try:
++            raw = deepcopy(case['input'])
++            fixed = deepcopy(case['suffix'])
++            if case.get('runtime_tuple'):
++                raw, fixed = tuple_coords(raw), tuple_coords(fixed)
++                assert type(raw['S']) is tuple and type(raw['F'][0]) is tuple
++                assert type(fixed['points'][0]) is tuple
++            result['runtime_container_evidence'] = {'S': type(raw.get('S')).__name__,
++                                                   'F_first': type(raw['F'][0]).__name__,
++                                                   'suffix_first': type(fixed['points'][0]).__name__}
++            out = session(raw, fixed, c)
++            result['session'] = out
++            expect_case(case, out)
++            result['independent_session'] = ind.audit_session(out, ic)
++            primitives, records = [], []
++            if case.get('primitives') or case.get('actions'):
++                s = parse(raw, c)
++                for item in case.get('primitives', []):
++                    a, b = point(item['a']), point(item['b'])
++                    good = geo.legal(s['F'], a, b, c, 'primitive')
++                    l, src = distance(a, b, c, 'primitive')
++                    hits = []
++                    for p in sorted(s['P']):
++                        t = geo.hit(a, b, p, c, 'primitive')
++                        if t is not None and t > 0 and p in s['F']:
++                            hits.append({'t': rat(t), 'cell': list(map(int, p))})
++                    hits.sort(key=lambda x: (ind.number(x['t']), x['cell']))
++                    saved = dict(a=item['a'], b=item['b'], legal=good, length=certificate(l),
++                                 squared_source=src, center_hits=hits, role=item['role'])
++                    primitives.append(saved)
++                    assert good == item['expect_legal']
++                    assert [v['cell'] for v in hits] == item['expect_hits']
++                result['primitives'] = primitives
++                if primitives:
++                    result['independent_primitives'] = ind.audit_primitives(raw, primitives, ic)
++                seen = set()
++                for action in case.get('actions', []):
++                    records.append({'action': action, 'result': commit(s, action, seen, c)})
++                result['actions'] = records
++                if records:
++                    result['actions_role'] = case.get('actions_role', 'handwritten_ledger_actions')
++                    result['actual_final'] = state_save(s)
++                    check_ledger_expectations(case, records, result['actual_final'])
++                    result['independent_actions'] = ind.audit_actions(raw, records, ic)
++            result['gate_status'] = 'passed'
++        except Exception:
++            result.update(gate_status='failed', failure=traceback.format_exc())
++        result['primary_counts'] = dict(c-before)
++        result['independent_counts'] = dict(ic-before_i)
++        result['finished_utc'] = now()
++        result = plain(result)
++        write_json(target/'outputs'/f'{case["id"]}.json', result)
++        rows.append({'id': case['id'], 'group': case['group'], 'gate_status': result['gate_status'],
++                     'status': result.get('session', {}).get('status', 'implementation_error'),
++                     'reason': result.get('session', {}).get('reason'), 'primary_counts': result['primary_counts'],
++                     'independent_counts': result['independent_counts'], 'reused': False,
++                     'evidence_path': str((target/'outputs'/f'{case["id"]}.json').relative_to(HERE)),
++                     'evidence_sha256': sha(target/'outputs'/f'{case["id"]}.json')})
++        print(case['id'], result['gate_status'], rows[-1]['status'], flush=True)
++    total = c+ic
++    first = read_json(target/'outputs'/'01_1.json')
++    tuple_case = read_json(target/'outputs'/'18_1.json')
++    representation_pair = all(first['session'].get(k) == tuple_case['session'].get(k)
++                              for k in ('status', 'q', 'request', 'plan', 'actual_before', 'actual_after'))
++    upper = reg['per_round_counter_upper_bounds']
++    violations = {k: v for k, v in total.items() if k not in upper or v > upper[k]}
++    zero = {k: 0 for k in reg['zero_required']}
++    summary = {'round': rnd, 'utc': now(), 'slots': len(reg['cases']),
++               'new_sessions': c['sessions'], 'reused_prior_pass': sum(r.get('reused', False) for r in rows),
++               'passed': sum(r['gate_status'] == 'passed' for r in rows),
++               'failed': sum(r['gate_status'] == 'failed' for r in rows), 'not_run': 0,
++               'primary_counts': dict(c), 'independent_counts': dict(ic),
++               'required_zeros': zero, 'upper_bound_violations': violations,
++               'saved_list_tuple_pair_equal': representation_pair,
++               'response_statuses': dict(Counter(r['status'] for r in rows)), 'rows': rows}
++    write_json(target/'result.json', summary)
++    print({k: summary[k] for k in ('round', 'slots', 'passed', 'failed', 'not_run', 'response_statuses', 'upper_bound_violations')})
++    if summary['failed'] or violations or not representation_pair:
++        raise SystemExit(1)
++
++if __name__ == '__main__':
++    main()
+--- /dev/null
++++ new/verify.py
+@@ -0,0 +1,112 @@
++"""Saved evidence only. Never import/call selector, stub, execution committer or planners."""
++from collections import Counter
++from pathlib import Path
++import ast
++import independent as ind
++from io_utils import HERE, ROOT, read_json, write_json, sha, now
++
++def expect(case, result):
++    out, ex = result['session'], case['expect']
++    assert result['gate_status'] == 'passed'
++    assert out['raw_input'] == case['input']
++    assert out['fixed_response'] == case['suffix']
++    for key in ('status', 'q', 'reason'):
++        if key in ex:
++            assert out.get(key) == ex[key]
++    if 'h_entry' in ex:
++        assert out['request']['h_entry'] == ex['h_entry']
++    if 'allowance' in ex:
++        assert out['request']['integer_suffix_allowance'] == ex['allowance']
++    if 'gamma_H' in ex:
++        assert out['predicted_entry']['H'] == ex['gamma_H']
++    if 'actual_H' in ex:
++        assert out['actual_after']['H'] == ex['actual_H']
++    if 'candidate_reject' in ex:
++        assert next(x for x in out['candidates'] if x['q'] == ex['candidate_reject'])['legal'] is False
++    if 'deferred' in ex:
++        assert out['request']['deferred'] == ex['deferred']
++    if 'final_plan_E' in ex:
++        assert ind.load(out['plan']['predicted_final']['E']['exact']) == ind.load(ex['final_plan_E'])
++    assert [v['action'] for v in result.get('actions', [])] == case.get('actions', [])
++    if result.get('actions'):
++        final = result['actual_final']
++        for key in ('H', 'S', 'h'):
++            if 'final_'+key in ex:
++                assert final[key] == ex['final_'+key]
++        for key in ('E', 'M'):
++            if 'final_'+key in ex:
++                assert ind.load(final[key]['exact']) == ind.load(ex['final_'+key])
++        if 'action_H' in ex:
++            assert [r['result']['actual']['H'] for r in result['actions']] == ex['action_H']
++    assert len(result.get('primitives', [])) == len(case.get('primitives', []))
++    for saved, original in zip(result.get('primitives', []), case.get('primitives', [])):
++        assert saved['a'] == original['a'] and saved['b'] == original['b']
++        assert saved['legal'] == original['expect_legal']
++        assert [v['cell'] for v in saved['center_hits']] == original['expect_hits']
++
++def main():
++    manifest = read_json(HERE/'completion_manifest.json')
++    for name, digest in manifest['files'].items():
++        assert sha(HERE/name) == digest, ('package_hash', name)
++    for old in read_json(HERE/'旧H1两版只读哈希.json'):
++        assert sha(ROOT/old['path']) == old['sha256'], ('old_changed', old['path'])
++    for source in read_json(HERE/'source_bindings.json'):
++        assert sha(ROOT/source['source']) == sha(HERE/source['copy']) == source['sha256']
++    # Snapshot hashes, intentionally no requirement that live root progress remains equal.
++    assert sha(HERE/'根进度_执行前快照.md') == manifest['root_before']
++    assert sha(HERE/'根进度_执行后快照.md') == manifest['root_after']
++    # Dependency safety is inspectable: main components only stdlib and new pure modules.
++    allowed = {'collections', 'copy', 'functools', 'fractions', 'math', 'exact', 'geometry'}
++    for name in ('exact.py', 'geometry.py', 'connector.py', 'independent.py'):
++        tree = ast.parse((HERE/name).read_text(encoding='utf-8'))
++        for n in ast.walk(tree):
++            if isinstance(n, ast.Import):
++                assert all(a.name in allowed for a in n.names)
++            if isinstance(n, ast.ImportFrom):
++                assert n.module in allowed
++    reg = read_json(HERE/'门槛事前登记.json')
++    rnd = manifest['accepted_round']
++    result = read_json(HERE/'repair_rounds'/f'round_{rnd}'/'result.json')
++    assert result['failed'] == result['not_run'] == 0 and not result['upper_bound_violations']
++    assert result['saved_list_tuple_pair_equal'] is True
++    c, rows, primary_sum, independent_sum = Counter(), [], Counter(), Counter()
++    mapping = {r['id']: r for r in result['rows']}
++    for case in reg['cases']:
++        source = mapping[case['id']]
++        path = HERE/source.get('evidence_path', str(Path('repair_rounds')/f'round_{rnd}'/'outputs'/f'{case["id"]}.json'))
++        if 'evidence_sha256' in source:
++            assert sha(path) == source['evidence_sha256']
++        data = read_json(path)
++        expect(case, data)
++        if case.get('runtime_tuple'):
++            assert set(data['runtime_container_evidence'].values()) == {'tuple'}
++        if not source.get('reused'):
++            primary_sum.update(data['primary_counts'])
++            independent_sum.update(data['independent_counts'])
++        checked = ind.audit_session(data['session'], c)
++        if data.get('actions'):
++            ind.audit_actions(data['session']['raw_input'], data['actions'], c)
++        if data.get('primitives'):
++            ind.audit_primitives(data['session']['raw_input'], data['primitives'], c)
++        rows.append({'id': case['id'], 'status': 'verified_saved_only', 'checked': checked})
++    assert primary_sum == Counter(result['primary_counts'])
++    assert independent_sum == Counter(result['independent_counts'])
++    upper = reg['read_only_verify_upper_bounds']
++    assert all(k in upper and v <= upper[k] for k, v in c.items())
++    report = {'utc': now(), 'status': 'VERIFIED_SAVED_ONLY', 'accepted_round': rnd,
++              'saved_sessions_checked': len(rows), 'new_selector': 0, 'new_stub_responses': 0,
++              'new_execution_committer': 0, 'native_planner': 0, 'PPCPP': 0, 'P2': 0,
++              'BFS': 0, 'A_star': 0, 'visibility_graph': 0, 'saved_geometry_rechecks': dict(c),
++              'old_H1_files_unchanged': len(read_json(HERE/'旧H1两版只读哈希.json')),
++              'manifest_files_checked': len(manifest['files']), 'rows': rows}
++    # New, separate receipt for each read-only invocation; never overwrite prior evidence.
++    directory = HERE/'verify_receipts'
++    directory.mkdir(exist_ok=True)
++    index = len(list(directory.glob('verify_*.json')))+1
++    target = directory/f'verify_{index:03d}.json'
++    assert not target.exists()
++    write_json(target, report)
++    print({k: v for k, v in report.items() if k != 'rows'})
++
++if __name__ == '__main__':
++    main()

@@ -1,0 +1,64 @@
+{
+  "stage": "B_STATIC",
+  "modules": [
+    {
+      "file": "run.py",
+      "sha256": "a2a4633643b06e4e9d1c0730353ac8b4a0d5c4d7764e2857566047b8114f72a2",
+      "unsafe_top_level_calls": [],
+      "safe_for_dynamic_import": true
+    },
+    {
+      "file": "analysis.py",
+      "sha256": "846bf1b1d678602955dfe8a5853869bcacca1115c41e9f33ac86f71186763c1a",
+      "unsafe_top_level_calls": [],
+      "safe_for_dynamic_import": true
+    },
+    {
+      "file": "verify.py",
+      "sha256": "907ead901b08b6765fa9748cd435fc898ab1a4c6f3038adfdf6d636453333b0a",
+      "unsafe_top_level_calls": [],
+      "safe_for_dynamic_import": true
+    },
+    {
+      "file": "generate.py",
+      "sha256": "dd0d62cc6f23b2c27ff67995c93ad2e25c275672465246f52f16beb9e92aca1a",
+      "unsafe_top_level_calls": [],
+      "safe_for_dynamic_import": true
+    },
+    {
+      "file": "worker.py",
+      "sha256": "e2f15f19338aad073c6c56255b275647066bb1cbb55e4de3aaa0e7ee81bd72e9",
+      "unsafe_top_level_calls": [
+        {
+          "line": 26,
+          "target": "sys.addaudithook",
+          "expression": "sys.addaudithook(audit)",
+          "source_line": "sys.addaudithook(audit);payload=inp.read_bytes();print('ENTRY_START '+j['id'],flush=True);begin=time.perf_counter()"
+        },
+        {
+          "line": 27,
+          "target": "runtime.run_payload",
+          "expression": "runtime.run_payload(payload, 'PPCPP', 20, j['seed'])",
+          "source_line": "x=runtime.run_payload(payload,'PPCPP',20,j['seed']) if j['method']=='PPCPP' else p2_adapter.run_payload(payload,20,j['seed']);wall=time.perf_counter()-begin"
+        },
+        {
+          "line": 27,
+          "target": "p2_adapter.run_payload",
+          "expression": "p2_adapter.run_payload(payload, 20, j['seed'])",
+          "source_line": "x=runtime.run_payload(payload,'PPCPP',20,j['seed']) if j['method']=='PPCPP' else p2_adapter.run_payload(payload,20,j['seed']);wall=time.perf_counter()-begin"
+        },
+        {
+          "line": 30,
+          "target": "Path(sys.argv[2]).open",
+          "expression": "Path(sys.argv[2]).open('x', encoding='utf8')",
+          "source_line": "with Path(sys.argv[2]).open('x',encoding='utf8') as f:json.dump(dict(job=j,result=x,caller_wall_seconds=wall,entry_overrun_seconds=max(0,x['entry_seconds']-20),imports=hs,input_sha256=seal['files'][str(inp)],runtime_reads=reads,actual_core_calls=counts),f,ensure_ascii=False,allow_nan=False,separators=(',',':'))"
+        }
+      ],
+      "safe_for_dynamic_import": false
+    }
+  ],
+  "passed": false,
+  "dynamic_import_attempts": 0,
+  "actual_entry_markers": 0,
+  "core_markers": 0
+}

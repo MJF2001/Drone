@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\technical.py", line 173, in <module>
+    elif a[0]=='--boot-session':boot_session(a[1],a[2:])
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\technical.py", line 120, in boot_session
+    sys.argv=[str(f/'session.py')]+args;session.main()
+                                        ^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\session.py", line 33, in main
+    j=read(sys.argv[1]);assert j in read(H/'session_order.json');run_session(j)
+                                                                 ^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\session.py", line 25, in run_session
+    try:result=run_world(world,{sj['method']:callback})
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\executor.py", line 89, in run_world
+    if fatal:raise TechnicalError(fatal,safe(result))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+contracts.TechnicalError: callback_exception

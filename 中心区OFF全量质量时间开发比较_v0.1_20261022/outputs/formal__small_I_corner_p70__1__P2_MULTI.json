@@ -1,0 +1,4790 @@
+{
+  "job": {
+    "id": "formal__small_I_corner_p70__1__P2_MULTI",
+    "case": "small_I_corner_p70",
+    "rep": 1,
+    "seed": 20261021,
+    "method": "P2_MULTI",
+    "phase": "formal",
+    "input": "inputs/small_I_corner_p70.json",
+    "config": "OFF"
+  },
+  "passed": true,
+  "views": {
+    "C0": {
+      "metrics": {
+        "published": 18,
+        "initial_H": 9,
+        "active": 18,
+        "remaining_before": 9,
+        "deferred": 0,
+        "new_credit": 9,
+        "missing": 0,
+        "active_coverage": 1.0,
+        "published_coverage": 1.0,
+        "covered_final": 18,
+        "return_success": true,
+        "length": 20.0,
+        "length_certificate": {
+          "exact": {
+            "terms": [
+              {
+                "r": 1,
+                "c": {
+                  "n": 20,
+                  "d": 1
+                }
+              }
+            ]
+          },
+          "interval_bits": 64,
+          "low": {
+            "n": 20,
+            "d": 1
+          },
+          "high": {
+            "n": 20,
+            "d": 1
+          }
+        },
+        "stages": {
+          "to_first_witness": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 19,
+                    "d": 10
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 19,
+              "d": 10
+            },
+            "high": {
+              "n": 19,
+              "d": 10
+            }
+          },
+          "between_first_last_witness": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 11,
+                    "d": 1
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 11,
+              "d": 1
+            },
+            "high": {
+              "n": 11,
+              "d": 1
+            }
+          },
+          "after_last_witness_return": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 71,
+                    "d": 10
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 71,
+              "d": 10
+            },
+            "high": {
+              "n": 71,
+              "d": 10
+            }
+          },
+          "convention": "midpoint of first intersecting executed segment interval; not unique physical first service time"
+        },
+        "no_new_credit_route": false,
+        "turns": {
+          "total": 8,
+          "90": 8
+        },
+        "total_turn_radians": 12.566370614359172,
+        "center_region_touch_events": 20,
+        "repeated_touch_events": 11,
+        "touch_definition": "one event per intersecting segment/task plus explicit initial collect; depends on segmentation, not extra distance",
+        "segments_without_new_credit": 11,
+        "whole_segments_without_new_credit_length": 11.0,
+        "noncollecting_definition": "whole-segment no-new-credit label, not pointwise noncollection distance",
+        "diagonal_offcenter_first_credit_tasks": 0,
+        "never_center_in_whole_actual_history_tasks": 0,
+        "diagonal_offcenter_witnesses": [],
+        "final_H": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            6,
+            4
+          ],
+          [
+            7,
+            3
+          ],
+          [
+            7,
+            4
+          ],
+          [
+            7,
+            5
+          ],
+          [
+            7,
+            6
+          ],
+          [
+            7,
+            7
+          ],
+          [
+            8,
+            3
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            8,
+            5
+          ],
+          [
+            8,
+            6
+          ],
+          [
+            8,
+            7
+          ]
+        ],
+        "final_position": [
+          0,
+          0
+        ]
+      },
+      "events": [
+        {
+          "kind": "collect_here",
+          "cell": [
+            6,
+            4
+          ],
+          "new": false,
+          "witness": {
+            "t": {
+              "n": 0,
+              "d": 1
+            },
+            "point": [
+              {
+                "n": 6,
+                "d": 1
+              },
+              {
+                "n": 4,
+                "d": 1
+              }
+            ]
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 0,
+          "cell": [
+            6,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 6,
+                  "d": 1
+                },
+                {
+                  "n": 41,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 1,
+          "cell": [
+            7,
+            5
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 69,
+                  "d": 10
+                },
+                {
+                  "n": 5,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 2,
+          "cell": [
+            7,
+            5
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 71,
+                  "d": 10
+                },
+                {
+                  "n": 5,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 2,
+          "cell": [
+            8,
+            5
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 79,
+                  "d": 10
+                },
+                {
+                  "n": 5,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 3,
+          "cell": [
+            8,
+            5
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 8,
+                  "d": 1
+                },
+                {
+                  "n": 51,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 3,
+          "cell": [
+            8,
+            6
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 8,
+                  "d": 1
+                },
+                {
+                  "n": 59,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 4,
+          "cell": [
+            8,
+            6
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 8,
+                  "d": 1
+                },
+                {
+                  "n": 61,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 4,
+          "cell": [
+            8,
+            7
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 8,
+                  "d": 1
+                },
+                {
+                  "n": 69,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 5,
+          "cell": [
+            8,
+            7
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 79,
+                  "d": 10
+                },
+                {
+                  "n": 7,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 5,
+          "cell": [
+            7,
+            7
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 71,
+                  "d": 10
+                },
+                {
+                  "n": 7,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 6,
+          "cell": [
+            7,
+            7
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 7,
+                  "d": 1
+                },
+                {
+                  "n": 69,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 6,
+          "cell": [
+            7,
+            6
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 7,
+                  "d": 1
+                },
+                {
+                  "n": 61,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 7,
+          "cell": [
+            7,
+            6
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 69,
+                  "d": 10
+                },
+                {
+                  "n": 6,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 10,
+          "cell": [
+            5,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 5,
+                  "d": 1
+                },
+                {
+                  "n": 41,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 11,
+          "cell": [
+            5,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 49,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 11,
+          "cell": [
+            4,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 41,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 12,
+          "cell": [
+            4,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 39,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 12,
+          "cell": [
+            3,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 31,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 13,
+          "cell": [
+            3,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 29,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        }
+      ],
+      "path": [
+        [
+          6,
+          4
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          8,
+          5
+        ],
+        [
+          8,
+          6
+        ],
+        [
+          8,
+          7
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          7,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "counts": {
+        "execute_inside_tests": 18,
+        "unit_edge_membership_proofs": 20,
+        "metric_distance": 20,
+        "target_box_tests": 360,
+        "execute_service_intersections": 19,
+        "new_credit_center_checks": 9
+      },
+      "squared_sources": [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      "scope": "full virtual execution from common externally given H; no event replay, future knowledge or state mutation"
+    },
+    "C": {
+      "metrics": {
+        "published": 18,
+        "initial_H": 9,
+        "active": 18,
+        "remaining_before": 9,
+        "deferred": 0,
+        "new_credit": 9,
+        "missing": 0,
+        "active_coverage": 1.0,
+        "published_coverage": 1.0,
+        "covered_final": 18,
+        "return_success": true,
+        "length": 16.242640687119284,
+        "length_certificate": {
+          "exact": {
+            "terms": [
+              {
+                "r": 1,
+                "c": {
+                  "n": 12,
+                  "d": 1
+                }
+              },
+              {
+                "r": 2,
+                "c": {
+                  "n": 3,
+                  "d": 1
+                }
+              }
+            ]
+          },
+          "interval_bits": 64,
+          "low": {
+            "n": 37452979479563914083,
+            "d": 2305843009213693952
+          },
+          "high": {
+            "n": 299623835836511312667,
+            "d": 18446744073709551616
+          }
+        },
+        "stages": {
+          "to_first_witness": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 2,
+                  "c": {
+                    "n": 9,
+                    "d": 10
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 29348590106998759977,
+              "d": 23058430092136939520
+            },
+            "high": {
+              "n": 46957744171198015965,
+              "d": 36893488147419103232
+            }
+          },
+          "between_first_last_witness": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 69,
+                    "d": 10
+                  }
+                },
+                {
+                  "r": 2,
+                  "c": {
+                    "n": 21,
+                    "d": 10
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 227583211218741989301,
+              "d": 23058430092136939520
+            },
+            "high": {
+              "n": 1820665689749935914429,
+              "d": 184467440737095516160
+            }
+          },
+          "after_last_witness_return": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 51,
+                    "d": 10
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 51,
+              "d": 10
+            },
+            "high": {
+              "n": 51,
+              "d": 10
+            }
+          },
+          "convention": "midpoint of first intersecting executed segment interval; not unique physical first service time"
+        },
+        "no_new_credit_route": false,
+        "turns": {
+          "total": 7,
+          "other": 4,
+          "90": 3
+        },
+        "total_turn_radians": 7.995878688578647,
+        "center_region_touch_events": 20,
+        "repeated_touch_events": 11,
+        "touch_definition": "one event per intersecting segment/task plus explicit initial collect; depends on segmentation, not extra distance",
+        "segments_without_new_credit": 1,
+        "whole_segments_without_new_credit_length": 5.0,
+        "noncollecting_definition": "whole-segment no-new-credit label, not pointwise noncollection distance",
+        "diagonal_offcenter_first_credit_tasks": 0,
+        "never_center_in_whole_actual_history_tasks": 0,
+        "diagonal_offcenter_witnesses": [],
+        "final_H": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            6,
+            4
+          ],
+          [
+            7,
+            3
+          ],
+          [
+            7,
+            4
+          ],
+          [
+            7,
+            5
+          ],
+          [
+            7,
+            6
+          ],
+          [
+            7,
+            7
+          ],
+          [
+            8,
+            3
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            8,
+            5
+          ],
+          [
+            8,
+            6
+          ],
+          [
+            8,
+            7
+          ]
+        ],
+        "final_position": [
+          0,
+          0
+        ]
+      },
+      "events": [
+        {
+          "kind": "collect_here",
+          "cell": [
+            6,
+            4
+          ],
+          "new": false,
+          "witness": {
+            "t": {
+              "n": 0,
+              "d": 1
+            },
+            "point": [
+              {
+                "n": 6,
+                "d": 1
+              },
+              {
+                "n": 4,
+                "d": 1
+              }
+            ]
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 0,
+          "cell": [
+            6,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 61,
+                  "d": 10
+                },
+                {
+                  "n": 41,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 0,
+          "cell": [
+            7,
+            5
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 69,
+                  "d": 10
+                },
+                {
+                  "n": 49,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 1,
+          "cell": [
+            7,
+            5
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 71,
+                  "d": 10
+                },
+                {
+                  "n": 5,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 1,
+          "cell": [
+            8,
+            5
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 79,
+                  "d": 10
+                },
+                {
+                  "n": 5,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 2,
+          "cell": [
+            8,
+            5
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 8,
+                  "d": 1
+                },
+                {
+                  "n": 51,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 2,
+          "cell": [
+            8,
+            6
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 8,
+                  "d": 1
+                },
+                {
+                  "n": 59,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 3,
+          "cell": [
+            8,
+            6
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 8,
+                  "d": 1
+                },
+                {
+                  "n": 61,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 3,
+          "cell": [
+            8,
+            7
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 8,
+                  "d": 1
+                },
+                {
+                  "n": 69,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 4,
+          "cell": [
+            8,
+            7
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 79,
+                  "d": 10
+                },
+                {
+                  "n": 7,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 4,
+          "cell": [
+            7,
+            7
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 71,
+                  "d": 10
+                },
+                {
+                  "n": 7,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 5,
+          "cell": [
+            7,
+            7
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 7,
+                  "d": 1
+                },
+                {
+                  "n": 69,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 5,
+          "cell": [
+            7,
+            6
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 7,
+                  "d": 1
+                },
+                {
+                  "n": 61,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 6,
+          "cell": [
+            7,
+            6
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 10
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 20
+              },
+              "point": [
+                {
+                  "n": 69,
+                  "d": 10
+                },
+                {
+                  "n": 59,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 6,
+          "cell": [
+            5,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 9,
+                "d": 10
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 19,
+                "d": 20
+              },
+              "point": [
+                {
+                  "n": 51,
+                  "d": 10
+                },
+                {
+                  "n": 41,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 7,
+          "cell": [
+            5,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 49,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 7,
+          "cell": [
+            4,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 41,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 8,
+          "cell": [
+            4,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 39,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 8,
+          "cell": [
+            3,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 31,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 9,
+          "cell": [
+            3,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 20
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 40
+              },
+              "point": [
+                {
+                  "n": 117,
+                  "d": 40
+                },
+                {
+                  "n": 39,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        }
+      ],
+      "path": [
+        [
+          6,
+          4
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          8,
+          5
+        ],
+        [
+          8,
+          6
+        ],
+        [
+          8,
+          7
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          7,
+          6
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "counts": {
+        "execute_inside_tests": 18,
+        "main_geometry": 10,
+        "metric_distance": 10,
+        "target_box_tests": 180,
+        "execute_service_intersections": 24,
+        "new_credit_center_checks": 9
+      },
+      "squared_sources": [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 8,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 25,
+          "d": 1
+        }
+      ],
+      "scope": "full virtual execution from common externally given H; no event replay, future knowledge or state mutation"
+    }
+  },
+  "started_utc": 1792727780.3048277,
+  "configuration": "OFF",
+  "cold_import_seconds": 0.10282460006419569,
+  "input": {
+    "name": "small_I_corner_p70",
+    "free": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        4
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        0,
+        6
+      ],
+      [
+        0,
+        7
+      ],
+      [
+        0,
+        8
+      ],
+      [
+        0,
+        9
+      ],
+      [
+        0,
+        10
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        1,
+        10
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        7
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        3,
+        9
+      ],
+      [
+        3,
+        10
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        7
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        4,
+        9
+      ],
+      [
+        4,
+        10
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        5,
+        8
+      ],
+      [
+        5,
+        9
+      ],
+      [
+        5,
+        10
+      ],
+      [
+        6,
+        0
+      ],
+      [
+        6,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        6,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        6,
+        8
+      ],
+      [
+        6,
+        9
+      ],
+      [
+        6,
+        10
+      ],
+      [
+        7,
+        0
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        7,
+        10
+      ],
+      [
+        8,
+        0
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        8,
+        2
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        8,
+        10
+      ],
+      [
+        9,
+        0
+      ],
+      [
+        9,
+        1
+      ],
+      [
+        9,
+        2
+      ],
+      [
+        9,
+        3
+      ],
+      [
+        9,
+        4
+      ],
+      [
+        9,
+        5
+      ],
+      [
+        9,
+        6
+      ],
+      [
+        9,
+        7
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        10
+      ],
+      [
+        10,
+        0
+      ],
+      [
+        10,
+        1
+      ],
+      [
+        10,
+        2
+      ],
+      [
+        10,
+        3
+      ],
+      [
+        10,
+        4
+      ],
+      [
+        10,
+        5
+      ],
+      [
+        10,
+        6
+      ],
+      [
+        10,
+        7
+      ],
+      [
+        10,
+        8
+      ],
+      [
+        10,
+        9
+      ],
+      [
+        10,
+        10
+      ],
+      [
+        11,
+        0
+      ],
+      [
+        11,
+        1
+      ],
+      [
+        11,
+        2
+      ],
+      [
+        11,
+        3
+      ],
+      [
+        11,
+        4
+      ],
+      [
+        11,
+        5
+      ],
+      [
+        11,
+        6
+      ],
+      [
+        11,
+        7
+      ],
+      [
+        11,
+        8
+      ],
+      [
+        11,
+        9
+      ],
+      [
+        11,
+        10
+      ],
+      [
+        12,
+        0
+      ],
+      [
+        12,
+        1
+      ],
+      [
+        12,
+        2
+      ],
+      [
+        12,
+        3
+      ],
+      [
+        12,
+        4
+      ],
+      [
+        12,
+        5
+      ],
+      [
+        12,
+        6
+      ],
+      [
+        12,
+        7
+      ],
+      [
+        12,
+        8
+      ],
+      [
+        12,
+        9
+      ],
+      [
+        12,
+        10
+      ],
+      [
+        13,
+        0
+      ],
+      [
+        13,
+        1
+      ],
+      [
+        13,
+        2
+      ],
+      [
+        13,
+        3
+      ],
+      [
+        13,
+        4
+      ],
+      [
+        13,
+        5
+      ],
+      [
+        13,
+        6
+      ],
+      [
+        13,
+        7
+      ],
+      [
+        13,
+        8
+      ],
+      [
+        13,
+        9
+      ],
+      [
+        13,
+        10
+      ],
+      [
+        14,
+        0
+      ],
+      [
+        14,
+        1
+      ],
+      [
+        14,
+        2
+      ],
+      [
+        14,
+        3
+      ],
+      [
+        14,
+        4
+      ],
+      [
+        14,
+        5
+      ],
+      [
+        14,
+        6
+      ],
+      [
+        14,
+        7
+      ],
+      [
+        14,
+        8
+      ],
+      [
+        14,
+        9
+      ],
+      [
+        14,
+        10
+      ]
+    ],
+    "targets": [
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        8,
+        7
+      ]
+    ],
+    "covered": [
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        8,
+        4
+      ]
+    ],
+    "published_targets": [
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        8,
+        7
+      ]
+    ],
+    "deferred_targets": [],
+    "current": [
+      6,
+      4
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "previous": [
+      7,
+      4
+    ],
+    "predator": [
+      -1,
+      0
+    ],
+    "initial_targets": [
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        8,
+        4
+      ]
+    ],
+    "old_route": [
+      [
+        6,
+        4
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        0,
+        4
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "distance_budget": 1000000
+  },
+  "initial_collect_here": {
+    "new_H": [],
+    "reason": "same supplied H, explicit idempotent collection"
+  },
+  "identity_before": {
+    "primary": {
+      "module": "center_bench_v01_20261022.service",
+      "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\service.py",
+      "sha256": "9516e463686bab7fa4a18a5bc21078efc3ad974cf5f55be2eed0d278d529e17b"
+    },
+    "independent": {
+      "module": "center_bench_v01_20261022.audit.region",
+      "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\audit\\region.py",
+      "sha256": "ddd294f9b9d7e882ee742242e9e53712a05cfb27ad2d11838f2b6754bc53a111"
+    }
+  },
+  "native": {
+    "raw": {
+      "route": [
+        [
+          6,
+          4
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          8,
+          5
+        ],
+        [
+          8,
+          6
+        ],
+        [
+          8,
+          7
+        ],
+        [
+          7,
+          7
+        ],
+        [
+          7,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          5,
+          6
+        ],
+        [
+          5,
+          5
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          1,
+          4
+        ],
+        [
+          0,
+          4
+        ],
+        [
+          0,
+          3
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "H_NN_opt",
+      "status": "finished",
+      "seconds": 0.004785500001162291,
+      "active_stage": "shuffle_1_expand",
+      "events": [
+        {
+          "stage": "fallback",
+          "start": 0.00025040004402399063,
+          "end": 0.00048560008872300386,
+          "status": "completed"
+        },
+        {
+          "stage": "H_generate",
+          "start": 0.0004882001085206866,
+          "end": 0.00051580008585006,
+          "status": "completed"
+        },
+        {
+          "stage": "H_raw",
+          "start": 0.0005171000957489014,
+          "end": 0.0005515000084415078,
+          "status": "completed"
+        },
+        {
+          "stage": "H_nearest",
+          "start": 0.0005524000152945518,
+          "end": 0.0015604000072926283,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_raw",
+          "start": 0.0015614000149071217,
+          "end": 0.0017096000956371427,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_passes",
+          "start": 0.0017117999959737062,
+          "end": 0.0018343999981880188,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_scan_opt",
+          "start": 0.001710900105535984,
+          "end": 0.0018355000065639615,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_expand",
+          "start": 0.0018363000126555562,
+          "end": 0.0019313000375404954,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_passes",
+          "start": 0.0019332000520080328,
+          "end": 0.002100600046105683,
+          "passes": 3,
+          "swaps": 2,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_NN_opt",
+          "start": 0.0019325000466778874,
+          "end": 0.002101500052958727,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_expand",
+          "start": 0.002102100057527423,
+          "end": 0.002152100089006126,
+          "status": "completed"
+        },
+        {
+          "stage": "V_generate",
+          "start": 0.002153300098143518,
+          "end": 0.0021921000443398952,
+          "status": "completed"
+        },
+        {
+          "stage": "V_raw",
+          "start": 0.0021931000519543886,
+          "end": 0.0022099000634625554,
+          "status": "completed"
+        },
+        {
+          "stage": "V_nearest",
+          "start": 0.0022105000680312514,
+          "end": 0.002240000059828162,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_raw",
+          "start": 0.002240500063635409,
+          "end": 0.0022563000675290823,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_passes",
+          "start": 0.002257700078189373,
+          "end": 0.0023726000217720866,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_scan_opt",
+          "start": 0.0022572000743821263,
+          "end": 0.002373300027102232,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_expand",
+          "start": 0.0023740000324323773,
+          "end": 0.0023886000271886587,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_passes",
+          "start": 0.002389600034803152,
+          "end": 0.002559000044129789,
+          "passes": 3,
+          "swaps": 2,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_NN_opt",
+          "start": 0.0023892000317573547,
+          "end": 0.0025595000479370356,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_expand",
+          "start": 0.0025600000517442822,
+          "end": 0.0025728000327944756,
+          "status": "completed"
+        },
+        {
+          "stage": "core_finished",
+          "end": 0.0025734000373631716,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_deep_passes",
+          "start": 0.0025752000510692596,
+          "end": 0.002628500107675791,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_scan_deep",
+          "start": 0.0025746000465005636,
+          "end": 0.0026289999950677156,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_deep_expand",
+          "start": 0.0026295999996364117,
+          "end": 0.002645100001245737,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_deep_passes",
+          "start": 0.002646300010383129,
+          "end": 0.0027000000700354576,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_NN_deep",
+          "start": 0.0026458000065758824,
+          "end": 0.002700400073081255,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_deep_expand",
+          "start": 0.002701000077649951,
+          "end": 0.002714300062507391,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_deep_passes",
+          "start": 0.002715200069360435,
+          "end": 0.0027709000278264284,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_scan_deep",
+          "start": 0.0027148000663146377,
+          "end": 0.0027712000301107764,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_deep_expand",
+          "start": 0.002771700033918023,
+          "end": 0.002784400014206767,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_deep_passes",
+          "start": 0.0027852000202983618,
+          "end": 0.0028419001027941704,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_NN_deep",
+          "start": 0.0027848000172525644,
+          "end": 0.002842400106601417,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_deep_expand",
+          "start": 0.0028429999947547913,
+          "end": 0.0028549000853672624,
+          "status": "completed"
+        },
+        {
+          "stage": "deep_finished",
+          "end": 0.0028553000884130597,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_raw",
+          "start": 0.0029159000841900706,
+          "end": 0.002932900097221136,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_passes",
+          "start": 0.002934100106358528,
+          "end": 0.002989700064063072,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "reverse_H_opt",
+          "start": 0.0029336001025512815,
+          "end": 0.0029903000686317682,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_expand",
+          "start": 0.0029909000732004642,
+          "end": 0.0030054000671952963,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_raw",
+          "start": 0.0030061000725254416,
+          "end": 0.003018900053575635,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_passes",
+          "start": 0.003019800060428679,
+          "end": 0.003076000022701919,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "reverse_V_opt",
+          "start": 0.0030193000566214323,
+          "end": 0.0030765000265091658,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_expand",
+          "start": 0.0030770000303164124,
+          "end": 0.0030900000128895044,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_raw",
+          "start": 0.0030906000174582005,
+          "end": 0.003276500036008656,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_passes",
+          "start": 0.003277700045146048,
+          "end": 0.003489100025035441,
+          "passes": 4,
+          "swaps": 3,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "perturb_H_opt",
+          "start": 0.003277100040577352,
+          "end": 0.0034898000303655863,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_expand",
+          "start": 0.0034905000356957316,
+          "end": 0.0035165000008419156,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_raw",
+          "start": 0.0035171000054106116,
+          "end": 0.0036566000198945403,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_passes",
+          "start": 0.0036575000267475843,
+          "end": 0.0038741000462323427,
+          "passes": 4,
+          "swaps": 3,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "perturb_V_opt",
+          "start": 0.003657100023701787,
+          "end": 0.0038746000500395894,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_expand",
+          "start": 0.00387600006069988,
+          "end": 0.003889900050126016,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_raw",
+          "start": 0.003890400053933263,
+          "end": 0.003983500064350665,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_passes",
+          "start": 0.003984400071203709,
+          "end": 0.0042937000980600715,
+          "passes": 6,
+          "swaps": 5,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "shuffle_0_opt",
+          "start": 0.003984000068157911,
+          "end": 0.004294200101867318,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_expand",
+          "start": 0.004294800106436014,
+          "end": 0.004308600095100701,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_raw",
+          "start": 0.0043091000989079475,
+          "end": 0.004366800072602928,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_passes",
+          "start": 0.004367700079455972,
+          "end": 0.004722500103525817,
+          "passes": 6,
+          "swaps": 5,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "shuffle_1_opt",
+          "start": 0.004367300076410174,
+          "end": 0.004723899997770786,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_expand",
+          "start": 0.00472480000462383,
+          "end": 0.004747700062580407,
+          "status": "completed"
+        }
+      ],
+      "improvements": [
+        {
+          "seconds": 0.0004843000788241625,
+          "steps": 28,
+          "source": "common_fallback"
+        },
+        {
+          "seconds": 0.0017089000903069973,
+          "steps": 26,
+          "source": "H_NN_raw"
+        },
+        {
+          "seconds": 0.0019308000337332487,
+          "steps": 22,
+          "source": "H_scan_opt"
+        },
+        {
+          "seconds": 0.0021516000851988792,
+          "steps": 20,
+          "source": "H_NN_opt"
+        }
+      ],
+      "core_finished": true,
+      "method": "P2_MULTI",
+      "budget": 19.99984790000599,
+      "seed": 20261021,
+      "fallback_selected": false,
+      "overrun_gt_10ms": false
+    },
+    "entry_seconds": 0.005066599929705262,
+    "budget": 20,
+    "method": "P2_MULTI",
+    "seed": 20261021,
+    "phase_seconds": {
+      "encoding": 0.00012529990635812283
+    }
+  },
+  "loaded_core_sources": {
+    "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\runtime.py": "1e69a2933db6f43372945709172edb4054981f39ddcc590c7155e56e548dc553",
+    "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\p2_adapter.py": "f1b08632759cd42a4b904ab061722b714dcda0b6bed42a2929873e528584bd23",
+    "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py": "2eee969dc3a1c46fe1ff055080d57f56cf0144551098de4fd25280d5fc074b14",
+    "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\p2_search_audit.py": "d1b93bd741b80af02c8f398b495441da570ae75f27008d512e9d873844a0385a",
+    "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\unified_geometry.py": "b0d70871ab4b2a3d3a4ccf3edcdadf4b3db9eb2415134d5740270a76293aff53",
+    "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\bfs_metric_geometry.py": "98298ca6620cf2aba0aedd5b7cfc4fbdabfdb2316e01ddeeb9be791b8a2b8933"
+  },
+  "post_request_utf8": "{\"id\":\"formal__small_I_corner_p70__1__P2_MULTI\",\"input\":{\"name\":\"small_I_corner_p70\",\"free\":[[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[0,9],[0,10],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[1,8],[1,9],[1,10],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7],[2,8],[2,9],[2,10],[3,0],[3,1],[3,2],[3,3],[3,4],[3,5],[3,6],[3,7],[3,8],[3,9],[3,10],[4,0],[4,1],[4,2],[4,3],[4,4],[4,5],[4,6],[4,7],[4,8],[4,9],[4,10],[5,0],[5,1],[5,2],[5,3],[5,4],[5,5],[5,6],[5,7],[5,8],[5,9],[5,10],[6,0],[6,1],[6,2],[6,3],[6,4],[6,5],[6,6],[6,7],[6,8],[6,9],[6,10],[7,0],[7,1],[7,2],[7,3],[7,4],[7,5],[7,6],[7,7],[7,8],[7,9],[7,10],[8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,6],[8,7],[8,8],[8,9],[8,10],[9,0],[9,1],[9,2],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[9,10],[10,0],[10,1],[10,2],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[10,9],[10,10],[11,0],[11,1],[11,2],[11,3],[11,4],[11,5],[11,6],[11,7],[11,8],[11,9],[11,10],[12,0],[12,1],[12,2],[12,3],[12,4],[12,5],[12,6],[12,7],[12,8],[12,9],[12,10],[13,0],[13,1],[13,2],[13,3],[13,4],[13,5],[13,6],[13,7],[13,8],[13,9],[13,10],[14,0],[14,1],[14,2],[14,3],[14,4],[14,5],[14,6],[14,7],[14,8],[14,9],[14,10]],\"targets\":[[3,3],[3,4],[4,3],[4,4],[5,3],[5,4],[6,3],[6,4],[7,3],[7,4],[7,5],[7,6],[7,7],[8,3],[8,4],[8,5],[8,6],[8,7]],\"covered\":[[3,3],[4,3],[5,3],[6,3],[6,4],[7,3],[7,4],[8,3],[8,4]],\"published_targets\":[[3,3],[3,4],[4,3],[4,4],[5,3],[5,4],[6,3],[6,4],[7,3],[7,4],[7,5],[7,6],[7,7],[8,3],[8,4],[8,5],[8,6],[8,7]],\"deferred_targets\":[],\"current\":[6,4],\"base\":[0,0],\"previous\":[7,4],\"predator\":[-1,0],\"initial_targets\":[[3,3],[3,4],[4,3],[4,4],[5,3],[5,4],[6,3],[6,4],[7,3],[7,4],[8,3],[8,4]],\"old_route\":[[6,4],[5,4],[4,4],[3,4],[2,4],[1,4],[0,4],[0,3],[0,2],[0,1],[0,0]],\"distance_budget\":1000000},\"raw\":{\"route\":[[6,4],[6,5],[7,5],[8,5],[8,6],[8,7],[7,7],[7,6],[6,6],[5,6],[5,5],[5,4],[4,4],[3,4],[2,4],[1,4],[0,4],[0,3],[0,2],[0,1],[0,0]],\"source\":\"H_NN_opt\",\"status\":\"finished\",\"seconds\":0.004785500001162291,\"active_stage\":\"shuffle_1_expand\",\"events\":[{\"stage\":\"fallback\",\"start\":0.00025040004402399063,\"end\":0.00048560008872300386,\"status\":\"completed\"},{\"stage\":\"H_generate\",\"start\":0.0004882001085206866,\"end\":0.00051580008585006,\"status\":\"completed\"},{\"stage\":\"H_raw\",\"start\":0.0005171000957489014,\"end\":0.0005515000084415078,\"status\":\"completed\"},{\"stage\":\"H_nearest\",\"start\":0.0005524000152945518,\"end\":0.0015604000072926283,\"status\":\"completed\"},{\"stage\":\"H_NN_raw\",\"start\":0.0015614000149071217,\"end\":0.0017096000956371427,\"status\":\"completed\"},{\"stage\":\"H_scan_passes\",\"start\":0.0017117999959737062,\"end\":0.0018343999981880188,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_scan_opt\",\"start\":0.001710900105535984,\"end\":0.0018355000065639615,\"status\":\"completed\"},{\"stage\":\"H_scan_expand\",\"start\":0.0018363000126555562,\"end\":0.0019313000375404954,\"status\":\"completed\"},{\"stage\":\"H_NN_passes\",\"start\":0.0019332000520080328,\"end\":0.002100600046105683,\"passes\":3,\"swaps\":2,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_NN_opt\",\"start\":0.0019325000466778874,\"end\":0.002101500052958727,\"status\":\"completed\"},{\"stage\":\"H_NN_expand\",\"start\":0.002102100057527423,\"end\":0.002152100089006126,\"status\":\"completed\"},{\"stage\":\"V_generate\",\"start\":0.002153300098143518,\"end\":0.0021921000443398952,\"status\":\"completed\"},{\"stage\":\"V_raw\",\"start\":0.0021931000519543886,\"end\":0.0022099000634625554,\"status\":\"completed\"},{\"stage\":\"V_nearest\",\"start\":0.0022105000680312514,\"end\":0.002240000059828162,\"status\":\"completed\"},{\"stage\":\"V_NN_raw\",\"start\":0.002240500063635409,\"end\":0.0022563000675290823,\"status\":\"completed\"},{\"stage\":\"V_scan_passes\",\"start\":0.002257700078189373,\"end\":0.0023726000217720866,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_scan_opt\",\"start\":0.0022572000743821263,\"end\":0.002373300027102232,\"status\":\"completed\"},{\"stage\":\"V_scan_expand\",\"start\":0.0023740000324323773,\"end\":0.0023886000271886587,\"status\":\"completed\"},{\"stage\":\"V_NN_passes\",\"start\":0.002389600034803152,\"end\":0.002559000044129789,\"passes\":3,\"swaps\":2,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_NN_opt\",\"start\":0.0023892000317573547,\"end\":0.0025595000479370356,\"status\":\"completed\"},{\"stage\":\"V_NN_expand\",\"start\":0.0025600000517442822,\"end\":0.0025728000327944756,\"status\":\"completed\"},{\"stage\":\"core_finished\",\"end\":0.0025734000373631716,\"status\":\"completed\"},{\"stage\":\"H_scan_deep_passes\",\"start\":0.0025752000510692596,\"end\":0.002628500107675791,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_scan_deep\",\"start\":0.0025746000465005636,\"end\":0.0026289999950677156,\"status\":\"completed\"},{\"stage\":\"H_scan_deep_expand\",\"start\":0.0026295999996364117,\"end\":0.002645100001245737,\"status\":\"completed\"},{\"stage\":\"H_NN_deep_passes\",\"start\":0.002646300010383129,\"end\":0.0027000000700354576,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_NN_deep\",\"start\":0.0026458000065758824,\"end\":0.002700400073081255,\"status\":\"completed\"},{\"stage\":\"H_NN_deep_expand\",\"start\":0.002701000077649951,\"end\":0.002714300062507391,\"status\":\"completed\"},{\"stage\":\"V_scan_deep_passes\",\"start\":0.002715200069360435,\"end\":0.0027709000278264284,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_scan_deep\",\"start\":0.0027148000663146377,\"end\":0.0027712000301107764,\"status\":\"completed\"},{\"stage\":\"V_scan_deep_expand\",\"start\":0.002771700033918023,\"end\":0.002784400014206767,\"status\":\"completed\"},{\"stage\":\"V_NN_deep_passes\",\"start\":0.0027852000202983618,\"end\":0.0028419001027941704,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_NN_deep\",\"start\":0.0027848000172525644,\"end\":0.002842400106601417,\"status\":\"completed\"},{\"stage\":\"V_NN_deep_expand\",\"start\":0.0028429999947547913,\"end\":0.0028549000853672624,\"status\":\"completed\"},{\"stage\":\"deep_finished\",\"end\":0.0028553000884130597,\"status\":\"completed\"},{\"stage\":\"reverse_H_raw\",\"start\":0.0029159000841900706,\"end\":0.002932900097221136,\"status\":\"completed\"},{\"stage\":\"reverse_H_passes\",\"start\":0.002934100106358528,\"end\":0.002989700064063072,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"reverse_H_opt\",\"start\":0.0029336001025512815,\"end\":0.0029903000686317682,\"status\":\"completed\"},{\"stage\":\"reverse_H_expand\",\"start\":0.0029909000732004642,\"end\":0.0030054000671952963,\"status\":\"completed\"},{\"stage\":\"reverse_V_raw\",\"start\":0.0030061000725254416,\"end\":0.003018900053575635,\"status\":\"completed\"},{\"stage\":\"reverse_V_passes\",\"start\":0.003019800060428679,\"end\":0.003076000022701919,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"reverse_V_opt\",\"start\":0.0030193000566214323,\"end\":0.0030765000265091658,\"status\":\"completed\"},{\"stage\":\"reverse_V_expand\",\"start\":0.0030770000303164124,\"end\":0.0030900000128895044,\"status\":\"completed\"},{\"stage\":\"perturb_H_raw\",\"start\":0.0030906000174582005,\"end\":0.003276500036008656,\"status\":\"completed\"},{\"stage\":\"perturb_H_passes\",\"start\":0.003277700045146048,\"end\":0.003489100025035441,\"passes\":4,\"swaps\":3,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"perturb_H_opt\",\"start\":0.003277100040577352,\"end\":0.0034898000303655863,\"status\":\"completed\"},{\"stage\":\"perturb_H_expand\",\"start\":0.0034905000356957316,\"end\":0.0035165000008419156,\"status\":\"completed\"},{\"stage\":\"perturb_V_raw\",\"start\":0.0035171000054106116,\"end\":0.0036566000198945403,\"status\":\"completed\"},{\"stage\":\"perturb_V_passes\",\"start\":0.0036575000267475843,\"end\":0.0038741000462323427,\"passes\":4,\"swaps\":3,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"perturb_V_opt\",\"start\":0.003657100023701787,\"end\":0.0038746000500395894,\"status\":\"completed\"},{\"stage\":\"perturb_V_expand\",\"start\":0.00387600006069988,\"end\":0.003889900050126016,\"status\":\"completed\"},{\"stage\":\"shuffle_0_raw\",\"start\":0.003890400053933263,\"end\":0.003983500064350665,\"status\":\"completed\"},{\"stage\":\"shuffle_0_passes\",\"start\":0.003984400071203709,\"end\":0.0042937000980600715,\"passes\":6,\"swaps\":5,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"shuffle_0_opt\",\"start\":0.003984000068157911,\"end\":0.004294200101867318,\"status\":\"completed\"},{\"stage\":\"shuffle_0_expand\",\"start\":0.004294800106436014,\"end\":0.004308600095100701,\"status\":\"completed\"},{\"stage\":\"shuffle_1_raw\",\"start\":0.0043091000989079475,\"end\":0.004366800072602928,\"status\":\"completed\"},{\"stage\":\"shuffle_1_passes\",\"start\":0.004367700079455972,\"end\":0.004722500103525817,\"passes\":6,\"swaps\":5,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"shuffle_1_opt\",\"start\":0.004367300076410174,\"end\":0.004723899997770786,\"status\":\"completed\"},{\"stage\":\"shuffle_1_expand\",\"start\":0.00472480000462383,\"end\":0.004747700062580407,\"status\":\"completed\"}],\"improvements\":[{\"seconds\":0.0004843000788241625,\"steps\":28,\"source\":\"common_fallback\"},{\"seconds\":0.0017089000903069973,\"steps\":26,\"source\":\"H_NN_raw\"},{\"seconds\":0.0019308000337332487,\"steps\":22,\"source\":\"H_scan_opt\"},{\"seconds\":0.0021516000851988792,\"steps\":20,\"source\":\"H_NN_opt\"}],\"core_finished\":true,\"method\":\"P2_MULTI\",\"budget\":19.99984790000599,\"seed\":20261021,\"fallback_selected\":false,\"overrun_gt_10ms\":false}}",
+  "post_response_utf8": "{\"id\":\"formal__small_I_corner_p70__1__P2_MULTI\",\"L4\":20,\"Lshortcut_interval\":[\"16.242640687119285146405066172629094235709015626130\",\"16.242640687119285146405066172629094235709015626131\"],\"Lshortcut_display\":16.242640687119284,\"saving_display\":3.757359312880715,\"saving_ratio_display\":0.18786796564403574,\"distance_budget\":1000000,\"resource_proof\":\"source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E\",\"vertices\":[[6,4],[7,5],[8,5],[8,6],[8,7],[7,7],[7,6],[5,4],[4,4],[3,4],[0,0]],\"edges\":[{\"left\":0,\"right\":2,\"a\":[6,4],\"b\":[7,5],\"part\":0,\"kind\":\"start_to_first\"},{\"left\":2,\"right\":3,\"a\":[7,5],\"b\":[8,5],\"part\":1,\"kind\":\"between_first_services\"},{\"left\":3,\"right\":4,\"a\":[8,5],\"b\":[8,6],\"part\":2,\"kind\":\"between_first_services\"},{\"left\":4,\"right\":5,\"a\":[8,6],\"b\":[8,7],\"part\":3,\"kind\":\"between_first_services\"},{\"left\":5,\"right\":6,\"a\":[8,7],\"b\":[7,7],\"part\":4,\"kind\":\"between_first_services\"},{\"left\":6,\"right\":7,\"a\":[7,7],\"b\":[7,6],\"part\":5,\"kind\":\"between_first_services\"},{\"left\":7,\"right\":11,\"a\":[7,6],\"b\":[5,4],\"part\":6,\"kind\":\"between_first_services\"},{\"left\":11,\"right\":12,\"a\":[5,4],\"b\":[4,4],\"part\":7,\"kind\":\"between_first_services\"},{\"left\":12,\"right\":13,\"a\":[4,4],\"b\":[3,4],\"part\":8,\"kind\":\"between_first_services\"},{\"left\":13,\"right\":20,\"a\":[3,4],\"b\":[0,0],\"part\":9,\"kind\":\"last_to_base\"}],\"parts\":[{\"left\":0,\"right\":2,\"kind\":\"start_to_first\",\"edge_start\":0,\"edge_end\":1,\"L4\":2,\"new_interval\":[\"1.4142135623730950488016887242096980785696718753768\",\"1.4142135623730950488016887242096980785696718753770\"]},{\"left\":2,\"right\":3,\"kind\":\"between_first_services\",\"edge_start\":1,\"edge_end\":2,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":3,\"right\":4,\"kind\":\"between_first_services\",\"edge_start\":2,\"edge_end\":3,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":4,\"right\":5,\"kind\":\"between_first_services\",\"edge_start\":3,\"edge_end\":4,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":5,\"right\":6,\"kind\":\"between_first_services\",\"edge_start\":4,\"edge_end\":5,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":6,\"right\":7,\"kind\":\"between_first_services\",\"edge_start\":5,\"edge_end\":6,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":7,\"right\":11,\"kind\":\"between_first_services\",\"edge_start\":6,\"edge_end\":7,\"L4\":4,\"new_interval\":[\"2.8284271247461900976033774484193961571393437507538\",\"2.8284271247461900976033774484193961571393437507540\"]},{\"left\":11,\"right\":12,\"kind\":\"between_first_services\",\"edge_start\":7,\"edge_end\":8,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":12,\"right\":13,\"kind\":\"between_first_services\",\"edge_start\":8,\"edge_end\":9,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":13,\"right\":20,\"kind\":\"last_to_base\",\"edge_start\":9,\"edge_end\":10,\"L4\":7,\"new_interval\":[\"5\",\"5\"]}],\"locked_nominal_anchors\":[{\"point\":[7,5],\"index\":2},{\"point\":[8,5],\"index\":3},{\"point\":[8,6],\"index\":4},{\"point\":[8,7],\"index\":5},{\"point\":[7,7],\"index\":6},{\"point\":[7,6],\"index\":7},{\"point\":[5,4],\"index\":11},{\"point\":[4,4],\"index\":12},{\"point\":[3,4],\"index\":13}],\"credit_witnesses\":[{\"point\":[7,5],\"edge\":0,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":69,\"d\":10},{\"n\":49,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[8,5],\"edge\":1,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":79,\"d\":10},{\"n\":5,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[8,6],\"edge\":2,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":8,\"d\":1},{\"n\":59,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[8,7],\"edge\":3,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":8,\"d\":1},{\"n\":69,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[7,7],\"edge\":4,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":71,\"d\":10},{\"n\":7,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[7,6],\"edge\":5,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":7,\"d\":1},{\"n\":61,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[5,4],\"edge\":6,\"evidence\":{\"interval\":{\"lower\":{\"n\":9,\"d\":10},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":19,\"d\":20},\"point\":[{\"n\":51,\"d\":10},{\"n\":41,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[4,4],\"edge\":7,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":41,\"d\":10},{\"n\":4,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[3,4],\"edge\":8,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":31,\"d\":10},{\"n\":4,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}}],\"witness_order_differs_from_locked_anchors\":false,\"trace_cross_original_moves\":{\"start_to_first x unavailable\":2,\"between_first_services x unavailable\":11,\"last_to_base x unavailable\":7},\"counts\":{\"candidate\":10,\"source_validation\":20,\"output_validation\":10,\"service_intersections\":90,\"post_inside_tests\":9,\"post_service_intersections\":90},\"query_log\":[{\"i\":0,\"j\":2,\"legal\":true,\"part\":0},{\"i\":2,\"j\":3,\"legal\":true,\"part\":1},{\"i\":3,\"j\":4,\"legal\":true,\"part\":2},{\"i\":4,\"j\":5,\"legal\":true,\"part\":3},{\"i\":5,\"j\":6,\"legal\":true,\"part\":4},{\"i\":6,\"j\":7,\"legal\":true,\"part\":5},{\"i\":7,\"j\":11,\"legal\":true,\"part\":6},{\"i\":11,\"j\":12,\"legal\":true,\"part\":7},{\"i\":12,\"j\":13,\"legal\":true,\"part\":8},{\"i\":13,\"j\":20,\"legal\":true,\"part\":9}],\"fallback\":null,\"turns_original\":{\"nonzero_direction_changes\":8,\"total_turn_radians\":12.566370614359172},\"turns_new\":{\"nonzero_direction_changes\":7,\"total_turn_radians\":7.995878688578647},\"timing\":{\"parse_preprocess_source_validation\":0.0014099000254645944,\"candidate\":0.000852599972859025,\"main_validation_metrics\":0.0018798999954015017}}",
+  "post_envelope": {
+    "entry_seconds": 0.004247100092470646,
+    "late": false,
+    "counts": {
+      "candidate": 10,
+      "source_validation": 20,
+      "output_validation": 10,
+      "service_intersections": 90,
+      "post_inside_tests": 9,
+      "post_service_intersections": 90
+    },
+    "fallback": null
+  },
+  "post": {
+    "id": "formal__small_I_corner_p70__1__P2_MULTI",
+    "L4": 20,
+    "Lshortcut_interval": [
+      "16.242640687119285146405066172629094235709015626130",
+      "16.242640687119285146405066172629094235709015626131"
+    ],
+    "Lshortcut_display": 16.242640687119284,
+    "saving_display": 3.757359312880715,
+    "saving_ratio_display": 0.18786796564403574,
+    "distance_budget": 1000000,
+    "resource_proof": "source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E",
+    "vertices": [
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "edges": [
+      {
+        "left": 0,
+        "right": 2,
+        "a": [
+          6,
+          4
+        ],
+        "b": [
+          7,
+          5
+        ],
+        "part": 0,
+        "kind": "start_to_first"
+      },
+      {
+        "left": 2,
+        "right": 3,
+        "a": [
+          7,
+          5
+        ],
+        "b": [
+          8,
+          5
+        ],
+        "part": 1,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 3,
+        "right": 4,
+        "a": [
+          8,
+          5
+        ],
+        "b": [
+          8,
+          6
+        ],
+        "part": 2,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 4,
+        "right": 5,
+        "a": [
+          8,
+          6
+        ],
+        "b": [
+          8,
+          7
+        ],
+        "part": 3,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 5,
+        "right": 6,
+        "a": [
+          8,
+          7
+        ],
+        "b": [
+          7,
+          7
+        ],
+        "part": 4,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 6,
+        "right": 7,
+        "a": [
+          7,
+          7
+        ],
+        "b": [
+          7,
+          6
+        ],
+        "part": 5,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 7,
+        "right": 11,
+        "a": [
+          7,
+          6
+        ],
+        "b": [
+          5,
+          4
+        ],
+        "part": 6,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 11,
+        "right": 12,
+        "a": [
+          5,
+          4
+        ],
+        "b": [
+          4,
+          4
+        ],
+        "part": 7,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 12,
+        "right": 13,
+        "a": [
+          4,
+          4
+        ],
+        "b": [
+          3,
+          4
+        ],
+        "part": 8,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 13,
+        "right": 20,
+        "a": [
+          3,
+          4
+        ],
+        "b": [
+          0,
+          0
+        ],
+        "part": 9,
+        "kind": "last_to_base"
+      }
+    ],
+    "parts": [
+      {
+        "left": 0,
+        "right": 2,
+        "kind": "start_to_first",
+        "edge_start": 0,
+        "edge_end": 1,
+        "L4": 2,
+        "new_interval": [
+          "1.4142135623730950488016887242096980785696718753768",
+          "1.4142135623730950488016887242096980785696718753770"
+        ]
+      },
+      {
+        "left": 2,
+        "right": 3,
+        "kind": "between_first_services",
+        "edge_start": 1,
+        "edge_end": 2,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 3,
+        "right": 4,
+        "kind": "between_first_services",
+        "edge_start": 2,
+        "edge_end": 3,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 4,
+        "right": 5,
+        "kind": "between_first_services",
+        "edge_start": 3,
+        "edge_end": 4,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 5,
+        "right": 6,
+        "kind": "between_first_services",
+        "edge_start": 4,
+        "edge_end": 5,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 6,
+        "right": 7,
+        "kind": "between_first_services",
+        "edge_start": 5,
+        "edge_end": 6,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 7,
+        "right": 11,
+        "kind": "between_first_services",
+        "edge_start": 6,
+        "edge_end": 7,
+        "L4": 4,
+        "new_interval": [
+          "2.8284271247461900976033774484193961571393437507538",
+          "2.8284271247461900976033774484193961571393437507540"
+        ]
+      },
+      {
+        "left": 11,
+        "right": 12,
+        "kind": "between_first_services",
+        "edge_start": 7,
+        "edge_end": 8,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 12,
+        "right": 13,
+        "kind": "between_first_services",
+        "edge_start": 8,
+        "edge_end": 9,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 13,
+        "right": 20,
+        "kind": "last_to_base",
+        "edge_start": 9,
+        "edge_end": 10,
+        "L4": 7,
+        "new_interval": [
+          "5",
+          "5"
+        ]
+      }
+    ],
+    "locked_nominal_anchors": [
+      {
+        "point": [
+          7,
+          5
+        ],
+        "index": 2
+      },
+      {
+        "point": [
+          8,
+          5
+        ],
+        "index": 3
+      },
+      {
+        "point": [
+          8,
+          6
+        ],
+        "index": 4
+      },
+      {
+        "point": [
+          8,
+          7
+        ],
+        "index": 5
+      },
+      {
+        "point": [
+          7,
+          7
+        ],
+        "index": 6
+      },
+      {
+        "point": [
+          7,
+          6
+        ],
+        "index": 7
+      },
+      {
+        "point": [
+          5,
+          4
+        ],
+        "index": 11
+      },
+      {
+        "point": [
+          4,
+          4
+        ],
+        "index": 12
+      },
+      {
+        "point": [
+          3,
+          4
+        ],
+        "index": 13
+      }
+    ],
+    "credit_witnesses": [
+      {
+        "point": [
+          7,
+          5
+        ],
+        "edge": 0,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 69,
+                "d": 10
+              },
+              {
+                "n": 49,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          8,
+          5
+        ],
+        "edge": 1,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 79,
+                "d": 10
+              },
+              {
+                "n": 5,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          8,
+          6
+        ],
+        "edge": 2,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 8,
+                "d": 1
+              },
+              {
+                "n": 59,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          8,
+          7
+        ],
+        "edge": 3,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 8,
+                "d": 1
+              },
+              {
+                "n": 69,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          7,
+          7
+        ],
+        "edge": 4,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 71,
+                "d": 10
+              },
+              {
+                "n": 7,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          7,
+          6
+        ],
+        "edge": 5,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 7,
+                "d": 1
+              },
+              {
+                "n": 61,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          5,
+          4
+        ],
+        "edge": 6,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 9,
+              "d": 10
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 19,
+              "d": 20
+            },
+            "point": [
+              {
+                "n": 51,
+                "d": 10
+              },
+              {
+                "n": 41,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          4,
+          4
+        ],
+        "edge": 7,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 41,
+                "d": 10
+              },
+              {
+                "n": 4,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          3,
+          4
+        ],
+        "edge": 8,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 31,
+                "d": 10
+              },
+              {
+                "n": 4,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      }
+    ],
+    "witness_order_differs_from_locked_anchors": false,
+    "trace_cross_original_moves": {
+      "start_to_first x unavailable": 2,
+      "between_first_services x unavailable": 11,
+      "last_to_base x unavailable": 7
+    },
+    "counts": {
+      "candidate": 10,
+      "source_validation": 20,
+      "output_validation": 10,
+      "service_intersections": 90,
+      "post_inside_tests": 9,
+      "post_service_intersections": 90
+    },
+    "query_log": [
+      {
+        "i": 0,
+        "j": 2,
+        "legal": true,
+        "part": 0
+      },
+      {
+        "i": 2,
+        "j": 3,
+        "legal": true,
+        "part": 1
+      },
+      {
+        "i": 3,
+        "j": 4,
+        "legal": true,
+        "part": 2
+      },
+      {
+        "i": 4,
+        "j": 5,
+        "legal": true,
+        "part": 3
+      },
+      {
+        "i": 5,
+        "j": 6,
+        "legal": true,
+        "part": 4
+      },
+      {
+        "i": 6,
+        "j": 7,
+        "legal": true,
+        "part": 5
+      },
+      {
+        "i": 7,
+        "j": 11,
+        "legal": true,
+        "part": 6
+      },
+      {
+        "i": 11,
+        "j": 12,
+        "legal": true,
+        "part": 7
+      },
+      {
+        "i": 12,
+        "j": 13,
+        "legal": true,
+        "part": 8
+      },
+      {
+        "i": 13,
+        "j": 20,
+        "legal": true,
+        "part": 9
+      }
+    ],
+    "fallback": null,
+    "turns_original": {
+      "nonzero_direction_changes": 8,
+      "total_turn_radians": 12.566370614359172
+    },
+    "turns_new": {
+      "nonzero_direction_changes": 7,
+      "total_turn_radians": 7.995878688578647
+    },
+    "timing": {
+      "parse_preprocess_source_validation": 0.0014099000254645944,
+      "candidate": 0.000852599972859025,
+      "main_validation_metrics": 0.0018798999954015017
+    }
+  },
+  "query_scope_schema": {
+    "engine": 90,
+    "raw_execution": 19,
+    "post_execution": 24,
+    "total": 133
+  },
+  "timing": {
+    "native_entry_seconds": 0.005085399956442416,
+    "raw_common_end_to_end": 0.008395600016228855,
+    "post_increment": 0.0070167999947443604,
+    "combined_end_to_end": 0.015412400010973215,
+    "artifact_flush_excluded_seconds": 0.002276599989272654,
+    "native_late": false,
+    "raw_stage_late": false,
+    "combined_late": false,
+    "post_late": false,
+    "native_status": "finished",
+    "termination": "natural",
+    "raw_necessary_wrapper_seconds": 0.003310200059786439,
+    "post_engine_seconds": 0.004247100092470646,
+    "post_necessary_wrapper_seconds": 0.0027696999022737145,
+    "main_measured_includes": "same raw/post virtual execution and encoding, post-return actual-source hashes, common single-entry dispatch, ON original profile only",
+    "outside_main": "pre-start frozen-source hashes, cold import, two actual evidence flushes, independent audit, process creation"
+  },
+  "main_passed": true,
+  "independent": {
+    "passed": true,
+    "views": {
+      "C0": {
+        "passed": true,
+        "counts": {
+          "independent_region_point_tests": 113,
+          "unit_edge_membership_proofs": 20,
+          "metric_distance": 20,
+          "target_box_tests": 360,
+          "independent_service_intersections": 19,
+          "independent_region_boundary_parameters": 38,
+          "new_credit_center_checks": 9
+        }
+      },
+      "C": {
+        "passed": true,
+        "counts": {
+          "independent_region_point_tests": 132,
+          "metric_distance": 10,
+          "target_box_tests": 180,
+          "independent_service_intersections": 24,
+          "independent_region_boundary_parameters": 68,
+          "new_credit_center_checks": 9
+        }
+      }
+    },
+    "post": {
+      "passed": true,
+      "id": "formal__small_I_corner_p70__1__P2_MULTI",
+      "input_sha256": "3944a1aaf3218b68d8d0484a56983bee52b4df845bb949a474ed0620fb8d007f",
+      "output_sha256": "342eaf4b02d4f1e20d24064c81a912719f97b4dfe943662e17459592859b4274",
+      "counts": {
+        "geometry": 10,
+        "service_intersections": 90,
+        "independent_region_point_tests": 104,
+        "independent_target_box_tests": 90,
+        "independent_service_intersections": 19,
+        "independent_region_boundary_parameters": 48
+      },
+      "seconds": 0.0021779999369755387,
+      "independent_length_interval": [
+        "16.2426406871192851464050661726290942357090156261308442195300",
+        "16.2426406871192851464050661726290942357090156261308442195301"
+      ],
+      "geometry_method": "closed forbidden squares exact slab intersection; bounding-box exterior forbidden",
+      "service_method": "independent strict-region boundary partition and interior witness per task"
+    },
+    "counts": {
+      "independent_region_point_tests": 245,
+      "unit_edge_membership_proofs": 20,
+      "metric_distance": 30,
+      "target_box_tests": 540,
+      "independent_service_intersections": 43,
+      "independent_region_boundary_parameters": 106,
+      "new_credit_center_checks": 18,
+      "post_independent_geometry": 10,
+      "post_independent_service_intersections": 90,
+      "post_independent_independent_region_point_tests": 104,
+      "post_independent_independent_target_box_tests": 90,
+      "post_independent_independent_service_intersections": 19,
+      "post_independent_independent_region_boundary_parameters": 48
+    },
+    "seconds": 0.006901000044308603,
+    "identity": {
+      "primary": {
+        "module": "center_bench_v01_20261022.service",
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\service.py",
+        "sha256": "9516e463686bab7fa4a18a5bc21078efc3ad974cf5f55be2eed0d278d529e17b"
+      },
+      "independent": {
+        "module": "center_bench_v01_20261022.audit.region",
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\audit\\region.py",
+        "sha256": "ddd294f9b9d7e882ee742242e9e53712a05cfb27ad2d11838f2b6754bc53a111"
+      }
+    }
+  },
+  "independent_wall_seconds": 0.01040379994083196,
+  "identity_after": {
+    "primary": {
+      "module": "center_bench_v01_20261022.service",
+      "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\service.py",
+      "sha256": "9516e463686bab7fa4a18a5bc21078efc3ad974cf5f55be2eed0d278d529e17b"
+    },
+    "independent": {
+      "module": "center_bench_v01_20261022.audit.region",
+      "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\audit\\region.py",
+      "sha256": "ddd294f9b9d7e882ee742242e9e53712a05cfb27ad2d11838f2b6754bc53a111"
+    }
+  },
+  "entry_ledger": {
+    "started": 1,
+    "returned": 1,
+    "exceptions": 0
+  },
+  "native_observation": {
+    "observable": false,
+    "status": "not_observed_profile_OFF",
+    "counts": null
+  },
+  "native_counts_actual": null,
+  "worker_wall_seconds": 0.35263890004716814
+}

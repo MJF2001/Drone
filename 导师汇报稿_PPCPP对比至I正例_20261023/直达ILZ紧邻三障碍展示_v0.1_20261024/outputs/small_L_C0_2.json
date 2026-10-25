@@ -1,0 +1,3947 @@
+{
+  "job": {
+    "id": "small_L_C0_2",
+    "case": "small_L_C0_2",
+    "seed": 20261020,
+    "method": "P2_MULTI",
+    "config": "OFF",
+    "input": "inputs/small_L_C0_2.json"
+  },
+  "passed": true,
+  "views": {
+    "C0": {
+      "metrics": {
+        "published": 24,
+        "initial_H": 17,
+        "active": 21,
+        "remaining_before": 4,
+        "deferred": 3,
+        "new_credit": 4,
+        "missing": 0,
+        "active_coverage": 1.0,
+        "published_coverage": 0.875,
+        "covered_final": 21,
+        "return_success": true,
+        "length": 7.0,
+        "length_certificate": {
+          "exact": {
+            "terms": [
+              {
+                "r": 1,
+                "c": {
+                  "n": 7,
+                  "d": 1
+                }
+              }
+            ]
+          },
+          "interval_bits": 64,
+          "low": {
+            "n": 7,
+            "d": 1
+          },
+          "high": {
+            "n": 7,
+            "d": 1
+          }
+        },
+        "stages": {
+          "to_first_witness": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 29,
+                    "d": 10
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 29,
+              "d": 10
+            },
+            "high": {
+              "n": 29,
+              "d": 10
+            }
+          },
+          "between_first_last_witness": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 3,
+                    "d": 1
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 3,
+              "d": 1
+            },
+            "high": {
+              "n": 3,
+              "d": 1
+            }
+          },
+          "after_last_witness_return": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 11,
+                    "d": 10
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 11,
+              "d": 10
+            },
+            "high": {
+              "n": 11,
+              "d": 10
+            }
+          },
+          "convention": "midpoint of first intersecting executed segment interval; not unique physical first service time"
+        },
+        "no_new_credit_route": false,
+        "turns": {
+          "total": 3,
+          "90": 3
+        },
+        "total_turn_radians": 4.71238898038469,
+        "center_region_touch_events": 11,
+        "repeated_touch_events": 7,
+        "touch_definition": "one event per intersecting segment/task plus explicit initial collect; depends on segmentation, not extra distance",
+        "segments_without_new_credit": 3,
+        "whole_segments_without_new_credit_length": 3.0,
+        "noncollecting_definition": "whole-segment no-new-credit label, not pointwise noncollection distance",
+        "diagonal_offcenter_first_credit_tasks": 0,
+        "never_center_in_whole_actual_history_tasks": 0,
+        "diagonal_offcenter_witnesses": [],
+        "final_H": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            6,
+            4
+          ],
+          [
+            7,
+            3
+          ],
+          [
+            7,
+            4
+          ],
+          [
+            7,
+            6
+          ],
+          [
+            7,
+            7
+          ],
+          [
+            7,
+            8
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            10
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            8,
+            5
+          ],
+          [
+            8,
+            6
+          ],
+          [
+            8,
+            7
+          ],
+          [
+            8,
+            8
+          ],
+          [
+            8,
+            9
+          ]
+        ],
+        "final_position": [
+          3,
+          3
+        ]
+      },
+      "events": [
+        {
+          "kind": "collect_here",
+          "cell": [
+            7,
+            6
+          ],
+          "new": false,
+          "witness": {
+            "t": {
+              "n": 0,
+              "d": 1
+            },
+            "point": [
+              {
+                "n": 7,
+                "d": 1
+              },
+              {
+                "n": 6,
+                "d": 1
+              }
+            ]
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 0,
+          "cell": [
+            7,
+            6
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 69,
+                  "d": 10
+                },
+                {
+                  "n": 6,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 2,
+          "cell": [
+            6,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 6,
+                  "d": 1
+                },
+                {
+                  "n": 41,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 3,
+          "cell": [
+            6,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 59,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 3,
+          "cell": [
+            5,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 51,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 4,
+          "cell": [
+            5,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 49,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 4,
+          "cell": [
+            4,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 41,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 5,
+          "cell": [
+            4,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 39,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 5,
+          "cell": [
+            3,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 31,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 6,
+          "cell": [
+            3,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 3,
+                  "d": 1
+                },
+                {
+                  "n": 39,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 6,
+          "cell": [
+            3,
+            3
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 3,
+                  "d": 1
+                },
+                {
+                  "n": 31,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        }
+      ],
+      "path": [
+        [
+          7,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "counts": {
+        "execute_inside_tests": 21,
+        "unit_edge_membership_proofs": 7,
+        "metric_distance": 7,
+        "target_box_tests": 147,
+        "execute_service_intersections": 10,
+        "new_credit_center_checks": 4
+      },
+      "squared_sources": [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      "scope": "full virtual execution from common externally given H; no event replay, future knowledge or state mutation"
+    },
+    "C": {
+      "metrics": {
+        "published": 24,
+        "initial_H": 17,
+        "active": 21,
+        "remaining_before": 4,
+        "deferred": 3,
+        "new_credit": 4,
+        "missing": 0,
+        "active_coverage": 1.0,
+        "published_coverage": 0.875,
+        "covered_final": 21,
+        "return_success": true,
+        "length": 7.0,
+        "length_certificate": {
+          "exact": {
+            "terms": [
+              {
+                "r": 1,
+                "c": {
+                  "n": 7,
+                  "d": 1
+                }
+              }
+            ]
+          },
+          "interval_bits": 64,
+          "low": {
+            "n": 7,
+            "d": 1
+          },
+          "high": {
+            "n": 7,
+            "d": 1
+          }
+        },
+        "stages": {
+          "to_first_witness": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 29,
+                    "d": 10
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 29,
+              "d": 10
+            },
+            "high": {
+              "n": 29,
+              "d": 10
+            }
+          },
+          "between_first_last_witness": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 3,
+                    "d": 1
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 3,
+              "d": 1
+            },
+            "high": {
+              "n": 3,
+              "d": 1
+            }
+          },
+          "after_last_witness_return": {
+            "exact": {
+              "terms": [
+                {
+                  "r": 1,
+                  "c": {
+                    "n": 11,
+                    "d": 10
+                  }
+                }
+              ]
+            },
+            "interval_bits": 64,
+            "low": {
+              "n": 11,
+              "d": 10
+            },
+            "high": {
+              "n": 11,
+              "d": 10
+            }
+          },
+          "convention": "midpoint of first intersecting executed segment interval; not unique physical first service time"
+        },
+        "no_new_credit_route": false,
+        "turns": {
+          "total": 3,
+          "90": 3
+        },
+        "total_turn_radians": 4.71238898038469,
+        "center_region_touch_events": 11,
+        "repeated_touch_events": 7,
+        "touch_definition": "one event per intersecting segment/task plus explicit initial collect; depends on segmentation, not extra distance",
+        "segments_without_new_credit": 2,
+        "whole_segments_without_new_credit_length": 2.0,
+        "noncollecting_definition": "whole-segment no-new-credit label, not pointwise noncollection distance",
+        "diagonal_offcenter_first_credit_tasks": 0,
+        "never_center_in_whole_actual_history_tasks": 0,
+        "diagonal_offcenter_witnesses": [],
+        "final_H": [
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            6,
+            4
+          ],
+          [
+            7,
+            3
+          ],
+          [
+            7,
+            4
+          ],
+          [
+            7,
+            6
+          ],
+          [
+            7,
+            7
+          ],
+          [
+            7,
+            8
+          ],
+          [
+            7,
+            9
+          ],
+          [
+            7,
+            10
+          ],
+          [
+            8,
+            4
+          ],
+          [
+            8,
+            5
+          ],
+          [
+            8,
+            6
+          ],
+          [
+            8,
+            7
+          ],
+          [
+            8,
+            8
+          ],
+          [
+            8,
+            9
+          ]
+        ],
+        "final_position": [
+          3,
+          3
+        ]
+      },
+      "events": [
+        {
+          "kind": "collect_here",
+          "cell": [
+            7,
+            6
+          ],
+          "new": false,
+          "witness": {
+            "t": {
+              "n": 0,
+              "d": 1
+            },
+            "point": [
+              {
+                "n": 7,
+                "d": 1
+              },
+              {
+                "n": 6,
+                "d": 1
+              }
+            ]
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 0,
+          "cell": [
+            7,
+            6
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 69,
+                  "d": 10
+                },
+                {
+                  "n": 6,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 1,
+          "cell": [
+            6,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 9,
+                "d": 10
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 19,
+                "d": 20
+              },
+              "point": [
+                {
+                  "n": 6,
+                  "d": 1
+                },
+                {
+                  "n": 41,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 2,
+          "cell": [
+            6,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 59,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 2,
+          "cell": [
+            5,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 51,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 3,
+          "cell": [
+            5,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 49,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 3,
+          "cell": [
+            4,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 41,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 4,
+          "cell": [
+            4,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 39,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 4,
+          "cell": [
+            3,
+            4
+          ],
+          "new": true,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 31,
+                  "d": 10
+                },
+                {
+                  "n": 4,
+                  "d": 1
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 5,
+          "cell": [
+            3,
+            4
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 0,
+                "d": 1
+              },
+              "upper": {
+                "n": 1,
+                "d": 5
+              },
+              "lower_closed": true,
+              "upper_closed": false
+            },
+            "witness": {
+              "t": {
+                "n": 1,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 3,
+                  "d": 1
+                },
+                {
+                  "n": 39,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        },
+        {
+          "kind": "region_traverse",
+          "edge": 5,
+          "cell": [
+            3,
+            3
+          ],
+          "new": false,
+          "evidence": {
+            "interval": {
+              "lower": {
+                "n": 4,
+                "d": 5
+              },
+              "upper": {
+                "n": 1,
+                "d": 1
+              },
+              "lower_closed": false,
+              "upper_closed": true
+            },
+            "witness": {
+              "t": {
+                "n": 9,
+                "d": 10
+              },
+              "point": [
+                {
+                  "n": 3,
+                  "d": 1
+                },
+                {
+                  "n": 31,
+                  "d": 10
+                }
+              ]
+            },
+            "parameterization": "committed_or_predicted_prefix",
+            "meaning": "interior_existence_witness_not_first_internal_time"
+          }
+        }
+      ],
+      "path": [
+        [
+          7,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "counts": {
+        "execute_inside_tests": 21,
+        "main_geometry": 6,
+        "metric_distance": 6,
+        "target_box_tests": 126,
+        "execute_service_intersections": 10,
+        "new_credit_center_checks": 4
+      },
+      "squared_sources": [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      "scope": "full virtual execution from common externally given H; no event replay, future knowledge or state mutation"
+    }
+  },
+  "started_utc": 1792818824.6881237,
+  "configuration": "OFF",
+  "cold_import_seconds": 0.10015389998443425,
+  "input": {
+    "name": "small_L_C0_2",
+    "free": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        3
+      ],
+      [
+        0,
+        4
+      ],
+      [
+        0,
+        5
+      ],
+      [
+        0,
+        6
+      ],
+      [
+        0,
+        7
+      ],
+      [
+        0,
+        8
+      ],
+      [
+        0,
+        9
+      ],
+      [
+        0,
+        10
+      ],
+      [
+        0,
+        11
+      ],
+      [
+        0,
+        12
+      ],
+      [
+        0,
+        13
+      ],
+      [
+        0,
+        14
+      ],
+      [
+        0,
+        15
+      ],
+      [
+        0,
+        16
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        1,
+        8
+      ],
+      [
+        1,
+        9
+      ],
+      [
+        1,
+        10
+      ],
+      [
+        1,
+        11
+      ],
+      [
+        1,
+        12
+      ],
+      [
+        1,
+        13
+      ],
+      [
+        1,
+        14
+      ],
+      [
+        1,
+        15
+      ],
+      [
+        1,
+        16
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        2,
+        7
+      ],
+      [
+        2,
+        8
+      ],
+      [
+        2,
+        9
+      ],
+      [
+        2,
+        10
+      ],
+      [
+        2,
+        11
+      ],
+      [
+        2,
+        12
+      ],
+      [
+        2,
+        13
+      ],
+      [
+        2,
+        14
+      ],
+      [
+        2,
+        15
+      ],
+      [
+        2,
+        16
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        3,
+        8
+      ],
+      [
+        3,
+        9
+      ],
+      [
+        3,
+        10
+      ],
+      [
+        3,
+        11
+      ],
+      [
+        3,
+        12
+      ],
+      [
+        3,
+        13
+      ],
+      [
+        3,
+        14
+      ],
+      [
+        3,
+        15
+      ],
+      [
+        3,
+        16
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        4,
+        7
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        4,
+        9
+      ],
+      [
+        4,
+        10
+      ],
+      [
+        4,
+        11
+      ],
+      [
+        4,
+        12
+      ],
+      [
+        4,
+        13
+      ],
+      [
+        4,
+        14
+      ],
+      [
+        4,
+        15
+      ],
+      [
+        4,
+        16
+      ],
+      [
+        5,
+        0
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        5,
+        8
+      ],
+      [
+        5,
+        9
+      ],
+      [
+        5,
+        10
+      ],
+      [
+        5,
+        11
+      ],
+      [
+        5,
+        12
+      ],
+      [
+        5,
+        13
+      ],
+      [
+        5,
+        14
+      ],
+      [
+        5,
+        15
+      ],
+      [
+        5,
+        16
+      ],
+      [
+        6,
+        0
+      ],
+      [
+        6,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        6,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        6,
+        8
+      ],
+      [
+        6,
+        9
+      ],
+      [
+        6,
+        10
+      ],
+      [
+        6,
+        11
+      ],
+      [
+        6,
+        12
+      ],
+      [
+        6,
+        13
+      ],
+      [
+        6,
+        14
+      ],
+      [
+        6,
+        15
+      ],
+      [
+        6,
+        16
+      ],
+      [
+        7,
+        0
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        7,
+        10
+      ],
+      [
+        7,
+        11
+      ],
+      [
+        7,
+        12
+      ],
+      [
+        7,
+        13
+      ],
+      [
+        7,
+        14
+      ],
+      [
+        7,
+        15
+      ],
+      [
+        7,
+        16
+      ],
+      [
+        8,
+        0
+      ],
+      [
+        8,
+        1
+      ],
+      [
+        8,
+        2
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        8,
+        11
+      ],
+      [
+        8,
+        12
+      ],
+      [
+        8,
+        13
+      ],
+      [
+        8,
+        14
+      ],
+      [
+        8,
+        15
+      ],
+      [
+        8,
+        16
+      ],
+      [
+        9,
+        0
+      ],
+      [
+        9,
+        1
+      ],
+      [
+        9,
+        2
+      ],
+      [
+        9,
+        3
+      ],
+      [
+        9,
+        4
+      ],
+      [
+        9,
+        5
+      ],
+      [
+        9,
+        6
+      ],
+      [
+        9,
+        7
+      ],
+      [
+        9,
+        8
+      ],
+      [
+        9,
+        9
+      ],
+      [
+        9,
+        10
+      ],
+      [
+        9,
+        11
+      ],
+      [
+        9,
+        12
+      ],
+      [
+        9,
+        13
+      ],
+      [
+        9,
+        14
+      ],
+      [
+        9,
+        15
+      ],
+      [
+        9,
+        16
+      ],
+      [
+        10,
+        0
+      ],
+      [
+        10,
+        1
+      ],
+      [
+        10,
+        2
+      ],
+      [
+        10,
+        3
+      ],
+      [
+        10,
+        4
+      ],
+      [
+        10,
+        5
+      ],
+      [
+        10,
+        6
+      ],
+      [
+        10,
+        7
+      ],
+      [
+        10,
+        8
+      ],
+      [
+        10,
+        9
+      ],
+      [
+        10,
+        10
+      ],
+      [
+        10,
+        11
+      ],
+      [
+        10,
+        12
+      ],
+      [
+        10,
+        13
+      ],
+      [
+        10,
+        14
+      ],
+      [
+        10,
+        15
+      ],
+      [
+        10,
+        16
+      ],
+      [
+        11,
+        0
+      ],
+      [
+        11,
+        1
+      ],
+      [
+        11,
+        2
+      ],
+      [
+        11,
+        3
+      ],
+      [
+        11,
+        4
+      ],
+      [
+        11,
+        5
+      ],
+      [
+        11,
+        6
+      ],
+      [
+        11,
+        7
+      ],
+      [
+        11,
+        8
+      ],
+      [
+        11,
+        9
+      ],
+      [
+        11,
+        10
+      ],
+      [
+        11,
+        11
+      ],
+      [
+        11,
+        12
+      ],
+      [
+        11,
+        13
+      ],
+      [
+        11,
+        14
+      ],
+      [
+        11,
+        15
+      ],
+      [
+        11,
+        16
+      ],
+      [
+        12,
+        0
+      ],
+      [
+        12,
+        1
+      ],
+      [
+        12,
+        2
+      ],
+      [
+        12,
+        3
+      ],
+      [
+        12,
+        4
+      ],
+      [
+        12,
+        5
+      ],
+      [
+        12,
+        6
+      ],
+      [
+        12,
+        7
+      ],
+      [
+        12,
+        8
+      ],
+      [
+        12,
+        9
+      ],
+      [
+        12,
+        10
+      ],
+      [
+        12,
+        11
+      ],
+      [
+        12,
+        12
+      ],
+      [
+        12,
+        13
+      ],
+      [
+        12,
+        14
+      ],
+      [
+        12,
+        15
+      ],
+      [
+        12,
+        16
+      ],
+      [
+        13,
+        0
+      ],
+      [
+        13,
+        1
+      ],
+      [
+        13,
+        2
+      ],
+      [
+        13,
+        3
+      ],
+      [
+        13,
+        4
+      ],
+      [
+        13,
+        5
+      ],
+      [
+        13,
+        6
+      ],
+      [
+        13,
+        7
+      ],
+      [
+        13,
+        8
+      ],
+      [
+        13,
+        9
+      ],
+      [
+        13,
+        10
+      ],
+      [
+        13,
+        11
+      ],
+      [
+        13,
+        12
+      ],
+      [
+        13,
+        13
+      ],
+      [
+        13,
+        14
+      ],
+      [
+        13,
+        15
+      ],
+      [
+        13,
+        16
+      ],
+      [
+        14,
+        0
+      ],
+      [
+        14,
+        1
+      ],
+      [
+        14,
+        2
+      ],
+      [
+        14,
+        3
+      ],
+      [
+        14,
+        4
+      ],
+      [
+        14,
+        5
+      ],
+      [
+        14,
+        6
+      ],
+      [
+        14,
+        7
+      ],
+      [
+        14,
+        8
+      ],
+      [
+        14,
+        9
+      ],
+      [
+        14,
+        10
+      ],
+      [
+        14,
+        11
+      ],
+      [
+        14,
+        12
+      ],
+      [
+        14,
+        13
+      ],
+      [
+        14,
+        14
+      ],
+      [
+        14,
+        15
+      ],
+      [
+        14,
+        16
+      ]
+    ],
+    "targets": [
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        7,
+        10
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        9
+      ]
+    ],
+    "covered": [
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        7,
+        10
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        9
+      ]
+    ],
+    "published_targets": [
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        7,
+        10
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        8,
+        10
+      ]
+    ],
+    "deferred_targets": [
+      [
+        7,
+        5
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        8,
+        10
+      ]
+    ],
+    "current": [
+      7,
+      6
+    ],
+    "base": [
+      3,
+      3
+    ],
+    "previous": [
+      7,
+      7
+    ],
+    "predator": [
+      -1,
+      0
+    ],
+    "initial_targets": [
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        6
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        7,
+        8
+      ],
+      [
+        7,
+        9
+      ],
+      [
+        7,
+        10
+      ],
+      [
+        8,
+        3
+      ],
+      [
+        8,
+        4
+      ],
+      [
+        8,
+        5
+      ],
+      [
+        8,
+        6
+      ],
+      [
+        8,
+        7
+      ],
+      [
+        8,
+        8
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        8,
+        10
+      ]
+    ],
+    "old_route": [
+      [
+        7,
+        6
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        6,
+        5
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        3
+      ]
+    ],
+    "distance_budget": 999983.0
+  },
+  "initial_collect_here": {
+    "new_H": [],
+    "reason": "real initial collection at region-entry base or idempotent history"
+  },
+  "identity_before": {
+    "primary": {
+      "module": "center_bench_v01_20261022.service",
+      "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\service.py",
+      "sha256": "9516e463686bab7fa4a18a5bc21078efc3ad974cf5f55be2eed0d278d529e17b"
+    },
+    "independent": {
+      "module": "center_bench_v01_20261022.audit.region",
+      "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\audit\\region.py",
+      "sha256": "ddd294f9b9d7e882ee742242e9e53712a05cfb27ad2d11838f2b6754bc53a111"
+    }
+  },
+  "native": {
+    "raw": {
+      "route": [
+        [
+          7,
+          6
+        ],
+        [
+          6,
+          6
+        ],
+        [
+          6,
+          5
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          3,
+          3
+        ]
+      ],
+      "source": "common_fallback",
+      "status": "finished",
+      "seconds": 0.0018210000125691295,
+      "active_stage": "shuffle_1_expand",
+      "events": [
+        {
+          "stage": "fallback",
+          "start": 0.0003469000803306699,
+          "end": 0.0004355000564828515,
+          "status": "completed"
+        },
+        {
+          "stage": "H_generate",
+          "start": 0.00043780007399618626,
+          "end": 0.000453100074082613,
+          "status": "completed"
+        },
+        {
+          "stage": "H_raw",
+          "start": 0.0004542000824585557,
+          "end": 0.0005338001064956188,
+          "status": "completed"
+        },
+        {
+          "stage": "H_nearest",
+          "start": 0.0005347999976947904,
+          "end": 0.0010319000575691462,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_raw",
+          "start": 0.0010330000659450889,
+          "end": 0.0010465000523254275,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_passes",
+          "start": 0.0010485000675544143,
+          "end": 0.0012281000381335616,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_scan_opt",
+          "start": 0.001047500059939921,
+          "end": 0.0012293000472709537,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_expand",
+          "start": 0.0012301000533625484,
+          "end": 0.0012413000222295523,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_passes",
+          "start": 0.001243000035174191,
+          "end": 0.0012547000078484416,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_NN_opt",
+          "start": 0.0012423000298440456,
+          "end": 0.001255400013178587,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_expand",
+          "start": 0.0012559000169858336,
+          "end": 0.001265200087800622,
+          "status": "completed"
+        },
+        {
+          "stage": "V_generate",
+          "start": 0.0012662000954151154,
+          "end": 0.0012769000604748726,
+          "status": "completed"
+        },
+        {
+          "stage": "V_raw",
+          "start": 0.0012777000665664673,
+          "end": 0.0012882000301033258,
+          "status": "completed"
+        },
+        {
+          "stage": "V_nearest",
+          "start": 0.0012888000346720219,
+          "end": 0.0012976001016795635,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_raw",
+          "start": 0.0012981001054868102,
+          "end": 0.0013062000507488847,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_passes",
+          "start": 0.0013076000614091754,
+          "end": 0.0013296999968588352,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_scan_opt",
+          "start": 0.0013071000576019287,
+          "end": 0.0013303000014275312,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_expand",
+          "start": 0.001335300039499998,
+          "end": 0.001343000098131597,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_passes",
+          "start": 0.0013440001057460904,
+          "end": 0.0013538000639528036,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_NN_opt",
+          "start": 0.001343600102700293,
+          "end": 0.0013541000662371516,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_expand",
+          "start": 0.001354500069282949,
+          "end": 0.0013617000076919794,
+          "status": "completed"
+        },
+        {
+          "stage": "core_finished",
+          "end": 0.0013623000122606754,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_deep_passes",
+          "start": 0.0013638000236824155,
+          "end": 0.0013735000975430012,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_scan_deep",
+          "start": 0.0013633000198751688,
+          "end": 0.0013740001013502479,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_deep_expand",
+          "start": 0.0013744001043960452,
+          "end": 0.0013819000450894237,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_deep_passes",
+          "start": 0.0013830000534653664,
+          "end": 0.0013925000093877316,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_NN_deep",
+          "start": 0.001382600050419569,
+          "end": 0.0013928000116720796,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_deep_expand",
+          "start": 0.001393200014717877,
+          "end": 0.0014009000733494759,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_deep_passes",
+          "start": 0.0014016000786796212,
+          "end": 0.0014114000368863344,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_scan_deep",
+          "start": 0.0014013000763952732,
+          "end": 0.0014117000391706824,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_deep_expand",
+          "start": 0.0014120000414550304,
+          "end": 0.0014191000955179334,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_deep_passes",
+          "start": 0.0014198001008480787,
+          "end": 0.001429300056770444,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_NN_deep",
+          "start": 0.0014195000985637307,
+          "end": 0.001429600059054792,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_deep_expand",
+          "start": 0.0014301000628620386,
+          "end": 0.001437300001271069,
+          "status": "completed"
+        },
+        {
+          "stage": "deep_finished",
+          "end": 0.0014377000043168664,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_raw",
+          "start": 0.0015010000206530094,
+          "end": 0.0015117001021280885,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_passes",
+          "start": 0.0015128001105040312,
+          "end": 0.001524000079371035,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "reverse_H_opt",
+          "start": 0.0015123001066967845,
+          "end": 0.0015246000839397311,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_expand",
+          "start": 0.0015251000877469778,
+          "end": 0.0015327000292018056,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_raw",
+          "start": 0.001533400034531951,
+          "end": 0.0015406000893563032,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_passes",
+          "start": 0.001541400095447898,
+          "end": 0.0015515000559389591,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "reverse_V_opt",
+          "start": 0.0015410000924021006,
+          "end": 0.0015521000605076551,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_expand",
+          "start": 0.0015525000635534525,
+          "end": 0.0015592999989166856,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_raw",
+          "start": 0.0015598000027239323,
+          "end": 0.0015786000294610858,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_passes",
+          "start": 0.0015796000370755792,
+          "end": 0.0016101000364869833,
+          "passes": 3,
+          "swaps": 2,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "perturb_H_opt",
+          "start": 0.0015792000340297818,
+          "end": 0.00161060004029423,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_expand",
+          "start": 0.001611200044862926,
+          "end": 0.0016185001004487276,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_raw",
+          "start": 0.001618900103494525,
+          "end": 0.0016361000016331673,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_passes",
+          "start": 0.001636900007724762,
+          "end": 0.0016667000018060207,
+          "passes": 3,
+          "swaps": 2,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "perturb_V_opt",
+          "start": 0.001636600005440414,
+          "end": 0.001667100004851818,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_expand",
+          "start": 0.0016675000078976154,
+          "end": 0.001674800063483417,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_raw",
+          "start": 0.0016752000665292144,
+          "end": 0.0017190000507980585,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_passes",
+          "start": 0.0017198000568896532,
+          "end": 0.0017476000357419252,
+          "passes": 3,
+          "swaps": 2,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "shuffle_0_opt",
+          "start": 0.0017195000546053052,
+          "end": 0.0017482000403106213,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_expand",
+          "start": 0.001748700044117868,
+          "end": 0.001757600111886859,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_raw",
+          "start": 0.0017580999992787838,
+          "end": 0.001765000051818788,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_passes",
+          "start": 0.0017657000571489334,
+          "end": 0.0017838000785559416,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "shuffle_1_opt",
+          "start": 0.0017654000548645854,
+          "end": 0.001784200081601739,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_expand",
+          "start": 0.0017846000846475363,
+          "end": 0.0017915000207722187,
+          "status": "completed"
+        }
+      ],
+      "improvements": [
+        {
+          "seconds": 0.0004341000458225608,
+          "steps": 7,
+          "source": "common_fallback"
+        }
+      ],
+      "core_finished": true,
+      "method": "P2_MULTI",
+      "budget": 19.999754399992526,
+      "seed": 20261020,
+      "fallback_selected": true,
+      "overrun_gt_10ms": false
+    },
+    "entry_seconds": 0.0021877000108361244,
+    "budget": 20,
+    "method": "P2_MULTI",
+    "seed": 20261020,
+    "phase_seconds": {
+      "encoding": 0.00011689995881170034
+    }
+  },
+  "loaded_core_sources": {
+    "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\runtime.py": "1e69a2933db6f43372945709172edb4054981f39ddcc590c7155e56e548dc553",
+    "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\p2_adapter.py": "f1b08632759cd42a4b904ab061722b714dcda0b6bed42a2929873e528584bd23",
+    "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py": "2eee969dc3a1c46fe1ff055080d57f56cf0144551098de4fd25280d5fc074b14",
+    "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\p2_search_audit.py": "d1b93bd741b80af02c8f398b495441da570ae75f27008d512e9d873844a0385a",
+    "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\unified_geometry.py": "b0d70871ab4b2a3d3a4ccf3edcdadf4b3db9eb2415134d5740270a76293aff53",
+    "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\bfs_metric_geometry.py": "98298ca6620cf2aba0aedd5b7cfc4fbdabfdb2316e01ddeeb9be791b8a2b8933"
+  },
+  "post_request_utf8": "{\"id\":\"small_L_C0_2\",\"input\":{\"name\":\"small_L_C0_2\",\"free\":[[0,0],[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[0,8],[0,9],[0,10],[0,11],[0,12],[0,13],[0,14],[0,15],[0,16],[1,0],[1,1],[1,2],[1,3],[1,4],[1,5],[1,6],[1,7],[1,8],[1,9],[1,10],[1,11],[1,12],[1,13],[1,14],[1,15],[1,16],[2,0],[2,1],[2,2],[2,3],[2,4],[2,5],[2,6],[2,7],[2,8],[2,9],[2,10],[2,11],[2,12],[2,13],[2,14],[2,15],[2,16],[3,0],[3,1],[3,2],[3,3],[3,4],[3,5],[3,6],[3,7],[3,8],[3,9],[3,10],[3,11],[3,12],[3,13],[3,14],[3,15],[3,16],[4,0],[4,1],[4,2],[4,3],[4,4],[4,5],[4,6],[4,7],[4,8],[4,9],[4,10],[4,11],[4,12],[4,13],[4,14],[4,15],[4,16],[5,0],[5,1],[5,2],[5,3],[5,4],[5,5],[5,6],[5,7],[5,8],[5,9],[5,10],[5,11],[5,12],[5,13],[5,14],[5,15],[5,16],[6,0],[6,1],[6,2],[6,3],[6,4],[6,5],[6,6],[6,7],[6,8],[6,9],[6,10],[6,11],[6,12],[6,13],[6,14],[6,15],[6,16],[7,0],[7,1],[7,2],[7,3],[7,4],[7,6],[7,7],[7,8],[7,9],[7,10],[7,11],[7,12],[7,13],[7,14],[7,15],[7,16],[8,0],[8,1],[8,2],[8,4],[8,5],[8,6],[8,7],[8,8],[8,9],[8,11],[8,12],[8,13],[8,14],[8,15],[8,16],[9,0],[9,1],[9,2],[9,3],[9,4],[9,5],[9,6],[9,7],[9,8],[9,9],[9,10],[9,11],[9,12],[9,13],[9,14],[9,15],[9,16],[10,0],[10,1],[10,2],[10,3],[10,4],[10,5],[10,6],[10,7],[10,8],[10,9],[10,10],[10,11],[10,12],[10,13],[10,14],[10,15],[10,16],[11,0],[11,1],[11,2],[11,3],[11,4],[11,5],[11,6],[11,7],[11,8],[11,9],[11,10],[11,11],[11,12],[11,13],[11,14],[11,15],[11,16],[12,0],[12,1],[12,2],[12,3],[12,4],[12,5],[12,6],[12,7],[12,8],[12,9],[12,10],[12,11],[12,12],[12,13],[12,14],[12,15],[12,16],[13,0],[13,1],[13,2],[13,3],[13,4],[13,5],[13,6],[13,7],[13,8],[13,9],[13,10],[13,11],[13,12],[13,13],[13,14],[13,15],[13,16],[14,0],[14,1],[14,2],[14,3],[14,4],[14,5],[14,6],[14,7],[14,8],[14,9],[14,10],[14,11],[14,12],[14,13],[14,14],[14,15],[14,16]],\"targets\":[[3,3],[3,4],[4,3],[4,4],[5,3],[5,4],[6,3],[6,4],[7,3],[7,4],[7,6],[7,7],[7,8],[7,9],[7,10],[8,4],[8,5],[8,6],[8,7],[8,8],[8,9]],\"covered\":[[3,3],[4,3],[5,3],[6,3],[7,3],[7,4],[7,6],[7,7],[7,8],[7,9],[7,10],[8,4],[8,5],[8,6],[8,7],[8,8],[8,9]],\"published_targets\":[[3,3],[3,4],[4,3],[4,4],[5,3],[5,4],[6,3],[6,4],[7,3],[7,4],[7,5],[7,6],[7,7],[7,8],[7,9],[7,10],[8,3],[8,4],[8,5],[8,6],[8,7],[8,8],[8,9],[8,10]],\"deferred_targets\":[[7,5],[8,3],[8,10]],\"current\":[7,6],\"base\":[3,3],\"previous\":[7,7],\"predator\":[-1,0],\"initial_targets\":[[3,3],[3,4],[4,3],[4,4],[5,3],[5,4],[6,3],[6,4],[7,3],[7,4],[7,5],[7,6],[7,7],[7,8],[7,9],[7,10],[8,3],[8,4],[8,5],[8,6],[8,7],[8,8],[8,9],[8,10]],\"old_route\":[[7,6],[7,5],[6,5],[6,4],[5,4],[4,4],[3,4],[3,3]],\"distance_budget\":999983.0},\"raw\":{\"route\":[[7,6],[6,6],[6,5],[6,4],[5,4],[4,4],[3,4],[3,3]],\"source\":\"common_fallback\",\"status\":\"finished\",\"seconds\":0.0018210000125691295,\"active_stage\":\"shuffle_1_expand\",\"events\":[{\"stage\":\"fallback\",\"start\":0.0003469000803306699,\"end\":0.0004355000564828515,\"status\":\"completed\"},{\"stage\":\"H_generate\",\"start\":0.00043780007399618626,\"end\":0.000453100074082613,\"status\":\"completed\"},{\"stage\":\"H_raw\",\"start\":0.0004542000824585557,\"end\":0.0005338001064956188,\"status\":\"completed\"},{\"stage\":\"H_nearest\",\"start\":0.0005347999976947904,\"end\":0.0010319000575691462,\"status\":\"completed\"},{\"stage\":\"H_NN_raw\",\"start\":0.0010330000659450889,\"end\":0.0010465000523254275,\"status\":\"completed\"},{\"stage\":\"H_scan_passes\",\"start\":0.0010485000675544143,\"end\":0.0012281000381335616,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_scan_opt\",\"start\":0.001047500059939921,\"end\":0.0012293000472709537,\"status\":\"completed\"},{\"stage\":\"H_scan_expand\",\"start\":0.0012301000533625484,\"end\":0.0012413000222295523,\"status\":\"completed\"},{\"stage\":\"H_NN_passes\",\"start\":0.001243000035174191,\"end\":0.0012547000078484416,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_NN_opt\",\"start\":0.0012423000298440456,\"end\":0.001255400013178587,\"status\":\"completed\"},{\"stage\":\"H_NN_expand\",\"start\":0.0012559000169858336,\"end\":0.001265200087800622,\"status\":\"completed\"},{\"stage\":\"V_generate\",\"start\":0.0012662000954151154,\"end\":0.0012769000604748726,\"status\":\"completed\"},{\"stage\":\"V_raw\",\"start\":0.0012777000665664673,\"end\":0.0012882000301033258,\"status\":\"completed\"},{\"stage\":\"V_nearest\",\"start\":0.0012888000346720219,\"end\":0.0012976001016795635,\"status\":\"completed\"},{\"stage\":\"V_NN_raw\",\"start\":0.0012981001054868102,\"end\":0.0013062000507488847,\"status\":\"completed\"},{\"stage\":\"V_scan_passes\",\"start\":0.0013076000614091754,\"end\":0.0013296999968588352,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_scan_opt\",\"start\":0.0013071000576019287,\"end\":0.0013303000014275312,\"status\":\"completed\"},{\"stage\":\"V_scan_expand\",\"start\":0.001335300039499998,\"end\":0.001343000098131597,\"status\":\"completed\"},{\"stage\":\"V_NN_passes\",\"start\":0.0013440001057460904,\"end\":0.0013538000639528036,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_NN_opt\",\"start\":0.001343600102700293,\"end\":0.0013541000662371516,\"status\":\"completed\"},{\"stage\":\"V_NN_expand\",\"start\":0.001354500069282949,\"end\":0.0013617000076919794,\"status\":\"completed\"},{\"stage\":\"core_finished\",\"end\":0.0013623000122606754,\"status\":\"completed\"},{\"stage\":\"H_scan_deep_passes\",\"start\":0.0013638000236824155,\"end\":0.0013735000975430012,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_scan_deep\",\"start\":0.0013633000198751688,\"end\":0.0013740001013502479,\"status\":\"completed\"},{\"stage\":\"H_scan_deep_expand\",\"start\":0.0013744001043960452,\"end\":0.0013819000450894237,\"status\":\"completed\"},{\"stage\":\"H_NN_deep_passes\",\"start\":0.0013830000534653664,\"end\":0.0013925000093877316,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_NN_deep\",\"start\":0.001382600050419569,\"end\":0.0013928000116720796,\"status\":\"completed\"},{\"stage\":\"H_NN_deep_expand\",\"start\":0.001393200014717877,\"end\":0.0014009000733494759,\"status\":\"completed\"},{\"stage\":\"V_scan_deep_passes\",\"start\":0.0014016000786796212,\"end\":0.0014114000368863344,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_scan_deep\",\"start\":0.0014013000763952732,\"end\":0.0014117000391706824,\"status\":\"completed\"},{\"stage\":\"V_scan_deep_expand\",\"start\":0.0014120000414550304,\"end\":0.0014191000955179334,\"status\":\"completed\"},{\"stage\":\"V_NN_deep_passes\",\"start\":0.0014198001008480787,\"end\":0.001429300056770444,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_NN_deep\",\"start\":0.0014195000985637307,\"end\":0.001429600059054792,\"status\":\"completed\"},{\"stage\":\"V_NN_deep_expand\",\"start\":0.0014301000628620386,\"end\":0.001437300001271069,\"status\":\"completed\"},{\"stage\":\"deep_finished\",\"end\":0.0014377000043168664,\"status\":\"completed\"},{\"stage\":\"reverse_H_raw\",\"start\":0.0015010000206530094,\"end\":0.0015117001021280885,\"status\":\"completed\"},{\"stage\":\"reverse_H_passes\",\"start\":0.0015128001105040312,\"end\":0.001524000079371035,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"reverse_H_opt\",\"start\":0.0015123001066967845,\"end\":0.0015246000839397311,\"status\":\"completed\"},{\"stage\":\"reverse_H_expand\",\"start\":0.0015251000877469778,\"end\":0.0015327000292018056,\"status\":\"completed\"},{\"stage\":\"reverse_V_raw\",\"start\":0.001533400034531951,\"end\":0.0015406000893563032,\"status\":\"completed\"},{\"stage\":\"reverse_V_passes\",\"start\":0.001541400095447898,\"end\":0.0015515000559389591,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"reverse_V_opt\",\"start\":0.0015410000924021006,\"end\":0.0015521000605076551,\"status\":\"completed\"},{\"stage\":\"reverse_V_expand\",\"start\":0.0015525000635534525,\"end\":0.0015592999989166856,\"status\":\"completed\"},{\"stage\":\"perturb_H_raw\",\"start\":0.0015598000027239323,\"end\":0.0015786000294610858,\"status\":\"completed\"},{\"stage\":\"perturb_H_passes\",\"start\":0.0015796000370755792,\"end\":0.0016101000364869833,\"passes\":3,\"swaps\":2,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"perturb_H_opt\",\"start\":0.0015792000340297818,\"end\":0.00161060004029423,\"status\":\"completed\"},{\"stage\":\"perturb_H_expand\",\"start\":0.001611200044862926,\"end\":0.0016185001004487276,\"status\":\"completed\"},{\"stage\":\"perturb_V_raw\",\"start\":0.001618900103494525,\"end\":0.0016361000016331673,\"status\":\"completed\"},{\"stage\":\"perturb_V_passes\",\"start\":0.001636900007724762,\"end\":0.0016667000018060207,\"passes\":3,\"swaps\":2,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"perturb_V_opt\",\"start\":0.001636600005440414,\"end\":0.001667100004851818,\"status\":\"completed\"},{\"stage\":\"perturb_V_expand\",\"start\":0.0016675000078976154,\"end\":0.001674800063483417,\"status\":\"completed\"},{\"stage\":\"shuffle_0_raw\",\"start\":0.0016752000665292144,\"end\":0.0017190000507980585,\"status\":\"completed\"},{\"stage\":\"shuffle_0_passes\",\"start\":0.0017198000568896532,\"end\":0.0017476000357419252,\"passes\":3,\"swaps\":2,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"shuffle_0_opt\",\"start\":0.0017195000546053052,\"end\":0.0017482000403106213,\"status\":\"completed\"},{\"stage\":\"shuffle_0_expand\",\"start\":0.001748700044117868,\"end\":0.001757600111886859,\"status\":\"completed\"},{\"stage\":\"shuffle_1_raw\",\"start\":0.0017580999992787838,\"end\":0.001765000051818788,\"status\":\"completed\"},{\"stage\":\"shuffle_1_passes\",\"start\":0.0017657000571489334,\"end\":0.0017838000785559416,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"shuffle_1_opt\",\"start\":0.0017654000548645854,\"end\":0.001784200081601739,\"status\":\"completed\"},{\"stage\":\"shuffle_1_expand\",\"start\":0.0017846000846475363,\"end\":0.0017915000207722187,\"status\":\"completed\"}],\"improvements\":[{\"seconds\":0.0004341000458225608,\"steps\":7,\"source\":\"common_fallback\"}],\"core_finished\":true,\"method\":\"P2_MULTI\",\"budget\":19.999754399992526,\"seed\":20261020,\"fallback_selected\":true,\"overrun_gt_10ms\":false}}",
+  "post_response_utf8": "{\"id\":\"small_L_C0_2\",\"L4\":7,\"Lshortcut_interval\":[\"7\",\"7\"],\"Lshortcut_display\":7.0,\"saving_display\":0.0,\"saving_ratio_display\":0.0,\"distance_budget\":999983.0,\"resource_proof\":\"source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E\",\"vertices\":[[7,6],[6,6],[6,4],[5,4],[4,4],[3,4],[3,3]],\"edges\":[{\"left\":0,\"right\":1,\"a\":[7,6],\"b\":[6,6],\"part\":0,\"kind\":\"start_to_first\"},{\"left\":1,\"right\":3,\"a\":[6,6],\"b\":[6,4],\"part\":0,\"kind\":\"start_to_first\"},{\"left\":3,\"right\":4,\"a\":[6,4],\"b\":[5,4],\"part\":1,\"kind\":\"between_first_services\"},{\"left\":4,\"right\":5,\"a\":[5,4],\"b\":[4,4],\"part\":2,\"kind\":\"between_first_services\"},{\"left\":5,\"right\":6,\"a\":[4,4],\"b\":[3,4],\"part\":3,\"kind\":\"between_first_services\"},{\"left\":6,\"right\":7,\"a\":[3,4],\"b\":[3,3],\"part\":4,\"kind\":\"last_to_base\"}],\"parts\":[{\"left\":0,\"right\":3,\"kind\":\"start_to_first\",\"edge_start\":0,\"edge_end\":2,\"L4\":3,\"new_interval\":[\"3\",\"3\"]},{\"left\":3,\"right\":4,\"kind\":\"between_first_services\",\"edge_start\":2,\"edge_end\":3,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":4,\"right\":5,\"kind\":\"between_first_services\",\"edge_start\":3,\"edge_end\":4,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":5,\"right\":6,\"kind\":\"between_first_services\",\"edge_start\":4,\"edge_end\":5,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":6,\"right\":7,\"kind\":\"last_to_base\",\"edge_start\":5,\"edge_end\":6,\"L4\":1,\"new_interval\":[\"1\",\"1\"]}],\"locked_nominal_anchors\":[{\"point\":[6,4],\"index\":3},{\"point\":[5,4],\"index\":4},{\"point\":[4,4],\"index\":5},{\"point\":[3,4],\"index\":6}],\"credit_witnesses\":[{\"point\":[6,4],\"edge\":1,\"evidence\":{\"interval\":{\"lower\":{\"n\":9,\"d\":10},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":19,\"d\":20},\"point\":[{\"n\":6,\"d\":1},{\"n\":41,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[5,4],\"edge\":2,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":51,\"d\":10},{\"n\":4,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[4,4],\"edge\":3,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":41,\"d\":10},{\"n\":4,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[3,4],\"edge\":4,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":31,\"d\":10},{\"n\":4,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}}],\"witness_order_differs_from_locked_anchors\":false,\"trace_cross_original_moves\":{\"start_to_first x unavailable\":3,\"between_first_services x unavailable\":3,\"last_to_base x unavailable\":1},\"counts\":{\"candidate\":8,\"source_validation\":7,\"output_validation\":6,\"service_intersections\":24,\"post_inside_tests\":4,\"post_service_intersections\":24},\"query_log\":[{\"i\":0,\"j\":3,\"legal\":false,\"part\":0},{\"i\":0,\"j\":2,\"legal\":false,\"part\":0},{\"i\":0,\"j\":1,\"legal\":true,\"part\":0},{\"i\":1,\"j\":3,\"legal\":true,\"part\":0},{\"i\":3,\"j\":4,\"legal\":true,\"part\":1},{\"i\":4,\"j\":5,\"legal\":true,\"part\":2},{\"i\":5,\"j\":6,\"legal\":true,\"part\":3},{\"i\":6,\"j\":7,\"legal\":true,\"part\":4}],\"fallback\":null,\"turns_original\":{\"nonzero_direction_changes\":3,\"total_turn_radians\":4.71238898038469},\"turns_new\":{\"nonzero_direction_changes\":3,\"total_turn_radians\":4.71238898038469},\"timing\":{\"parse_preprocess_source_validation\":0.0005919999675825238,\"candidate\":0.0004054000601172447,\"main_validation_metrics\":0.0007783999899402261}}",
+  "post_envelope": {
+    "entry_seconds": 0.0018413999350741506,
+    "late": false,
+    "counts": {
+      "candidate": 8,
+      "source_validation": 7,
+      "output_validation": 6,
+      "service_intersections": 24,
+      "post_inside_tests": 4,
+      "post_service_intersections": 24
+    },
+    "fallback": null
+  },
+  "post": {
+    "id": "small_L_C0_2",
+    "L4": 7,
+    "Lshortcut_interval": [
+      "7",
+      "7"
+    ],
+    "Lshortcut_display": 7.0,
+    "saving_display": 0.0,
+    "saving_ratio_display": 0.0,
+    "distance_budget": 999983.0,
+    "resource_proof": "source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E",
+    "vertices": [
+      [
+        7,
+        6
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        3
+      ]
+    ],
+    "edges": [
+      {
+        "left": 0,
+        "right": 1,
+        "a": [
+          7,
+          6
+        ],
+        "b": [
+          6,
+          6
+        ],
+        "part": 0,
+        "kind": "start_to_first"
+      },
+      {
+        "left": 1,
+        "right": 3,
+        "a": [
+          6,
+          6
+        ],
+        "b": [
+          6,
+          4
+        ],
+        "part": 0,
+        "kind": "start_to_first"
+      },
+      {
+        "left": 3,
+        "right": 4,
+        "a": [
+          6,
+          4
+        ],
+        "b": [
+          5,
+          4
+        ],
+        "part": 1,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 4,
+        "right": 5,
+        "a": [
+          5,
+          4
+        ],
+        "b": [
+          4,
+          4
+        ],
+        "part": 2,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 5,
+        "right": 6,
+        "a": [
+          4,
+          4
+        ],
+        "b": [
+          3,
+          4
+        ],
+        "part": 3,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 6,
+        "right": 7,
+        "a": [
+          3,
+          4
+        ],
+        "b": [
+          3,
+          3
+        ],
+        "part": 4,
+        "kind": "last_to_base"
+      }
+    ],
+    "parts": [
+      {
+        "left": 0,
+        "right": 3,
+        "kind": "start_to_first",
+        "edge_start": 0,
+        "edge_end": 2,
+        "L4": 3,
+        "new_interval": [
+          "3",
+          "3"
+        ]
+      },
+      {
+        "left": 3,
+        "right": 4,
+        "kind": "between_first_services",
+        "edge_start": 2,
+        "edge_end": 3,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 4,
+        "right": 5,
+        "kind": "between_first_services",
+        "edge_start": 3,
+        "edge_end": 4,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 5,
+        "right": 6,
+        "kind": "between_first_services",
+        "edge_start": 4,
+        "edge_end": 5,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 6,
+        "right": 7,
+        "kind": "last_to_base",
+        "edge_start": 5,
+        "edge_end": 6,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      }
+    ],
+    "locked_nominal_anchors": [
+      {
+        "point": [
+          6,
+          4
+        ],
+        "index": 3
+      },
+      {
+        "point": [
+          5,
+          4
+        ],
+        "index": 4
+      },
+      {
+        "point": [
+          4,
+          4
+        ],
+        "index": 5
+      },
+      {
+        "point": [
+          3,
+          4
+        ],
+        "index": 6
+      }
+    ],
+    "credit_witnesses": [
+      {
+        "point": [
+          6,
+          4
+        ],
+        "edge": 1,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 9,
+              "d": 10
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 19,
+              "d": 20
+            },
+            "point": [
+              {
+                "n": 6,
+                "d": 1
+              },
+              {
+                "n": 41,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          5,
+          4
+        ],
+        "edge": 2,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 51,
+                "d": 10
+              },
+              {
+                "n": 4,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          4,
+          4
+        ],
+        "edge": 3,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 41,
+                "d": 10
+              },
+              {
+                "n": 4,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          3,
+          4
+        ],
+        "edge": 4,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 31,
+                "d": 10
+              },
+              {
+                "n": 4,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      }
+    ],
+    "witness_order_differs_from_locked_anchors": false,
+    "trace_cross_original_moves": {
+      "start_to_first x unavailable": 3,
+      "between_first_services x unavailable": 3,
+      "last_to_base x unavailable": 1
+    },
+    "counts": {
+      "candidate": 8,
+      "source_validation": 7,
+      "output_validation": 6,
+      "service_intersections": 24,
+      "post_inside_tests": 4,
+      "post_service_intersections": 24
+    },
+    "query_log": [
+      {
+        "i": 0,
+        "j": 3,
+        "legal": false,
+        "part": 0
+      },
+      {
+        "i": 0,
+        "j": 2,
+        "legal": false,
+        "part": 0
+      },
+      {
+        "i": 0,
+        "j": 1,
+        "legal": true,
+        "part": 0
+      },
+      {
+        "i": 1,
+        "j": 3,
+        "legal": true,
+        "part": 0
+      },
+      {
+        "i": 3,
+        "j": 4,
+        "legal": true,
+        "part": 1
+      },
+      {
+        "i": 4,
+        "j": 5,
+        "legal": true,
+        "part": 2
+      },
+      {
+        "i": 5,
+        "j": 6,
+        "legal": true,
+        "part": 3
+      },
+      {
+        "i": 6,
+        "j": 7,
+        "legal": true,
+        "part": 4
+      }
+    ],
+    "fallback": null,
+    "turns_original": {
+      "nonzero_direction_changes": 3,
+      "total_turn_radians": 4.71238898038469
+    },
+    "turns_new": {
+      "nonzero_direction_changes": 3,
+      "total_turn_radians": 4.71238898038469
+    },
+    "timing": {
+      "parse_preprocess_source_validation": 0.0005919999675825238,
+      "candidate": 0.0004054000601172447,
+      "main_validation_metrics": 0.0007783999899402261
+    }
+  },
+  "query_scope_schema": {
+    "engine": 24,
+    "raw_execution": 10,
+    "post_execution": 10,
+    "total": 44
+  },
+  "timing": {
+    "native_entry_seconds": 0.0022075000451877713,
+    "raw_common_end_to_end": 0.004429499967955053,
+    "post_increment": 0.004138200078159571,
+    "combined_end_to_end": 0.008567700046114624,
+    "artifact_flush_excluded_seconds": 0.002023200038820505,
+    "native_late": false,
+    "raw_stage_late": false,
+    "combined_late": false,
+    "post_late": false,
+    "native_status": "finished",
+    "termination": "natural",
+    "raw_necessary_wrapper_seconds": 0.0022219999227672815,
+    "post_engine_seconds": 0.0018413999350741506,
+    "post_necessary_wrapper_seconds": 0.00229680014308542,
+    "main_measured_includes": "same raw/post virtual execution and encoding, post-return actual-source hashes, common single-entry dispatch, ON original profile only",
+    "outside_main": "pre-start frozen-source hashes, cold import, two actual evidence flushes, independent audit, process creation"
+  },
+  "main_passed": true,
+  "independent": {
+    "passed": true,
+    "views": {
+      "C0": {
+        "passed": true,
+        "counts": {
+          "independent_region_point_tests": 71,
+          "unit_edge_membership_proofs": 7,
+          "metric_distance": 7,
+          "target_box_tests": 147,
+          "independent_service_intersections": 10,
+          "independent_region_boundary_parameters": 20,
+          "new_credit_center_checks": 4
+        }
+      },
+      "C": {
+        "passed": true,
+        "counts": {
+          "independent_region_point_tests": 71,
+          "metric_distance": 6,
+          "target_box_tests": 126,
+          "independent_service_intersections": 10,
+          "independent_region_boundary_parameters": 20,
+          "new_credit_center_checks": 4
+        }
+      }
+    },
+    "post": {
+      "passed": true,
+      "id": "small_L_C0_2",
+      "input_sha256": "9ef64b8a7dfbdb8a98ab655a7cba13aef8c3856a54f4b1d82c7e16c332aeee4d",
+      "output_sha256": "d845da7876ebac9240f8ef81dafd8a763ecbe8afcfe1286b6bdfad9f57030919",
+      "counts": {
+        "geometry": 6,
+        "service_intersections": 24,
+        "independent_region_point_tests": 44,
+        "independent_target_box_tests": 24,
+        "independent_service_intersections": 8,
+        "independent_region_boundary_parameters": 16
+      },
+      "seconds": 0.0011757999891415238,
+      "independent_length_interval": [
+        "7",
+        "7"
+      ],
+      "geometry_method": "closed forbidden squares exact slab intersection; bounding-box exterior forbidden",
+      "service_method": "independent strict-region boundary partition and interior witness per task"
+    },
+    "counts": {
+      "independent_region_point_tests": 142,
+      "unit_edge_membership_proofs": 7,
+      "metric_distance": 13,
+      "target_box_tests": 273,
+      "independent_service_intersections": 20,
+      "independent_region_boundary_parameters": 40,
+      "new_credit_center_checks": 8,
+      "post_independent_geometry": 6,
+      "post_independent_service_intersections": 24,
+      "post_independent_independent_region_point_tests": 44,
+      "post_independent_independent_target_box_tests": 24,
+      "post_independent_independent_service_intersections": 8,
+      "post_independent_independent_region_boundary_parameters": 16
+    },
+    "seconds": 0.0038309000665321946,
+    "identity": {
+      "primary": {
+        "module": "center_bench_v01_20261022.service",
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\service.py",
+        "sha256": "9516e463686bab7fa4a18a5bc21078efc3ad974cf5f55be2eed0d278d529e17b"
+      },
+      "independent": {
+        "module": "center_bench_v01_20261022.audit.region",
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\audit\\region.py",
+        "sha256": "ddd294f9b9d7e882ee742242e9e53712a05cfb27ad2d11838f2b6754bc53a111"
+      }
+    }
+  },
+  "independent_wall_seconds": 0.0073787999572232366,
+  "identity_after": {
+    "primary": {
+      "module": "center_bench_v01_20261022.service",
+      "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\service.py",
+      "sha256": "9516e463686bab7fa4a18a5bc21078efc3ad974cf5f55be2eed0d278d529e17b"
+    },
+    "independent": {
+      "module": "center_bench_v01_20261022.audit.region",
+      "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\audit\\region.py",
+      "sha256": "ddd294f9b9d7e882ee742242e9e53712a05cfb27ad2d11838f2b6754bc53a111"
+    }
+  },
+  "entry_ledger": {
+    "started": 1,
+    "returned": 1,
+    "exceptions": 0
+  },
+  "native_observation": {
+    "observable": false,
+    "status": "not_observed_profile_OFF",
+    "counts": null
+  },
+  "native_counts_actual": null,
+  "worker_wall_seconds": 0.24422090000007302
+}

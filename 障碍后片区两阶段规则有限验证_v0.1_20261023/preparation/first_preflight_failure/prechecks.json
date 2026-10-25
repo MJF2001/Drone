@@ -1,0 +1,324 @@
+{
+  "cases": [
+    {
+      "id": 1,
+      "coverage": "AST/main guards, frozen coordinates, call caps",
+      "expect": "parse and static registration pass; 44 planned only",
+      "passed": true,
+      "seconds": 0.04078069992829114
+    },
+    {
+      "id": 2,
+      "coverage": "unique module names, import side effects, public observer identities",
+      "expect": "no solve/process/core_route call on import; distinct independent service module",
+      "passed": true,
+      "task_calls_on_import": [],
+      "seconds": 6.69492799998261
+    },
+    {
+      "id": 3,
+      "coverage": "missing/overlapping task labels",
+      "expect": "reject; no activation",
+      "passed": true,
+      "seconds": 0.0002598999999463558
+    },
+    {
+      "id": 4,
+      "coverage": "touching original labels; pending fragments retain original label",
+      "expect": "touch rejects; fragments not relabeled",
+      "passed": true,
+      "seconds": 0.002256099949590862
+    },
+    {
+      "id": 5,
+      "coverage": "8/8 tie and one remaining region",
+      "expect": "minimum_tie / single_region",
+      "passed": true,
+      "seconds": 0.00010960001964122057
+    },
+    {
+      "id": 6,
+      "coverage": "49/50 count proxy, no added quantity threshold",
+      "expect": "unique count minimum S but geometry condition fails",
+      "passed": true,
+      "seconds": 0.0018074000254273415
+    },
+    {
+      "id": 7,
+      "coverage": "B-nearest representative coordinate tie; exact equality and strict inequality",
+      "expect": "lex representative; equality is insufficient for strict condition",
+      "passed": true,
+      "seconds": 0.0025624000700190663
+    },
+    {
+      "id": 8,
+      "coverage": "q0 already other and once-only opportunity",
+      "expect": "default_already_other; no later retry",
+      "passed": true,
+      "seconds": 0.00010960001964122057
+    },
+    {
+      "id": 9,
+      "coverage": "positive geometry and all-other-region requirement; three-row bound",
+      "expect": "two-region fixture activates; failed third region rejects; <=3 rule rows",
+      "passed": true,
+      "seconds": 0.0029564000433310866
+    },
+    {
+      "id": 10,
+      "coverage": "OTHER local and recovery filtering, reward computed with complete Q",
+      "expect": "only-S local options filter to empty; E still has other; scores are unchanged",
+      "passed": true,
+      "seconds": 0.0015638999175280333
+    },
+    {
+      "id": 11,
+      "coverage": "incidental S credit, cancellation, no post feedback, responsibility/H/F immutability",
+      "expect": "S exhausted -> CANCELLED; all real credits retained; no forced extra S visit",
+      "passed": true,
+      "seconds": 0.013688099919818342
+    },
+    {
+      "id": 12,
+      "coverage": "other cleared -> TAIL, all cleared -> DONE; fixed connection not interrupted",
+      "expect": "release retains actual S; return only at empty Q; move loop has no replanning",
+      "passed": true,
+      "seconds": 0.003440600004978478
+    },
+    {
+      "id": 13,
+      "coverage": "OFF bypass, no rule queries",
+      "expect": "exact direct original return; Priority never instantiated",
+      "passed": true,
+      "seconds": 0.0005874999333173037
+    },
+    {
+      "id": 14,
+      "coverage": "deadline containment, resource failures honest, no backup",
+      "expect": "synthetic deadline propagates; native source has audit and no backup output read",
+      "passed": true,
+      "seconds": 0.00026490003801882267
+    },
+    {
+      "id": 15,
+      "coverage": "exclusive writes, tuple/list JSON, zero count schema, main timing containment",
+      "expect": "duplicate exclusive claim refused; JSON roundtrip; zero counts distinguish null",
+      "passed": true,
+      "seconds": 0.00040479993913322687
+    },
+    {
+      "id": 16,
+      "coverage": "independent ON per-decision audit, Q/reward/allowed set, return/release; tamper rejection",
+      "expect": "handmade synthetic route passes; altered allowed set rejected",
+      "passed": true,
+      "synthetic_audit": {
+        "passed": true,
+        "check": {
+          "index": 0,
+          "Q": [
+            [
+              2,
+              0
+            ],
+            [
+              6,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "counts": {
+            "S": 1,
+            "R": 2
+          },
+          "q0": [
+            2,
+            0
+          ],
+          "representatives": {
+            "S": [
+              2,
+              0
+            ],
+            "R": [
+              6,
+              0
+            ]
+          },
+          "conditions": [
+            {
+              "other": "R",
+              "d_R_B": 6,
+              "d_R_S": 4,
+              "d_S_B": 2,
+              "d_X_R": 2,
+              "d_X_S": 2,
+              "on_return": true,
+              "detour_strict": true
+            }
+          ],
+          "activated": true,
+          "reason": "activated",
+          "S": "S",
+          "S_pending_at_activation": [
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        "S": "S",
+        "phase": "TAIL",
+        "transitions": [
+          {
+            "index": 0,
+            "phase": "OTHER",
+            "Q_S": 1,
+            "Q_other": 2
+          },
+          {
+            "index": 3,
+            "phase": "TAIL",
+            "Q_S": 1,
+            "Q_other": 0
+          }
+        ],
+        "release_pending": [
+          [
+            2,
+            0
+          ]
+        ],
+        "decisions": [
+          {
+            "index": 0,
+            "end": 2,
+            "kind": "recovery",
+            "phase": "OTHER",
+            "Q": [
+              [
+                2,
+                0
+              ],
+              [
+                6,
+                0
+              ],
+              [
+                7,
+                0
+              ]
+            ],
+            "allowed": [
+              [
+                6,
+                0
+              ],
+              [
+                7,
+                0
+              ]
+            ],
+            "goal": [
+              6,
+              0
+            ],
+            "new_tasks": [
+              [
+                6,
+                0
+              ]
+            ]
+          },
+          {
+            "index": 2,
+            "end": 3,
+            "kind": "local",
+            "phase": "OTHER",
+            "Q": [
+              [
+                2,
+                0
+              ],
+              [
+                7,
+                0
+              ]
+            ],
+            "allowed": [
+              [
+                7,
+                0
+              ]
+            ],
+            "goal": [
+              7,
+              0
+            ],
+            "new_tasks": [
+              [
+                7,
+                0
+              ]
+            ]
+          },
+          {
+            "index": 3,
+            "end": 8,
+            "kind": "recovery",
+            "phase": "TAIL",
+            "Q": [
+              [
+                2,
+                0
+              ]
+            ],
+            "allowed": [
+              [
+                2,
+                0
+              ]
+            ],
+            "goal": [
+              2,
+              0
+            ],
+            "new_tasks": [
+              [
+                2,
+                0
+              ]
+            ]
+          },
+          {
+            "index": 8,
+            "end": 10,
+            "kind": "return",
+            "phase": "TAIL",
+            "Q": [],
+            "allowed": [],
+            "goal": [
+              0,
+              0
+            ],
+            "new_tasks": []
+          }
+        ],
+        "counts": {
+          "BFS_calls": 7,
+          "BFS_popped": 126
+        },
+        "seconds": 0.0002711999695748091,
+        "connector_tie_scope": "frozen deterministic path implementation bound; independent BFS shortestness"
+      },
+      "seconds": 0.0006554999854415655
+    }
+  ],
+  "passed": true,
+  "real_core": 0,
+  "real_post": 0,
+  "synthetic_only": true,
+  "repair_rounds": 0
+}

@@ -1,0 +1,31 @@
+"""Plain-language result summary from the sealed fixed batch."""
+from bridge_analysis import H,read,save
+def summary():
+    a=read(H/'analysis.json');s=read(H/'supplement.json');p=a['summary']['PPCPP'];q=a['summary']['P2_MULTI'];pm=p['metric_mean'];qm=q['metric_mean']
+    assert not a['signal']['passed'] and all(v['routes_any_raw_bridge_excess']==0 for v in s['bridge_relation'].values())
+    delta=pm['length']-qm['length'];ratio=100*delta/qm['length'];pairs=a['matched']
+    lines=['# 结果与审核说明','', '2026-10-21。已封存，待负责人审核。','',
+        '**本批没有发现“PPCPP因反复穿越单入口瓶颈而增加路程”的问题，不建议据此开发上层区域选择器。按稿停止该假设，不追加地图找正例。**','',
+        '这不是说PPCPP路线已经最优，也不是说所有障碍结构都没有改进空间。结论仅覆盖这六张新开发图、两段真实历史、两个障碍数量档和三个匹配布局。','',
+        '## 最关键的证据','',
+        '- 72状态中的single各有2条实际桥边、归并为1组；multi各有4条桥边、归并为2组，确有待检任务，不是标签空转。分散条件本批均无桥。',
+        '- **原PPCPP与P2各216条正式路线，所有逐桥实际穿越次数都恰好达到相应割下界；超额均为0。**“任务未完先退出又再入”的事件两方法也均为0。这不是组内取最小掩盖了其他边的超额。',
+        f'- 48个single/multi对分散的匹配对照中，相对路程差增大{sum(x["length_gap_increase"]>0 for x in pairs)}、不变{sum(x["length_gap_increase"]==0 for x in pairs)}、缩小{sum(x["length_gap_increase"]<0 for x in pairs)}。但超额穿越差都没有增大，因此预登记的“两族、三基础几何”继续信号为0。',
+        f'- 路线质量差仍存在：PPCPP平均{pm["length"]:.4f}步，P2平均{qm["length"]:.4f}步，差{delta:.4f}步（相对P2多{ratio:.4f}%）。72个状态的三种子均值中，PPCPP全部较长；逐种子有{len(a["same_excess_different_length"])}对超额相同而长度不同。不能把这部分差距归因于桥的反复穿越。','',
+        '## 差距出现在哪里','',
+        f'按移动类别分解，PPCPP相对P2每次平均多：本轮重复采集{pm["repeated_new_target_steps"]-qm["repeated_new_target_steps"]:.4f}步、非目标通行{pm["non_target_steps"]-qm["non_target_steps"]:.4f}步；历史重复少{-pm["historical_target_steps"]+qm["historical_target_steps"]:.4f}步，首次新采相同。合计为上述{delta:.4f}步。说明差距主要体现在本轮重复目标到达，但这仍是成本账，不是已证明的机制因果。','',
+        f'另按任务阶段分解：采完前多{pm["completion_step"]-qm["completion_step"]:.4f}步，返航尾段多{pm["return_tail_steps"]-qm["return_tail_steps"]:.4f}步。阶段分解与移动类别分解分别完整，不能相加。两方法全部完成剩余可检任务并返航，公开覆盖100%、暂缓0。','',
+        '两个数量档也没有展示“障碍越多就普遍明显更难”：36个高减低匹配中，PPCPP 11长25平，P2 12长24平，两方法平均都增加约1.3889步。这里高档主要增添分散通行障碍，不能冒充连续密度规律。','',
+        '## 调用与复核','',
+        f'实际6历史准备＋12门槛＋432正式＝450入口，没有额外重试、覆盖最优搜索或留出使用。12门槛中10条合法路线与2个预设不可达拒绝均符合预期；432正式全部合法及时，PPCPP入口均值{p["seconds"]["mean"]*1000:.4f}毫秒，P2为{q["seconds"]["mean"]*1000:.4f}毫秒。20秒共同暖入口不改，不能把快直接当作路线质量优势。','',
+        '两个阶段的输入/代码/相关依赖封存保留；原冻结PPCPP/P2未改。准备后发现未使用的封存函数会误封追加台账，已保留原件并另立事件封存实现。离线比较的tuple/list表示问题仅由后继版本规范化，不改结果或统计规则；详情见封存实现补充.md、离线表示规范化说明.md。','',
+        '只读verify重建六历史/12前缀、24匹配组三布局、逐图桥边与割下界、450调用顺序/实际导入哈希、432路线双指标/原PPCPP决策、三种子汇总和所有进出账；另用并查集与逐步跨侧变化独立检查。实际日志见verify.log。普通图BFS只用于距离核验，不是覆盖次序精确搜索。','',
+        '## 审核材料','',
+        '- [完整技术报告](诊断结果报告.md)：完整指标、分层、时间、范围及限制。',
+        '- [匹配布局差异](匹配布局差异.csv)、analysis.json、supplement.json：48匹配对、全部种子符号、均值范围与及时口径。',
+        '- figures/：每族预定最大/最小增幅、字典序首个无超额例，重复0，三布局×两方法；SVG与PNG配套。example_shortest_path_ledger.json列实际段与独立最短路径账。',
+        '- inputs/prep_outputs/outputs/route_cuts/structure、actual_order.jsonl、两个seal、manifest.json及review_packet.md：原始证据与复核入口。','',
+        '障碍布局还改变距离，六图又共享模板化支路构造；这不是单一拓扑变量的因果实验，也不是独立现场测试。无桥不等于没有窄走廊，割下界不等于完整路线最优。本轮没有证据支持继续为这个特定瓶颈假设投入区域图算法开发。','',
+        '已封存，待负责人审核。不自动开展下一轮。']
+    with (H/'结果与审核说明.md').open('x',encoding='utf8') as f:f.write('\n'.join(lines))
+if __name__=='__main__':summary()

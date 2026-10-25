@@ -1,0 +1,13 @@
+--- old/common.py
++++ variant/common.py
+@@ -42,8 +42,8 @@
+ def entry(job,kind):
+  p=H/'entry_log.jsonl';rows=[json.loads(z) for z in p.read_text(encoding='utf-8').splitlines()] if p.exists() else []
+  starts=[z for z in rows if z['event']=='started' and z['kind']==kind]
+- assert len(starts)<42 and not any(z['job']==job['id'] for z in starts),'absolute entry cap / duplicate'
+- phase=job['arm'];cap=6 if phase=='history' else 12
++ assert len(starts)<36 and not any(z['job']==job['id'] for z in starts),'absolute entry cap / duplicate'
++ phase=job['arm'];cap=0 if phase=='history' else 12
+  assert sum(z['arm']==phase for z in starts)<cap
+  append(p,dict(event='started',kind=kind,job=job['id'],arm=phase,utc=time.time()))
+ def returned(job,kind):append(H/'entry_log.jsonl',dict(event='returned',kind=kind,job=job['id'],arm=job['arm'],utc=time.time()))

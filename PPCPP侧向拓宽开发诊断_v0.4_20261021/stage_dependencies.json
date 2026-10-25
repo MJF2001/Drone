@@ -1,0 +1,58 @@
+{
+  "dependencies": {
+    "technical": [],
+    "stat_stubs": [],
+    "seal1": [
+      "technical",
+      "stat_stubs"
+    ],
+    "prep": [
+      "technical",
+      "stat_stubs",
+      "seal1"
+    ],
+    "generated": [
+      "prep"
+    ],
+    "seal2": [
+      "technical",
+      "stat_stubs",
+      "seal1",
+      "prep",
+      "generated",
+      "inputs_audited"
+    ],
+    "gate": [
+      "technical",
+      "stat_stubs",
+      "seal2",
+      "prep",
+      "generated"
+    ],
+    "formal": [
+      "technical",
+      "stat_stubs",
+      "seal2",
+      "prep",
+      "generated",
+      "gate"
+    ],
+    "inputs_audited": [
+      "technical",
+      "prep",
+      "generated"
+    ]
+  },
+  "production_counts": [
+    6,
+    12,
+    288
+  ],
+  "cap": 306,
+  "clock": {
+    "warm_entry_seconds": 20,
+    "watchdog_seconds": 90,
+    "threads": 1
+  },
+  "synthetic_plan": "6 prep +12 gate +2 formal tests existing fixed past-count assertions; does not alter production orders"
+}

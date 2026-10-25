@@ -1,0 +1,2 @@
+# SYNTHETIC_NOT_EXPERIMENT: stub provenance placeholder
+SYNTHETIC_NEGATIVE

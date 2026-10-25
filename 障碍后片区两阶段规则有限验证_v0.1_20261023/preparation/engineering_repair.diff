@@ -1,0 +1,44 @@
+--- before/register.py
++++ after/register.py
+@@ -52,7 +52,7 @@
+  for p in source.rglob('*'):
+   if p.is_file() and '__pycache__' not in p.parts:prior[str(p.resolve())]=sha(p)
+  runtime={}
+- dirs=[ROOT/'基线复现准备_20261019',ROOT/'研究方案_剩余覆盖重规划_20261009/算法小型验证_20261010/frozen_baselines/v2_20261012/source',ROOT/'研究方案_剩余覆盖重规划_20261009/算法小型验证_20261010/candidate_baselines/PPCPP_CORE4/v0.1_20261014/source']
++ dirs=[ROOT/'基线复现准备_20261019',ROOT/'研究方案_剩余覆盖重规划_20261009/算法小型验证_20261010/frozen_baselines/v2_20261012/source',ROOT/'研究方案_剩余覆盖重规划_20261009/算法小型验证_20261010/candidate_baselines/PPCPP_CORE4/v0.1_20261014/source',ROOT/'研究方案_剩余覆盖重规划_20261009/算法小型验证_20261010/.deps']
+  for d in dirs:
+   for p in d.rglob('*.py'):runtime[str(p.resolve())]=sha(p)
+  for p in (ROOT/'portable_frozen.py',ROOT/'PPCPP结构候选新开发验证_v0.1_20261020/validation.py'):runtime[str(p.resolve())]=sha(p)
+
+--- before/precheck.py
++++ after/precheck.py
+@@ -27,6 +27,11 @@
+     try:b=bindings()
+     finally:sys.setprofile(None)
+     assert not calls and b['B'].identity()['primary']['file']!=b['B'].identity()['independent']['file'];row['task_calls_on_import']=calls
++    runtime=read(H/'runtime_guards.json');active=read(H/'active_freeze.json')
++    for path,value in loaded_sources().items():
++     pp=Path(path)
++     if pp.is_relative_to(ROOT/'运行环境'):continue
++     assert runtime.get(path)==value or (pp.is_relative_to(H) and active.get(str(pp.relative_to(H)))==value),('preflight unbound source',path)
+     from region_audit import audit
+     assert 'region_rule' not in audit.__globals__ and 'Priority' not in audit.__globals__
+    elif n==3:
+@@ -73,7 +78,7 @@
+     else:raise AssertionError('deadline swallowed')
+     text=(H/'region_native.py').read_text();assert "deadline=begin+budget" in text and 'single_cell_audit(s,tuple(route))' in text and 'read(' not in text and "else ()" in text
+    elif n==15:
+-    p=H/'preparation/exclusive_fixture.claim'
++    p=H/('preparation/exclusive_fixture_retest.claim' if (H/'engineering_repair.json').exists() else 'preparation/exclusive_fixture.claim')
+     with p.open('x',encoding='utf-8') as f:f.write('first owner')
+     try:
+      with p.open('x'):pass
+@@ -97,7 +102,7 @@
+    row['passed']=True
+   except BaseException as e:row.update(failure=repr(e),traceback=traceback.format_exc())
+   row['seconds']=time.perf_counter()-start;records.append(row)
+-  dump(H/'prechecks.json',dict(cases=records,passed=all(z['passed'] for z in records) and len(records)==16,real_core=0,real_post=0,synthetic_only=True,repair_rounds=0))
++  dump(H/'prechecks.json',dict(cases=records,passed=all(z['passed'] for z in records) and len(records)==16,real_core=0,real_post=0,synthetic_only=True,repair_rounds=int((H/'engineering_repair.json').exists())))
+   print('PURE',item['id'],row['passed'],row.get('failure',''),flush=True)
+   if not row['passed']:break
+  return all(z['passed'] for z in records) and len(records)==16

@@ -1,0 +1,290 @@
+[
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py",
+    "sha256": "2eee969dc3a1c46fe1ff055080d57f56cf0144551098de4fd25280d5fc074b14",
+    "lines": [
+      {
+        "line": 108,
+        "text": "    def expand(self, visits):"
+      },
+      {
+        "line": 109,
+        "text": "        \"\"\"Skip a visit only if its full assigned footprint is already covered.\"\"\""
+      },
+      {
+        "line": 110,
+        "text": "        route = [self.s.current]"
+      },
+      {
+        "line": 111,
+        "text": "        covered = set(self.s.covered) | self.views[self.s.current]"
+      },
+      {
+        "line": 112,
+        "text": "        for p in visits:"
+      },
+      {
+        "line": 113,
+        "text": "            self.check_time()"
+      },
+      {
+        "line": 114,
+        "text": "            if not self.views[p] - covered:"
+      },
+      {
+        "line": 115,
+        "text": "                continue"
+      },
+      {
+        "line": 116,
+        "text": "            extension = self.path(route[-1], p)"
+      },
+      {
+        "line": 117,
+        "text": "            route.extend(extension[1:])"
+      },
+      {
+        "line": 118,
+        "text": "            for q in extension:"
+      },
+      {
+        "line": 119,
+        "text": "                covered.update(self.views[q])"
+      },
+      {
+        "line": 120,
+        "text": "        route.extend(self.path(route[-1], self.s.base)[1:])"
+      },
+      {
+        "line": 121,
+        "text": "        return tuple(route)"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\unified_geometry.py",
+    "sha256": "b0d70871ab4b2a3d3a4ccf3edcdadf4b3db9eb2415134d5740270a76293aff53",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Common exact metric and query-order-independent connector policy, not novelty.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "from bfs_metric_geometry import BFSMetricGeometry"
+      },
+      {
+        "line": 3,
+        "text": "from model import Geometry"
+      },
+      {
+        "line": 4,
+        "text": ""
+      },
+      {
+        "line": 5,
+        "text": ""
+      },
+      {
+        "line": 6,
+        "text": "class UnifiedGeometry(BFSMetricGeometry):"
+      },
+      {
+        "line": 7,
+        "text": "    def path(self, a, b):"
+      },
+      {
+        "line": 8,
+        "text": "        self.check_time()"
+      },
+      {
+        "line": 9,
+        "text": "        if (a,b) not in self.cache:"
+      },
+      {
+        "line": 10,
+        "text": "            # Same endpoints always select the same shortest-path geometry,"
+      },
+      {
+        "line": 11,
+        "text": "            # irrespective of which algorithm queried a distance first."
+      },
+      {
+        "line": 12,
+        "text": "            lo,hi=sorted((a,b))"
+      },
+      {
+        "line": 13,
+        "text": "            Geometry.path(self,lo,hi)"
+      },
+      {
+        "line": 14,
+        "text": "        return self.cache[a,b]"
+      },
+      {
+        "line": 15,
+        "text": ""
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\bfs_metric_geometry.py",
+    "sha256": "98298ca6620cf2aba0aedd5b7cfc4fbdabfdb2316e01ddeeb9be791b8a2b8933",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Implementation optimisation: batched exact distances, legacy A* path ties."
+      },
+      {
+        "line": 2,
+        "text": ""
+      },
+      {
+        "line": 3,
+        "text": "    This is not a new coverage algorithm. In unlimited runs every legacy query"
+      },
+      {
+        "line": 4,
+        "text": "    receives the same distance and first-query-direction path as Geometry."
+      },
+      {
+        "line": 5,
+        "text": "\"\"\""
+      },
+      {
+        "line": 6,
+        "text": "from collections import deque"
+      },
+      {
+        "line": 7,
+        "text": "from model import Geometry,NoPath,adjacent"
+      },
+      {
+        "line": 8,
+        "text": ""
+      },
+      {
+        "line": 9,
+        "text": ""
+      },
+      {
+        "line": 10,
+        "text": "class BFSMetricGeometry(Geometry):"
+      },
+      {
+        "line": 11,
+        "text": "    def __init__(self,*args,**kwargs):"
+      },
+      {
+        "line": 12,
+        "text": "        super().__init__(*args,**kwargs)"
+      },
+      {
+        "line": 13,
+        "text": "        self.distance_rows={}"
+      },
+      {
+        "line": 14,
+        "text": "        self.first_direction={}"
+      },
+      {
+        "line": 15,
+        "text": "        self.bfs_rows_built=0"
+      },
+      {
+        "line": 16,
+        "text": ""
+      },
+      {
+        "line": 17,
+        "text": "    def distance(self,a,b):"
+      },
+      {
+        "line": 18,
+        "text": "        self.check_time()"
+      },
+      {
+        "line": 19,
+        "text": "        if a not in self.reachable or b not in self.reachable:"
+      },
+      {
+        "line": 20,
+        "text": "            raise NoPath('endpoint_unreachable')"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\p2_search_audit.py",
+    "sha256": "d1b93bd741b80af02c8f398b495441da570ae75f27008d512e9d873844a0385a",
+    "lines": [
+      {
+        "line": 22,
+        "text": "    def opt(points,limit,label):"
+      },
+      {
+        "line": 23,
+        "text": "        visits=list(points);swaps=0;passes=0;reason='pass_limit';t=elapsed()"
+      },
+      {
+        "line": 24,
+        "text": "        try:"
+      },
+      {
+        "line": 25,
+        "text": "            for _ in range(limit):"
+      },
+      {
+        "line": 26,
+        "text": "                passes+=1;delta_best=0;pair=None"
+      },
+      {
+        "line": 27,
+        "text": "                for i in range(len(visits)-1):"
+      },
+      {
+        "line": 28,
+        "text": "                    a=s.current if i==0 else visits[i-1];b=visits[i]"
+      },
+      {
+        "line": 29,
+        "text": "                    for j in range(i+1,len(visits)):"
+      },
+      {
+        "line": 30,
+        "text": "                        c=visits[j];d=s.base if j+1==len(visits) else visits[j+1]"
+      },
+      {
+        "line": 31,
+        "text": "                        delta=g.distance(a,c)+g.distance(b,d)-g.distance(a,b)-g.distance(c,d)"
+      },
+      {
+        "line": 32,
+        "text": "                        if delta<delta_best:delta_best=delta;pair=(i,j)"
+      },
+      {
+        "line": 33,
+        "text": "                if pair is None:reason='no_improving_2opt_move';break"
+      },
+      {
+        "line": 34,
+        "text": "                i,j=pair;visits[i:j+1]=reversed(visits[i:j+1]);swaps+=1"
+      },
+      {
+        "line": 35,
+        "text": "            return visits"
+      },
+      {
+        "line": 36,
+        "text": "        except DeadlineExceeded:reason='deadline';raise"
+      },
+      {
+        "line": 37,
+        "text": "        finally:events.append(dict(stage=label+'_passes',start=t,end=elapsed(),passes=passes,swaps=swaps,termination=reason))"
+      },
+      {
+        "line": 38,
+        "text": "    try:"
+      }
+    ]
+  }
+]

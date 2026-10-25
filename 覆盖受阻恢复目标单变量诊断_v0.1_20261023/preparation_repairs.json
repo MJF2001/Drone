@@ -1,0 +1,30 @@
+{
+  "used": 1,
+  "cap": 2,
+  "records": [
+    {
+      "round": 1,
+      "reason": "First eight pure checks passed, but counters omitted finish-rejection attempt and partial counts from rejected independent audit fixtures.",
+      "fix": "Expose optional external Counter in auditor and save every pure attempt in finally; count finish separately; new pure output name preserves round1. No assertion/policy/input/budget changed.",
+      "sources": [
+        {
+          "old": "source_snapshot\\precheck_count_v01.py.txt",
+          "old_sha256": "7fb52959b984039274f04770344eb77df76b91cc8c55f478f64cd21ed9ef8879",
+          "new": "precheck.py",
+          "new_sha256": "6df269f8b54c2da99bfe5b4ecdc621ebc306872a28a5cf204a7777c4f3c53a2f"
+        },
+        {
+          "old": "source_snapshot\\independent_count_v01.py.txt",
+          "old_sha256": "0820b213b6d2b541aea5b9d03cff95c2f863a1e9f8705c480cab60c4334f58d4",
+          "new": "recovery_diag_decision_audit.py",
+          "new_sha256": "dd34d839bb5cf7057afdc31eee183c001eba3fb20f91d4ff7ab50059260a2c10"
+        }
+      ],
+      "first_round_complete_observed_counters": "prechecks_preparation_v01_passed_count_incomplete.json",
+      "first_round_missing_counter_reconstruction": {
+        "finish_stub_attempts_from_fixed_invocation": 1,
+        "independent_negative_partial_counts": "not observed in round1, not treated as zero; round2 measures them"
+      }
+    }
+  ]
+}

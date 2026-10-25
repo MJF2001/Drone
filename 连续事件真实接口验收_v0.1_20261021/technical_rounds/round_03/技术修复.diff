@@ -1,0 +1,37 @@
+--- 连续事件真实接口验收_v0.1_20261021\technical_rounds\round_02\source_deliver.py
++++ 连续事件真实接口验收_v0.1_20261021\technical_rounds\round_03\source_deliver.py
+@@ -18,7 +18,11 @@
+         try:verifies.append(dict(log=p.name,**json.loads(p.read_text(encoding='utf8').strip().splitlines()[-1])))
+         except (ValueError,IndexError):pass
+     chain_files=list((H/'technical_rounds').glob('round_*/chain.json'));tech=[read(p) for p in chain_files]
+-    counts=dict(actual_process_attempts=len(attempts),**totals,new_stub_API_calls=len(stubs),technical_rounds=len(list((H/'technical_rounds').glob('round_*'))),native_graph=graph,main_environment_BFS=main_bfs,independent_acceptance_BFS=a['independent_audit_BFS'] if a else None,readonly_verifications=verifies,technical_synthetic_graph_ledger=tech)
++    tech_worlds=[]
++    for p in (H/'technical_rounds').glob('round_*/chain/SYNTHETIC_TECHNICAL_NOT_REAL/sessions/*.json'):
++        r=read(p)
++        if isinstance(r,dict) and 'environment_BFS' in r:tech_worlds.append(dict(source=str(p.relative_to(H)),ordinary_environment_BFS=len(r['environment_BFS'])))
++    counts=dict(actual_process_attempts=len(attempts),**totals,new_stub_API_calls=len(stubs),technical_rounds=len(list((H/'technical_rounds').glob('round_*'))),native_graph=graph,main_environment_BFS=main_bfs,independent_acceptance_BFS=a['independent_audit_BFS'] if a else None,readonly_verifications=verifies,technical_synthetic_graph_ledger=tech,technical_worlds_including_failed=tech_worlds)
+     save(H/'18槽实际调用账.json',rows);save(H/'分类计数与图搜索账.json',counts)
+     lines=['# 连续事件真实接口有限验收报告','',f"实际交付时间：{datetime.datetime.now(datetime.timezone.utc).isoformat()}。目录日期沿用执行稿。",'',f"整体接口验收：{'通过' if a and a['interface_pass'] else '未通过／已停止'}。真实进程尝试 {len(attempts)}/18，暖入口 {totals['entries']}，核心开始/返回 {totals['core_starts']}/{totals['core_returns']}；新增手写技术桩 {len(stubs)}/24。",'', '以下步数和耗时仅用于核对执行账，不据此排名。三个微型世界只验证接口和两次事件接续。','', '|会话|状态|实际移动|等待tick|响应|跨两事件来源链|', '|---|---|---:|---:|---:|---|']
+     if a:
+--- 连续事件真实接口验收_v0.1_20261021\technical_rounds\round_02\source_technical.py
++++ 连续事件真实接口验收_v0.1_20261021\technical_rounds\round_03\source_technical.py
+@@ -104,8 +104,9 @@
+     def api_for(method):
+         api=fake_api(f,method,route)
+         if args[0]!='inventory':
++            stamp_stub(j['id'],method)  # Reserve before worker installs current-input-only audit.
+             owner=api['runtime'] if method=='PPCPP' else api['p2'];original=owner.run_payload
+-            def counted(*a,**kw):stamp_stub(j['id'],method);return original(*a,**kw)
++            def counted(*a,**kw):return original(*a,**kw)
+             owner.run_payload=counted
+         return api
+     worker.load_api=api_for;sys.argv=[str(f/'worker.py')]+args;worker.main()
+@@ -129,7 +130,7 @@
+     put(f/'readonly.stdout.log',p.stdout);put(f/'readonly.stderr.log',p.stderr)
+     attempts=[json.loads(x) for x in (f/'actual_attempts.jsonl').read_text().splitlines()];assert len(attempts)==6
+     # Explicitly blocked BEFORE any entry/core: output overwrite, stale PASS,
+-    # and missing seal. No extra stub invocation is authorized by these probes.
++    # No extra stub invocation is authorized by these probes.
+     j=read(f/'jobs'/(attempts[-1]['id']+'.json'));outpath=f/'outputs'/(j['id']+'.json');before=sha(outpath)
+     argv=[sys.executable,'-B','-X','utf8',str(f/'worker.py'),str(f/'jobs'/(j['id']+'.json')),str(outpath)]
+     p=worker_launch(argv,capture_output=True);assert p.returncode!=0 and b'ENTRY_START ' not in p.stdout and before==sha(outpath)

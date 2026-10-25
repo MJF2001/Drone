@@ -1,0 +1,5 @@
+{
+  "path": "E:\\无人机研究项目_接续包_20261014\\复杂障碍压力开发测试_v0.1_20261021\\stress.py",
+  "sha256": "4f594947cdebdf1317172507bdb4fed52165e9b1f147d2a086eb008e76b008d0",
+  "exact_function": "def layouts(w,h):\n full={(x,y) for x in range(w) for y in range(h)}\n walls={(x,y) for i,x in enumerate(range(2,w-1,2)) for y in range(h) if y!=(1 if i%2==0 else h-2)}\n rooms={(x,y) for x,y in full if (x>0 and x%4==0 and y%4!=1) or (y>0 and y%4==0 and x%4!=1)}\n rng=random.Random(20261021+w);start=(1,1);f={start};seen={start};stack=[start]\n while stack:\n  x,y=stack[-1];ns=[(x+dx,y+dy) for dx,dy in ((2,0),(0,2),(-2,0),(0,-2)) if 0<x+dx<w-1 and 0<y+dy<h-1 and (x+dx,y+dy) not in seen]\n  if not ns:stack.pop();continue\n  n=rng.choice(ns);seen.add(n);f.add(n);f.add(((x+n[0])//2,(y+n[1])//2));stack.append(n)\n f|={(0,0),(0,1)}\n return dict(control=full,serpentine=full-walls,rooms=full-rooms,maze=f)"
+}

@@ -1,0 +1,462 @@
+ENVIRONMENT/HASH verified 9381
+{
+  "verified": true,
+  "planner_calls": 0,
+  "environment_files": 9381,
+  "manifest_files": 3070,
+  "gates": 49,
+  "formal": 972,
+  "P0_pairs": 324,
+  "budgets": {
+    "1": {
+      "counts": {
+        "PPCPP": {
+          "N": 162,
+          "valid": 162,
+          "timely": 162,
+          "late": 0,
+          "no_route": 0,
+          "invalid": 0,
+          "native_status": {
+            "core_complete": 162
+          },
+          "sources": {
+            "P0": 162
+          },
+          "overrun_gt_10ms": 0,
+          "overrun": {
+            "N": 162,
+            "mean": 0,
+            "median": 0.0,
+            "p95": 0.0,
+            "max": 0
+          },
+          "entry": {
+            "N": 162,
+            "mean": 0.0062127469131222895,
+            "median": 0.0032692999811843038,
+            "p95": 0.022075874987058337,
+            "max": 0.025628299976233393
+          },
+          "external_audit": {
+            "N": 162,
+            "mean": 0.004992000001229714,
+            "median": 0.001960449997568503,
+            "p95": 0.01428270498290658,
+            "max": 0.12477739999303594
+          },
+          "native_seconds": {
+            "N": 162,
+            "mean": 0.00433238580094271,
+            "median": 0.00232684999355115,
+            "p95": 0.01631712000526022,
+            "max": 0.018871799984481186
+          }
+        },
+        "LAST_V2": {
+          "N": 162,
+          "valid": 162,
+          "timely": 162,
+          "late": 0,
+          "no_route": 0,
+          "invalid": 0,
+          "native_status": {
+            "core_complete": 162
+          },
+          "sources": {
+            "P0": 81,
+            "P1": 81
+          },
+          "overrun_gt_10ms": 0,
+          "overrun": {
+            "N": 162,
+            "mean": 0,
+            "median": 0.0,
+            "p95": 0.0,
+            "max": 0
+          },
+          "entry": {
+            "N": 162,
+            "mean": 0.012943335799112296,
+            "median": 0.00739234997308813,
+            "p95": 0.04614877500862348,
+            "max": 0.05550379998749122
+          },
+          "external_audit": {
+            "N": 162,
+            "mean": 0.024537900619404276,
+            "median": 0.0046070000098552555,
+            "p95": 0.07115257496770933,
+            "max": 0.4811436000163667
+          },
+          "native_seconds": {
+            "N": 162,
+            "mean": 0.0043177197530670204,
+            "median": 0.0022747500333935022,
+            "p95": 0.016387119991122745,
+            "max": 0.020747300004586577
+          }
+        },
+        "P2_MULTI": {
+          "N": 162,
+          "valid": 162,
+          "timely": 125,
+          "late": 37,
+          "no_route": 0,
+          "invalid": 0,
+          "native_status": {
+            "finished": 125,
+            "deadline": 37
+          },
+          "sources": {
+            "H_raw": 6,
+            "H_scan_opt": 51,
+            "H_NN_opt": 15,
+            "common_fallback": 3,
+            "old_suffix": 15,
+            "V_scan_opt": 57,
+            "reverse_V_raw": 5,
+            "shuffle_1_opt": 3,
+            "shuffle_0_opt": 1,
+            "perturb_V_opt": 4,
+            "perturb_H_opt": 2
+          },
+          "overrun_gt_10ms": 8,
+          "overrun": {
+            "N": 162,
+            "mean": 0.0014096888901096666,
+            "median": 0.0,
+            "p95": 0.009644159974413894,
+            "max": 0.013360199984163046
+          },
+          "entry": {
+            "N": 162,
+            "mean": 0.3805907641995244,
+            "median": 0.1464535999984946,
+            "p95": 1.009644159974414,
+            "max": 1.013360199984163
+          },
+          "external_audit": {
+            "N": 162,
+            "mean": 0.0005248765422341725,
+            "median": 0.0003667999990284443,
+            "p95": 0.0016437700047390535,
+            "max": 0.0021658000187017024
+          },
+          "native_seconds": {
+            "N": 162,
+            "mean": 0.37940510679115425,
+            "median": 0.14570764999371022,
+            "p95": 1.00633401000523,
+            "max": 1.0098932999535464
+          }
+        }
+      },
+      "comparisons": [
+        {
+          "a": "LAST_V2",
+          "b": "PPCPP",
+          "view": "timely_valid",
+          "N": 162,
+          "short": 81,
+          "equal": 81,
+          "long": 0,
+          "a_total": 16428,
+          "b_total": 16590,
+          "delta": -162,
+          "mean_relative": -0.01621048347972066
+        },
+        {
+          "a": "LAST_V2",
+          "b": "PPCPP",
+          "view": "route_valid",
+          "N": 162,
+          "short": 81,
+          "equal": 81,
+          "long": 0,
+          "a_total": 16428,
+          "b_total": 16590,
+          "delta": -162,
+          "mean_relative": -0.01621048347972066
+        },
+        {
+          "a": "LAST_V2",
+          "b": "P2_MULTI",
+          "view": "timely_valid",
+          "N": 125,
+          "short": 0,
+          "equal": 38,
+          "long": 87,
+          "a_total": 7139,
+          "b_total": 6331,
+          "delta": 808,
+          "mean_relative": 0.11885420662676822
+        },
+        {
+          "a": "LAST_V2",
+          "b": "P2_MULTI",
+          "view": "route_valid",
+          "N": 162,
+          "short": 0,
+          "equal": 38,
+          "long": 124,
+          "a_total": 16428,
+          "b_total": 13260,
+          "delta": 3168,
+          "mean_relative": 0.16540060227112674
+        },
+        {
+          "a": "PPCPP",
+          "b": "P2_MULTI",
+          "view": "timely_valid",
+          "N": 125,
+          "short": 0,
+          "equal": 28,
+          "long": 97,
+          "a_total": 7287,
+          "b_total": 6331,
+          "delta": 956,
+          "mean_relative": 0.1433829639272167
+        },
+        {
+          "a": "PPCPP",
+          "b": "P2_MULTI",
+          "view": "route_valid",
+          "N": 162,
+          "short": 0,
+          "equal": 28,
+          "long": 134,
+          "a_total": 16590,
+          "b_total": 13260,
+          "delta": 3330,
+          "mean_relative": 0.18487282280600983
+        }
+      ]
+    },
+    "20": {
+      "counts": {
+        "PPCPP": {
+          "N": 162,
+          "valid": 162,
+          "timely": 162,
+          "late": 0,
+          "no_route": 0,
+          "invalid": 0,
+          "native_status": {
+            "core_complete": 162
+          },
+          "sources": {
+            "P0": 162
+          },
+          "overrun_gt_10ms": 0,
+          "overrun": {
+            "N": 162,
+            "mean": 0,
+            "median": 0.0,
+            "p95": 0.0,
+            "max": 0
+          },
+          "entry": {
+            "N": 162,
+            "mean": 0.006315541972857498,
+            "median": 0.0034434999979566783,
+            "p95": 0.02148087002860848,
+            "max": 0.027773100009653717
+          },
+          "external_audit": {
+            "N": 162,
+            "mean": 0.005532659259682268,
+            "median": 0.0019490999984554946,
+            "p95": 0.016125909989932536,
+            "max": 0.09567710000555962
+          },
+          "native_seconds": {
+            "N": 162,
+            "mean": 0.004377844443768953,
+            "median": 0.002388799999607727,
+            "p95": 0.016142899994156322,
+            "max": 0.020772699965164065
+          }
+        },
+        "LAST_V2": {
+          "N": 162,
+          "valid": 162,
+          "timely": 162,
+          "late": 0,
+          "no_route": 0,
+          "invalid": 0,
+          "native_status": {
+            "core_complete": 162
+          },
+          "sources": {
+            "P0": 81,
+            "P1": 81
+          },
+          "overrun_gt_10ms": 0,
+          "overrun": {
+            "N": 162,
+            "mean": 0,
+            "median": 0.0,
+            "p95": 0.0,
+            "max": 0
+          },
+          "entry": {
+            "N": 162,
+            "mean": 0.01298279753191983,
+            "median": 0.007588099979329854,
+            "p95": 0.044204574995092116,
+            "max": 0.07269830000586808
+          },
+          "external_audit": {
+            "N": 162,
+            "mean": 0.018080409878166392,
+            "median": 0.004811199993127957,
+            "p95": 0.06355215000512544,
+            "max": 0.256358899991028
+          },
+          "native_seconds": {
+            "N": 162,
+            "mean": 0.004353972220862353,
+            "median": 0.002355249976972118,
+            "p95": 0.015785920005873776,
+            "max": 0.028880300000309944
+          }
+        },
+        "P2_MULTI": {
+          "N": 162,
+          "valid": 162,
+          "timely": 162,
+          "late": 0,
+          "no_route": 0,
+          "invalid": 0,
+          "native_status": {
+            "finished": 162
+          },
+          "sources": {
+            "H_raw": 6,
+            "H_scan_opt": 46,
+            "H_NN_opt": 15,
+            "common_fallback": 3,
+            "old_suffix": 15,
+            "V_scan_opt": 60,
+            "reverse_V_raw": 5,
+            "shuffle_1_opt": 3,
+            "perturb_V_opt": 5,
+            "shuffle_0_opt": 1,
+            "perturb_H_opt": 3
+          },
+          "overrun_gt_10ms": 0,
+          "overrun": {
+            "N": 162,
+            "mean": 0,
+            "median": 0.0,
+            "p95": 0.0,
+            "max": 0
+          },
+          "entry": {
+            "N": 162,
+            "mean": 0.9136687080270933,
+            "median": 0.1454243000189308,
+            "p95": 4.295179139994434,
+            "max": 9.166430699988268
+          },
+          "external_audit": {
+            "N": 162,
+            "mean": 0.0005340117254771615,
+            "median": 0.0003633000305853784,
+            "p95": 0.0017135799775132902,
+            "max": 0.0023846999974921346
+          },
+          "native_seconds": {
+            "N": 162,
+            "mean": 0.9124773419763962,
+            "median": 0.14481830000295304,
+            "p95": 4.292434589969343,
+            "max": 9.162876999995206
+          }
+        }
+      },
+      "comparisons": [
+        {
+          "a": "LAST_V2",
+          "b": "PPCPP",
+          "view": "timely_valid",
+          "N": 162,
+          "short": 81,
+          "equal": 81,
+          "long": 0,
+          "a_total": 16428,
+          "b_total": 16590,
+          "delta": -162,
+          "mean_relative": -0.01621048347972066
+        },
+        {
+          "a": "LAST_V2",
+          "b": "PPCPP",
+          "view": "route_valid",
+          "N": 162,
+          "short": 81,
+          "equal": 81,
+          "long": 0,
+          "a_total": 16428,
+          "b_total": 16590,
+          "delta": -162,
+          "mean_relative": -0.01621048347972066
+        },
+        {
+          "a": "LAST_V2",
+          "b": "P2_MULTI",
+          "view": "timely_valid",
+          "N": 162,
+          "short": 0,
+          "equal": 38,
+          "long": 124,
+          "a_total": 16428,
+          "b_total": 13180,
+          "delta": 3248,
+          "mean_relative": 0.1681514128023568
+        },
+        {
+          "a": "LAST_V2",
+          "b": "P2_MULTI",
+          "view": "route_valid",
+          "N": 162,
+          "short": 0,
+          "equal": 38,
+          "long": 124,
+          "a_total": 16428,
+          "b_total": 13180,
+          "delta": 3248,
+          "mean_relative": 0.1681514128023568
+        },
+        {
+          "a": "PPCPP",
+          "b": "P2_MULTI",
+          "view": "timely_valid",
+          "N": 162,
+          "short": 0,
+          "equal": 28,
+          "long": 134,
+          "a_total": 16590,
+          "b_total": 13180,
+          "delta": 3410,
+          "mean_relative": 0.1876236333372399
+        },
+        {
+          "a": "PPCPP",
+          "b": "P2_MULTI",
+          "view": "route_valid",
+          "N": 162,
+          "short": 0,
+          "equal": 28,
+          "long": 134,
+          "a_total": 16590,
+          "b_total": 13180,
+          "delta": 3410,
+          "mean_relative": 0.1876236333372399
+        }
+      ]
+    }
+  },
+  "status": "执行完成，待负责人审核"
+}

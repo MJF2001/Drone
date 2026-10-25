@@ -1,0 +1,1824 @@
+[
+  {
+    "id": "old_candidates",
+    "file": "E:\\无人机研究项目_接续包_20261014\\PPCPP首次恢复完整试走_v0.1_20261020\\rollout.py",
+    "sha256": "94253044865c1fdeff6c5901726069c1225fe4808919cb6abffdd491b72e4b9a",
+    "start": 54,
+    "end": 67,
+    "lines": [
+      {
+        "line": 54,
+        "text": "                tick('first_recovery');nearest=min(pending,key=lambda q:(g.distance(route[-1],q),q));tick('nearest_ready')"
+      },
+      {
+        "line": 55,
+        "text": "                branch_state=dict(path=list(route),pending=sorted(pending),previous=route[-2] if len(route)>1 else previous,nearest=nearest)"
+      },
+      {
+        "line": 56,
+        "text": "                # Baseline branch first. Never rewrite real H/initial_targets."
+      },
+      {
+        "line": 57,
+        "text": "                goals=[nearest]"
+      },
+      {
+        "line": 58,
+        "text": "                branches.append(finish(list(route),copy.deepcopy(events),set(pending),nearest));tick('baseline_ready')"
+      },
+      {
+        "line": 59,
+        "text": "                if mode=='three' and branches[0]['status']=='core_complete':"
+      },
+      {
+        "line": 60,
+        "text": "                    tick('candidate_generation');near=min(pending,key=lambda q:(g.distance(s.base,q),q));far=min(pending,key=lambda q:(-g.distance(s.base,q),q))"
+      },
+      {
+        "line": 61,
+        "text": "                    for goal in (near,far):"
+      },
+      {
+        "line": 62,
+        "text": "                        if goal not in goals:goals.append(goal)"
+      },
+      {
+        "line": 63,
+        "text": "                    tick('candidates_ready')"
+      },
+      {
+        "line": 64,
+        "text": "                    for goal in goals[1:]:"
+      },
+      {
+        "line": 65,
+        "text": "                        tick('alternative_start');branches.append(finish(list(route),copy.deepcopy(events),set(pending),goal));tick('alternative_done')"
+      },
+      {
+        "line": 66,
+        "text": "                valid=[i for i,b in enumerate(branches) if b['status']=='core_complete']"
+      },
+      {
+        "line": 67,
+        "text": "                if valid:chosen=min(valid,key=lambda i:(len(branches[i]['route']),i))"
+      }
+    ]
+  },
+  {
+    "id": "old_clone_heading",
+    "file": "E:\\无人机研究项目_接续包_20261014\\PPCPP首次恢复完整试走_v0.1_20261020\\rollout.py",
+    "sha256": "94253044865c1fdeff6c5901726069c1225fe4808919cb6abffdd491b72e4b9a",
+    "start": 18,
+    "end": 35,
+    "lines": [
+      {
+        "line": 18,
+        "text": "    def finish(path,tr,pending,first_goal):"
+      },
+      {
+        "line": 19,
+        "text": "        first=True;forced=first_goal"
+      },
+      {
+        "line": 20,
+        "text": "        while pending:"
+      },
+      {
+        "line": 21,
+        "text": "            tick('branch_decision');cur=path[-1];prev=path[-2] if len(path)>1 else previous"
+      },
+      {
+        "line": 22,
+        "text": "            options=core.reward_options(cur,prev,pending,s.free,predator,(2.,.5));tick('branch_options')"
+      },
+      {
+        "line": 23,
+        "text": "            e=dict(index=len(path)-1,current=cur,previous=prev,pending_count=len(pending))"
+      },
+      {
+        "line": 24,
+        "text": "            if options:"
+      },
+      {
+        "line": 25,
+        "text": "                goal=core.choose_neighbor(options);e.update(kind='local',options=options,goal=goal);segment=(cur,goal)"
+      },
+      {
+        "line": 26,
+        "text": "            else:"
+      },
+      {
+        "line": 27,
+        "text": "                if first and forced is not None:goal=forced"
+      },
+      {
+        "line": 28,
+        "text": "                else:goal=min(pending,key=lambda q:(g.distance(cur,q),q))"
+      },
+      {
+        "line": 29,
+        "text": "                e.update(kind='recovery',goal=goal);segment=g.path(cur,goal)"
+      },
+      {
+        "line": 30,
+        "text": "            first=False;tr.append(e);move(path,segment[1:],pending)"
+      },
+      {
+        "line": 31,
+        "text": "        tick('return');tr.append(dict(kind='return',index=len(path)-1,current=path[-1],goal=s.base,pending_count=0))"
+      },
+      {
+        "line": 32,
+        "text": "        move(path,g.path(path[-1],s.base)[1:],pending);tick('branch_audit')"
+      },
+      {
+        "line": 33,
+        "text": "        ck=native.single_cell_audit(s,tuple(path));tick('branch_audited');accepted=_clock()-begin"
+      },
+      {
+        "line": 34,
+        "text": "        return dict(status='core_complete' if ck['valid'] else 'core_invalid',route=path if ck['valid'] else [],diagnostic_route=path,trace=tr,"
+      },
+      {
+        "line": 35,
+        "text": "            reason=ck['errors'],accepted_seconds=accepted,budget=budget,predator=predator,initial_previous=previous,weights=(2.,.5),fallback_selected=False,forced_goal=first_goal)"
+      }
+    ]
+  },
+  {
+    "id": "old_prefix_geometry",
+    "file": "E:\\无人机研究项目_接续包_20261014\\PPCPP首次恢复完整试走_v0.1_20261020\\rollout.py",
+    "sha256": "94253044865c1fdeff6c5901726069c1225fe4808919cb6abffdd491b72e4b9a",
+    "start": 42,
+    "end": 58,
+    "lines": [
+      {
+        "line": 42,
+        "text": "        tick('input');g=native.UnifiedGeometry(s,deadline);reason=g.precheck();tick('geometry')"
+      },
+      {
+        "line": 43,
+        "text": "        if reason:status='environment_infeasible'"
+      },
+      {
+        "line": 44,
+        "text": "        else:"
+      },
+      {
+        "line": 45,
+        "text": "            pending=set(s.targets)-set(s.covered)-{s.current};route=[s.current]"
+      },
+      {
+        "line": 46,
+        "text": "            while pending:"
+      },
+      {
+        "line": 47,
+        "text": "                tick('prefix');cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+      },
+      {
+        "line": 48,
+        "text": "                options=core.reward_options(cur,prev,pending,s.free,predator,(2.,.5));tick('prefix_options')"
+      },
+      {
+        "line": 49,
+        "text": "                if not options:break"
+      },
+      {
+        "line": 50,
+        "text": "                goal=core.choose_neighbor(options);events.append(dict(index=len(route)-1,current=cur,previous=prev,pending_count=len(pending),kind='local',options=options,goal=goal));move(route,[goal],pending)"
+      },
+      {
+        "line": 51,
+        "text": "            if not pending:"
+      },
+      {
+        "line": 52,
+        "text": "                branches.append(finish(list(route),copy.deepcopy(events),set(),None));chosen=0"
+      },
+      {
+        "line": 53,
+        "text": "            else:"
+      },
+      {
+        "line": 54,
+        "text": "                tick('first_recovery');nearest=min(pending,key=lambda q:(g.distance(route[-1],q),q));tick('nearest_ready')"
+      },
+      {
+        "line": 55,
+        "text": "                branch_state=dict(path=list(route),pending=sorted(pending),previous=route[-2] if len(route)>1 else previous,nearest=nearest)"
+      },
+      {
+        "line": 56,
+        "text": "                # Baseline branch first. Never rewrite real H/initial_targets."
+      },
+      {
+        "line": 57,
+        "text": "                goals=[nearest]"
+      },
+      {
+        "line": 58,
+        "text": "                branches.append(finish(list(route),copy.deepcopy(events),set(pending),nearest));tick('baseline_ready')"
+      }
+    ]
+  },
+  {
+    "id": "old_deadline_return",
+    "file": "E:\\无人机研究项目_接续包_20261014\\PPCPP首次恢复完整试走_v0.1_20261020\\rollout.py",
+    "sha256": "94253044865c1fdeff6c5901726069c1225fe4808919cb6abffdd491b72e4b9a",
+    "start": 66,
+    "end": 79,
+    "lines": [
+      {
+        "line": 66,
+        "text": "                valid=[i for i,b in enumerate(branches) if b['status']=='core_complete']"
+      },
+      {
+        "line": 67,
+        "text": "                if valid:chosen=min(valid,key=lambda i:(len(branches[i]['route']),i))"
+      },
+      {
+        "line": 68,
+        "text": "            status='core_complete' if chosen is not None and branches[chosen]['status']=='core_complete' else 'core_invalid'"
+      },
+      {
+        "line": 69,
+        "text": "    except native.DeadlineExceeded:status='deadline'"
+      },
+      {
+        "line": 70,
+        "text": "    except native.NoPath as exc:status='planning_failure';reason=str(exc)"
+      },
+      {
+        "line": 71,
+        "text": "    try:tick('result_ready')"
+      },
+      {
+        "line": 72,
+        "text": "    except native.DeadlineExceeded:status='deadline'"
+      },
+      {
+        "line": 73,
+        "text": "    elapsed=_clock()-begin"
+      },
+      {
+        "line": 74,
+        "text": "    if elapsed>=budget:status='deadline'"
+      },
+      {
+        "line": 75,
+        "text": "    selected=branches[chosen] if chosen is not None else None"
+      },
+      {
+        "line": 76,
+        "text": "    return dict(version='PPCPP_FIRST_RECOVERY_ROLLOUT_v0.1',mode=mode,status=status,seconds=elapsed,reason=reason,"
+      },
+      {
+        "line": 77,
+        "text": "        route=selected['route'] if status=='core_complete' else [],trace=selected['trace'] if selected else [],"
+      },
+      {
+        "line": 78,
+        "text": "        branches=branches,selected_branch=chosen,branch_state=branch_state,diagnostic_prefix=route,"
+      },
+      {
+        "line": 79,
+        "text": "        budget=budget,seed=seed,predator=predator,initial_previous=previous,weights=(2.,.5),fallback_selected=False)"
+      }
+    ]
+  },
+  {
+    "id": "old_worker_boundary",
+    "file": "E:\\无人机研究项目_接续包_20261014\\PPCPP首次恢复完整试走_v0.1_20261020\\worker.py",
+    "sha256": "c126f3a1aa45fb678e061c24b2b42f7573a42651ed34cc73420c224c4ecc8a10",
+    "start": 7,
+    "end": 15,
+    "lines": [
+      {
+        "line": 7,
+        "text": "def main(j,dest):"
+      },
+      {
+        "line": 8,
+        "text": "    payload=Path(j['input']).read_bytes();begin=time.perf_counter();c=json.loads(payload);validate(c);s=snapshot(c);initial=set(map(tuple,c['initial_targets']));pred=tuple(c['predator']);prev=tuple(c['previous']) if c['previous'] else None"
+      },
+      {
+        "line": 9,
+        "text": "    left=j['budget']-(time.perf_counter()-begin)"
+      },
+      {
+        "line": 10,
+        "text": "    if j['method']=='PPCPP':r=native.solve(s,initial,left,j['seed'],pred,prev)"
+      },
+      {
+        "line": 11,
+        "text": "    else:r=solve(s,initial,left,j['seed'],pred,prev,mode='one' if j['method']=='ONE' else 'three')"
+      },
+      {
+        "line": 12,
+        "text": "    wire=json.dumps(r,ensure_ascii=False,allow_nan=False,separators=(',',':')).encode('utf-8');elapsed=time.perf_counter()-begin"
+      },
+      {
+        "line": 13,
+        "text": "    x=dict(job=j,raw=r,entry_seconds=elapsed,eligible=r['status']=='core_complete' and elapsed<j['budget'],payload_bytes=len(wire));x['independent_seconds']=time.perf_counter()-begin"
+      },
+      {
+        "line": 14,
+        "text": "    if x['independent_seconds']>=j['budget']:x['eligible']=False"
+      },
+      {
+        "line": 15,
+        "text": "    Path(dest).write_text(json.dumps(x,ensure_ascii=False,separators=(',',':')),encoding='utf-8')"
+      }
+    ]
+  },
+  {
+    "id": "old_branch_checks",
+    "file": "E:\\无人机研究项目_接续包_20261014\\PPCPP首次恢复完整试走_v0.1_20261020\\checks.py",
+    "sha256": "2c25ddaa63e4d48d99f9fb2c215fbcfaf3f606c06a78d8e659a667318d33edd9",
+    "start": 7,
+    "end": 28,
+    "lines": [
+      {
+        "line": 7,
+        "text": "def audit(c,r):"
+      },
+      {
+        "line": 8,
+        "text": "    if 'branches' not in r:"
+      },
+      {
+        "line": 9,
+        "text": "        if r['route']:pa.audit(c,r)"
+      },
+      {
+        "line": 10,
+        "text": "        return"
+      },
+      {
+        "line": 11,
+        "text": "    bs=r['branches'];state=r['branch_state'];goals=[]"
+      },
+      {
+        "line": 12,
+        "text": "    if state:"
+      },
+      {
+        "line": 13,
+        "text": "        f=set(map(tuple,c['free']));pending=set(map(tuple,state['pending']));cur=tuple(state['path'][-1]);d=bfs(f,cur)"
+      },
+      {
+        "line": 14,
+        "text": "        nearest=min(pending,key=lambda q:(d[q],q));assert nearest==tuple(state['nearest'])"
+      },
+      {
+        "line": 15,
+        "text": "        goals=[nearest]"
+      },
+      {
+        "line": 16,
+        "text": "        if r['mode']=='three':"
+      },
+      {
+        "line": 17,
+        "text": "            db=bfs(f,tuple(c['base']))"
+      },
+      {
+        "line": 18,
+        "text": "            for g in (min(pending,key=lambda q:(db[q],q)),min(pending,key=lambda q:(-db[q],q))):"
+      },
+      {
+        "line": 19,
+        "text": "                if g not in goals:goals.append(g)"
+      },
+      {
+        "line": 20,
+        "text": "    for i,b in enumerate(bs):"
+      },
+      {
+        "line": 21,
+        "text": "        if state:"
+      },
+      {
+        "line": 22,
+        "text": "            assert tuple(b['forced_goal'])==goals[i] and norm(b['diagnostic_route'][:len(state['path'])])==norm(state['path'])"
+      },
+      {
+        "line": 23,
+        "text": "        if b['status']=='core_complete':branch_audit(c,b)"
+      },
+      {
+        "line": 24,
+        "text": "    if r['status']=='core_complete':"
+      },
+      {
+        "line": 25,
+        "text": "        valid=[i for i,b in enumerate(bs) if b['status']=='core_complete'];chosen=min(valid,key=lambda i:(len(bs[i]['route']),i))"
+      },
+      {
+        "line": 26,
+        "text": "        assert r['selected_branch']==chosen and norm(r['route'])==norm(bs[chosen]['route']) and norm(r['trace'])==norm(bs[chosen]['trace'])"
+      },
+      {
+        "line": 27,
+        "text": "        if state:assert len(bs)==len(goals)"
+      },
+      {
+        "line": 28,
+        "text": "    else:assert not r['route']"
+      }
+    ]
+  },
+  {
+    "id": "old_deadline_tests",
+    "file": "E:\\无人机研究项目_接续包_20261014\\PPCPP首次恢复完整试走_v0.1_20261020\\run.py",
+    "sha256": "095b6b7a81a574133ef0a6ce32c39a6843cd23d2fad9420924eb6fa3086d9bdc",
+    "start": 23,
+    "end": 34,
+    "lines": [
+      {
+        "line": 23,
+        "text": "        c=dict(name='micro_'+str(mask),free=sorted(set(cells)|h),targets=sorted(t),covered=sorted(h),published_targets=sorted(t),deferred_targets=[],current=(0,0),base=(-1,0),distance_budget=100,initial_targets=sorted(h),predator=(-2,0),previous=(-1,0),old_route=[(0,0),(-1,0)])"
+      },
+      {
+        "line": 24,
+        "text": "        n=call(c,'PPCPP');one=call(c,'ONE');three=call(c,'THREE')"
+      },
+      {
+        "line": 25,
+        "text": "        assert n['status']==one['status']==three['status']=='core_complete'"
+      },
+      {
+        "line": 26,
+        "text": "        assert norm(n['route'])==norm(one['route']) and norm(n['trace'])==norm(one['trace'])"
+      },
+      {
+        "line": 27,
+        "text": "        base=three['branches'][0];assert norm(base['route'])==norm(n['route']) and norm(base['trace'])==norm(n['trace'])"
+      },
+      {
+        "line": 28,
+        "text": "        if three['branch_state'] is not None and len(three['branches'])>1:discovery=c"
+      },
+      {
+        "line": 29,
+        "text": "    seen=[];call(discovery,'THREE',lambda stage:seen.append(stage))"
+      },
+      {
+        "line": 30,
+        "text": "    for target in sorted(set(seen)):"
+      },
+      {
+        "line": 31,
+        "text": "        def hook(stage):"
+      },
+      {
+        "line": 32,
+        "text": "            if stage==target:raise native.DeadlineExceeded()"
+      },
+      {
+        "line": 33,
+        "text": "        r=call(discovery,'THREE',hook);assert r['status']=='deadline' and not r['route']"
+      },
+      {
+        "line": 34,
+        "text": "    save(H/'gate_PASS.json',dict(calls=len(records),micro_subsets=64,deadline_stages=len(set(seen)),all_pass=True))"
+      }
+    ]
+  },
+  {
+    "id": "current_candidates",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\expand_hook.py",
+    "sha256": "3593fd5c13566d494235b0886435ec99514dd3c1e61547720da39d556f01091d",
+    "start": 5,
+    "end": 18,
+    "lines": [
+      {
+        "line": 5,
+        "text": "def select(pending,default,old):"
+      },
+      {
+        "line": 6,
+        "text": " seen=set();ordered=[];ranks={}"
+      },
+      {
+        "line": 7,
+        "text": " for i,v in enumerate(old):"
+      },
+      {
+        "line": 8,
+        "text": "  q=tuple(v)"
+      },
+      {
+        "line": 9,
+        "text": "  if q not in seen:seen.add(q);ordered.append(q);ranks[q]=i"
+      },
+      {
+        "line": 10,
+        "text": " current=[q for q in ordered if q in pending]"
+      },
+      {
+        "line": 11,
+        "text": " alt=next((q for q in current if q!=default),None)"
+      },
+      {
+        "line": 12,
+        "text": " first=current[0] if current else None"
+      },
+      {
+        "line": 13,
+        "text": " return alt,{'q0_is_first_pending_in_old_order':default==first,'q0_old_rank':ranks.get(default),'q1_old_rank':ranks.get(alt),"
+      },
+      {
+        "line": 14,
+        "text": "  'identity_class':'default_not_in_old_order' if default not in ranks else 'default_already_prioritizes_old_order' if default==first else 'alternative_precedes_default',"
+      },
+      {
+        "line": 15,
+        "text": "  'first_pending_in_old_order':norm(first)}"
+      },
+      {
+        "line": 16,
+        "text": "def packet(record,index,current,previous,pending,default,old):"
+      },
+      {
+        "line": 17,
+        "text": " alt,tags=select(pending,default,old)"
+      },
+      {
+        "line": 18,
+        "text": " return dict(trace_record=record,route_index=index,current=norm(current),previous=norm(previous),pending=norm(sorted(pending)),default_goal=norm(default),alternative_goal=norm(alt),tags=tags,status='applicable' if alt is not None else 'no_distinct_old_candidate')"
+      }
+    ]
+  },
+  {
+    "id": "current_trigger",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\expand_hook.py",
+    "sha256": "3593fd5c13566d494235b0886435ec99514dd3c1e61547720da39d556f01091d",
+    "start": 31,
+    "end": 54,
+    "lines": [
+      {
+        "line": 31,
+        "text": "class Diagnostic:"
+      },
+      {
+        "line": 32,
+        "text": " def __init__(self,old,enabled):"
+      },
+      {
+        "line": 33,
+        "text": "  self.old=old;self.enabled=enabled;self.examined=False;self.trigger=None;self.records=[];self.seconds=0.;self.counts=Counter({k:0 for k in ['recovery_hook_calls','decision_records','matched','applied','explanatory_distance_queries','pending_cells_logged','old_order_cells_scanned']})"
+      },
+      {
+        "line": 34,
+        "text": " def choose(self,trace,route,current,previous,pending,default,geometry):"
+      },
+      {
+        "line": 35,
+        "text": "  start=time.perf_counter()"
+      },
+      {
+        "line": 36,
+        "text": "  try:"
+      },
+      {
+        "line": 37,
+        "text": "   self.counts['recovery_hook_calls']+=1"
+      },
+      {
+        "line": 38,
+        "text": "   if self.examined or len(pending)<2:return default"
+      },
+      {
+        "line": 39,
+        "text": "   self.examined=True;self.counts['old_order_cells_scanned']+=len(self.old)"
+      },
+      {
+        "line": 40,
+        "text": "   t=packet(len(trace),len(route)-1,current,previous,pending,default,self.old);self.trigger=t"
+      },
+      {
+        "line": 41,
+        "text": "   if t['alternative_goal'] is None:return default"
+      },
+      {
+        "line": 42,
+        "text": "   alt=tuple(t['alternative_goal']);assert alt in pending and alt in geometry.s.free and alt in geometry.reachable,'candidate_unavailable_contract_error'"
+      },
+      {
+        "line": 43,
+        "text": "   d0=geometry.distance(current,default);d1=geometry.distance(current,alt);self.counts['explanatory_distance_queries']+=2"
+      },
+      {
+        "line": 44,
+        "text": "   assert d1>=d0"
+      },
+      {
+        "line": 45,
+        "text": "   t.update(default_distance=d0,alternative_distance=d1,chosen_goal=norm(alt if self.enabled else default),replacement_enabled=self.enabled)"
+      },
+      {
+        "line": 46,
+        "text": "   self.counts['matched']+=1;self.counts['applied']+=int(self.enabled)"
+      },
+      {
+        "line": 47,
+        "text": "   return alt if self.enabled else default"
+      },
+      {
+        "line": 48,
+        "text": "  finally:self.seconds+=time.perf_counter()-start"
+      },
+      {
+        "line": 49,
+        "text": " def record(self,trace,event,pending,route,segment):"
+      },
+      {
+        "line": 50,
+        "text": "  start=time.perf_counter();self.records.append(dict(trace_record=len(trace),event=norm(event),pending=norm(sorted(pending)),segment=norm(segment)))"
+      },
+      {
+        "line": 51,
+        "text": "  self.counts['decision_records']+=1;self.counts['pending_cells_logged']+=len(pending)"
+      },
+      {
+        "line": 52,
+        "text": "  if self.trigger and self.trigger['trace_record']==len(trace):self.trigger['actual_recovery_path']=norm(segment)"
+      },
+      {
+        "line": 53,
+        "text": "  self.seconds+=time.perf_counter()-start"
+      },
+      {
+        "line": 54,
+        "text": " def export(self):return dict(target_intervention_enabled=self.enabled,core_detail_profile_enabled=False,trigger=self.trigger,decision_states=self.records,counts=dict(self.counts),diagnostic_hook_seconds=self.seconds)"
+      }
+    ]
+  },
+  {
+    "id": "current_REF_scan",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\expand_hook.py",
+    "sha256": "3593fd5c13566d494235b0886435ec99514dd3c1e61547720da39d556f01091d",
+    "start": 19,
+    "end": 30,
+    "lines": [
+      {
+        "line": 19,
+        "text": "def scan_ref(events,prefix_stream,U,old,deadline):"
+      },
+      {
+        "line": 20,
+        "text": " pending=set(U);cursor=-1;calls=0;one=False;found=None"
+      },
+      {
+        "line": 21,
+        "text": " for i,e in enumerate(events):"
+      },
+      {
+        "line": 22,
+        "text": "  assert time.perf_counter()<deadline,'selector_deadline'"
+      },
+      {
+        "line": 23,
+        "text": "  while cursor<e['index']:"
+      },
+      {
+        "line": 24,
+        "text": "   cursor,p=next(prefix_stream);pending.discard(tuple(p));calls+=1"
+      },
+      {
+        "line": 25,
+        "text": "  assert len(pending)==e['pending_count']"
+      },
+      {
+        "line": 26,
+        "text": "  if e['kind']=='recovery':"
+      },
+      {
+        "line": 27,
+        "text": "   one=True"
+      },
+      {
+        "line": 28,
+        "text": "   if len(pending)>=2:"
+      },
+      {
+        "line": 29,
+        "text": "    found=packet(i,e['index'],e['current'],e['previous'],pending,tuple(e['goal']),old);break"
+      },
+      {
+        "line": 30,
+        "text": " return {'trigger':found,'status':found['status'] if found else 'singleton_recovery' if one else 'no_recovery','counts':{'prefix_vertices':calls}}"
+      }
+    ]
+  },
+  {
+    "id": "current_native",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\expand_native.py",
+    "sha256": "0e33fd665558fbccf0b7bc9f4d3e73968b4ded81d06da5020b1c1e6804e0d6bf",
+    "start": 8,
+    "end": 49,
+    "lines": [
+      {
+        "line": 8,
+        "text": "def solve(s,initial,budget,seed,predator,previous,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit,_diag=None):"
+      },
+      {
+        "line": 9,
+        "text": "    begin=_clock();deadline=begin+budget;route=[];trace=[];status='not_started';reason=None;accepted=None"
+      },
+      {
+        "line": 10,
+        "text": "    def tick():"
+      },
+      {
+        "line": 11,
+        "text": "        if _clock()>=deadline:raise DeadlineExceeded()"
+      },
+      {
+        "line": 12,
+        "text": "    def move(segment,pending):"
+      },
+      {
+        "line": 13,
+        "text": "        assert segment[0]==route[-1]"
+      },
+      {
+        "line": 14,
+        "text": "        for p in segment[1:]:tick();route.append(p);pending.discard(p)"
+      },
+      {
+        "line": 15,
+        "text": "    try:"
+      },
+      {
+        "line": 16,
+        "text": "        check_contract(s,initial,budget)"
+      },
+      {
+        "line": 17,
+        "text": "        if not math.isfinite(budget):raise ValueError('finite budget')"
+      },
+      {
+        "line": 18,
+        "text": "        if len(predator)!=2 or not all(math.isfinite(v) for v in predator):raise ValueError('finite predator')"
+      },
+      {
+        "line": 19,
+        "text": "        if s.free and not (predator[0]<min(x for x,y in s.free) or predator[0]>max(x for x,y in s.free)):raise ValueError('predator outside fixed flight-domain x bounds required')"
+      },
+      {
+        "line": 20,
+        "text": "        if previous is not None and sum(abs(a-b) for a,b in zip(previous,s.current))!=1:raise ValueError('historical heading must be adjacent')"
+      },
+      {
+        "line": 21,
+        "text": "        tick();g=_geometry(s,deadline);reason=g.precheck();tick()"
+      },
+      {
+        "line": 22,
+        "text": "        if reason:status='environment_infeasible'"
+      },
+      {
+        "line": 23,
+        "text": "        else:"
+      },
+      {
+        "line": 24,
+        "text": "            pending=set(s.targets)-set(s.covered)-{s.current};route=[s.current]"
+      },
+      {
+        "line": 25,
+        "text": "            while pending:"
+      },
+      {
+        "line": 26,
+        "text": "                tick();cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+      },
+      {
+        "line": 27,
+        "text": "                options=core.reward_options(cur,prev,pending,s.free,predator,(2.,.5));tick()"
+      },
+      {
+        "line": 28,
+        "text": "                event=dict(index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))"
+      },
+      {
+        "line": 29,
+        "text": "                if options:"
+      },
+      {
+        "line": 30,
+        "text": "                    goal=core.choose_neighbor(options);event.update(kind='local',options=options,goal=goal);segment=(cur,goal)"
+      },
+      {
+        "line": 31,
+        "text": "                else:"
+      },
+      {
+        "line": 32,
+        "text": "                    goal=min(pending,key=lambda q:(g.distance(cur,q),q));tick()"
+      },
+      {
+        "line": 33,
+        "text": "                    if _diag is not None:goal=_diag.choose(trace,route,cur,prev,pending,goal,g);tick()"
+      },
+      {
+        "line": 34,
+        "text": "                    segment=g.path(cur,goal)"
+      },
+      {
+        "line": 35,
+        "text": "                    event.update(kind='recovery',goal=goal)"
+      },
+      {
+        "line": 36,
+        "text": "                if _diag is not None:_diag.record(trace,event,pending,route,segment);tick()"
+      },
+      {
+        "line": 37,
+        "text": "                trace.append(event);move(segment,pending)"
+      },
+      {
+        "line": 38,
+        "text": "            tick();trace.append(dict(kind='return',index=len(route)-1,current=route[-1],goal=s.base,pending_count=0))"
+      },
+      {
+        "line": 39,
+        "text": "            move(g.path(route[-1],s.base),pending);tick()"
+      },
+      {
+        "line": 40,
+        "text": "            checked=_audit(s,tuple(route));tick()"
+      },
+      {
+        "line": 41,
+        "text": "            if checked['valid']:accepted=_clock()-begin;tick();status='core_complete'"
+      },
+      {
+        "line": 42,
+        "text": "            else:status='core_invalid';reason=checked['errors']"
+      },
+      {
+        "line": 43,
+        "text": "    except DeadlineExceeded:status='deadline'"
+      },
+      {
+        "line": 44,
+        "text": "    except NoPath as e:status='planning_failure';reason=str(e)"
+      },
+      {
+        "line": 45,
+        "text": "    seconds=_clock()-begin"
+      },
+      {
+        "line": 46,
+        "text": "    return dict(version=VERSION,method='PPCPP_INDEPENDENT',route=tuple(route) if status=='core_complete' else (),status=status,reason=reason,"
+      },
+      {
+        "line": 47,
+        "text": "        seconds=seconds,budget=budget,seed=seed,seed_used=False,predator=predator,initial_previous=previous,weights=(2.,.5),"
+      },
+      {
+        "line": 48,
+        "text": "        trace=trace,accepted_seconds=accepted if status=='core_complete' else None,fallback_selected=False,"
+      },
+      {
+        "line": 49,
+        "text": "        overrun_gt_10ms=seconds>budget+.01)"
+      }
+    ]
+  },
+  {
+    "id": "current_worker_before_clock",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\worker.py",
+    "sha256": "ec41d4e3c11c6fc211f6902244c0abdae5d52a7e15d756818921e1e1069520dc",
+    "start": 5,
+    "end": 18,
+    "lines": [
+      {
+        "line": 5,
+        "text": "def worker(job):"
+      },
+      {
+        "line": 6,
+        "text": " dest=H/'outputs'/(job['id']+'.json');token=H/'outputs'/(job['id']+'.claim')"
+      },
+      {
+        "line": 7,
+        "text": " with token.open('x',encoding='utf-8') as f:f.write('exclusive job slot\\n')"
+      },
+      {
+        "line": 8,
+        "text": " wall=time.perf_counter();out=dict(job=job,passed=False,eligible=False,status='starting',counts={'native_detail_profile':None},started_utc=time.time());stage='guard'"
+      },
+      {
+        "line": 9,
+        "text": " try:"
+      },
+      {
+        "line": 10,
+        "text": "  guard();b=bindings();sources=loaded_sources()"
+      },
+      {
+        "line": 11,
+        "text": "  for p,v in sources.items():assert (p in read(H/'runtime_guards.json') and read(H/'runtime_guards.json')[p]==v) or (Path(p).is_relative_to(H) and sha(p)==read(H/'active_freeze.json')[str(Path(p).relative_to(H))]),('unbound source',p)"
+      },
+      {
+        "line": 12,
+        "text": "  out['loaded_sources']=sources;out['identity']=b['B'].identity()"
+      },
+      {
+        "line": 13,
+        "text": "  c=read(H/job['input']);before=norm(c);out['input']=c;old=job.get('old_order',[]);out['input_sha256']=sha(H/job['input']);stage='input_contract'"
+      },
+      {
+        "line": 14,
+        "text": "  begin=time.perf_counter();phase_validate(c,b['validate']);s=snapshot(c,b['Snapshot']);deadline=begin+20"
+      },
+      {
+        "line": 15,
+        "text": "  out['initial_collect_here']={'new_H':[],'reason':'non-target base: no credit' if c['phase']=='history_prepare' else 'actual prefix collected S; idempotent'}"
+      },
+      {
+        "line": 16,
+        "text": "  diag=Diagnostic(old,job['arm']=='ALT1') if job['arm'] in ('OFF','ALT1') else None"
+      },
+      {
+        "line": 17,
+        "text": "  stage='core';entry(job,'core');raw=(b['native'] if diag is not None else b['reference']).solve(s,ps(c['initial_targets']),deadline-time.perf_counter(),20261020,tuple(c['predator']),tuple(c['previous']) if c['previous'] is not None else None,**({'_diag':diag} if diag is not None else {}));returned(job,'core')"
+      },
+      {
+        "line": 18,
+        "text": "  out['native']={'raw':norm(raw)};out['diagnostic']=diag.export() if diag else None"
+      }
+    ]
+  },
+  {
+    "id": "current_main_clocks",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\worker.py",
+    "sha256": "ec41d4e3c11c6fc211f6902244c0abdae5d52a7e15d756818921e1e1069520dc",
+    "start": 17,
+    "end": 32,
+    "lines": [
+      {
+        "line": 17,
+        "text": "  stage='core';entry(job,'core');raw=(b['native'] if diag is not None else b['reference']).solve(s,ps(c['initial_targets']),deadline-time.perf_counter(),20261020,tuple(c['predator']),tuple(c['previous']) if c['previous'] is not None else None,**({'_diag':diag} if diag is not None else {}));returned(job,'core')"
+      },
+      {
+        "line": 18,
+        "text": "  out['native']={'raw':norm(raw)};out['diagnostic']=diag.export() if diag else None"
+      },
+      {
+        "line": 19,
+        "text": "  if raw['status']!='core_complete':"
+      },
+      {
+        "line": 20,
+        "text": "   out['status']=raw['status'];out['semantic_error']=raw['status']=='core_invalid';return"
+      },
+      {
+        "line": 21,
+        "text": "  if len(raw['route'])-1>4096:out['status']='route_size_cap';return"
+      },
+      {
+        "line": 22,
+        "text": "  if job['arm']=='REF':"
+      },
+      {
+        "line": 23,
+        "text": "   stage='selector';out['scanner']=scan_ref(iter(raw['trace']),iter(enumerate(raw['route'])),ps(c['targets'])-ps(c['covered']),old,deadline)"
+      },
+      {
+        "line": 24,
+        "text": "  json.dumps(out,ensure_ascii=False,allow_nan=False);native_end=time.perf_counter();out['native_entry_seconds']=native_end-begin"
+      },
+      {
+        "line": 25,
+        "text": "  if native_end>=deadline:out['status']='native_or_selector_deadline';return"
+      },
+      {
+        "line": 26,
+        "text": "  stage='raw_execution';out['views']={'A':b['metrics'].evaluate(c,raw['route'],grid=True)};rawend=time.perf_counter()"
+      },
+      {
+        "line": 27,
+        "text": "  request={'id':job['id'],'input':c,'raw':norm(raw)};wire=json.dumps(request,ensure_ascii=False,separators=(',',':')).encode()"
+      },
+      {
+        "line": 28,
+        "text": "  out['post_request_utf8']=wire.decode();stage='post';entry(job,'post');poststart=time.perf_counter();postwire,envelope=b['engine'].process(wire,limit=4096,soft=18,total=20);returned(job,'post')"
+      },
+      {
+        "line": 29,
+        "text": "  out.update(post_response_utf8=postwire,post_envelope=envelope,post=json.loads(postwire));stage='post_execution';out['views']['B']=b['metrics'].evaluate(c,out['post']['vertices']);json.dumps(out,ensure_ascii=False,allow_nan=False);mainend=time.perf_counter()"
+      },
+      {
+        "line": 30,
+        "text": "  out['timing']=dict(native_entry_seconds=native_end-begin,raw_common_end_to_end=rawend-begin,post_increment=mainend-rawend,combined_end_to_end=mainend-begin,post_engine_seconds=envelope['entry_seconds'],native_late=native_end-begin>=20,raw_stage_late=rawend-begin>20,post_late=mainend-rawend>20 or envelope['late'],combined_late=mainend-begin>40,scope='input/selection/core/encoding and actual raw/post execution inside; disk/cold/source guards and independent audits outside, worker wall includes them')"
+      },
+      {
+        "line": 31,
+        "text": "  out['passed']=True;out['status']='complete';out['eligible']=not any(out['timing'][k] for k in ('native_late','raw_stage_late','post_late','combined_late'))"
+      },
+      {
+        "line": 32,
+        "text": "  dump(dest,out);stage='independent_review';astart=time.perf_counter();out['independent']=b['B'].audit_result(out);out['decision_audit']=audit(c,raw,old,job['arm'],out['diagnostic'],out.get('scanner'));out['independent_seconds']=time.perf_counter()-astart"
+      }
+    ]
+  },
+  {
+    "id": "current_audit_outer",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\worker.py",
+    "sha256": "ec41d4e3c11c6fc211f6902244c0abdae5d52a7e15d756818921e1e1069520dc",
+    "start": 32,
+    "end": 46,
+    "lines": [
+      {
+        "line": 32,
+        "text": "  dump(dest,out);stage='independent_review';astart=time.perf_counter();out['independent']=b['B'].audit_result(out);out['decision_audit']=audit(c,raw,old,job['arm'],out['diagnostic'],out.get('scanner'));out['independent_seconds']=time.perf_counter()-astart"
+      },
+      {
+        "line": 33,
+        "text": "  if out['independent_seconds']>150:out['eligible']=False;out['status']='independent_deadline'"
+      },
+      {
+        "line": 34,
+        "text": "  if job['arm']=='OFF':"
+      },
+      {
+        "line": 35,
+        "text": "   ref=read(H/'outputs'/(job['reference_id']+'.json'))"
+      },
+      {
+        "line": 36,
+        "text": "   out['off_equivalence']=dict(raw_semantic=canonical(raw)==canonical(ref['native']['raw']),post_vertices=out['post']['vertices']==ref['post']['vertices'],post_anchors=out['post']['locked_nominal_anchors']==ref['post']['locked_nominal_anchors'],post_credits=out['post']['credit_witnesses']==ref['post']['credit_witnesses'],raw_credits=out['views']['A']['events']==ref['views']['A']['events'],actual_post_credits=out['views']['B']['events']==ref['views']['B']['events'])"
+      },
+      {
+        "line": 37,
+        "text": "   assert all(out['off_equivalence'].values()),'OFF equivalence failure'"
+      },
+      {
+        "line": 38,
+        "text": "  assert c==before;guard()"
+      },
+      {
+        "line": 39,
+        "text": " except AssertionError as ex:"
+      },
+      {
+        "line": 40,
+        "text": "  if str(ex) in ('selector_deadline','independent_deadline'):"
+      },
+      {
+        "line": 41,
+        "text": "   out.update(eligible=False,status=str(ex),passed=False,semantic_error=False)"
+      },
+      {
+        "line": 42,
+        "text": "  else:out.update(passed=False,eligible=False,status='semantic_or_contract_error',semantic_error=True,failure=repr(ex),traceback=traceback.format_exc())"
+      },
+      {
+        "line": 43,
+        "text": " except BaseException as ex:out.update(passed=False,eligible=False,status='implementation_error',semantic_error=True,failure=repr(ex),traceback=traceback.format_exc())"
+      },
+      {
+        "line": 44,
+        "text": " finally:"
+      },
+      {
+        "line": 45,
+        "text": "  out['last_stage']=stage;out['worker_wall_seconds']=time.perf_counter()-wall;out['diagnostic_total_seconds']=out['worker_wall_seconds'];dump(dest,out)"
+      },
+      {
+        "line": 46,
+        "text": "  print(json.dumps({'id':job['id'],'status':out['status'],'eligible':out['eligible'],'semantic_error':out.get('semantic_error',False),'seconds':out['worker_wall_seconds']},ensure_ascii=False),flush=True)"
+      }
+    ]
+  },
+  {
+    "id": "current_parent_clock",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\run.py",
+    "sha256": "e3a0ff472a25c801fadb4ad58ba51a935affe3f6ade298846807df89d98940bd",
+    "start": 8,
+    "end": 24,
+    "lines": [
+      {
+        "line": 8,
+        "text": "def launch(job,status):"
+      },
+      {
+        "line": 9,
+        "text": " assert job['id'] not in status['attempted'];status['attempted'].append(job['id']);dump(H/'current_job.json',job);dump(H/'status.json',status)"
+      },
+      {
+        "line": 10,
+        "text": " before=time.perf_counter();append(H/'attempts.jsonl',dict(event='started',id=job['id'],arm=job['arm'],input=job['input'],utc=time.time()))"
+      },
+      {
+        "line": 11,
+        "text": " env=dict(os.environ,**read(H/'plan.json')['thread_env'],PYTHONDONTWRITEBYTECODE='1')"
+      },
+      {
+        "line": 12,
+        "text": " try:"
+      },
+      {
+        "line": 13,
+        "text": "  proc=subprocess.run([sys.executable,'-B','-X','utf8',str(H/'worker.py'),str(H/'current_job.json')],env=env,capture_output=True,timeout=150)"
+      },
+      {
+        "line": 14,
+        "text": "  (H/'logs'/(job['id']+'.log')).write_bytes(proc.stdout+proc.stderr)"
+      },
+      {
+        "line": 15,
+        "text": "  x=read(H/'outputs'/(job['id']+'.json'))"
+      },
+      {
+        "line": 16,
+        "text": "  if proc.returncode and not x.get('semantic_error'):x.update(semantic_error=True,status='worker_exit_error')"
+      },
+      {
+        "line": 17,
+        "text": " except subprocess.TimeoutExpired as ex:"
+      },
+      {
+        "line": 18,
+        "text": "  (H/'logs'/(job['id']+'.log')).write_bytes((ex.stdout or b'')+(ex.stderr or b''));x=read(H/'outputs'/(job['id']+'.json')) if (H/'outputs'/(job['id']+'.json')).exists() else dict(job=job)"
+      },
+      {
+        "line": 19,
+        "text": "  x.update(passed=False,eligible=False,status='parent_timeout',semantic_error=False);dump(H/'outputs'/(job['id']+'.json'),x)"
+      },
+      {
+        "line": 20,
+        "text": " x['parent_wall_seconds']=time.perf_counter()-before;dump(H/'outputs'/(job['id']+'.json'),x)"
+      },
+      {
+        "line": 21,
+        "text": " status['completed'].append(dict(id=job['id'],arm=job['arm'],status=x['status'],eligible=x['eligible']))"
+      },
+      {
+        "line": 22,
+        "text": " append(H/'attempts.jsonl',dict(event='ended',id=job['id'],arm=job['arm'],status=x['status'],eligible=x['eligible'],parent_wall_seconds=x['parent_wall_seconds']))"
+      },
+      {
+        "line": 23,
+        "text": " dump(H/'status.json',status);print('ENTRY',job['id'],x['status'],'eligible='+str(x['eligible']),flush=True)"
+      },
+      {
+        "line": 24,
+        "text": " if x.get('semantic_error'):raise RuntimeError('substantive error; stop no repair/retry: '+job['id'])"
+      }
+    ]
+  },
+  {
+    "id": "current_run_order",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\run.py",
+    "sha256": "e3a0ff472a25c801fadb4ad58ba51a935affe3f6ade298846807df89d98940bd",
+    "start": 37,
+    "end": 48,
+    "lines": [
+      {
+        "line": 37,
+        "text": "  for row in registry:"
+      },
+      {
+        "line": 38,
+        "text": "   sr=dict(id=row['id'],qualification=row['status'],arms={});status['responses'].append(sr)"
+      },
+      {
+        "line": 39,
+        "text": "   if row['status']!='qualified':sr['reason']='not_qualified';continue"
+      },
+      {
+        "line": 40,
+        "text": "   common=dict(input=row['input'],base_geometry=row['base_geometry'],family=row['family'],old_order=row['old_order'])"
+      },
+      {
+        "line": 41,
+        "text": "   refid=row['id']+'__REF';ref=launch(dict(common,id=refid,arm='REF'),status);sr['arms']['REF']=ref['status']"
+      },
+      {
+        "line": 42,
+        "text": "   if not ref['eligible']:sr['reason']='REF_not_eligible';continue"
+      },
+      {
+        "line": 43,
+        "text": "   if ref['scanner']['status']!='applicable':sr['reason']=ref['scanner']['status'];continue"
+      },
+      {
+        "line": 44,
+        "text": "   off=launch(dict(common,id=row['id']+'__OFF',arm='OFF',reference_id=refid),status);sr['arms']['OFF']=off['status']"
+      },
+      {
+        "line": 45,
+        "text": "   if not off['eligible']:sr['reason']='OFF_not_eligible';continue"
+      },
+      {
+        "line": 46,
+        "text": "   alt=launch(dict(common,id=row['id']+'__ALT1',arm='ALT1'),status);sr['arms']['ALT1']=alt['status']"
+      },
+      {
+        "line": 47,
+        "text": "   if not alt['eligible']:sr['reason']='ALT1_not_eligible';continue"
+      },
+      {
+        "line": 48,
+        "text": "   result=pair(row,off,alt,b);status['pairs'].append(result);sr['reason']='valid_pair';dump(H/'pairs.json',status['pairs']);dump(H/'status.json',status)"
+      }
+    ]
+  },
+  {
+    "id": "post_clocks_checks",
+    "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\post\\engine.py",
+    "sha256": "62c0f474cd3b4ee6532c27221fad4cf4eb151373617aa35e9893310bd9aa23fa",
+    "start": 53,
+    "end": 94,
+    "lines": [
+      {
+        "line": 53,
+        "text": "def process(payload,limit=4096,soft=18.,total=20.):"
+      },
+      {
+        "line": 54,
+        "text": "    start=time.perf_counter();o=json.loads(payload);c=o['input'];raw=o['raw'];path=list(map(tuple,raw['route']));F=ps(c['free']);U=ps(c['targets'])-ps(c['covered']);n=len(path)-1"
+      },
+      {
+        "line": 55,
+        "text": "    counts=Counter(candidate=0,source_validation=0,output_validation=0,service_intersections=0);times={};phase=time.perf_counter()"
+      },
+      {
+        "line": 56,
+        "text": "    assert path[0]==tuple(c['current']) and path[-1]==tuple(c['base']);assert n<=Decimal(str(c['distance_budget']))"
+      },
+      {
+        "line": 57,
+        "text": "    assert ps(c['targets'])==ps(c['published_targets'])&F and ps(c['deferred_targets'])==ps(c['published_targets'])-F-ps(c['covered'])"
+      },
+      {
+        "line": 58,
+        "text": "    for a,b in zip(path,path[1:]):"
+      },
+      {
+        "line": 59,
+        "text": "        assert abs(a[0]-b[0])+abs(a[1]-b[1])==1"
+      },
+      {
+        "line": 60,
+        "text": "        counts['source_validation']+=1;assert G.legal(F,a,b)"
+      },
+      {
+        "line": 61,
+        "text": "    first=first_original(path,U);parts=split(path,first);times['parse_preprocess_source_validation']=time.perf_counter()-start"
+      },
+      {
+        "line": 62,
+        "text": "    phase=time.perf_counter();edges=[];querylog=[];fallback=None;partdata=[]"
+      },
+      {
+        "line": 63,
+        "text": "    for part,(left,right,kind) in enumerate(parts):"
+      },
+      {
+        "line": 64,
+        "text": "        idx=left;loedge=len(edges)"
+      },
+      {
+        "line": 65,
+        "text": "        while idx<right:"
+      },
+      {
+        "line": 66,
+        "text": "            if fallback is None and (counts['candidate']>=limit or time.perf_counter()-start>=soft):fallback='candidate_cap' if counts['candidate']>=limit else 'soft_deadline'"
+      },
+      {
+        "line": 67,
+        "text": "            if fallback is not None:j=idx+1"
+      },
+      {
+        "line": 68,
+        "text": "            else:"
+      },
+      {
+        "line": 69,
+        "text": "                j=right"
+      },
+      {
+        "line": 70,
+        "text": "                while j>idx:"
+      },
+      {
+        "line": 71,
+        "text": "                    if counts['candidate']>=limit or time.perf_counter()-start>=soft:"
+      },
+      {
+        "line": 72,
+        "text": "                        fallback='candidate_cap' if counts['candidate']>=limit else 'soft_deadline';j=idx+1;break"
+      },
+      {
+        "line": 73,
+        "text": "                    counts['candidate']+=1;ok=G.legal(F,path[idx],path[j]);querylog.append({'i':idx,'j':j,'legal':ok,'part':part})"
+      },
+      {
+        "line": 74,
+        "text": "                    if ok:break"
+      },
+      {
+        "line": 75,
+        "text": "                    j-=1"
+      },
+      {
+        "line": 76,
+        "text": "                assert j>idx"
+      },
+      {
+        "line": 77,
+        "text": "            edges.append({'left':idx,'right':j,'a':list(path[idx]),'b':list(path[j]),'part':part,'kind':kind});idx=j"
+      },
+      {
+        "line": 78,
+        "text": "        partdata.append({'left':left,'right':right,'kind':kind,'edge_start':loedge,'edge_end':len(edges)})"
+      },
+      {
+        "line": 79,
+        "text": "    times['candidate']=time.perf_counter()-phase;phase=time.perf_counter()"
+      },
+      {
+        "line": 80,
+        "text": "    output=[path[0]]+[tuple(e['b']) for e in edges]"
+      },
+      {
+        "line": 81,
+        "text": "    for a,b in zip(output,output[1:]):counts['output_validation']+=1;assert G.legal(F,a,b)"
+      },
+      {
+        "line": 82,
+        "text": "    credited=credits(output,U,counts);bounds=G.interval(output);lo,hi=map(Decimal,bounds);E=Decimal(str(c['distance_budget']))"
+      },
+      {
+        "line": 83,
+        "text": "    assert hi<=Decimal(n) and hi<=E,('length_or_resource_interval',bounds,n,str(E))"
+      },
+      {
+        "line": 84,
+        "text": "    assert len(edges)<=n and counts['candidate']<=limit and counts['service_intersections']<=n*len(U)"
+      },
+      {
+        "line": 85,
+        "text": "    for p in partdata:p['L4']=p['right']-p['left'];p['new_interval']=G.interval([path[p['left']]]+[tuple(e['b']) for e in edges[p['edge_start']:p['edge_end']]])"
+      },
+      {
+        "line": 86,
+        "text": "    trace=raw.get('trace',[]);cross=Counter()"
+      },
+      {
+        "line": 87,
+        "text": "    for p in partdata:"
+      },
+      {
+        "line": 88,
+        "text": "        for k in range(p['left'],p['right']):"
+      },
+      {
+        "line": 89,
+        "text": "            ts=[t for t in trace if t['index']<=k];tr=ts[-1]['kind'] if ts else 'unavailable';cross[p['kind']+' x '+tr]+=1"
+      },
+      {
+        "line": 90,
+        "text": "    r={'id':o['id'],'L4':n,'Lshortcut_interval':bounds,'Lshortcut_display':float((lo+hi)/2),'saving_display':float(Decimal(n)-(lo+hi)/2),'saving_ratio_display':float((Decimal(n)-(lo+hi)/2)/n) if n else 0.,'distance_budget':c['distance_budget'],'resource_proof':'source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E','vertices':output,'edges':edges,'parts':partdata,'locked_nominal_anchors':first,'credit_witnesses':credited,'witness_order_differs_from_locked_anchors':[v['point'] for v in first]!=[v['point'] for v in credited],'trace_cross_original_moves':dict(cross),'counts':dict(counts),'query_log':querylog,'fallback':fallback,'turns_original':turns(path),'turns_new':turns(output),'timing':times}"
+      },
+      {
+        "line": 91,
+        "text": "    times['main_validation_metrics']=time.perf_counter()-phase;phase=time.perf_counter();encoded=json.dumps(r,ensure_ascii=False,separators=(',',':'));times['encoding']=time.perf_counter()-phase"
+      },
+      {
+        "line": 92,
+        "text": "    # Return a fully encoded artifact plus an external timing envelope; encoding is inside the budget."
+      },
+      {
+        "line": 93,
+        "text": "    elapsed=time.perf_counter()-start"
+      },
+      {
+        "line": 94,
+        "text": "    return encoded,{'entry_seconds':elapsed,'late':elapsed>total,'counts':dict(counts),'fallback':fallback}"
+      }
+    ]
+  },
+  {
+    "id": "metrics_credit_check",
+    "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\metrics.py",
+    "sha256": "463e88d288652985f73b70c894be9d4c16b7fb7f8ce1e6770bccfd1bf6bb5e85",
+    "start": 19,
+    "end": 56,
+    "lines": [
+      {
+        "line": 19,
+        "text": "def evaluate(c,path,independent=False,grid=False):"
+      },
+      {
+        "line": 20,
+        "text": "    path=[tuple(p) for p in path];f=set(map(tuple,c['free']));P=set(map(tuple,c['published_targets']));h=set(map(tuple,c['covered']));initial=set(h)"
+      },
+      {
+        "line": 21,
+        "text": "    assert path and path[0]==tuple(c['current']) and path[-1]==tuple(c['base'])"
+      },
+      {
+        "line": 22,
+        "text": "    assert h<=P and set(map(tuple,c['deferred_targets']))==P-f-h"
+      },
+      {
+        "line": 23,
+        "text": "    active=P&f;pending=active-h;counts=Counter();events=[];sources=[];total=Expr();first=None;last=None;no_new=Expr();off=[];touches=duplicates=0"
+      },
+      {
+        "line": 24,
+        "text": "    for p in sorted(active):"
+      },
+      {
+        "line": 25,
+        "text": "        inside=Z.internal(path[0],p,counts) if independent else C.inside(path[0],p,counts,'execute')"
+      },
+      {
+        "line": 26,
+        "text": "        if inside:"
+      },
+      {
+        "line": 27,
+        "text": "            new=p not in h;h.add(p);touches+=1;duplicates+=not new"
+      },
+      {
+        "line": 28,
+        "text": "            events.append({'kind':'collect_here','cell':list(p),'new':new,'witness':{'t':{'n':0,'d':1},'point':C.pt(path[0])}})"
+      },
+      {
+        "line": 29,
+        "text": "            if new:first=first or Expr();last=Expr()"
+      },
+      {
+        "line": 30,
+        "text": "    dirs=[]"
+      },
+      {
+        "line": 31,
+        "text": "    for edge,(a,b) in enumerate(zip(path,path[1:])):"
+      },
+      {
+        "line": 32,
+        "text": "        assert a!=b"
+      },
+      {
+        "line": 33,
+        "text": "        if grid:"
+      },
+      {
+        "line": 34,
+        "text": "            assert a in f and b in f and abs(a[0]-b[0])+abs(a[1]-b[1])==1"
+      },
+      {
+        "line": 35,
+        "text": "            counts['unit_edge_membership_proofs']+=1"
+      },
+      {
+        "line": 36,
+        "text": "        elif not independent:"
+      },
+      {
+        "line": 37,
+        "text": "            counts['main_geometry']+=1;assert G.legal(f,a,b)"
+      },
+      {
+        "line": 38,
+        "text": "        length,square=distance(a,b,counts,'metric');sources.append(square)"
+      },
+      {
+        "line": 39,
+        "text": "        hits=[]"
+      },
+      {
+        "line": 40,
+        "text": "        for p in sorted(active):"
+      },
+      {
+        "line": 41,
+        "text": "            counts['target_box_tests']+=1"
+      },
+      {
+        "line": 42,
+        "text": "            if not candidate(a,b,p):continue"
+      },
+      {
+        "line": 43,
+        "text": "            evidence=Z.intersection(a,b,p,counts) if independent else C.intersection(a,b,p,counts,'execute')"
+      },
+      {
+        "line": 44,
+        "text": "            if evidence:"
+      },
+      {
+        "line": 45,
+        "text": "                t=evidence['witness']['t'];hits.append((Q(t['n'],t['d']),p,evidence))"
+      },
+      {
+        "line": 46,
+        "text": "        hits.sort(key=lambda x:(x[0],x[1]));new_count=0"
+      },
+      {
+        "line": 47,
+        "text": "        for t,p,evidence in hits:"
+      },
+      {
+        "line": 48,
+        "text": "            new=p not in h;h.add(p);touches+=1;duplicates+=not new"
+      },
+      {
+        "line": 49,
+        "text": "            events.append({'kind':'region_traverse','edge':edge,'cell':list(p),'new':new,'evidence':evidence})"
+      },
+      {
+        "line": 50,
+        "text": "            if new:"
+      },
+      {
+        "line": 51,
+        "text": "                position=total+scale(length,t);first=position if first is None else first;last=position;new_count+=1"
+      },
+      {
+        "line": 52,
+        "text": "                counts['new_credit_center_checks']+=1"
+      },
+      {
+        "line": 53,
+        "text": "                if b[0]!=a[0] and b[1]!=a[1] and not center_hit(a,b,p):off.append({'edge':edge,'cell':list(p),'evidence':evidence})"
+      },
+      {
+        "line": 54,
+        "text": "        if not new_count:no_new=no_new+length"
+      },
+      {
+        "line": 55,
+        "text": "        total=total+length;dirs.append((b[0]-a[0],b[1]-a[1]))"
+      },
+      {
+        "line": 56,
+        "text": "    assert not(active-h) and (Expr.number(c['distance_budget'])-total).sign()>=0"
+      }
+    ]
+  },
+  {
+    "id": "metrics_report_turns",
+    "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\metrics.py",
+    "sha256": "463e88d288652985f73b70c894be9d4c16b7fb7f8ce1e6770bccfd1bf6bb5e85",
+    "start": 57,
+    "end": 82,
+    "lines": [
+      {
+        "line": 57,
+        "text": "    turns=Counter();angle=0."
+      },
+      {
+        "line": 58,
+        "text": "    for u,v in zip(dirs,dirs[1:]):"
+      },
+      {
+        "line": 59,
+        "text": "        cross=u[0]*v[1]-u[1]*v[0];dot=u[0]*v[0]+u[1]*v[1]"
+      },
+      {
+        "line": 60,
+        "text": "        if cross or dot<0:"
+      },
+      {
+        "line": 61,
+        "text": "            turns['total']+=1;angle+=atan2(abs(cross),dot)"
+      },
+      {
+        "line": 62,
+        "text": "            turns['90' if dot==0 else '180' if cross==0 and dot<0 else 'other']+=1"
+      },
+      {
+        "line": 63,
+        "text": "    never=[];vertices=set(path)"
+      },
+      {
+        "line": 64,
+        "text": "    for event in off:"
+      },
+      {
+        "line": 65,
+        "text": "        p=tuple(event['cell'])"
+      },
+      {
+        "line": 66,
+        "text": "        if p in vertices:continue"
+      },
+      {
+        "line": 67,
+        "text": "        counts['whole_history_center_tests']+=len(path)-1"
+      },
+      {
+        "line": 68,
+        "text": "        if not any(center_hit(a,b,p) for a,b in zip(path,path[1:])):never.append(list(p))"
+      },
+      {
+        "line": 69,
+        "text": "    stages=None if first is None else {'to_first_witness':certificate(first),'between_first_last_witness':certificate(last-first),"
+      },
+      {
+        "line": 70,
+        "text": "                                      'after_last_witness_return':certificate(total-last),'convention':'midpoint of first intersecting executed segment interval; not unique physical first service time'}"
+      },
+      {
+        "line": 71,
+        "text": "    metrics={'published':len(P),'initial_H':len(initial),'active':len(active),'remaining_before':len(pending),'deferred':len(P-f-h),"
+      },
+      {
+        "line": 72,
+        "text": "        'new_credit':len(h-initial),'missing':len(active-h),'active_coverage':len(h&active)/len(active) if active else 1,"
+      },
+      {
+        "line": 73,
+        "text": "        'published_coverage':len(h&P)/len(P) if P else 1,'covered_final':len(h),'return_success':path[-1]==tuple(c['base']),"
+      },
+      {
+        "line": 74,
+        "text": "        'length':display(total),'length_certificate':certificate(total),'stages':stages,'no_new_credit_route':first is None,"
+      },
+      {
+        "line": 75,
+        "text": "        'turns':dict(turns),'total_turn_radians':angle,'center_region_touch_events':touches,'repeated_touch_events':duplicates,"
+      },
+      {
+        "line": 76,
+        "text": "        'touch_definition':'one event per intersecting segment/task plus explicit initial collect; depends on segmentation, not extra distance',"
+      },
+      {
+        "line": 77,
+        "text": "        'segments_without_new_credit':sum(1 for k in range(len(path)-1) if not any(e.get('edge')==k and e['new'] for e in events)),"
+      },
+      {
+        "line": 78,
+        "text": "        'whole_segments_without_new_credit_length':display(no_new),'noncollecting_definition':'whole-segment no-new-credit label, not pointwise noncollection distance',"
+      },
+      {
+        "line": 79,
+        "text": "        'diagonal_offcenter_first_credit_tasks':len({tuple(v['cell']) for v in off}),'never_center_in_whole_actual_history_tasks':len({tuple(p) for p in never}),"
+      },
+      {
+        "line": 80,
+        "text": "        'diagonal_offcenter_witnesses':off,'final_H':[list(p) for p in sorted(h)],'final_position':list(path[-1])}"
+      },
+      {
+        "line": 81,
+        "text": "    return {'metrics':metrics,'events':events,'path':[list(p) for p in path],'counts':dict(counts),'squared_sources':sources,"
+      },
+      {
+        "line": 82,
+        "text": "        'scope':'full virtual execution from common externally given H; no event replay, future knowledge or state mutation'}"
+      }
+    ]
+  },
+  {
+    "id": "independent_views_post",
+    "file": "E:\\无人机研究项目_接续包_20261014\\中心区PPCPP直达质量时间开发比较_v0.1_20261022\\center_bench_v01_20261022\\bench.py",
+    "sha256": "0fa924f9ce2b9539adfbffe41c625d352b8ec0e9e17629d3be248a6500fcc8c7",
+    "start": 105,
+    "end": 120,
+    "lines": [
+      {
+        "line": 105,
+        "text": "def audit_result(result):"
+      },
+      {
+        "line": 106,
+        "text": "    from .metrics import evaluate"
+      },
+      {
+        "line": 107,
+        "text": "    from .audit import _post_saved"
+      },
+      {
+        "line": 108,
+        "text": "    start=time.perf_counter();counts=Counter();receipts={};c=result['input'];before=deepcopy(c)"
+      },
+      {
+        "line": 109,
+        "text": "    for name,view in result['views'].items():"
+      },
+      {
+        "line": 110,
+        "text": "        independent=evaluate(c,view['path'],True,grid=name in ('A','C0'))"
+      },
+      {
+        "line": 111,
+        "text": "        assert independent['metrics']==view['metrics'] and independent['events']==view['events']"
+      },
+      {
+        "line": 112,
+        "text": "        counts.update(independent['counts']);receipts[name]={'passed':True,'counts':independent['counts']}"
+      },
+      {
+        "line": 113,
+        "text": "    n=len(result['native']['raw']['route'])-1;u=len(ps(c['targets'])-ps(c['covered']))"
+      },
+      {
+        "line": 114,
+        "text": "    post=_post_saved.audit_one({'id':result['job']['id'],'limits':{'candidate_geometry':4096,'independent_geometry':n,'independent_service_intersections':n*u}},"
+      },
+      {
+        "line": 115,
+        "text": "                result['post_request_utf8'].encode(),result['post_response_utf8'].encode())"
+      },
+      {
+        "line": 116,
+        "text": "    counts.update({'post_independent_'+k:v for k,v in post['counts'].items()})"
+      },
+      {
+        "line": 117,
+        "text": "    assert c==before"
+      },
+      {
+        "line": 118,
+        "text": "    return {'passed':True,'views':receipts,'post':post,'counts':dict(counts),'seconds':time.perf_counter()-start,'identity':identity()}"
+      },
+      {
+        "line": 119,
+        "text": ""
+      },
+      {
+        "line": 120,
+        "text": "def precheck():"
+      }
+    ]
+  },
+  {
+    "id": "current_log_io",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\common.py",
+    "sha256": "4e5eaf99cb2e3fce6a62deba2ee1a2146f7a739320d4479a5b716bb9ee878db1",
+    "start": 11,
+    "end": 14,
+    "lines": [
+      {
+        "line": 11,
+        "text": "def append(p,x):"
+      },
+      {
+        "line": 12,
+        "text": " with Path(p).open('a',encoding='utf-8') as f:"
+      },
+      {
+        "line": 13,
+        "text": "  f.write(json.dumps(x,ensure_ascii=False,allow_nan=False)+'\\n');f.flush();os.fsync(f.fileno())"
+      },
+      {
+        "line": 14,
+        "text": "def module(name,path):"
+      }
+    ]
+  },
+  {
+    "id": "current_entry_return_log",
+    "file": "E:\\无人机研究项目_接续包_20261014\\障碍后接续假设有限扩样_v0.1_20261023\\common.py",
+    "sha256": "4e5eaf99cb2e3fce6a62deba2ee1a2146f7a739320d4479a5b716bb9ee878db1",
+    "start": 42,
+    "end": 49,
+    "lines": [
+      {
+        "line": 42,
+        "text": "def entry(job,kind):"
+      },
+      {
+        "line": 43,
+        "text": " p=H/'entry_log.jsonl';rows=[json.loads(z) for z in p.read_text(encoding='utf-8').splitlines()] if p.exists() else []"
+      },
+      {
+        "line": 44,
+        "text": " starts=[z for z in rows if z['event']=='started' and z['kind']==kind]"
+      },
+      {
+        "line": 45,
+        "text": " assert len(starts)<42 and not any(z['job']==job['id'] for z in starts),'absolute entry cap / duplicate'"
+      },
+      {
+        "line": 46,
+        "text": " phase=job['arm'];cap=6 if phase=='history' else 12"
+      },
+      {
+        "line": 47,
+        "text": " assert sum(z['arm']==phase for z in starts)<cap"
+      },
+      {
+        "line": 48,
+        "text": " append(p,dict(event='started',kind=kind,job=job['id'],arm=phase,utc=time.time()))"
+      },
+      {
+        "line": 49,
+        "text": "def returned(job,kind):append(H/'entry_log.jsonl',dict(event='returned',kind=kind,job=job['id'],arm=job['arm'],utc=time.time()))"
+      }
+    ]
+  }
+]

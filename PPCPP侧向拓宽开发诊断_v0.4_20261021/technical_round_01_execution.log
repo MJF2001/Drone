@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\PPCPP侧向拓宽开发诊断_v0.4_20261021\tech_preflight.py", line 67, in <module>
+    if __name__=='__main__':sys.exit(main())
+                                     ^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP侧向拓宽开发诊断_v0.4_20261021\tech_preflight.py", line 31, in main
+    syntax=syntax_gate(paths);save(d/'A_initial_syntax.json',dict(files=syntax,passed=True))
+           ^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP侧向拓宽开发诊断_v0.4_20261021\tech_lib.py", line 8, in syntax_gate
+    ast.parse(p.read_text(encoding='utf8-sig'),filename=str(p));rows.append(dict(path=str(p.resolve()),sha256=sha(p),passed=True))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+LookupError: unknown encoding: utf8-sig

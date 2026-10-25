@@ -1,0 +1,59 @@
+"""Plots from saved coordinates and credit labels only; no geometry queries."""
+from pathlib import Path
+from PIL import Image,ImageDraw,ImageFont
+import json,time,math
+H=Path(__file__).resolve().parent;read=lambda p:json.loads(Path(p).read_text(encoding='utf-8-sig'))
+FONT='C:/Windows/Fonts/msyh.ttc';fonts={n:ImageFont.truetype(FONT,n) for n in (15,18,21,26)}
+colors=['#e4aa48','#579bd5','#8c6fc4','#51af9c','#d7788d','#91ad4b','#db8952','#8796d1']
+def text(d,xy,s,n=18,col='#203b4d'):d.text(xy,s,font=fonts[n],fill=col)
+def bar(d,x,y,w,h,seq,n,label):
+ text(d,(x-140,y-1),label,18);n=max(n,1);rank=0
+ for run in seq['runs']:
+  count=run['end_scope_rank']-run['start_scope_rank']+1;left=x+rank*w/n;right=x+(rank+count)*w/n;bid=run['block'];d.rectangle((left,y,right,y+h),fill=colors[int(bid[1:])-1],outline='white')
+  if right-left>40:text(d,(left+5,y+2),bid,15,col='white')
+  rank+=count
+ text(d,(x+w+12,y),str(rank)+'格',15)
+def timeline(p):
+ im=Image.new('RGB',(1720,365),'white');d=ImageDraw.Draw(im);a=p['after_route_known']['arms'];post=p['after_route_known']['delta_post_display'];text(d,(20,12),p['key']+f"    Δpost={post:+.6f}米",21)
+ for j,(arm,mode,label) in enumerate([('OFF','native_from_trigger','原生 OFF'),('ALT1','native_from_trigger','原生 ALT1'),('OFF','post_from_mapped_trigger','直达 OFF'),('ALT1','post_from_mapped_trigger','直达 ALT1')]):
+  seq=a[arm][mode];y=60+j*58
+  if seq is None:text(d,(165,y),label+' 边界未知，保留全信用序',18);continue
+  bar(d,170,y,1100,25,seq,len(seq['task_sequence']),label);last=seq['last_task'];text(d,(1310,y),f"末块={seq['last_completed_block']} 末格={last}",15)
+ text(d,(20,310),'横轴只表示新采任务的序号，不是距离/时间；同色段不保证只穿过一次物理边界。',18)
+ text(d,(20,338),'编号沿原矩形设计顺序；直达信用按保存内部见证口径，不称唯一首次入区时间。',15)
+ return im
+def map_panel(im,box,p,arm,rectangles):
+ d=ImageDraw.Draw(im);x0,y0,w,h=box;o=read(p['source'][arm]);c=o['input'];tr=o['diagnostic']['trigger'];F=set(map(tuple,c['free']));HH=set(map(tuple,c['covered']));pending=set(map(tuple,tr['pending']));xmax=max(x for x,y in F);ymax=max(y for x,y in F);s=min(13,(w-130)/(xmax+1),(h-120)/(ymax+1));ox=x0+45;oy=y0+85+ymax*s
+ def xy(q):return (round(ox+q[0]*s),round(oy-q[1]*s))
+ def cell(q,color):
+  x,y=xy(q);r=s*.46;d.rectangle((x-r,y-r,x+r,y+r),fill=color)
+ text(d,(x0+15,y0+8),arm+'：触发后保存的原生路线',21)
+ aa=xy((-.5,ymax+.5));zz=xy((xmax+.5,-.5));d.rectangle((*aa,*zz),fill='#eef2f5',outline='#a8b4bd')
+ for j,(a,b,v,z) in enumerate(rectangles):
+  for x in range(a,b+1):
+   for y in range(v,z+1):
+    q=x,y;cell(q,'#a4d6b4' if q in HH else colors[j] if q in pending else '#d6dce2')
+  xx,yy=xy((a,z));text(d,(xx,yy-23),'B'+str(j+1).zfill(2),15)
+ path=o['native']['raw']['route'][tr['route_index']:];d.line([xy(v) for v in path],fill='#235faa' if arm=='OFF' else '#a63f89',width=2)
+ for q in p['decision_available']['known_obstacles']:cell(q,'#171f29')
+ for name,col in [('q0','#1c579e'),('q1','#9f387e')]:
+  q=p['decision_available'][name];x,y=xy(q);d.ellipse((x-5,y-5,x+5,y+5),outline=col,width=2);text(d,(x+5,y-15),name,15,col)
+ x,y=xy(tr['current']);d.ellipse((x-7,y-7,x+7,y+7),outline='#d74234',width=3);bx,by=xy(c['base']);d.polygon([(bx,by-6),(bx+6,by),(bx,by+6),(bx-6,by)],fill='#152f43')
+ a=p['after_route_known']['arms'][arm];q=a['last_native_service']['cell'];x,y=xy(q);d.rectangle((x-5,y-5,x+5,y+5),outline='#bd1826',width=3);text(d,(x+7,y-5),'末采',15,'#9d2230')
+ text(d,(x0+20,y0+h-28),f"末块={a['last_native_service']['block']}；末格={q}；原生返航={a['raw_return_edges']}步",18)
+def render():
+ start=time.perf_counter();index=read(H/'pair_index.json');maps=read(H/'block_systems.json');files=[]
+ for ix in index:
+  p=read(H/ix['file']);im=timeline(p);name='timeline__'+ix['key']+'.png';im.save(H/'figures'/name);files.append(dict(key=ix['key'],type='saved_credit_sequence',path='figures/'+name))
+ for key in ['base__I_gap_B__p60','base__T_gap_B__p25','base__L_gap_A__p25','base__I_gap_A__p60']:
+  p=read(H/'pairs'/(key+'.json'));rects=maps[p['base_geometry']]['source_rectangles'];im=Image.new('RGB',(2000,810),'white');d=ImageDraw.Draw(im);text(d,(20,12),key+'：固定任务块、采集次序与末采位置',26)
+  map_panel(im,(0,50,1000,650),p,'OFF',rects);map_panel(im,(1000,50,1000,650),p,'ALT1',rects)
+  text(d,(20,720),'绿色=事件物理H；彩色=触发pending按原块着色；灰色P=规划前缀已服务，不写回物理H；浅灰背景=非目标可飞区。',18)
+  text(d,(20,755),'黑格=公开障碍；红圈=规划触发current；菱形=基地；红框=末采格。路线全部来自保存原生点串，未新增执行或查询。',18)
+  name='map__'+key+'.png';im.save(H/'figures'/name);files.append(dict(key=key,type='saved_raw_coordinates',path='figures/'+name))
+ contact=Image.new('RGB',(1720,1850),'#dfe5e9')
+ for i,ix in enumerate(index):
+  im=Image.open(H/'figures'/('timeline__'+ix['key']+'.png'));im.thumbnail((860,180));contact.paste(im,((i%2)*860,(i//2)*185))
+ contact.save(H/'figures/十九对序列图总览.png');(H/'figure_index.json').write_text(json.dumps(dict(files=files,contact_sheet='figures/十九对序列图总览.png',wall_seconds=time.perf_counter()-start,new_core=0,new_post=0,new_BFS=0,new_visibility=0),ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+ print(json.dumps(dict(sequence_figures=19,coordinate_figures=4,contact_sheet=1,seconds=time.perf_counter()-start)))
+if __name__=='__main__':render()

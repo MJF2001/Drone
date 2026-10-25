@@ -1,0 +1,18 @@
+[
+  {
+    "file": "analysis.py",
+    "sha256": "e9d9de051f6f782b67d9943d3c506676576205c1ec59da9c93dd57208a66f1ee",
+    "line": 56,
+    "offset": 186,
+    "message": "':' expected after dictionary key",
+    "text": "    a=compute();save(H/'analysis.json',a);csvsave(H/'288正式调用完整指标.csv',[{**{k:v for k,v in r.items() if k not in ('metrics','visits_A','pp_first_A_event')},**(r['metrics'] or {}),visits_A=r['visits_A'],pp_first_A_event=r['pp_first_A_event']} for r in a['rows']]);csvsave(H/'144全部配对与不可用原因.csv',a['pairs'])\n"
+  },
+  {
+    "file": "verify.py",
+    "sha256": "8324138c4a3d4c24d3055267ce50e3e7c640c7261b17414881e100f49f3a0a1c",
+    "line": 51,
+    "offset": 147,
+    "message": "':' expected after dictionary key",
+    "text": "    csvcheck('288正式调用完整指标.csv',[{**{k:v for k,v in r.items() if k not in ('metrics','visits_A','pp_first_A_event')},**(r['metrics'] or {}),visits_A=r['visits_A'],pp_first_A_event=r['pp_first_A_event']} for r in a['rows']]);csvcheck('144全部配对与不可用原因.csv',a['pairs'])\n"
+  }
+]

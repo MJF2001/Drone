@@ -1,0 +1,2828 @@
+[
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\runtime.py",
+    "sha256": "1e69a2933db6f43372945709172edb4054981f39ddcc590c7155e56e548dc553",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Production imports: frozen PPCPP and contract only; no experiment references.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "import sys,time,json,math,importlib.util"
+      },
+      {
+        "line": 3,
+        "text": "from pathlib import Path"
+      },
+      {
+        "line": 4,
+        "text": "R=Path(__file__).resolve().parent.parent"
+      },
+      {
+        "line": 5,
+        "text": "sys.path.insert(0,str(R));sys.path.insert(0,str(R/'基线复现准备_20261019'))"
+      },
+      {
+        "line": 6,
+        "text": "def module(name,path):"
+      },
+      {
+        "line": 7,
+        "text": " spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m"
+      },
+      {
+        "line": 8,
+        "text": "native=module('last_native',R/'基线复现准备_20261019/独立版_v0.2/ppcpp.py')"
+      },
+      {
+        "line": 9,
+        "text": "validate=module('last_validation',R/'PPCPP结构候选新开发验证_v0.1_20261020/validation.py').validate"
+      },
+      {
+        "line": 10,
+        "text": "from model import Snapshot,DeadlineExceeded,NoPath"
+      },
+      {
+        "line": 11,
+        "text": "def snapshot(c):return Snapshot(c['name'],frozenset(map(tuple,c['free'])),frozenset(map(tuple,c['targets'])),frozenset(map(tuple,c['covered'])),tuple(c['current']),tuple(c['base']),tuple(map(tuple,c['old_route'])),0,c['distance_budget'])"
+      },
+      {
+        "line": 12,
+        "text": "def run_payload(payload,mode,budget=20,seed=0,*,hook=None,clock=time.perf_counter,geometry=native.UnifiedGeometry):"
+      },
+      {
+        "line": 13,
+        "text": " from candidate import solve"
+      },
+      {
+        "line": 14,
+        "text": " begin=clock();deadline=begin+budget;raw=None;phases={};events=[]"
+      },
+      {
+        "line": 15,
+        "text": " def mark(stage):"
+      },
+      {
+        "line": 16,
+        "text": "  if hook:hook(stage)"
+      },
+      {
+        "line": 17,
+        "text": "  events.append(dict(stage=stage,seconds=clock()-begin)) if hook else None"
+      },
+      {
+        "line": 18,
+        "text": "  if clock()>=deadline:raise DeadlineExceeded()"
+      },
+      {
+        "line": 19,
+        "text": " try:"
+      },
+      {
+        "line": 20,
+        "text": "  c=json.loads(payload);validate(c);s=snapshot(c);mark('entry')"
+      },
+      {
+        "line": 21,
+        "text": "  raw=solve(s,set(map(tuple,c['initial_targets'])),mode,seed,tuple(c['predator']),tuple(c['previous']) if c['previous'] else None,begin,deadline,phases,mark,clock,geometry)"
+      },
+      {
+        "line": 22,
+        "text": "  mark('encode_before');encode_begin=clock();wire=json.dumps(raw,ensure_ascii=False,allow_nan=False,separators=(',',':'));phases['encoding']=clock()-encode_begin;mark('encode_after')"
+      },
+      {
+        "line": 23,
+        "text": " except DeadlineExceeded:"
+      },
+      {
+        "line": 24,
+        "text": "  raw=raw if raw is not None else dict(branches={},trace=[])"
+      },
+      {
+        "line": 25,
+        "text": "  raw.update(status='deadline',route=(),selected=None,reason='shared_entry_deadline')"
+      },
+      {
+        "line": 26,
+        "text": " elapsed=clock()-begin"
+      },
+      {
+        "line": 27,
+        "text": " if elapsed>=budget:raw.update(status='deadline',route=(),selected=None,reason='shared_entry_deadline')"
+      },
+      {
+        "line": 28,
+        "text": " return dict(raw=raw,entry_seconds=elapsed,phase_seconds=phases,eligible=raw['status']=='core_complete' and elapsed<budget,budget=budget,method=mode,seed=seed,injection_events=events)"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\candidate.py",
+    "sha256": "885ca9439d4b6a78490ec4dfaa4b69594cc8536628ad06bd872db3fdfa3a3a4b",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Only new policy: one input-selected last target; private F-e then restore F.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "import json,hashlib"
+      },
+      {
+        "line": 3,
+        "text": "from dataclasses import replace"
+      },
+      {
+        "line": 4,
+        "text": "from runtime import native,DeadlineExceeded,NoPath"
+      },
+      {
+        "line": 5,
+        "text": "VERSION='PPCPP_LAST_RESERVE_v0.2'"
+      },
+      {
+        "line": 6,
+        "text": "def append_segment(route,pending,segment,mark):"
+      },
+      {
+        "line": 7,
+        "text": " assert segment[0]==route[-1]"
+      },
+      {
+        "line": 8,
+        "text": " for q in segment[1:]:mark('alternative_move');route.append(q);pending.discard(q)"
+      },
+      {
+        "line": 9,
+        "text": "def solve(s,initial,mode,seed,predator,previous,begin,deadline,phases,mark,clock,geometry):"
+      },
+      {
+        "line": 10,
+        "text": " assert mode in ('PPCPP','ONE','LAST')"
+      },
+      {
+        "line": 11,
+        "text": " out=dict(version=VERSION,mode=mode,status='not_started',route=(),trace=[],selected=None,e=None,branches={},reason=None)"
+      },
+      {
+        "line": 12,
+        "text": " try:"
+      },
+      {
+        "line": 13,
+        "text": "  mark('p0_before');a=clock();p0=native.solve(s,initial,deadline-clock(),seed,predator,previous,_clock=clock,_geometry=geometry);phases['p0']=clock()-a;out['branches']['P0']=p0"
+      },
+      {
+        "line": 14,
+        "text": "  mark('p0_done')"
+      },
+      {
+        "line": 15,
+        "text": "  if p0['status']!='core_complete':out.update(status=p0['status'],reason='original_branch_failed');return out"
+      },
+      {
+        "line": 16,
+        "text": "  pristine=json.dumps(p0,sort_keys=True);chosen=p0;out['selected']='P0'"
+      },
+      {
+        "line": 17,
+        "text": "  u=set(s.targets)-set(s.covered)-{s.current}"
+      },
+      {
+        "line": 18,
+        "text": "  if mode=='LAST' and u:"
+      },
+      {
+        "line": 19,
+        "text": "   a=clock();mark('candidate_before');full=geometry(s,deadline)"
+      },
+      {
+        "line": 20,
+        "text": "   def dist(q):mark('candidate_distance');return full.distance(s.base,q)"
+      },
+      {
+        "line": 21,
+        "text": "   e=min(u,key=lambda q:(dist(q),q));out['e']=e;phases['candidate']=clock()-a"
+      },
+      {
+        "line": 22,
+        "text": "   branch=dict(status='building',route=(),diagnostic_route=[s.current],trace=[],reserved=e,work_free_count=len(s.free)-1,cache_scopes=['original_full','alternative_full','alternative_work'],phase1_end=None,accepted_seconds=None)"
+      },
+      {
+        "line": 23,
+        "text": "   out['branches']['P1']=branch;route=[s.current];trace=branch['trace'];pending=set(u)-{e};a=clock()"
+      },
+      {
+        "line": 24,
+        "text": "   def move(segment):"
+      },
+      {
+        "line": 25,
+        "text": "    append_segment(route,pending,segment,mark)"
+      },
+      {
+        "line": 26,
+        "text": "   try:"
+      },
+      {
+        "line": 27,
+        "text": "    if pending:"
+      },
+      {
+        "line": 28,
+        "text": "     work_snapshot=replace(s,free=frozenset(set(s.free)-{e}),targets=frozenset(pending))"
+      },
+      {
+        "line": 29,
+        "text": "     work=geometry(work_snapshot,deadline)"
+      },
+      {
+        "line": 30,
+        "text": "     assert work.cache is not full.cache and work.distance_rows is not full.distance_rows"
+      },
+      {
+        "line": 31,
+        "text": "     # No work.precheck(): the base may be absent/unreachable until reservation release."
+      },
+      {
+        "line": 32,
+        "text": "     missing=pending-work.reachable;mark('phase1_precheck')"
+      },
+      {
+        "line": 33,
+        "text": "     if missing:branch.update(status='reservation_infeasible',unreachable=sorted(missing))"
+      },
+      {
+        "line": 34,
+        "text": "     else:"
+      },
+      {
+        "line": 35,
+        "text": "      while pending:"
+      },
+      {
+        "line": 36,
+        "text": "       mark('phase1');cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+      },
+      {
+        "line": 37,
+        "text": "       opts=native.core.reward_options(cur,prev,pending,work_snapshot.free,predator,(2.,.5))"
+      },
+      {
+        "line": 38,
+        "text": "       event=dict(phase='work',index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))"
+      },
+      {
+        "line": 39,
+        "text": "       if opts:goal=native.core.choose_neighbor(opts);segment=(cur,goal);event.update(kind='local',goal=goal,options=opts)"
+      },
+      {
+        "line": 40,
+        "text": "       else:goal=min(pending,key=lambda q:(work.distance(cur,q),q));segment=work.path(cur,goal);event.update(kind='recovery',goal=goal)"
+      },
+      {
+        "line": 41,
+        "text": "       trace.append(event);move(segment)"
+      },
+      {
+        "line": 42,
+        "text": "    if branch['status']!='reservation_infeasible':"
+      },
+      {
+        "line": 43,
+        "text": "     branch['phase1_end']=len(route)-1;mark('release')"
+      },
+      {
+        "line": 44,
+        "text": "     trace.append(dict(phase='released',kind='reserved',index=len(route)-1,current=route[-1],goal=e,pending_count=1));move(full.path(route[-1],e))"
+      },
+      {
+        "line": 45,
+        "text": "     mark('return');trace.append(dict(phase='released',kind='return',index=len(route)-1,current=route[-1],goal=s.base,pending_count=0));move(full.path(route[-1],s.base))"
+      },
+      {
+        "line": 46,
+        "text": "     mark('p1_audit_before');checked=native.single_cell_audit(s,tuple(route));mark('p1_audit_after')"
+      },
+      {
+        "line": 47,
+        "text": "     branch.update(status='core_complete' if checked['valid'] else 'core_invalid',route=tuple(route) if checked['valid'] else (),errors=checked['errors'],accepted_seconds=clock()-begin if checked['valid'] else None)"
+      },
+      {
+        "line": 48,
+        "text": "   except NoPath as ex:branch.update(status='planning_failure',reason=str(ex))"
+      },
+      {
+        "line": 49,
+        "text": "   finally:branch['diagnostic_route']=tuple(route);phases['p1']=clock()-a"
+      },
+      {
+        "line": 50,
+        "text": "   assert json.dumps(p0,sort_keys=True)==pristine,'P0 was mutated'"
+      },
+      {
+        "line": 51,
+        "text": "   if branch['status']=='core_complete' and len(branch['route'])<len(p0['route']):chosen=branch;out['selected']='P1'"
+      },
+      {
+        "line": 52,
+        "text": "  elif mode=='LAST':out['no_tasks']=True"
+      },
+      {
+        "line": 53,
+        "text": "  mark('final_audit_before');a=clock();checked=native.single_cell_audit(s,tuple(chosen['route']));phases['final_audit']=clock()-a;mark('final_audit_after')"
+      },
+      {
+        "line": 54,
+        "text": "  out.update(status='core_complete' if checked['valid'] else 'core_invalid',route=tuple(chosen['route']) if checked['valid'] else (),trace=chosen['trace'],reason=checked['errors'] or None)"
+      },
+      {
+        "line": 55,
+        "text": " except DeadlineExceeded:"
+      },
+      {
+        "line": 56,
+        "text": "  out.update(status='deadline',route=(),selected=None,reason='shared_entry_deadline')"
+      },
+      {
+        "line": 57,
+        "text": " return out"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\基线复现准备_20261019\\独立版_v0.2\\ppcpp.py",
+    "sha256": "0e1ab657bf76d3ddb682a54e451252d19ecdf5bbc77edf42ca98c3c95dfb8f51",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Frozen-input four-neighbor PPCPP adaptation; core only, no external candidates.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "import sys,time,math"
+      },
+      {
+        "line": 3,
+        "text": "from pathlib import Path"
+      },
+      {
+        "line": 4,
+        "text": "ROOT=Path(__file__).resolve().parents[2]"
+      },
+      {
+        "line": 5,
+        "text": "sys.path.insert(0,str(ROOT/'基线复现准备_20261019'))"
+      },
+      {
+        "line": 6,
+        "text": "from ppcpp_independent import core,UnifiedGeometry,single_cell_audit,check_contract,DeadlineExceeded,NoPath"
+      },
+      {
+        "line": 7,
+        "text": "VERSION='PPCPP_CORE4_FIXED_HISTORY_v0.2_20261019'"
+      },
+      {
+        "line": 8,
+        "text": "def solve(s,initial,budget,seed,predator,previous,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit):"
+      },
+      {
+        "line": 9,
+        "text": "    begin=_clock();deadline=begin+budget;route=[];trace=[];status='not_started';reason=None;accepted=None"
+      },
+      {
+        "line": 10,
+        "text": "    def tick():"
+      },
+      {
+        "line": 11,
+        "text": "        if _clock()>=deadline:raise DeadlineExceeded()"
+      },
+      {
+        "line": 12,
+        "text": "    def move(segment,pending):"
+      },
+      {
+        "line": 13,
+        "text": "        assert segment[0]==route[-1]"
+      },
+      {
+        "line": 14,
+        "text": "        for p in segment[1:]:tick();route.append(p);pending.discard(p)"
+      },
+      {
+        "line": 15,
+        "text": "    try:"
+      },
+      {
+        "line": 16,
+        "text": "        check_contract(s,initial,budget)"
+      },
+      {
+        "line": 17,
+        "text": "        if not math.isfinite(budget):raise ValueError('finite budget')"
+      },
+      {
+        "line": 18,
+        "text": "        if len(predator)!=2 or not all(math.isfinite(v) for v in predator):raise ValueError('finite predator')"
+      },
+      {
+        "line": 19,
+        "text": "        if s.free and not (predator[0]<min(x for x,y in s.free) or predator[0]>max(x for x,y in s.free)):raise ValueError('predator outside fixed flight-domain x bounds required')"
+      },
+      {
+        "line": 20,
+        "text": "        if previous is not None and sum(abs(a-b) for a,b in zip(previous,s.current))!=1:raise ValueError('historical heading must be adjacent')"
+      },
+      {
+        "line": 21,
+        "text": "        tick();g=_geometry(s,deadline);reason=g.precheck();tick()"
+      },
+      {
+        "line": 22,
+        "text": "        if reason:status='environment_infeasible'"
+      },
+      {
+        "line": 23,
+        "text": "        else:"
+      },
+      {
+        "line": 24,
+        "text": "            pending=set(s.targets)-set(s.covered)-{s.current};route=[s.current]"
+      },
+      {
+        "line": 25,
+        "text": "            while pending:"
+      },
+      {
+        "line": 26,
+        "text": "                tick();cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+      },
+      {
+        "line": 27,
+        "text": "                options=core.reward_options(cur,prev,pending,s.free,predator,(2.,.5));tick()"
+      },
+      {
+        "line": 28,
+        "text": "                event=dict(index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))"
+      },
+      {
+        "line": 29,
+        "text": "                if options:"
+      },
+      {
+        "line": 30,
+        "text": "                    goal=core.choose_neighbor(options);event.update(kind='local',options=options,goal=goal);segment=(cur,goal)"
+      },
+      {
+        "line": 31,
+        "text": "                else:"
+      },
+      {
+        "line": 32,
+        "text": "                    goal=min(pending,key=lambda q:(g.distance(cur,q),q));tick();segment=g.path(cur,goal)"
+      },
+      {
+        "line": 33,
+        "text": "                    event.update(kind='recovery',goal=goal)"
+      },
+      {
+        "line": 34,
+        "text": "                trace.append(event);move(segment,pending)"
+      },
+      {
+        "line": 35,
+        "text": "            tick();trace.append(dict(kind='return',index=len(route)-1,current=route[-1],goal=s.base,pending_count=0))"
+      },
+      {
+        "line": 36,
+        "text": "            move(g.path(route[-1],s.base),pending);tick()"
+      },
+      {
+        "line": 37,
+        "text": "            checked=_audit(s,tuple(route));tick()"
+      },
+      {
+        "line": 38,
+        "text": "            if checked['valid']:accepted=_clock()-begin;tick();status='core_complete'"
+      },
+      {
+        "line": 39,
+        "text": "            else:status='core_invalid';reason=checked['errors']"
+      },
+      {
+        "line": 40,
+        "text": "    except DeadlineExceeded:status='deadline'"
+      },
+      {
+        "line": 41,
+        "text": "    except NoPath as e:status='planning_failure';reason=str(e)"
+      },
+      {
+        "line": 42,
+        "text": "    seconds=_clock()-begin"
+      },
+      {
+        "line": 43,
+        "text": "    return dict(version=VERSION,method='PPCPP_INDEPENDENT',route=tuple(route) if status=='core_complete' else (),status=status,reason=reason,"
+      },
+      {
+        "line": 44,
+        "text": "        seconds=seconds,budget=budget,seed=seed,seed_used=False,predator=predator,initial_previous=previous,weights=(2.,.5),"
+      },
+      {
+        "line": 45,
+        "text": "        trace=trace,accepted_seconds=accepted if status=='core_complete' else None,fallback_selected=False,"
+      },
+      {
+        "line": 46,
+        "text": "        overrun_gt_10ms=seconds>budget+.01)"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP结构候选新开发验证_v0.1_20261020\\validation.py",
+    "sha256": "e857de9f8514b96f39ad7891a03979d21208149a997c6774fdde15dea44a5f2e",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Same frozen request validation for BOTH methods, no solver imports.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "import math"
+      },
+      {
+        "line": 3,
+        "text": "def validate(c):"
+      },
+      {
+        "line": 4,
+        "text": "    if not isinstance(c,dict):raise ValueError('object required')"
+      },
+      {
+        "line": 5,
+        "text": "    def point(p):"
+      },
+      {
+        "line": 6,
+        "text": "        if not isinstance(p,(list,tuple)) or len(p)!=2 or any(type(x) is not int for x in p):raise ValueError('integer grid point required')"
+      },
+      {
+        "line": 7,
+        "text": "    for field in ('free','targets','covered'):"
+      },
+      {
+        "line": 8,
+        "text": "        if not isinstance(c[field],list):raise ValueError(field)"
+      },
+      {
+        "line": 9,
+        "text": "        for p in c[field]:point(p)"
+      },
+      {
+        "line": 10,
+        "text": "    for field in ('published_targets','deferred_targets'):"
+      },
+      {
+        "line": 11,
+        "text": "        if field in c:"
+      },
+      {
+        "line": 12,
+        "text": "            if not isinstance(c[field],list):raise ValueError(field)"
+      },
+      {
+        "line": 13,
+        "text": "            for p in c[field]:point(p)"
+      },
+      {
+        "line": 14,
+        "text": "    point(c['current']);point(c['base'])"
+      },
+      {
+        "line": 15,
+        "text": "    if 'distance_budget' in c:"
+      },
+      {
+        "line": 16,
+        "text": "        v=c['distance_budget']"
+      },
+      {
+        "line": 17,
+        "text": "        if type(v) not in (int,float) or not math.isfinite(v) or v<0:raise ValueError('finite nonnegative distance budget')"
+      },
+      {
+        "line": 18,
+        "text": "    if 'cap_resume_target' in c and c['cap_resume_target'] is not None:"
+      },
+      {
+        "line": 19,
+        "text": "        r=c['cap_resume_target']"
+      },
+      {
+        "line": 20,
+        "text": "        if not isinstance(r,dict):raise ValueError('resume object')"
+      },
+      {
+        "line": 21,
+        "text": "        point(r['point'])"
+      },
+      {
+        "line": 22,
+        "text": "        if not isinstance(r['reference'],str) or not r['reference']:raise ValueError('resume reference')"
+      },
+      {
+        "line": 23,
+        "text": "    f=set(map(tuple,c['free']));t=set(map(tuple,c['targets']));h=set(map(tuple,c['covered']))"
+      },
+      {
+        "line": 24,
+        "text": "    published=set(map(tuple,c.get('published_targets',list(t|h))))"
+      },
+      {
+        "line": 25,
+        "text": "    if tuple(c['current']) not in f or tuple(c['base']) not in f or not t<=f or not (t|h)<=published or (published&f)-h-t:raise ValueError('snapshot ledger')"
+      },
+      {
+        "line": 26,
+        "text": "    if 'deferred_targets' in c and set(map(tuple,c['deferred_targets']))!=published-f-h:raise ValueError('deferred ledger')"
+      },
+      {
+        "line": 27,
+        "text": "    if c.get('cap_resume_target') is not None and tuple(c['cap_resume_target']['point']) not in f:raise ValueError('resume not free')"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\bfs_metric_geometry.py",
+    "sha256": "98298ca6620cf2aba0aedd5b7cfc4fbdabfdb2316e01ddeeb9be791b8a2b8933",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Implementation optimisation: batched exact distances, legacy A* path ties."
+      },
+      {
+        "line": 2,
+        "text": ""
+      },
+      {
+        "line": 3,
+        "text": "    This is not a new coverage algorithm. In unlimited runs every legacy query"
+      },
+      {
+        "line": 4,
+        "text": "    receives the same distance and first-query-direction path as Geometry."
+      },
+      {
+        "line": 5,
+        "text": "\"\"\""
+      },
+      {
+        "line": 6,
+        "text": "from collections import deque"
+      },
+      {
+        "line": 7,
+        "text": "from model import Geometry,NoPath,adjacent"
+      },
+      {
+        "line": 8,
+        "text": ""
+      },
+      {
+        "line": 9,
+        "text": ""
+      },
+      {
+        "line": 10,
+        "text": "class BFSMetricGeometry(Geometry):"
+      },
+      {
+        "line": 11,
+        "text": "    def __init__(self,*args,**kwargs):"
+      },
+      {
+        "line": 12,
+        "text": "        super().__init__(*args,**kwargs)"
+      },
+      {
+        "line": 13,
+        "text": "        self.distance_rows={}"
+      },
+      {
+        "line": 14,
+        "text": "        self.first_direction={}"
+      },
+      {
+        "line": 15,
+        "text": "        self.bfs_rows_built=0"
+      },
+      {
+        "line": 16,
+        "text": ""
+      },
+      {
+        "line": 17,
+        "text": "    def distance(self,a,b):"
+      },
+      {
+        "line": 18,
+        "text": "        self.check_time()"
+      },
+      {
+        "line": 19,
+        "text": "        if a not in self.reachable or b not in self.reachable:"
+      },
+      {
+        "line": 20,
+        "text": "            raise NoPath('endpoint_unreachable')"
+      },
+      {
+        "line": 21,
+        "text": "        if (a,b) in self.cache:"
+      },
+      {
+        "line": 22,
+        "text": "            return len(self.cache[a,b])-1"
+      },
+      {
+        "line": 23,
+        "text": "        pair=(a,b) if a<=b else (b,a)"
+      },
+      {
+        "line": 24,
+        "text": "        self.first_direction.setdefault(pair,(a,b))"
+      },
+      {
+        "line": 25,
+        "text": "        if a==b:return 0"
+      },
+      {
+        "line": 26,
+        "text": "        if a in self.distance_rows:return self.distance_rows[a][b]"
+      },
+      {
+        "line": 27,
+        "text": "        if b in self.distance_rows:return self.distance_rows[b][a]"
+      },
+      {
+        "line": 28,
+        "text": "        ds={a:0};queue=deque([a])"
+      },
+      {
+        "line": 29,
+        "text": "        while queue:"
+      },
+      {
+        "line": 30,
+        "text": "            self.check_time()"
+      },
+      {
+        "line": 31,
+        "text": "            p=queue.popleft()"
+      },
+      {
+        "line": 32,
+        "text": "            for q in adjacent(p):"
+      },
+      {
+        "line": 33,
+        "text": "                if q in self.s.free and q not in ds:"
+      },
+      {
+        "line": 34,
+        "text": "                    ds[q]=ds[p]+1;queue.append(q)"
+      },
+      {
+        "line": 35,
+        "text": "        self.distance_rows[a]=ds"
+      },
+      {
+        "line": 36,
+        "text": "        self.bfs_rows_built+=1"
+      },
+      {
+        "line": 37,
+        "text": "        return ds[b]"
+      },
+      {
+        "line": 38,
+        "text": ""
+      },
+      {
+        "line": 39,
+        "text": "    def path(self,a,b):"
+      },
+      {
+        "line": 40,
+        "text": "        self.check_time()"
+      },
+      {
+        "line": 41,
+        "text": "        if (a,b) in self.cache:return super().path(a,b)"
+      },
+      {
+        "line": 42,
+        "text": "        pair=(a,b) if a<=b else (b,a)"
+      },
+      {
+        "line": 43,
+        "text": "        first=self.first_direction.setdefault(pair,(a,b))"
+      },
+      {
+        "line": 44,
+        "text": "        # Legacy distance calls pre-populate symmetric paths. Materialise the"
+      },
+      {
+        "line": 45,
+        "text": "        # same first requested orientation lazily, preserving incidental cover."
+      },
+      {
+        "line": 46,
+        "text": "        super().path(*first)"
+      },
+      {
+        "line": 47,
+        "text": "        return self.cache[a,b]"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py",
+    "sha256": "2eee969dc3a1c46fe1ff055080d57f56cf0144551098de4fd25280d5fc074b14",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Shared, discrete geometry. No vision, dynamics, or physical energy claims.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "from dataclasses import dataclass"
+      },
+      {
+        "line": 3,
+        "text": "from collections import deque"
+      },
+      {
+        "line": 4,
+        "text": "import heapq"
+      },
+      {
+        "line": 5,
+        "text": "import time"
+      },
+      {
+        "line": 6,
+        "text": ""
+      },
+      {
+        "line": 7,
+        "text": "Point = tuple[int, int]"
+      },
+      {
+        "line": 8,
+        "text": ""
+      },
+      {
+        "line": 9,
+        "text": ""
+      },
+      {
+        "line": 10,
+        "text": "def adjacent(p):"
+      },
+      {
+        "line": 11,
+        "text": "    x, y = p"
+      },
+      {
+        "line": 12,
+        "text": "    return ((x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1))"
+      },
+      {
+        "line": 13,
+        "text": ""
+      },
+      {
+        "line": 14,
+        "text": ""
+      },
+      {
+        "line": 15,
+        "text": "def footprint(p, targets, radius=1):"
+      },
+      {
+        "line": 16,
+        "text": "    x, y = p"
+      },
+      {
+        "line": 17,
+        "text": "    return {(a, b) for a in range(x-radius, x+radius+1)"
+      },
+      {
+        "line": 18,
+        "text": "            for b in range(y-radius, y+radius+1) if (a, b) in targets}"
+      },
+      {
+        "line": 19,
+        "text": ""
+      },
+      {
+        "line": 20,
+        "text": ""
+      },
+      {
+        "line": 21,
+        "text": "@dataclass(frozen=True)"
+      },
+      {
+        "line": 22,
+        "text": "class Snapshot:"
+      },
+      {
+        "line": 23,
+        "text": "    name: str"
+      },
+      {
+        "line": 24,
+        "text": "    free: frozenset[Point]"
+      },
+      {
+        "line": 25,
+        "text": "    targets: frozenset[Point]"
+      },
+      {
+        "line": 26,
+        "text": "    covered: frozenset[Point]"
+      },
+      {
+        "line": 27,
+        "text": "    current: Point"
+      },
+      {
+        "line": 28,
+        "text": "    base: Point"
+      },
+      {
+        "line": 29,
+        "text": "    old_route: tuple[Point, ...]"
+      },
+      {
+        "line": 30,
+        "text": "    radius: int = 1"
+      },
+      {
+        "line": 31,
+        "text": "    distance_budget: int = 100000"
+      },
+      {
+        "line": 32,
+        "text": ""
+      },
+      {
+        "line": 33,
+        "text": ""
+      },
+      {
+        "line": 34,
+        "text": "class NoPath(Exception):"
+      },
+      {
+        "line": 35,
+        "text": "    pass"
+      },
+      {
+        "line": 36,
+        "text": ""
+      },
+      {
+        "line": 37,
+        "text": ""
+      },
+      {
+        "line": 38,
+        "text": "class DeadlineExceeded(Exception):"
+      },
+      {
+        "line": 39,
+        "text": "    pass"
+      },
+      {
+        "line": 40,
+        "text": ""
+      },
+      {
+        "line": 41,
+        "text": ""
+      },
+      {
+        "line": 42,
+        "text": "class Geometry:"
+      },
+      {
+        "line": 43,
+        "text": "    def __init__(self, snapshot, deadline=float('inf')):"
+      },
+      {
+        "line": 44,
+        "text": "        self.s = snapshot"
+      },
+      {
+        "line": 45,
+        "text": "        self.deadline = deadline"
+      },
+      {
+        "line": 46,
+        "text": "        self.cache = {}"
+      },
+      {
+        "line": 47,
+        "text": "        self.searches = 0"
+      },
+      {
+        "line": 48,
+        "text": "        self.check_time()"
+      },
+      {
+        "line": 49,
+        "text": "        if snapshot.current not in snapshot.free:"
+      },
+      {
+        "line": 50,
+        "text": "            raise NoPath('current_not_free')"
+      },
+      {
+        "line": 51,
+        "text": "        self.reachable = {snapshot.current}"
+      },
+      {
+        "line": 52,
+        "text": "        queue = deque([snapshot.current])"
+      },
+      {
+        "line": 53,
+        "text": "        while queue:"
+      },
+      {
+        "line": 54,
+        "text": "            self.check_time()"
+      },
+      {
+        "line": 55,
+        "text": "            for q in adjacent(queue.popleft()):"
+      },
+      {
+        "line": 56,
+        "text": "                if q in snapshot.free and q not in self.reachable:"
+      },
+      {
+        "line": 57,
+        "text": "                    self.reachable.add(q)"
+      },
+      {
+        "line": 58,
+        "text": "                    queue.append(q)"
+      },
+      {
+        "line": 59,
+        "text": "        self.views = {}"
+      },
+      {
+        "line": 60,
+        "text": "        for p in sorted(self.reachable):"
+      },
+      {
+        "line": 61,
+        "text": "            self.check_time()"
+      },
+      {
+        "line": 62,
+        "text": "            self.views[p] = footprint(p, snapshot.targets, snapshot.radius)"
+      },
+      {
+        "line": 63,
+        "text": ""
+      },
+      {
+        "line": 64,
+        "text": "    def check_time(self):"
+      },
+      {
+        "line": 65,
+        "text": "        if time.perf_counter() > self.deadline:"
+      },
+      {
+        "line": 66,
+        "text": "            raise DeadlineExceeded()"
+      },
+      {
+        "line": 67,
+        "text": ""
+      },
+      {
+        "line": 68,
+        "text": "    def precheck(self):"
+      },
+      {
+        "line": 69,
+        "text": "        if self.s.base not in self.reachable:"
+      },
+      {
+        "line": 70,
+        "text": "            return 'base_unreachable'"
+      },
+      {
+        "line": 71,
+        "text": "        visible = set().union(*self.views.values()) if self.views else set()"
+      },
+      {
+        "line": 72,
+        "text": "        if self.s.targets - self.s.covered - visible:"
+      },
+      {
+        "line": 73,
+        "text": "            return 'target_unobservable'"
+      },
+      {
+        "line": 74,
+        "text": "        return None"
+      },
+      {
+        "line": 75,
+        "text": ""
+      },
+      {
+        "line": 76,
+        "text": "    def path(self, start, goal):"
+      },
+      {
+        "line": 77,
+        "text": "        self.check_time()"
+      },
+      {
+        "line": 78,
+        "text": "        if (start, goal) in self.cache:"
+      },
+      {
+        "line": 79,
+        "text": "            return self.cache[start, goal]"
+      },
+      {
+        "line": 80,
+        "text": "        if start not in self.reachable or goal not in self.reachable:"
+      },
+      {
+        "line": 81,
+        "text": "            raise NoPath('endpoint_unreachable')"
+      },
+      {
+        "line": 82,
+        "text": "        self.searches += 1"
+      },
+      {
+        "line": 83,
+        "text": "        h = lambda p: abs(p[0]-goal[0]) + abs(p[1]-goal[1])"
+      },
+      {
+        "line": 84,
+        "text": "        queue = [(h(start), 0, start)]"
+      },
+      {
+        "line": 85,
+        "text": "        cost, parent = {start: 0}, {}"
+      },
+      {
+        "line": 86,
+        "text": "        while queue:"
+      },
+      {
+        "line": 87,
+        "text": "            self.check_time()"
+      },
+      {
+        "line": 88,
+        "text": "            _, distance, p = heapq.heappop(queue)"
+      },
+      {
+        "line": 89,
+        "text": "            if distance != cost[p]:"
+      },
+      {
+        "line": 90,
+        "text": "                continue"
+      },
+      {
+        "line": 91,
+        "text": "            if p == goal:"
+      },
+      {
+        "line": 92,
+        "text": "                route = [goal]"
+      },
+      {
+        "line": 93,
+        "text": "                while route[-1] != start:"
+      },
+      {
+        "line": 94,
+        "text": "                    route.append(parent[route[-1]])"
+      },
+      {
+        "line": 95,
+        "text": "                route = tuple(reversed(route))"
+      },
+      {
+        "line": 96,
+        "text": "                self.cache[start, goal] = route"
+      },
+      {
+        "line": 97,
+        "text": "                self.cache[goal, start] = tuple(reversed(route))"
+      },
+      {
+        "line": 98,
+        "text": "                return route"
+      },
+      {
+        "line": 99,
+        "text": "            for q in adjacent(p):"
+      },
+      {
+        "line": 100,
+        "text": "                if q in self.s.free and distance+1 < cost.get(q, float('inf')):"
+      },
+      {
+        "line": 101,
+        "text": "                    cost[q], parent[q] = distance+1, p"
+      },
+      {
+        "line": 102,
+        "text": "                    heapq.heappush(queue, (distance+1+h(q), distance+1, q))"
+      },
+      {
+        "line": 103,
+        "text": "        raise NoPath('no_path')"
+      },
+      {
+        "line": 104,
+        "text": ""
+      },
+      {
+        "line": 105,
+        "text": "    def distance(self, a, b):"
+      },
+      {
+        "line": 106,
+        "text": "        return len(self.path(a, b))-1"
+      },
+      {
+        "line": 107,
+        "text": ""
+      },
+      {
+        "line": 108,
+        "text": "    def expand(self, visits):"
+      },
+      {
+        "line": 109,
+        "text": "        \"\"\"Skip a visit only if its full assigned footprint is already covered.\"\"\""
+      },
+      {
+        "line": 110,
+        "text": "        route = [self.s.current]"
+      },
+      {
+        "line": 111,
+        "text": "        covered = set(self.s.covered) | self.views[self.s.current]"
+      },
+      {
+        "line": 112,
+        "text": "        for p in visits:"
+      },
+      {
+        "line": 113,
+        "text": "            self.check_time()"
+      },
+      {
+        "line": 114,
+        "text": "            if not self.views[p] - covered:"
+      },
+      {
+        "line": 115,
+        "text": "                continue"
+      },
+      {
+        "line": 116,
+        "text": "            extension = self.path(route[-1], p)"
+      },
+      {
+        "line": 117,
+        "text": "            route.extend(extension[1:])"
+      },
+      {
+        "line": 118,
+        "text": "            for q in extension:"
+      },
+      {
+        "line": 119,
+        "text": "                covered.update(self.views[q])"
+      },
+      {
+        "line": 120,
+        "text": "        route.extend(self.path(route[-1], self.s.base)[1:])"
+      },
+      {
+        "line": 121,
+        "text": "        return tuple(route)"
+      },
+      {
+        "line": 122,
+        "text": ""
+      },
+      {
+        "line": 123,
+        "text": ""
+      },
+      {
+        "line": 124,
+        "text": "def capture_route(route, targets, radius=1):"
+      },
+      {
+        "line": 125,
+        "text": "    covered = set()"
+      },
+      {
+        "line": 126,
+        "text": "    for p in route:"
+      },
+      {
+        "line": 127,
+        "text": "        covered.update(footprint(p, targets, radius))"
+      },
+      {
+        "line": 128,
+        "text": "    return frozenset(covered)"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\unified_geometry.py",
+    "sha256": "b0d70871ab4b2a3d3a4ccf3edcdadf4b3db9eb2415134d5740270a76293aff53",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Common exact metric and query-order-independent connector policy, not novelty.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "from bfs_metric_geometry import BFSMetricGeometry"
+      },
+      {
+        "line": 3,
+        "text": "from model import Geometry"
+      },
+      {
+        "line": 4,
+        "text": ""
+      },
+      {
+        "line": 5,
+        "text": ""
+      },
+      {
+        "line": 6,
+        "text": "class UnifiedGeometry(BFSMetricGeometry):"
+      },
+      {
+        "line": 7,
+        "text": "    def path(self, a, b):"
+      },
+      {
+        "line": 8,
+        "text": "        self.check_time()"
+      },
+      {
+        "line": 9,
+        "text": "        if (a,b) not in self.cache:"
+      },
+      {
+        "line": 10,
+        "text": "            # Same endpoints always select the same shortest-path geometry,"
+      },
+      {
+        "line": 11,
+        "text": "            # irrespective of which algorithm queried a distance first."
+      },
+      {
+        "line": 12,
+        "text": "            lo,hi=sorted((a,b))"
+      },
+      {
+        "line": 13,
+        "text": "            Geometry.path(self,lo,hi)"
+      },
+      {
+        "line": 14,
+        "text": "        return self.cache[a,b]"
+      },
+      {
+        "line": 15,
+        "text": ""
+      },
+      {
+        "line": 16,
+        "text": ""
+      },
+      {
+        "line": 17,
+        "text": "def single_cell_audit(s, route):"
+      },
+      {
+        "line": 18,
+        "text": "    \"\"\"Linear single-cell validator; historical independent auditor is retained.\"\"\""
+      },
+      {
+        "line": 19,
+        "text": "    if s.radius != 0:"
+      },
+      {
+        "line": 20,
+        "text": "        raise ValueError('single-cell only')"
+      },
+      {
+        "line": 21,
+        "text": "    errors=[]"
+      },
+      {
+        "line": 22,
+        "text": "    if not route:"
+      },
+      {
+        "line": 23,
+        "text": "        return {'valid':False,'errors':['empty_route'],'length':None}"
+      },
+      {
+        "line": 24,
+        "text": "    if route[0]!=s.current:errors.append('wrong_start')"
+      },
+      {
+        "line": 25,
+        "text": "    if route[-1]!=s.base:errors.append('missing_return')"
+      },
+      {
+        "line": 26,
+        "text": "    if not set(route)<=s.free:errors.append('collision_or_out_of_bounds')"
+      },
+      {
+        "line": 27,
+        "text": "    if any(abs(a[0]-b[0])+abs(a[1]-b[1])!=1 for a,b in zip(route,route[1:])):"
+      },
+      {
+        "line": 28,
+        "text": "        errors.append('illegal_step')"
+      },
+      {
+        "line": 29,
+        "text": "    if s.targets-s.covered-set(route):errors.append('coverage_omission')"
+      },
+      {
+        "line": 30,
+        "text": "    if len(route)-1>s.distance_budget:errors.append('distance_budget_exceeded')"
+      },
+      {
+        "line": 31,
+        "text": "    return {'valid':not errors,'errors':errors,'length':len(route)-1}"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\任意方向合法直达有限诊断_v0.1_20261022\\engine.py",
+    "sha256": "48645e81b500e38f7d4bec274d1218df940befef9dfa7386b27ef49171e1e252",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"One locked-anchor shortcut pass. Production planners are never imported.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "import json,time,math"
+      },
+      {
+        "line": 3,
+        "text": "from decimal import Decimal"
+      },
+      {
+        "line": 4,
+        "text": "from collections import Counter"
+      },
+      {
+        "line": 5,
+        "text": "import geometry as G"
+      },
+      {
+        "line": 6,
+        "text": ""
+      },
+      {
+        "line": 7,
+        "text": "def ps(x):return set(map(tuple,x))"
+      },
+      {
+        "line": 8,
+        "text": ""
+      },
+      {
+        "line": 9,
+        "text": "def first_original(path,U):"
+      },
+      {
+        "line": 10,
+        "text": "    seen=set();out=[]"
+      },
+      {
+        "line": 11,
+        "text": "    for i,p in enumerate(path):"
+      },
+      {
+        "line": 12,
+        "text": "        if p in U and p not in seen:out.append({'point':list(p),'index':i});seen.add(p)"
+      },
+      {
+        "line": 13,
+        "text": "    assert seen==U"
+      },
+      {
+        "line": 14,
+        "text": "    return out"
+      },
+      {
+        "line": 15,
+        "text": ""
+      },
+      {
+        "line": 16,
+        "text": "def split(path,first):"
+      },
+      {
+        "line": 17,
+        "text": "    n=len(path)-1"
+      },
+      {
+        "line": 18,
+        "text": "    if not first:return [(0,n,'empty_task_to_base')]"
+      },
+      {
+        "line": 19,
+        "text": "    f=[v['index'] for v in first]"
+      },
+      {
+        "line": 20,
+        "text": "    return [(0,f[0],'start_to_first')]+[(a,b,'between_first_services') for a,b in zip(f,f[1:])]+[(f[-1],n,'last_to_base')]"
+      },
+      {
+        "line": 21,
+        "text": ""
+      },
+      {
+        "line": 22,
+        "text": "def credits(path,U,counters,hit):"
+      },
+      {
+        "line": 23,
+        "text": "    seen=set();out=[]"
+      },
+      {
+        "line": 24,
+        "text": "    if path[0] in U:seen.add(path[0]);out.append({'point':list(path[0]),'edge':-1,'t':'0'})"
+      },
+      {
+        "line": 25,
+        "text": "    for k,(a,b) in enumerate(zip(path,path[1:])):"
+      },
+      {
+        "line": 26,
+        "text": "        hits=[]"
+      },
+      {
+        "line": 27,
+        "text": "        for p in sorted(U):"
+      },
+      {
+        "line": 28,
+        "text": "            counters['service_intersections']+=1;t=hit(a,b,p)"
+      },
+      {
+        "line": 29,
+        "text": "            if t is not None and p not in seen:hits.append((t,p))"
+      },
+      {
+        "line": 30,
+        "text": "        for t,p in sorted(hits):"
+      },
+      {
+        "line": 31,
+        "text": "            if p not in seen:out.append({'point':list(p),'edge':k,'t':str(t)});seen.add(p)"
+      },
+      {
+        "line": 32,
+        "text": "    assert seen==U,('missing_credit',U-seen)"
+      },
+      {
+        "line": 33,
+        "text": "    return out"
+      },
+      {
+        "line": 34,
+        "text": ""
+      },
+      {
+        "line": 35,
+        "text": "def turns(path):"
+      },
+      {
+        "line": 36,
+        "text": "    ds=[(b[0]-a[0],b[1]-a[1]) for a,b in zip(path,path[1:]) if a!=b];count=0;angle=0."
+      },
+      {
+        "line": 37,
+        "text": "    for u,v in zip(ds,ds[1:]):"
+      },
+      {
+        "line": 38,
+        "text": "        cross=u[0]*v[1]-u[1]*v[0];dot=u[0]*v[0]+u[1]*v[1]"
+      },
+      {
+        "line": 39,
+        "text": "        if cross or dot<0:count+=1;angle+=math.atan2(abs(cross),dot)"
+      },
+      {
+        "line": 40,
+        "text": "    return {'nonzero_direction_changes':count,'total_turn_radians':angle}"
+      },
+      {
+        "line": 41,
+        "text": ""
+      },
+      {
+        "line": 42,
+        "text": "def process(payload,limit=4096,soft=18.,total=20.):"
+      },
+      {
+        "line": 43,
+        "text": "    start=time.perf_counter();o=json.loads(payload);c=o['input'];raw=o['raw'];path=list(map(tuple,raw['route']));F=ps(c['free']);U=ps(c['targets'])-ps(c['covered']);n=len(path)-1"
+      },
+      {
+        "line": 44,
+        "text": "    counts=Counter(candidate=0,source_validation=0,output_validation=0,service_intersections=0);times={};phase=time.perf_counter()"
+      },
+      {
+        "line": 45,
+        "text": "    assert path[0]==tuple(c['current']) and path[-1]==tuple(c['base']);assert n<=Decimal(str(c['distance_budget']))"
+      },
+      {
+        "line": 46,
+        "text": "    assert ps(c['targets'])==ps(c['published_targets'])&F and ps(c['deferred_targets'])==ps(c['published_targets'])-F-ps(c['covered'])"
+      },
+      {
+        "line": 47,
+        "text": "    for a,b in zip(path,path[1:]):"
+      },
+      {
+        "line": 48,
+        "text": "        assert abs(a[0]-b[0])+abs(a[1]-b[1])==1"
+      },
+      {
+        "line": 49,
+        "text": "        counts['source_validation']+=1;assert G.legal(F,a,b)"
+      },
+      {
+        "line": 50,
+        "text": "    first=first_original(path,U);parts=split(path,first);times['parse_preprocess_source_validation']=time.perf_counter()-start"
+      },
+      {
+        "line": 51,
+        "text": "    phase=time.perf_counter();edges=[];querylog=[];fallback=None;partdata=[]"
+      },
+      {
+        "line": 52,
+        "text": "    for part,(left,right,kind) in enumerate(parts):"
+      },
+      {
+        "line": 53,
+        "text": "        idx=left;loedge=len(edges)"
+      },
+      {
+        "line": 54,
+        "text": "        while idx<right:"
+      },
+      {
+        "line": 55,
+        "text": "            if fallback is None and (counts['candidate']>=limit or time.perf_counter()-start>=soft):fallback='candidate_cap' if counts['candidate']>=limit else 'soft_deadline'"
+      },
+      {
+        "line": 56,
+        "text": "            if fallback is not None:j=idx+1"
+      },
+      {
+        "line": 57,
+        "text": "            else:"
+      },
+      {
+        "line": 58,
+        "text": "                j=right"
+      },
+      {
+        "line": 59,
+        "text": "                while j>idx:"
+      },
+      {
+        "line": 60,
+        "text": "                    if counts['candidate']>=limit or time.perf_counter()-start>=soft:"
+      },
+      {
+        "line": 61,
+        "text": "                        fallback='candidate_cap' if counts['candidate']>=limit else 'soft_deadline';j=idx+1;break"
+      },
+      {
+        "line": 62,
+        "text": "                    counts['candidate']+=1;ok=G.legal(F,path[idx],path[j]);querylog.append({'i':idx,'j':j,'legal':ok,'part':part})"
+      },
+      {
+        "line": 63,
+        "text": "                    if ok:break"
+      },
+      {
+        "line": 64,
+        "text": "                    j-=1"
+      },
+      {
+        "line": 65,
+        "text": "                assert j>idx"
+      },
+      {
+        "line": 66,
+        "text": "            edges.append({'left':idx,'right':j,'a':list(path[idx]),'b':list(path[j]),'part':part,'kind':kind});idx=j"
+      },
+      {
+        "line": 67,
+        "text": "        partdata.append({'left':left,'right':right,'kind':kind,'edge_start':loedge,'edge_end':len(edges)})"
+      },
+      {
+        "line": 68,
+        "text": "    times['candidate']=time.perf_counter()-phase;phase=time.perf_counter()"
+      },
+      {
+        "line": 69,
+        "text": "    output=[path[0]]+[tuple(e['b']) for e in edges]"
+      },
+      {
+        "line": 70,
+        "text": "    for a,b in zip(output,output[1:]):counts['output_validation']+=1;assert G.legal(F,a,b)"
+      },
+      {
+        "line": 71,
+        "text": "    credited=credits(output,U,counts,G.hit);bounds=G.interval(output);lo,hi=map(Decimal,bounds);E=Decimal(str(c['distance_budget']))"
+      },
+      {
+        "line": 72,
+        "text": "    assert hi<=Decimal(n) and hi<=E,('length_or_resource_interval',bounds,n,str(E))"
+      },
+      {
+        "line": 73,
+        "text": "    assert len(edges)<=n and counts['candidate']<=limit and counts['service_intersections']<=n*len(U)"
+      },
+      {
+        "line": 74,
+        "text": "    for p in partdata:p['L4']=p['right']-p['left'];p['new_interval']=G.interval([path[p['left']]]+[tuple(e['b']) for e in edges[p['edge_start']:p['edge_end']]])"
+      },
+      {
+        "line": 75,
+        "text": "    trace=raw.get('trace',[]);cross=Counter()"
+      },
+      {
+        "line": 76,
+        "text": "    for p in partdata:"
+      },
+      {
+        "line": 77,
+        "text": "        for k in range(p['left'],p['right']):"
+      },
+      {
+        "line": 78,
+        "text": "            ts=[t for t in trace if t['index']<=k];tr=ts[-1]['kind'] if ts else 'unavailable';cross[p['kind']+' x '+tr]+=1"
+      },
+      {
+        "line": 79,
+        "text": "    r={'id':o['id'],'L4':n,'Lshortcut_interval':bounds,'Lshortcut_display':float((lo+hi)/2),'saving_display':float(Decimal(n)-(lo+hi)/2),'saving_ratio_display':float((Decimal(n)-(lo+hi)/2)/n) if n else 0.,'distance_budget':c['distance_budget'],'resource_proof':'source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E','vertices':output,'edges':edges,'parts':partdata,'first_original':first,'first_actual':credited,'actual_order_changed':[v['point'] for v in first]!=[v['point'] for v in credited],'trace_cross_original_moves':dict(cross),'counts':dict(counts),'query_log':querylog,'fallback':fallback,'turns_original':turns(path),'turns_new':turns(output),'timing':times}"
+      },
+      {
+        "line": 80,
+        "text": "    times['main_validation_metrics']=time.perf_counter()-phase;phase=time.perf_counter();encoded=json.dumps(r,ensure_ascii=False,separators=(',',':'));times['encoding']=time.perf_counter()-phase"
+      },
+      {
+        "line": 81,
+        "text": "    # Return a fully encoded artifact plus an external timing envelope; encoding is inside the budget."
+      },
+      {
+        "line": 82,
+        "text": "    elapsed=time.perf_counter()-start"
+      },
+      {
+        "line": 83,
+        "text": "    return encoded,{'entry_seconds':elapsed,'late':elapsed>total,'counts':dict(counts),'fallback':fallback}"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\任意方向合法直达有限诊断_v0.1_20261022\\geometry.py",
+    "sha256": "013fa8cc013c151ad64f206ab8156d0ecd9ac923eaf326554759756bd4341874",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Primary predicate: exact rational grid crossing events, no sampled LOS.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "from fractions import Fraction as Q"
+      },
+      {
+        "line": 3,
+        "text": "from math import isqrt"
+      },
+      {
+        "line": 4,
+        "text": "from decimal import Decimal,localcontext,ROUND_FLOOR,ROUND_CEILING"
+      },
+      {
+        "line": 5,
+        "text": ""
+      },
+      {
+        "line": 6,
+        "text": "def inside(F,p):"
+      },
+      {
+        "line": 7,
+        "text": "    options=[]"
+      },
+      {
+        "line": 8,
+        "text": "    for x in p:"
+      },
+      {
+        "line": 9,
+        "text": "        z=x+Q(1,2); k=z.numerator//z.denominator"
+      },
+      {
+        "line": 10,
+        "text": "        options.append((k-1,k) if z.denominator==1 else (k,))"
+      },
+      {
+        "line": 11,
+        "text": "    return all((x,y) in F for x in options[0] for y in options[1])"
+      },
+      {
+        "line": 12,
+        "text": ""
+      },
+      {
+        "line": 13,
+        "text": "def legal(F,a,b):"
+      },
+      {
+        "line": 14,
+        "text": "    a=tuple(map(Q,a));b=tuple(map(Q,b));ts={Q(0),Q(1)}"
+      },
+      {
+        "line": 15,
+        "text": "    for k in (0,1):"
+      },
+      {
+        "line": 16,
+        "text": "        d=b[k]-a[k]"
+      },
+      {
+        "line": 17,
+        "text": "        if d:"
+      },
+      {
+        "line": 18,
+        "text": "            lo,hi=sorted((a[k],b[k]))"
+      },
+      {
+        "line": 19,
+        "text": "            for m in range(int(lo)-2,int(hi)+3):"
+      },
+      {
+        "line": 20,
+        "text": "                t=(Q(2*m+1,2)-a[k])/d"
+      },
+      {
+        "line": 21,
+        "text": "                if 0<t<1:ts.add(t)"
+      },
+      {
+        "line": 22,
+        "text": "    ts=sorted(ts);tests=ts+[(x+y)/2 for x,y in zip(ts,ts[1:])]"
+      },
+      {
+        "line": 23,
+        "text": "    return all(inside(F,tuple(a[k]+t*(b[k]-a[k]) for k in (0,1))) for t in tests)"
+      },
+      {
+        "line": 24,
+        "text": ""
+      },
+      {
+        "line": 25,
+        "text": "def hit(a,b,p):"
+      },
+      {
+        "line": 26,
+        "text": "    dx,dy=b[0]-a[0],b[1]-a[1];x,y=p[0]-a[0],p[1]-a[1]"
+      },
+      {
+        "line": 27,
+        "text": "    if dx==dy==0:return Q(0) if p==a else None"
+      },
+      {
+        "line": 28,
+        "text": "    if dx*y!=dy*x:return None"
+      },
+      {
+        "line": 29,
+        "text": "    dot=x*dx+y*dy;sq=dx*dx+dy*dy"
+      },
+      {
+        "line": 30,
+        "text": "    return Q(dot,sq) if 0<=dot<=sq else None"
+      },
+      {
+        "line": 31,
+        "text": ""
+      },
+      {
+        "line": 32,
+        "text": "def interval(points):"
+      },
+      {
+        "line": 33,
+        "text": "    with localcontext() as c:"
+      },
+      {
+        "line": 34,
+        "text": "        c.prec=50;lo=hi=Decimal(0)"
+      },
+      {
+        "line": 35,
+        "text": "        for a,b in zip(points,points[1:]):"
+      },
+      {
+        "line": 36,
+        "text": "            n=sum((x-y)**2 for x,y in zip(a,b));r=isqrt(n)"
+      },
+      {
+        "line": 37,
+        "text": "            if r*r==n:l=u=Decimal(r)"
+      },
+      {
+        "line": 38,
+        "text": "            else:"
+      },
+      {
+        "line": 39,
+        "text": "                z=Decimal(n).sqrt();l=z.next_minus();u=z.next_plus()"
+      },
+      {
+        "line": 40,
+        "text": "            c.rounding=ROUND_FLOOR;lo=lo+l"
+      },
+      {
+        "line": 41,
+        "text": "            c.rounding=ROUND_CEILING;hi=hi+u"
+      },
+      {
+        "line": 42,
+        "text": "        return str(lo),str(hi)"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\任意方向合法直达有限诊断_v0.1_20261022\\audit_geometry.py",
+    "sha256": "c38560fac5ac18c9239cc1fdd96cb5b8fc923804299b953e419911b21e0cd0c9",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Independent predicate: intersect closed forbidden cell boxes using slabs."
+      },
+      {
+        "line": 2,
+        "text": "No import of primary geometry. Bounding-box exterior is also forbidden."
+      },
+      {
+        "line": 3,
+        "text": "\"\"\""
+      },
+      {
+        "line": 4,
+        "text": "from fractions import Fraction"
+      },
+      {
+        "line": 5,
+        "text": "from math import ceil,floor"
+      },
+      {
+        "line": 6,
+        "text": ""
+      },
+      {
+        "line": 7,
+        "text": "def rectangle_intersects(a,b,x0,x1,y0,y1):"
+      },
+      {
+        "line": 8,
+        "text": "    low,high=Fraction(0),Fraction(1)"
+      },
+      {
+        "line": 9,
+        "text": "    for v,w,left,right in ((a[0],b[0],x0,x1),(a[1],b[1],y0,y1)):"
+      },
+      {
+        "line": 10,
+        "text": "        d=w-v"
+      },
+      {
+        "line": 11,
+        "text": "        if not d:"
+      },
+      {
+        "line": 12,
+        "text": "            if v<left or v>right:return False"
+      },
+      {
+        "line": 13,
+        "text": "        else:"
+      },
+      {
+        "line": 14,
+        "text": "            u,vv=(left-v)/d,(right-v)/d"
+      },
+      {
+        "line": 15,
+        "text": "            low=max(low,min(u,vv));high=min(high,max(u,vv))"
+      },
+      {
+        "line": 16,
+        "text": "            if low>high:return False"
+      },
+      {
+        "line": 17,
+        "text": "    return True"
+      },
+      {
+        "line": 18,
+        "text": ""
+      },
+      {
+        "line": 19,
+        "text": "def legal(F,a,b):"
+      },
+      {
+        "line": 20,
+        "text": "    a=tuple(map(Fraction,a));b=tuple(map(Fraction,b));xs=[x for x,y in F];ys=[y for x,y in F]"
+      },
+      {
+        "line": 21,
+        "text": "    xmin,xmax=min(xs),max(xs);ymin,ymax=min(ys),max(ys);half=Fraction(1,2)"
+      },
+      {
+        "line": 22,
+        "text": "    if any(not (xmin-half<p[0]<xmax+half and ymin-half<p[1]<ymax+half) for p in (a,b)):return False"
+      },
+      {
+        "line": 23,
+        "text": "    for x in range(max(xmin,ceil(min(a[0],b[0])-half)),min(xmax,floor(max(a[0],b[0])+half))+1):"
+      },
+      {
+        "line": 24,
+        "text": "        for y in range(max(ymin,ceil(min(a[1],b[1])-half)),min(ymax,floor(max(a[1],b[1])+half))+1):"
+      },
+      {
+        "line": 25,
+        "text": "            if (x,y) not in F and rectangle_intersects(a,b,x-half,x+half,y-half,y+half):return False"
+      },
+      {
+        "line": 26,
+        "text": "    return True"
+      },
+      {
+        "line": 27,
+        "text": ""
+      },
+      {
+        "line": 28,
+        "text": "def hit(a,b,p):"
+      },
+      {
+        "line": 29,
+        "text": "    ts=[]"
+      },
+      {
+        "line": 30,
+        "text": "    for k in (0,1):"
+      },
+      {
+        "line": 31,
+        "text": "        if a[k]==b[k]:"
+      },
+      {
+        "line": 32,
+        "text": "            if p[k]!=a[k]:return None"
+      },
+      {
+        "line": 33,
+        "text": "        else:ts.append(Fraction(p[k]-a[k],b[k]-a[k]))"
+      },
+      {
+        "line": 34,
+        "text": "    if not ts:return Fraction(0)"
+      },
+      {
+        "line": 35,
+        "text": "    return ts[0] if all(t==ts[0] for t in ts) and 0<=ts[0]<=1 else None"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\连续事件六世界开发比较_v0.1_20261022\\executor.py",
+    "sha256": "b61973e026f177e49f7b2001e59e148e50ad6988c718a2f459cc2a776ed71f27",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Minimal synchronous world/session executor; callbacks receive bytes only.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "from collections import deque"
+      },
+      {
+        "line": 3,
+        "text": "import json,hashlib,copy"
+      },
+      {
+        "line": 4,
+        "text": "from contracts import points,wire,safe,admit,validate_world,SNAPSHOT_KEYS,TechnicalError"
+      },
+      {
+        "line": 5,
+        "text": "def world_hash(w):return hashlib.sha256(wire(w).encode('utf8')).hexdigest()"
+      },
+      {
+        "line": 6,
+        "text": "def reach(f,start,accounts,method,tick):"
+      },
+      {
+        "line": 7,
+        "text": "    accounts.append(dict(method=method,tick=tick,kind='environment_reachability_BFS'))"
+      },
+      {
+        "line": 8,
+        "text": "    seen={start};queue=deque([start])"
+      },
+      {
+        "line": 9,
+        "text": "    while queue:"
+      },
+      {
+        "line": 10,
+        "text": "        x,y=queue.popleft()"
+      },
+      {
+        "line": 11,
+        "text": "        for p in ((x+1,y),(x,y+1),(x-1,y),(x,y-1)):"
+      },
+      {
+        "line": 12,
+        "text": "            if p in f and p not in seen:seen.add(p);queue.append(p)"
+      },
+      {
+        "line": 13,
+        "text": "    return seen"
+      },
+      {
+        "line": 14,
+        "text": "class Session:"
+      },
+      {
+        "line": 15,
+        "text": "    def __init__(self,start,E0):"
+      },
+      {
+        "line": 16,
+        "text": "        self.current=tuple(start);self.previous=None;self.H=set();self.M=0;self.E=E0;self.waits=0;self.plan=None;self.cursor=0"
+      },
+      {
+        "line": 17,
+        "text": "        self.terminal=None;self.credits=[];self.requests=[];self.actions=[];self.frames=[]"
+      },
+      {
+        "line": 18,
+        "text": "        self.move_classes=dict(fresh_target=0,initial_historical=0,session_repeat=0,non_target=0);self.turns90=0;self.turns180=0;self.first_credit={}"
+      },
+      {
+        "line": 19,
+        "text": "    def suffix(self):return self.plan[self.cursor:] if self.plan is not None else [list(self.current)]"
+      },
+      {
+        "line": 20,
+        "text": "    def record(self,P,F):"
+      },
+      {
+        "line": 21,
+        "text": "        return dict(current=self.current,previous=self.previous,H=sorted(self.H),M=self.M,E=self.E,waits=self.waits,plan=self.plan,cursor=self.cursor,U=sorted((P&F)-self.H),D=sorted(P-F-self.H))"
+      },
+      {
+        "line": 22,
+        "text": "    def credit(self,p,tick,source,P,origin,epoch):"
+      },
+      {
+        "line": 23,
+        "text": "        if p in P and p not in self.H:"
+      },
+      {
+        "line": 24,
+        "text": "            self.H.add(p);ev=dict(point=p,tick=tick,source=source,event_id=epoch,target_first_published=origin[p]);self.credits.append(ev);self.first_credit[p]=ev;return True"
+      },
+      {
+        "line": 25,
+        "text": "        return False"
+      },
+      {
+        "line": 26,
+        "text": "    def end(self,status,reason,tick,P,F):self.terminal=dict(status=status,reason=reason,tick=tick,state=safe(self.record(P,F)))"
+      },
+      {
+        "line": 27,
+        "text": "    def snapshot(self,P,F,P_before,base):"
+      },
+      {
+        "line": 28,
+        "text": "        x=dict(name='stub_snapshot',free=sorted(F),targets=sorted(P&F),covered=sorted(self.H),published_targets=sorted(P),deferred_targets=sorted(P-F-self.H),initial_targets=sorted(P_before|self.H),current=self.current,previous=self.previous,base=base,predator=[-1,0],old_route=self.suffix(),distance_budget=self.E,radius=0)"
+      },
+      {
+        "line": 29,
+        "text": "        x=json.loads(wire(x));assert set(x)==SNAPSHOT_KEYS and points(x['covered'])<=points(x['initial_targets']);return x"
+      },
+      {
+        "line": 30,
+        "text": "def run_world(world,callbacks):"
+      },
+      {
+        "line": 31,
+        "text": "    validate_world(world);original=wire(world);P=points(world['published']);F=points(world['free']);base=tuple(world['base']);origin={p:'initial' for p in P};epoch='initial'"
+      },
+      {
+        "line": 32,
+        "text": "    states={name:Session(world['start'],world['E0']) for name in callbacks};publog=[];bfs=[];result=dict(world=copy.deepcopy(world),world_hash=world_hash(world),publications=publog,sessions={},environment_BFS=bfs)"
+      },
+      {
+        "line": 33,
+        "text": "    final_tick=max([e['tick'] for e in world['events']],default=0);fatal=None"
+      },
+      {
+        "line": 34,
+        "text": "    for tick in range(world['T_max']+1):"
+      },
+      {
+        "line": 35,
+        "text": "        before=set(P);events=sorted([e for e in world['events'] if e['tick']==tick],key=lambda e:e['id'])"
+      },
+      {
+        "line": 36,
+        "text": "        if tick==0 or events:"
+      },
+      {
+        "line": 37,
+        "text": "            for e in events:"
+      },
+      {
+        "line": 38,
+        "text": "                for p in map(tuple,e['add_targets']):origin.setdefault(p,e['id']);P.add(p)"
+      },
+      {
+        "line": 39,
+        "text": "                F.difference_update(map(tuple,e['block']))"
+      },
+      {
+        "line": 40,
+        "text": "            epoch='initial' if tick==0 else '|'.join(e['id'] for e in events)"
+      },
+      {
+        "line": 41,
+        "text": "            publog.append(dict(tick=tick,ids=[e['id'] for e in events],P_before=sorted(before),P=sorted(P),F=sorted(F),epoch=epoch))"
+      },
+      {
+        "line": 42,
+        "text": "        for name,s in states.items():"
+      },
+      {
+        "line": 43,
+        "text": "            if s.terminal:continue"
+      },
+      {
+        "line": 44,
+        "text": "            frame=dict(tick=tick,before=safe(s.record(P,F)));s.frames.append(frame)"
+      },
+      {
+        "line": 45,
+        "text": "            if s.current not in F or base not in F:"
+      },
+      {
+        "line": 46,
+        "text": "                s.end('environment_termination','current_blocked' if s.current not in F else 'base_blocked',tick,P,F);frame['after']=safe(s.record(P,F));continue"
+      },
+      {
+        "line": 47,
+        "text": "            s.credit(s.current,tick,'publication',P,origin,epoch)"
+      },
+      {
+        "line": 48,
+        "text": "            reached=reach(F,s.current,bfs,name,tick);U=(P&F)-s.H"
+      },
+      {
+        "line": 49,
+        "text": "            if base not in reached or not U<=reached:"
+      },
+      {
+        "line": 50,
+        "text": "                s.end('environment_termination','base_unreachable' if base not in reached else 'target_unreachable',tick,P,F);frame['after']=safe(s.record(P,F));continue"
+      },
+      {
+        "line": 51,
+        "text": "            if tick>=final_tick and not U and s.current==base:"
+      },
+      {
+        "line": 52,
+        "text": "                s.end('success',None,tick,P,F);frame['after']=safe(s.record(P,F));continue"
+      },
+      {
+        "line": 53,
+        "text": "            if tick==world['T_max']:"
+      },
+      {
+        "line": 54,
+        "text": "                s.end('tick_limit','maximum_tick_reached',tick,P,F);frame['after']=safe(s.record(P,F));continue"
+      },
+      {
+        "line": 55,
+        "text": "            if tick==0 or events:"
+      },
+      {
+        "line": 56,
+        "text": "                snap=s.snapshot(P,F,before,world['base']);payload=wire(snap).encode('utf8');req=dict(sequence=len(s.requests),tick=tick,input=snap,payload_utf8=payload.decode('utf8'),payload_sha256=hashlib.sha256(payload).hexdigest(),plan_before=copy.deepcopy(s.plan),cursor_before=s.cursor,actual_prefix=[[*world['start']]]+[a['end'] for a in s.actions if a['kind']=='move'])"
+      },
+      {
+        "line": 57,
+        "text": "                s.requests.append(req)"
+      },
+      {
+        "line": 58,
+        "text": "                try:response=callbacks[name](payload)"
+      },
+      {
+        "line": 59,
+        "text": "                except BaseException as ex:"
+      },
+      {
+        "line": 60,
+        "text": "                    req.update(response=None,admission='technical_error',reason='callback_exception',exception=repr(ex));s.end('technical_error','callback_exception',tick,P,F);fatal='callback_exception';frame['after']=safe(s.record(P,F));break"
+      },
+      {
+        "line": 61,
+        "text": "                admission,reason=admit(snap,response);req.update(response=safe(response),admission=admission,reason=reason)"
+      },
+      {
+        "line": 62,
+        "text": "                if admission!='accepted':"
+      },
+      {
+        "line": 63,
+        "text": "                    s.end(admission,reason,tick,P,F);frame['after']=safe(s.record(P,F))"
+      },
+      {
+        "line": 64,
+        "text": "                    if admission=='technical_error':fatal=reason;break"
+      },
+      {
+        "line": 65,
+        "text": "                    continue"
+      },
+      {
+        "line": 66,
+        "text": "                s.plan=copy.deepcopy(response['route']);s.cursor=0;req['plan_adopted']=copy.deepcopy(s.plan)"
+      },
+      {
+        "line": 67,
+        "text": "            if s.plan is not None and s.cursor+1<len(s.plan):"
+      },
+      {
+        "line": 68,
+        "text": "                nxt=tuple(s.plan[s.cursor+1])"
+      },
+      {
+        "line": 69,
+        "text": "                if nxt not in F or abs(nxt[0]-s.current[0])+abs(nxt[1]-s.current[1])!=1:"
+      },
+      {
+        "line": 70,
+        "text": "                    s.end('technical_error','next_move_invalid',tick,P,F);fatal='next_move_invalid';frame['after']=safe(s.record(P,F));break"
+      },
+      {
+        "line": 71,
+        "text": "                if s.E<=0:s.end('resource_infeasible','no_resource_for_next_move',tick,P,F);frame['after']=safe(s.record(P,F));continue"
+      },
+      {
+        "line": 72,
+        "text": "                old=s.current;kind='non_target' if nxt not in P else 'session_repeat' if nxt in s.H else 'fresh_target'"
+      },
+      {
+        "line": 73,
+        "text": "                angle=None"
+      },
+      {
+        "line": 74,
+        "text": "                if s.previous is not None:"
+      },
+      {
+        "line": 75,
+        "text": "                    dot=(old[0]-s.previous[0])*(nxt[0]-old[0])+(old[1]-s.previous[1])*(nxt[1]-old[1]);angle=90 if dot==0 else 180 if dot==-1 else 0"
+      },
+      {
+        "line": 76,
+        "text": "                    s.turns90+=angle==90;s.turns180+=angle==180"
+      },
+      {
+        "line": 77,
+        "text": "                prior=s.first_credit.get(nxt);s.actions.append(dict(kind='move',tick=tick,arrival_tick=tick+1,start=list(old),end=list(nxt),classification=kind,turn_degrees=angle,first_credit_event=prior['event_id'] if prior else None,repeat_across_event=bool(prior and prior['event_id']!=epoch)))"
+      },
+      {
+        "line": 78,
+        "text": "                s.current=nxt;s.previous=old;s.M+=1;s.E-=1;s.cursor+=1;s.move_classes[kind]+=1;s.credit(nxt,tick+1,'arrival',P,origin,epoch)"
+      },
+      {
+        "line": 79,
+        "text": "            elif s.current==base and not ((P&F)-s.H):"
+      },
+      {
+        "line": 80,
+        "text": "                s.actions.append(dict(kind='wait',tick=tick,end_tick=tick+1,current=list(s.current),previous=list(s.previous) if s.previous is not None else None));s.waits+=1"
+      },
+      {
+        "line": 81,
+        "text": "            else:"
+      },
+      {
+        "line": 82,
+        "text": "                s.end('technical_error','plan_exhausted_without_completion',tick,P,F);fatal='plan_exhausted_without_completion';frame['after']=safe(s.record(P,F));break"
+      },
+      {
+        "line": 83,
+        "text": "            frame['after']=safe(s.record(P,F))"
+      },
+      {
+        "line": 84,
+        "text": "        if fatal:break"
+      },
+      {
+        "line": 85,
+        "text": "        if all(s.terminal for s in states.values()) and tick>=final_tick:break"
+      },
+      {
+        "line": 86,
+        "text": "    for name,s in states.items():"
+      },
+      {
+        "line": 87,
+        "text": "        result['sessions'][name]=dict(terminal=s.terminal,actions=s.actions,requests=s.requests,credits=s.credits,frames=s.frames,summary=safe(dict(status=s.terminal['status'],reason=s.terminal['reason'],finish_tick=s.terminal['tick'],M=s.M,E=s.E,waits=s.waits,current=s.current,previous=s.previous,H=sorted(s.H),P=sorted(P),F=sorted(F),U=sorted((P&F)-s.H),D=sorted(P-F-s.H),historical_now_blocked=sorted(s.H-F),returned=s.current==base,response_calls=len(s.requests),move_classes=s.move_classes,turns90=s.turns90,turns180=s.turns180,first_credit=s.credits,zero_move_credits=sum(e['source']=='publication' for e in s.credits),benchmark_eligible=False)))"
+      },
+      {
+        "line": 88,
+        "text": "    assert original==wire(world),'world mutated by executor';result['fatal_technical_error']=fatal"
+      },
+      {
+        "line": 89,
+        "text": "    if fatal:raise TechnicalError(fatal,safe(result))"
+      },
+      {
+        "line": 90,
+        "text": "    return safe(result)"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\连续事件六世界开发比较_v0.1_20261022\\contracts.py",
+    "sha256": "bb26ee04199033747f154989333f1e2ac5f9ba1a80e0602e803faa1c4e7ae748",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"Pure input/response contracts. No algorithm or path construction.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "import json,math"
+      },
+      {
+        "line": 3,
+        "text": "ENTRY_BUDGET=20"
+      },
+      {
+        "line": 4,
+        "text": "SNAPSHOT_KEYS={'name','free','targets','covered','published_targets','deferred_targets','initial_targets','current','previous','base','predator','old_route','distance_budget','radius'}"
+      },
+      {
+        "line": 5,
+        "text": "class TechnicalError(RuntimeError):"
+      },
+      {
+        "line": 6,
+        "text": "    def __init__(self,reason,result=None):super().__init__(reason);self.result=result"
+      },
+      {
+        "line": 7,
+        "text": "def points(xs):return set(map(tuple,xs))"
+      },
+      {
+        "line": 8,
+        "text": "def point(p):return isinstance(p,(list,tuple)) and len(p)==2 and all(type(v) is int for v in p)"
+      },
+      {
+        "line": 9,
+        "text": "def safe(x):"
+      },
+      {
+        "line": 10,
+        "text": "    if isinstance(x,float) and not math.isfinite(x):return {'nonfinite_float':str(x)}"
+      },
+      {
+        "line": 11,
+        "text": "    if isinstance(x,dict):return {k:safe(v) for k,v in x.items()}"
+      },
+      {
+        "line": 12,
+        "text": "    if isinstance(x,(list,tuple)):return [safe(v) for v in x]"
+      },
+      {
+        "line": 13,
+        "text": "    return x"
+      },
+      {
+        "line": 14,
+        "text": "def wire(x):return json.dumps(safe(x),sort_keys=True,ensure_ascii=False,separators=(',',':'),allow_nan=False)"
+      },
+      {
+        "line": 15,
+        "text": "def validate_world(w):"
+      },
+      {
+        "line": 16,
+        "text": "    assert set(w)=={'free','published','base','start','E0','T_max','events'}"
+      },
+      {
+        "line": 17,
+        "text": "    assert all(point(p) for p in w['free']+w['published']) and point(w['base']) and point(w['start'])"
+      },
+      {
+        "line": 18,
+        "text": "    assert type(w['E0']) is int and w['E0']>=0 and type(w['T_max']) is int and w['T_max']>0"
+      },
+      {
+        "line": 19,
+        "text": "    f=points(w['free']);assert tuple(w['base']) in f and tuple(w['start']) in f and points(w['published'])<=f"
+      },
+      {
+        "line": 20,
+        "text": "    assert len(f)==len(w['free'])"
+      },
+      {
+        "line": 21,
+        "text": "    ids=set()"
+      },
+      {
+        "line": 22,
+        "text": "    for e in w['events']:"
+      },
+      {
+        "line": 23,
+        "text": "        assert set(e)=={'tick','id','add_targets','block'} and type(e['tick']) is int and 0<e['tick']<w['T_max'] and isinstance(e['id'],str) and e['id'] and e['id'] not in ids"
+      },
+      {
+        "line": 24,
+        "text": "        assert all(point(p) for p in e['add_targets']+e['block']);ids.add(e['id'])"
+      },
+      {
+        "line": 25,
+        "text": "def admit(snapshot,response):"
+      },
+      {
+        "line": 26,
+        "text": "    if response is None:return 'solver_no_solution','missing_response'"
+      },
+      {
+        "line": 27,
+        "text": "    if not isinstance(response,dict):return 'technical_error','response_not_object'"
+      },
+      {
+        "line": 28,
+        "text": "    seconds=response.get('entry_seconds')"
+      },
+      {
+        "line": 29,
+        "text": "    if type(seconds) not in (int,float) or not math.isfinite(seconds) or seconds<0:return 'technical_error','invalid_time_field'"
+      },
+      {
+        "line": 30,
+        "text": "    if seconds>=ENTRY_BUDGET:return 'deadline','entry_not_strictly_less_than_20'"
+      },
+      {
+        "line": 31,
+        "text": "    if 'route' not in response or not response['route']:"
+      },
+      {
+        "line": 32,
+        "text": "        return ('deadline','native_deadline_without_route') if response.get('native_status')=='deadline' else ('solver_no_solution','no_route')"
+      },
+      {
+        "line": 33,
+        "text": "    path=response['route'];f=points(snapshot['free']);u=points(snapshot['targets'])-points(snapshot['covered'])"
+      },
+      {
+        "line": 34,
+        "text": "    if not isinstance(path,list) or not all(point(p) for p in path):return 'invalid_route','route_points'"
+      },
+      {
+        "line": 35,
+        "text": "    if path[0]!=snapshot['current'] or path[-1]!=snapshot['base'] or not points(path)<=f:return 'invalid_route','endpoint_or_collision'"
+      },
+      {
+        "line": 36,
+        "text": "    if any(abs(p[0]-q[0])+abs(p[1]-q[1])!=1 for p,q in zip(path,path[1:])):return 'invalid_route','non_four_neighbor_move'"
+      },
+      {
+        "line": 37,
+        "text": "    if not u<=points(path):return 'invalid_route','coverage_omission'"
+      },
+      {
+        "line": 38,
+        "text": "    if len(path)-1>snapshot['distance_budget']:return 'resource_infeasible','full_route_exceeds_remaining_resource'"
+      },
+      {
+        "line": 39,
+        "text": "    return 'accepted',None"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\连续事件六世界开发比较_v0.1_20261022\\session.py",
+    "sha256": "cb4fcf2d61df568f2d591fc620fe2ce0ae275ce44de78c66b1bc90b34c3f366a",
+    "lines": [
+      {
+        "line": 1,
+        "text": "\"\"\"One isolated method session; one fresh worker per actual response.\"\"\""
+      },
+      {
+        "line": 2,
+        "text": "from util import *"
+      },
+      {
+        "line": 3,
+        "text": "from executor import run_world"
+      },
+      {
+        "line": 4,
+        "text": "from contracts import TechnicalError"
+      },
+      {
+        "line": 5,
+        "text": "import sys,subprocess,time"
+      },
+      {
+        "line": 6,
+        "text": "def run_session(sj):"
+      },
+      {
+        "line": 7,
+        "text": "    cfg=config();check_seal();world=read(H/'worlds.json')[sj['world']];slots=[s for s in read(H/'call_slots.json') if s['session']==sj['id']];index=0;callback_rows=[]"
+      },
+      {
+        "line": 8,
+        "text": "    def callback(payload):"
+      },
+      {
+        "line": 9,
+        "text": "        nonlocal index"
+      },
+      {
+        "line": 10,
+        "text": "        begin=time.perf_counter();check_seal();assert index<len(slots);slot=slots[index];index+=1"
+      },
+      {
+        "line": 11,
+        "text": "        journal=H/'actual_attempts.jsonl';past=[json.loads(x) for x in journal.read_text(encoding='utf8').splitlines()] if journal.exists() else [];assert len(past)<cfg['real_entry_cap']"
+      },
+      {
+        "line": 12,
+        "text": "        rid=slot['id'];inp=H/'inputs'/(rid+'.json');jobpath=H/'jobs'/(rid+'.json');out=H/'outputs'/(rid+'.json');log=H/'logs'/(rid+'.txt');assert not any(p.exists() for p in (inp,jobpath,out,log))"
+      },
+      {
+        "line": 13,
+        "text": "        put(inp,payload);j=dict(id=rid,session=sj['id'],method=sj['method'],seed=sj['seed'],slot=slot,input=str(inp.relative_to(H)),input_sha256=sha(inp),seal_sha256=sha(H/'seal.json'));save(jobpath,j)"
+      },
+      {
+        "line": 14,
+        "text": "        attempt=dict(id=rid,session=sj['id'],method=sj['method'],sequence=len(past)+1,process_start=time.time(),synthetic=H.name=='SYNTHETIC_TECHNICAL_NOT_REAL')"
+      },
+      {
+        "line": 15,
+        "text": "        with journal.open('a',encoding='utf8') as f:f.write(json.dumps(attempt)+'\\n')"
+      },
+      {
+        "line": 16,
+        "text": "        try:p=subprocess.run([sys.executable,'-B','-X','utf8',str(H/'worker.py'),str(jobpath),str(out)],env=env(),capture_output=True,timeout=90);code=p.returncode;data=p.stdout+p.stderr"
+      },
+      {
+        "line": 17,
+        "text": "        except subprocess.TimeoutExpired as ex:code='watchdog';data=(ex.stdout or b'')+(ex.stderr or b'')"
+      },
+      {
+        "line": 18,
+        "text": "        put(log,data);markers=dict(entries=data.count(b'ENTRY_START '),core_starts=data.count(b'CORE_START '),core_returns=data.count(b'CORE_RETURN'),entry_returns=data.count(b'ENTRY_RETURN '));assert max(markers.values())<=1"
+      },
+      {
+        "line": 19,
+        "text": "        q=dict(job=j,exit_code=code,markers=markers,callback_total_wall_seconds=time.perf_counter()-begin,no_retry=True)"
+      },
+      {
+        "line": 20,
+        "text": "        if code!=0:"
+      },
+      {
+        "line": 21,
+        "text": "            q['status']='WATCHDOG' if code=='watchdog' else 'PROCESS_ABNORMAL';save(H/'logs'/(rid+'.receipt.json'),q);raise RuntimeError(('worker_process_stop',rid,code))"
+      },
+      {
+        "line": 22,
+        "text": "        x=read(out);assert x['job']==j and x['input_sha256']==sha(inp) and markers==dict(entries=1,core_starts=1,core_returns=1,entry_returns=1)"
+      },
+      {
+        "line": 23,
+        "text": "        q.update(status='RETURNED',output_sha256=sha(out),entry_seconds=x['entry']['entry_seconds'],native_graph=x['native_graph']);save(H/'logs'/(rid+'.receipt.json'),q);callback_rows.append(q)"
+      },
+      {
+        "line": 24,
+        "text": "        return x['entry']['response']"
+      },
+      {
+        "line": 25,
+        "text": "    try:result=run_world(world,{sj['method']:callback})"
+      },
+      {
+        "line": 26,
+        "text": "    except TechnicalError as ex:"
+      },
+      {
+        "line": 27,
+        "text": "        if ex.result:save(H/'sessions'/(sj['id']+'.json'),ex.result)"
+      },
+      {
+        "line": 28,
+        "text": "        raise"
+      },
+      {
+        "line": 29,
+        "text": "    save(H/'sessions'/(sj['id']+'.json'),result);save(H/'sessions'/(sj['id']+'.callbacks.json'),callback_rows)"
+      },
+      {
+        "line": 30,
+        "text": "    print('SESSION_COMPLETE',sj['id'],result['sessions'][sj['method']]['summary']['status'],'responses',index,flush=True)"
+      },
+      {
+        "line": 31,
+        "text": "    return result"
+      },
+      {
+        "line": 32,
+        "text": "def main():"
+      },
+      {
+        "line": 33,
+        "text": "    j=read(sys.argv[1]);assert j in read(H/'session_order.json');run_session(j)"
+      },
+      {
+        "line": 34,
+        "text": "if __name__=='__main__':main()"
+      }
+    ]
+  }
+]

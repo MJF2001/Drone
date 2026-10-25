@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "synthetic": true,
+  "actual_control_sources": [
+    "seal.py",
+    "run.py",
+    "worker.py",
+    "analysis.export",
+    "verify.csvcheck",
+    "common.require/check_seal"
+  ],
+  "simulation_counts": {
+    "prep": 6,
+    "gate": 12,
+    "formal": 2,
+    "stub_entries": 20,
+    "stub_cores": 20
+  },
+  "production_counts_unchanged": [
+    6,
+    12,
+    288
+  ],
+  "negative_seals_blocked": [
+    "mismatch_reference",
+    "stale_PASS"
+  ],
+  "missing_gate_blocked": true,
+  "existing_output_blocked_before_entry": true,
+  "interfaces_replaced": [
+    "planner runtime/candidate/p2_adapter",
+    "worker subprocess bootstrap",
+    "synthetic generation stage product and input-audit receipt",
+    "analysis.compute synthetic selection only"
+  ],
+  "real_entry_core_calls": 0
+}

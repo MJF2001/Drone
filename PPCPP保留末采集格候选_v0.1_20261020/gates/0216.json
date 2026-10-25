@@ -1,0 +1,684 @@
+{
+  "kind": "deadline_injection",
+  "name": "encode_after",
+  "input": {
+    "name": "incidental_collection",
+    "free": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "targets": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "covered": [],
+    "published_targets": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "deferred_targets": [],
+    "current": [
+      0,
+      0
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "previous": null,
+    "predator": [
+      -1,
+      0
+    ],
+    "initial_targets": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "old_route": [
+      [
+        0,
+        0
+      ]
+    ],
+    "distance_budget": 1000000
+  },
+  "method": "LAST",
+  "result": {
+    "raw": {
+      "version": "PPCPP_LAST_RESERVE_v0.1",
+      "mode": "LAST",
+      "status": "deadline",
+      "route": [],
+      "trace": [
+        {
+          "index": 0,
+          "current": [
+            0,
+            0
+          ],
+          "previous": null,
+          "pending_count": 3,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                1,
+                0
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 0.0,
+              "boundary_reward": 1.0,
+              "score": 0.5
+            }
+          ],
+          "goal": [
+            1,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "current": [
+            1,
+            0
+          ],
+          "previous": [
+            0,
+            0
+          ],
+          "pending_count": 2,
+          "kind": "recovery",
+          "goal": [
+            2,
+            1
+          ]
+        },
+        {
+          "index": 3,
+          "current": [
+            2,
+            1
+          ],
+          "previous": [
+            1,
+            1
+          ],
+          "pending_count": 1,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                3,
+                1
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 1.0,
+              "boundary_reward": 1.0,
+              "score": 2.5
+            }
+          ],
+          "goal": [
+            3,
+            1
+          ]
+        },
+        {
+          "kind": "return",
+          "index": 4,
+          "current": [
+            3,
+            1
+          ],
+          "goal": [
+            0,
+            0
+          ],
+          "pending_count": 0
+        }
+      ],
+      "selected": null,
+      "e": [
+        1,
+        0
+      ],
+      "branches": {
+        "P0": {
+          "version": "PPCPP_CORE4_FIXED_HISTORY_v0.2_20261019",
+          "method": "PPCPP_INDEPENDENT",
+          "route": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "status": "core_complete",
+          "reason": null,
+          "seconds": 0.00010800000745803118,
+          "budget": 19.999955300008878,
+          "seed": 0,
+          "seed_used": false,
+          "predator": [
+            -1,
+            0
+          ],
+          "initial_previous": null,
+          "weights": [
+            2.0,
+            0.5
+          ],
+          "trace": [
+            {
+              "index": 0,
+              "current": [
+                0,
+                0
+              ],
+              "previous": null,
+              "pending_count": 3,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    1,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.0,
+                  "boundary_reward": 1.0,
+                  "score": 0.5
+                }
+              ],
+              "goal": [
+                1,
+                0
+              ]
+            },
+            {
+              "index": 1,
+              "current": [
+                1,
+                0
+              ],
+              "previous": [
+                0,
+                0
+              ],
+              "pending_count": 2,
+              "kind": "recovery",
+              "goal": [
+                2,
+                1
+              ]
+            },
+            {
+              "index": 3,
+              "current": [
+                2,
+                1
+              ],
+              "previous": [
+                1,
+                1
+              ],
+              "pending_count": 1,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    3,
+                    1
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 1.0,
+                  "boundary_reward": 1.0,
+                  "score": 2.5
+                }
+              ],
+              "goal": [
+                3,
+                1
+              ]
+            },
+            {
+              "kind": "return",
+              "index": 4,
+              "current": [
+                3,
+                1
+              ],
+              "goal": [
+                0,
+                0
+              ],
+              "pending_count": 0
+            }
+          ],
+          "accepted_seconds": 0.00010760000441223383,
+          "fallback_selected": false,
+          "overrun_gt_10ms": false
+        },
+        "P1": {
+          "status": "core_complete",
+          "route": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "diagnostic_route": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "trace": [
+            {
+              "phase": "work",
+              "index": 0,
+              "current": [
+                0,
+                0
+              ],
+              "previous": null,
+              "pending_count": 2,
+              "kind": "recovery",
+              "goal": [
+                2,
+                1
+              ]
+            },
+            {
+              "phase": "work",
+              "index": 3,
+              "current": [
+                2,
+                1
+              ],
+              "previous": [
+                1,
+                1
+              ],
+              "pending_count": 1,
+              "kind": "local",
+              "goal": [
+                3,
+                1
+              ],
+              "options": [
+                {
+                  "cell": [
+                    3,
+                    1
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 1.0,
+                  "boundary_reward": 1.0,
+                  "score": 2.5
+                }
+              ]
+            },
+            {
+              "phase": "released",
+              "kind": "reserved",
+              "index": 4,
+              "current": [
+                3,
+                1
+              ],
+              "goal": [
+                1,
+                0
+              ],
+              "pending_count": 1
+            },
+            {
+              "phase": "released",
+              "kind": "return",
+              "index": 7,
+              "current": [
+                1,
+                0
+              ],
+              "goal": [
+                0,
+                0
+              ],
+              "pending_count": 0
+            }
+          ],
+          "reserved": [
+            1,
+            0
+          ],
+          "work_free_count": 11,
+          "cache_scopes": [
+            "original_full",
+            "alternative_full",
+            "alternative_work"
+          ],
+          "phase1_end": 4,
+          "accepted_seconds": 0.000318799982778728,
+          "errors": []
+        }
+      },
+      "reason": "shared_entry_deadline"
+    },
+    "entry_seconds": 30.000407300016377,
+    "phase_seconds": {
+      "p0": 0.00011399999493733048,
+      "candidate": 4.529999569058418e-05,
+      "p1": 8.169998181983829e-05,
+      "final_audit": 3.8000289350748062e-06,
+      "encoding": 4.829996032640338e-05
+    },
+    "eligible": false,
+    "budget": 20,
+    "method": "LAST",
+    "seed": 0,
+    "injection_events": [
+      {
+        "stage": "entry",
+        "seconds": 4.110002191737294e-05
+      },
+      {
+        "stage": "p0_before",
+        "seconds": 4.39999857917428e-05
+      },
+      {
+        "stage": "p0_done",
+        "seconds": 0.000159099989105016
+      },
+      {
+        "stage": "candidate_before",
+        "seconds": 0.00019099999917671084
+      },
+      {
+        "stage": "candidate_distance",
+        "seconds": 0.00020940002286806703
+      },
+      {
+        "stage": "candidate_distance",
+        "seconds": 0.0002191000385209918
+      },
+      {
+        "stage": "candidate_distance",
+        "seconds": 0.0002277999883517623
+      },
+      {
+        "stage": "phase1_precheck",
+        "seconds": 0.00025919999461621046
+      },
+      {
+        "stage": "phase1",
+        "seconds": 0.0002597999991849065
+      },
+      {
+        "stage": "alternative_move",
+        "seconds": 0.00028199999360367656
+      },
+      {
+        "stage": "alternative_move",
+        "seconds": 0.0002826999989338219
+      },
+      {
+        "stage": "alternative_move",
+        "seconds": 0.0002832000027410686
+      },
+      {
+        "stage": "phase1",
+        "seconds": 0.00028390000807121396
+      },
+      {
+        "stage": "alternative_move",
+        "seconds": 0.0002914000069722533
+      },
+      {
+        "stage": "release",
+        "seconds": 0.0002924000145867467
+      },
+      {
+        "stage": "alternative_move",
+        "seconds": 0.00030590000096708536
+      },
+      {
+        "stage": "alternative_move",
+        "seconds": 0.00030640000477433205
+      },
+      {
+        "stage": "alternative_move",
+        "seconds": 0.00030690000858157873
+      },
+      {
+        "stage": "return",
+        "seconds": 0.00030750001315027475
+      },
+      {
+        "stage": "alternative_move",
+        "seconds": 0.00031239999225363135
+      },
+      {
+        "stage": "p1_audit_before",
+        "seconds": 0.0003129999968223274
+      },
+      {
+        "stage": "p1_audit_after",
+        "seconds": 0.00031810003565624356
+      },
+      {
+        "stage": "final_audit_before",
+        "seconds": 0.0003446000046096742
+      },
+      {
+        "stage": "final_audit_after",
+        "seconds": 0.0003491000388748944
+      },
+      {
+        "stage": "encode_before",
+        "seconds": 0.00035440002102404833
+      },
+      {
+        "stage": "encode_after",
+        "seconds": 30.00040409999201
+      }
+    ]
+  },
+  "audit": {
+    "extra_work_connection_steps": 0,
+    "work_segments": [
+      {
+        "index": 0,
+        "end": 3,
+        "goal": [
+          2,
+          1
+        ],
+        "steps": 3,
+        "original_distance": 3,
+        "extra": 0
+      },
+      {
+        "index": 3,
+        "end": 4,
+        "goal": [
+          3,
+          1
+        ],
+        "steps": 1,
+        "original_distance": 1,
+        "extra": 0
+      }
+    ]
+  }
+}

@@ -1,0 +1,5153 @@
+{
+  "id": "W1_P2_plan_2",
+  "passed": true,
+  "native_counts": {
+    "shared_region_queries_total": 157,
+    "scope_wrapper_prediction_region_queries": 7,
+    "core_started": 1,
+    "context_calls": 1,
+    "context_BFS_started": 1,
+    "context_BFS_completed": 1,
+    "geometry_precheck_calls": 1,
+    "geometry_path_calls": 148,
+    "astar_calls": 26,
+    "Astar_started": 26,
+    "Astar_completed": 26,
+    "main_audit_calls": 25,
+    "main_audit_returns": 25,
+    "main_audit_valid": 25,
+    "geometry_distance_calls": 2576,
+    "distance_row_BFS_started": 7,
+    "distance_row_BFS_completed": 7,
+    "core_returned": 1,
+    "core_complete": 1,
+    "scope_wrapper_native_region_queries": 31,
+    "post_entry_calls": 1,
+    "post_source_geometry": 11,
+    "post_candidate_geometry": 8,
+    "post_output_geometry": 8,
+    "scope_engine_region_queries": 56,
+    "post_service_queries_total_protected": 84,
+    "post_service_intersections": 56,
+    "post_interval_calls": 9,
+    "scope_wrapper_post_region_queries": 28,
+    "scope_wrapper_full_region_queries": 35
+  },
+  "method": "P2",
+  "seed": 20261022,
+  "wrapper_counts": {
+    "parse": 1,
+    "input_geometry": 1,
+    "primary_domain_points": 183,
+    "selector": 1,
+    "candidate_checks": 9,
+    "candidate_distance": 9,
+    "candidate_geometry": 9,
+    "candidate_resource_checks": 9,
+    "candidate_rejected": 5,
+    "candidate_comparisons": 6,
+    "prediction_collect_here": 1,
+    "prediction_inside_tests": 7,
+    "prediction_service_intersections": 7,
+    "native_adapter_calls": 1,
+    "native_route_audits": 1,
+    "native_collect_here": 1,
+    "native_inside_tests": 7,
+    "native_geometry": 11,
+    "native_distance": 11,
+    "native_service_intersections": 31,
+    "native_resource_checks": 1,
+    "post_route_audits": 1,
+    "post_collect_here": 1,
+    "post_inside_tests": 7,
+    "post_geometry": 8,
+    "post_distance": 8,
+    "post_service_intersections": 28,
+    "post_resource_checks": 1,
+    "full_route_audits": 1,
+    "full_collect_here": 1,
+    "full_inside_tests": 7,
+    "full_geometry": 9,
+    "full_distance": 9,
+    "full_service_intersections": 35,
+    "full_resource_checks": 1
+  },
+  "stage": "main_complete",
+  "timing": {
+    "connector_and_contract_seconds": 0.013674999994691461,
+    "core_adapter_seconds": 0.09549810003954917,
+    "post_adapter_seconds": 0.022894299996551126,
+    "main_encoding_seconds": 0.0006990000256337225,
+    "pipeline_seconds": 0.17486309999367222,
+    "pipeline_late": false
+  },
+  "snapshot": {
+    "id": "W1_P2_plan_2",
+    "input": {
+      "S": [
+        {
+          "n": 11,
+          "d": 8
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": 3,
+          "d": 8
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "heading_status": "KNOWN",
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "D": [
+        [
+          2,
+          0
+        ]
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 789,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "M": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 11,
+              "d": 8
+            }
+          }
+        ]
+      }
+    },
+    "metadata": {
+      "initial_targets": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "predator": [
+        -3,
+        -3
+      ],
+      "old_route": [],
+      "heading_source": {
+        "action_index": 4,
+        "a": [
+          {
+            "n": 1,
+            "d": 1
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "b": [
+          {
+            "n": 11,
+            "d": 8
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "vector": [
+          {
+            "n": 3,
+            "d": 8
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ]
+      },
+      "execution_log_tail": "ca99fbb1e6cf87f8f93aa4d5e7495654b448e95c1580ff1d1063a8d8366af10c",
+      "known_obstacles": [
+        [
+          2,
+          0
+        ]
+      ],
+      "scope": "public_execution_state_only"
+    }
+  },
+  "actual_before": {
+    "S": [
+      {
+        "n": 11,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": [
+      {
+        "n": 3,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "D": [
+      [
+        2,
+        0
+      ]
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 789,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 789,
+        "d": 8
+      },
+      "high": {
+        "n": 789,
+        "d": 8
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 11,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 11,
+        "d": 8
+      },
+      "high": {
+        "n": 11,
+        "d": 8
+      }
+    }
+  },
+  "actual_after": {
+    "S": [
+      {
+        "n": 11,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": [
+      {
+        "n": 3,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "D": [
+      [
+        2,
+        0
+      ]
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 789,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 789,
+        "d": 8
+      },
+      "high": {
+        "n": 789,
+        "d": 8
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 11,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 11,
+        "d": 8
+      },
+      "high": {
+        "n": 11,
+        "d": 8
+      }
+    }
+  },
+  "candidates": [
+    {
+      "q": [
+        0,
+        0
+      ],
+      "squared": {
+        "n": 121,
+        "d": 64
+      },
+      "dot": {
+        "n": -33,
+        "d": 64
+      },
+      "legal": true,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 11,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 11,
+          "d": 8
+        },
+        "high": {
+          "n": 11,
+          "d": 8
+        }
+      },
+      "squared_source": {
+        "n": 121,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        0,
+        1
+      ],
+      "squared": {
+        "n": 185,
+        "d": 64
+      },
+      "dot": {
+        "n": -33,
+        "d": 64
+      },
+      "legal": true,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 185,
+              "c": {
+                "n": 1,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 250902845500750779629,
+          "d": 147573952589676412928
+        },
+        "high": {
+          "n": 125451422750375389815,
+          "d": 73786976294838206464
+        }
+      },
+      "squared_source": {
+        "n": 185,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        1,
+        0
+      ],
+      "squared": {
+        "n": 9,
+        "d": 64
+      },
+      "dot": {
+        "n": -9,
+        "d": 64
+      },
+      "legal": true,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 3,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 3,
+          "d": 8
+        },
+        "high": {
+          "n": 3,
+          "d": 8
+        }
+      },
+      "squared_source": {
+        "n": 9,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        1,
+        1
+      ],
+      "squared": {
+        "n": 73,
+        "d": 64
+      },
+      "dot": {
+        "n": -9,
+        "d": 64
+      },
+      "legal": true,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 73,
+              "c": {
+                "n": 1,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 78804525227344190619,
+          "d": 73786976294838206464
+        },
+        "high": {
+          "n": 157609050454688381239,
+          "d": 147573952589676412928
+        }
+      },
+      "squared_source": {
+        "n": 73,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        2,
+        1
+      ],
+      "squared": {
+        "n": 89,
+        "d": 64
+      },
+      "dot": {
+        "n": 15,
+        "d": 64
+      },
+      "legal": false,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 89,
+              "c": {
+                "n": 1,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 87013117769626441607,
+          "d": 73786976294838206464
+        },
+        "high": {
+          "n": 174026235539252883215,
+          "d": 147573952589676412928
+        }
+      },
+      "squared_source": {
+        "n": 89,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        3,
+        0
+      ],
+      "squared": {
+        "n": 169,
+        "d": 64
+      },
+      "dot": {
+        "n": 39,
+        "d": 64
+      },
+      "legal": false,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 13,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 13,
+          "d": 8
+        },
+        "high": {
+          "n": 13,
+          "d": 8
+        }
+      },
+      "squared_source": {
+        "n": 169,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        3,
+        1
+      ],
+      "squared": {
+        "n": 233,
+        "d": 64
+      },
+      "dot": {
+        "n": 39,
+        "d": 64
+      },
+      "legal": false,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 233,
+              "c": {
+                "n": 1,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 281577327731794951039,
+          "d": 147573952589676412928
+        },
+        "high": {
+          "n": 2199822872904648055,
+          "d": 1152921504606846976
+        }
+      },
+      "squared_source": {
+        "n": 233,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        4,
+        0
+      ],
+      "squared": {
+        "n": 441,
+        "d": 64
+      },
+      "dot": {
+        "n": 63,
+        "d": 64
+      },
+      "legal": false,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 21,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 21,
+          "d": 8
+        },
+        "high": {
+          "n": 21,
+          "d": 8
+        }
+      },
+      "squared_source": {
+        "n": 441,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        4,
+        1
+      ],
+      "squared": {
+        "n": 505,
+        "d": 64
+      },
+      "dot": {
+        "n": 63,
+        "d": 64
+      },
+      "legal": false,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 505,
+              "c": {
+                "n": 1,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 207269507703782808527,
+          "d": 73786976294838206464
+        },
+        "high": {
+          "n": 414539015407565617055,
+          "d": 147573952589676412928
+        }
+      },
+      "squared_source": {
+        "n": 505,
+        "d": 64
+      }
+    }
+  ],
+  "q": [
+    1,
+    0
+  ],
+  "gamma": [
+    [
+      {
+        "n": 11,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ]
+  ],
+  "gamma_length": {
+    "exact": {
+      "terms": [
+        {
+          "r": 1,
+          "c": {
+            "n": 3,
+            "d": 8
+          }
+        }
+      ]
+    },
+    "interval_bits": 64,
+    "low": {
+      "n": 3,
+      "d": 8
+    },
+    "high": {
+      "n": 3,
+      "d": 8
+    }
+  },
+  "gamma_events": [],
+  "h_entry": [
+    {
+      "n": -3,
+      "d": 8
+    },
+    {
+      "n": 0,
+      "d": 1
+    }
+  ],
+  "heading": {
+    "status": "KNOWN",
+    "vector": [
+      "-3/8",
+      0
+    ],
+    "source": {
+      "kind": "synthetic_direction_fixture",
+      "scope": "technical_world_executed_prefix",
+      "snapshot_id": "W1_P2_plan_2",
+      "snapshot_sha256": "7b63d83312d35407a96c580b34e8d94e589631a1ee96b4386e7ceecd1a166e75",
+      "meaning": "paid_predicted_gamma_direction",
+      "executed_heading": [
+        {
+          "n": 3,
+          "d": 8
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "execution_evidence": {
+        "action_index": 4,
+        "a": [
+          {
+            "n": 1,
+            "d": 1
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "b": [
+          {
+            "n": 11,
+            "d": 8
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "vector": [
+          {
+            "n": 3,
+            "d": 8
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ]
+      },
+      "execution_log_tail": "ca99fbb1e6cf87f8f93aa4d5e7495654b448e95c1580ff1d1063a8d8366af10c"
+    }
+  },
+  "predicted_entry": {
+    "S": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": [
+      {
+        "n": -3,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "D": [
+      [
+        2,
+        0
+      ]
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 393,
+              "d": 4
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 393,
+        "d": 4
+      },
+      "high": {
+        "n": 393,
+        "d": 4
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 7,
+              "d": 4
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 7,
+        "d": 4
+      },
+      "high": {
+        "n": 7,
+        "d": 4
+      }
+    }
+  },
+  "core_request": {
+    "name": "synthetic_stop_W1_P2_plan_2",
+    "free": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "published_targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "covered": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "deferred_targets": [
+      [
+        2,
+        0
+      ]
+    ],
+    "current": [
+      1,
+      0
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "old_route": [],
+    "initial_targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "distance_budget": 98,
+    "predator": [
+      -3,
+      -3
+    ],
+    "previous": null,
+    "incoming_heading": {
+      "status": "KNOWN",
+      "vector": [
+        "-3/8",
+        0
+      ],
+      "source": {
+        "kind": "synthetic_direction_fixture",
+        "scope": "technical_world_executed_prefix",
+        "snapshot_id": "W1_P2_plan_2",
+        "snapshot_sha256": "7b63d83312d35407a96c580b34e8d94e589631a1ee96b4386e7ceecd1a166e75",
+        "meaning": "paid_predicted_gamma_direction",
+        "executed_heading": [
+          {
+            "n": 3,
+            "d": 8
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "execution_evidence": {
+          "action_index": 4,
+          "a": [
+            {
+              "n": 1,
+              "d": 1
+            },
+            {
+              "n": 0,
+              "d": 1
+            }
+          ],
+          "b": [
+            {
+              "n": 11,
+              "d": 8
+            },
+            {
+              "n": 0,
+              "d": 1
+            }
+          ],
+          "vector": [
+            {
+              "n": 3,
+              "d": 8
+            },
+            {
+              "n": 0,
+              "d": 1
+            }
+          ]
+        },
+        "execution_log_tail": "ca99fbb1e6cf87f8f93aa4d5e7495654b448e95c1580ff1d1063a8d8366af10c"
+      }
+    }
+  },
+  "core_request_utf8": "{\"name\":\"synthetic_stop_W1_P2_plan_2\",\"free\":[[0,0],[0,1],[1,0],[1,1],[2,1],[3,0],[3,1],[4,0],[4,1]],\"published_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"targets\":[[0,0],[0,1],[1,0],[1,1],[2,1],[3,0],[3,1],[4,0],[4,1]],\"covered\":[[0,0],[1,0]],\"deferred_targets\":[[2,0]],\"current\":[1,0],\"base\":[0,0],\"old_route\":[],\"initial_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"distance_budget\":98,\"predator\":[-3,-3],\"previous\":null,\"incoming_heading\":{\"status\":\"KNOWN\",\"vector\":[\"-3/8\",0],\"source\":{\"kind\":\"synthetic_direction_fixture\",\"scope\":\"technical_world_executed_prefix\",\"snapshot_id\":\"W1_P2_plan_2\",\"snapshot_sha256\":\"7b63d83312d35407a96c580b34e8d94e589631a1ee96b4386e7ceecd1a166e75\",\"meaning\":\"paid_predicted_gamma_direction\",\"executed_heading\":[{\"n\":3,\"d\":8},{\"n\":0,\"d\":1}],\"execution_evidence\":{\"action_index\":4,\"a\":[{\"n\":1,\"d\":1},{\"n\":0,\"d\":1}],\"b\":[{\"n\":11,\"d\":8},{\"n\":0,\"d\":1}],\"vector\":[{\"n\":3,\"d\":8},{\"n\":0,\"d\":1}]},\"execution_log_tail\":\"ca99fbb1e6cf87f8f93aa4d5e7495654b448e95c1580ff1d1063a8d8366af10c\"}}}",
+  "core_request_sha256": "08e03078721d201e5ca43404504bdac70559fa7f01b6a7ca17c3637d1600cdcc",
+  "core_budget_passed": 20.0,
+  "native_entry": {
+    "raw": {
+      "route": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "common_fallback",
+      "status": "finished",
+      "seconds": 0.07636129995808005,
+      "active_stage": "shuffle_1_expand",
+      "events": [
+        {
+          "stage": "fallback",
+          "start": 0.000464899989310652,
+          "end": 0.001966600015293807,
+          "status": "completed"
+        },
+        {
+          "stage": "H_generate",
+          "start": 0.0019748000195249915,
+          "end": 0.0020997999818064272,
+          "status": "completed"
+        },
+        {
+          "stage": "H_raw",
+          "start": 0.0021182000054977834,
+          "end": 0.0022671999759040773,
+          "status": "completed"
+        },
+        {
+          "stage": "H_nearest",
+          "start": 0.0022709000040777028,
+          "end": 0.00614130002213642,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_raw",
+          "start": 0.006145499995909631,
+          "end": 0.007807300018612295,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_passes",
+          "start": 0.007816200028173625,
+          "end": 0.010040300025139004,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_scan_opt",
+          "start": 0.007811199990101159,
+          "end": 0.010042599984444678,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_expand",
+          "start": 0.010046000010333955,
+          "end": 0.010191800014581531,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_passes",
+          "start": 0.010199900018051267,
+          "end": 0.01482510002097115,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_NN_opt",
+          "start": 0.010195599985308945,
+          "end": 0.014828799990937114,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_expand",
+          "start": 0.014833200024440885,
+          "end": 0.015802300011273474,
+          "status": "completed"
+        },
+        {
+          "stage": "V_generate",
+          "start": 0.015806499985046685,
+          "end": 0.015855500008910894,
+          "status": "completed"
+        },
+        {
+          "stage": "V_raw",
+          "start": 0.01585760002490133,
+          "end": 0.01628869998967275,
+          "status": "completed"
+        },
+        {
+          "stage": "V_nearest",
+          "start": 0.01629050000337884,
+          "end": 0.017040700011420995,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_raw",
+          "start": 0.01704449998214841,
+          "end": 0.017226999974809587,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_passes",
+          "start": 0.017237599997315556,
+          "end": 0.021715299983043224,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_scan_opt",
+          "start": 0.017231800011359155,
+          "end": 0.021718000003602356,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_expand",
+          "start": 0.021722399978898466,
+          "end": 0.0223083000164479,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_passes",
+          "start": 0.022325699974317104,
+          "end": 0.025999800011049956,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_NN_opt",
+          "start": 0.022319599986076355,
+          "end": 0.026003199978731573,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_expand",
+          "start": 0.026007300009950995,
+          "end": 0.026113700005225837,
+          "status": "completed"
+        },
+        {
+          "stage": "core_finished",
+          "end": 0.026116900029592216,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_deep_passes",
+          "start": 0.026126999990083277,
+          "end": 0.028080500022042543,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_scan_deep",
+          "start": 0.02612090000184253,
+          "end": 0.028083099983632565,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_deep_expand",
+          "start": 0.02808680001180619,
+          "end": 0.02817710000090301,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_deep_passes",
+          "start": 0.028185700008179992,
+          "end": 0.030730600003153086,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_NN_deep",
+          "start": 0.02818040002603084,
+          "end": 0.03073430003132671,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_deep_expand",
+          "start": 0.03076110000256449,
+          "end": 0.031059400003869087,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_deep_passes",
+          "start": 0.03106800001114607,
+          "end": 0.032858100021258,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_scan_deep",
+          "start": 0.03106349997688085,
+          "end": 0.032861199986655265,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_deep_expand",
+          "start": 0.03286480001406744,
+          "end": 0.03293320001102984,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_deep_passes",
+          "start": 0.03293909999774769,
+          "end": 0.034530900011304766,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_NN_deep",
+          "start": 0.032935400027781725,
+          "end": 0.034533999976702034,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_deep_expand",
+          "start": 0.03453890001401305,
+          "end": 0.03463569999439642,
+          "status": "completed"
+        },
+        {
+          "stage": "deep_finished",
+          "end": 0.034638500015717,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_raw",
+          "start": 0.0348620000295341,
+          "end": 0.035794700030237436,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_passes",
+          "start": 0.03581000003032386,
+          "end": 0.03984899999340996,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "reverse_H_opt",
+          "start": 0.035803499980829656,
+          "end": 0.03985250002006069,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_expand",
+          "start": 0.03985770000144839,
+          "end": 0.03995920001761988,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_raw",
+          "start": 0.03996339999139309,
+          "end": 0.04002820001915097,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_passes",
+          "start": 0.04003410000586882,
+          "end": 0.041703600028995425,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "reverse_V_opt",
+          "start": 0.04003009997541085,
+          "end": 0.04170679999515414,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_expand",
+          "start": 0.04171160003170371,
+          "end": 0.04180930001894012,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_raw",
+          "start": 0.04181269998662174,
+          "end": 0.04297369997948408,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_passes",
+          "start": 0.042983499995898455,
+          "end": 0.04990669997641817,
+          "passes": 4,
+          "swaps": 3,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "perturb_H_opt",
+          "start": 0.0429782000137493,
+          "end": 0.0499091999954544,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_expand",
+          "start": 0.049913000024389476,
+          "end": 0.050053799990564585,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_raw",
+          "start": 0.05005770002026111,
+          "end": 0.051198999979533255,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_passes",
+          "start": 0.051206299976911396,
+          "end": 0.05835489998571575,
+          "passes": 4,
+          "swaps": 3,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "perturb_V_opt",
+          "start": 0.05120230000466108,
+          "end": 0.05835760000627488,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_expand",
+          "start": 0.058361199975479394,
+          "end": 0.05864639999344945,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_raw",
+          "start": 0.058650000020861626,
+          "end": 0.05932910001138225,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_passes",
+          "start": 0.059339000028558075,
+          "end": 0.0677191999857314,
+          "passes": 4,
+          "swaps": 3,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "shuffle_0_opt",
+          "start": 0.05933379998896271,
+          "end": 0.06772260001162067,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_expand",
+          "start": 0.06772609998006374,
+          "end": 0.06781640002736822,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_raw",
+          "start": 0.06781909998971969,
+          "end": 0.0682288000243716,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_passes",
+          "start": 0.06823789997724816,
+          "end": 0.07506040000589564,
+          "passes": 4,
+          "swaps": 3,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "shuffle_1_opt",
+          "start": 0.0682327999966219,
+          "end": 0.0750644999789074,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_expand",
+          "start": 0.07509050000226125,
+          "end": 0.07576929999049753,
+          "status": "completed"
+        }
+      ],
+      "improvements": [
+        {
+          "seconds": 0.001962199981790036,
+          "steps": 11,
+          "source": "common_fallback"
+        }
+      ],
+      "core_finished": true,
+      "method": "P2_MULTI",
+      "budget": 19.999786100001074,
+      "seed": 20261022,
+      "fallback_selected": true,
+      "overrun_gt_10ms": false
+    },
+    "entry_seconds": 0.07679050002479926,
+    "budget": 20.0,
+    "method": "P2_MULTI",
+    "seed": 20261022,
+    "phase_seconds": {
+      "encoding": 0.00020619999850168824
+    }
+  },
+  "native_main_audit": {
+    "points": [
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 11,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 11,
+        "d": 1
+      },
+      "high": {
+        "n": 11,
+        "d": 1
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "region_traverse",
+        "cell": [
+          1,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 1,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          2,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 19,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 29,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 3,
+                "d": 1
+              },
+              {
+                "n": 1,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 39,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 4,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          0,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 1,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": -1,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "D": [
+        [
+          2,
+          0
+        ]
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 349,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 349,
+          "d": 4
+        },
+        "high": {
+          "n": 349,
+          "d": 4
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 51,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 51,
+          "d": 4
+        },
+        "high": {
+          "n": 51,
+          "d": 4
+        }
+      }
+    },
+    "valid": true
+  },
+  "core_output_used": true,
+  "native_source": "common_fallback",
+  "native_fallback_selected": true,
+  "native_raw_edges": 11,
+  "post_request_utf8": "{\"id\":\"W1_P2_plan_2_P2\",\"input\":{\"name\":\"synthetic_stop_W1_P2_plan_2\",\"free\":[[0,0],[0,1],[1,0],[1,1],[2,1],[3,0],[3,1],[4,0],[4,1]],\"published_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"targets\":[[0,0],[0,1],[1,0],[1,1],[2,1],[3,0],[3,1],[4,0],[4,1]],\"covered\":[[0,0],[1,0]],\"deferred_targets\":[[2,0]],\"current\":[1,0],\"base\":[0,0],\"old_route\":[],\"initial_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"distance_budget\":98,\"predator\":[-3,-3],\"previous\":null,\"incoming_heading\":{\"status\":\"KNOWN\",\"vector\":[\"-3/8\",0],\"source\":{\"kind\":\"synthetic_direction_fixture\",\"scope\":\"technical_world_executed_prefix\",\"snapshot_id\":\"W1_P2_plan_2\",\"snapshot_sha256\":\"7b63d83312d35407a96c580b34e8d94e589631a1ee96b4386e7ceecd1a166e75\",\"meaning\":\"paid_predicted_gamma_direction\",\"executed_heading\":[{\"n\":3,\"d\":8},{\"n\":0,\"d\":1}],\"execution_evidence\":{\"action_index\":4,\"a\":[{\"n\":1,\"d\":1},{\"n\":0,\"d\":1}],\"b\":[{\"n\":11,\"d\":8},{\"n\":0,\"d\":1}],\"vector\":[{\"n\":3,\"d\":8},{\"n\":0,\"d\":1}]},\"execution_log_tail\":\"ca99fbb1e6cf87f8f93aa4d5e7495654b448e95c1580ff1d1063a8d8366af10c\"}}},\"raw\":{\"route\":[[1,0],[1,1],[2,1],[3,1],[3,0],[4,0],[4,1],[3,1],[2,1],[1,1],[0,1],[0,0]],\"source\":\"common_fallback\",\"status\":\"finished\",\"seconds\":0.07636129995808005,\"active_stage\":\"shuffle_1_expand\",\"events\":[{\"stage\":\"fallback\",\"start\":0.000464899989310652,\"end\":0.001966600015293807,\"status\":\"completed\"},{\"stage\":\"H_generate\",\"start\":0.0019748000195249915,\"end\":0.0020997999818064272,\"status\":\"completed\"},{\"stage\":\"H_raw\",\"start\":0.0021182000054977834,\"end\":0.0022671999759040773,\"status\":\"completed\"},{\"stage\":\"H_nearest\",\"start\":0.0022709000040777028,\"end\":0.00614130002213642,\"status\":\"completed\"},{\"stage\":\"H_NN_raw\",\"start\":0.006145499995909631,\"end\":0.007807300018612295,\"status\":\"completed\"},{\"stage\":\"H_scan_passes\",\"start\":0.007816200028173625,\"end\":0.010040300025139004,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_scan_opt\",\"start\":0.007811199990101159,\"end\":0.010042599984444678,\"status\":\"completed\"},{\"stage\":\"H_scan_expand\",\"start\":0.010046000010333955,\"end\":0.010191800014581531,\"status\":\"completed\"},{\"stage\":\"H_NN_passes\",\"start\":0.010199900018051267,\"end\":0.01482510002097115,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_NN_opt\",\"start\":0.010195599985308945,\"end\":0.014828799990937114,\"status\":\"completed\"},{\"stage\":\"H_NN_expand\",\"start\":0.014833200024440885,\"end\":0.015802300011273474,\"status\":\"completed\"},{\"stage\":\"V_generate\",\"start\":0.015806499985046685,\"end\":0.015855500008910894,\"status\":\"completed\"},{\"stage\":\"V_raw\",\"start\":0.01585760002490133,\"end\":0.01628869998967275,\"status\":\"completed\"},{\"stage\":\"V_nearest\",\"start\":0.01629050000337884,\"end\":0.017040700011420995,\"status\":\"completed\"},{\"stage\":\"V_NN_raw\",\"start\":0.01704449998214841,\"end\":0.017226999974809587,\"status\":\"completed\"},{\"stage\":\"V_scan_passes\",\"start\":0.017237599997315556,\"end\":0.021715299983043224,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_scan_opt\",\"start\":0.017231800011359155,\"end\":0.021718000003602356,\"status\":\"completed\"},{\"stage\":\"V_scan_expand\",\"start\":0.021722399978898466,\"end\":0.0223083000164479,\"status\":\"completed\"},{\"stage\":\"V_NN_passes\",\"start\":0.022325699974317104,\"end\":0.025999800011049956,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_NN_opt\",\"start\":0.022319599986076355,\"end\":0.026003199978731573,\"status\":\"completed\"},{\"stage\":\"V_NN_expand\",\"start\":0.026007300009950995,\"end\":0.026113700005225837,\"status\":\"completed\"},{\"stage\":\"core_finished\",\"end\":0.026116900029592216,\"status\":\"completed\"},{\"stage\":\"H_scan_deep_passes\",\"start\":0.026126999990083277,\"end\":0.028080500022042543,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_scan_deep\",\"start\":0.02612090000184253,\"end\":0.028083099983632565,\"status\":\"completed\"},{\"stage\":\"H_scan_deep_expand\",\"start\":0.02808680001180619,\"end\":0.02817710000090301,\"status\":\"completed\"},{\"stage\":\"H_NN_deep_passes\",\"start\":0.028185700008179992,\"end\":0.030730600003153086,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_NN_deep\",\"start\":0.02818040002603084,\"end\":0.03073430003132671,\"status\":\"completed\"},{\"stage\":\"H_NN_deep_expand\",\"start\":0.03076110000256449,\"end\":0.031059400003869087,\"status\":\"completed\"},{\"stage\":\"V_scan_deep_passes\",\"start\":0.03106800001114607,\"end\":0.032858100021258,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_scan_deep\",\"start\":0.03106349997688085,\"end\":0.032861199986655265,\"status\":\"completed\"},{\"stage\":\"V_scan_deep_expand\",\"start\":0.03286480001406744,\"end\":0.03293320001102984,\"status\":\"completed\"},{\"stage\":\"V_NN_deep_passes\",\"start\":0.03293909999774769,\"end\":0.034530900011304766,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_NN_deep\",\"start\":0.032935400027781725,\"end\":0.034533999976702034,\"status\":\"completed\"},{\"stage\":\"V_NN_deep_expand\",\"start\":0.03453890001401305,\"end\":0.03463569999439642,\"status\":\"completed\"},{\"stage\":\"deep_finished\",\"end\":0.034638500015717,\"status\":\"completed\"},{\"stage\":\"reverse_H_raw\",\"start\":0.0348620000295341,\"end\":0.035794700030237436,\"status\":\"completed\"},{\"stage\":\"reverse_H_passes\",\"start\":0.03581000003032386,\"end\":0.03984899999340996,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"reverse_H_opt\",\"start\":0.035803499980829656,\"end\":0.03985250002006069,\"status\":\"completed\"},{\"stage\":\"reverse_H_expand\",\"start\":0.03985770000144839,\"end\":0.03995920001761988,\"status\":\"completed\"},{\"stage\":\"reverse_V_raw\",\"start\":0.03996339999139309,\"end\":0.04002820001915097,\"status\":\"completed\"},{\"stage\":\"reverse_V_passes\",\"start\":0.04003410000586882,\"end\":0.041703600028995425,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"reverse_V_opt\",\"start\":0.04003009997541085,\"end\":0.04170679999515414,\"status\":\"completed\"},{\"stage\":\"reverse_V_expand\",\"start\":0.04171160003170371,\"end\":0.04180930001894012,\"status\":\"completed\"},{\"stage\":\"perturb_H_raw\",\"start\":0.04181269998662174,\"end\":0.04297369997948408,\"status\":\"completed\"},{\"stage\":\"perturb_H_passes\",\"start\":0.042983499995898455,\"end\":0.04990669997641817,\"passes\":4,\"swaps\":3,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"perturb_H_opt\",\"start\":0.0429782000137493,\"end\":0.0499091999954544,\"status\":\"completed\"},{\"stage\":\"perturb_H_expand\",\"start\":0.049913000024389476,\"end\":0.050053799990564585,\"status\":\"completed\"},{\"stage\":\"perturb_V_raw\",\"start\":0.05005770002026111,\"end\":0.051198999979533255,\"status\":\"completed\"},{\"stage\":\"perturb_V_passes\",\"start\":0.051206299976911396,\"end\":0.05835489998571575,\"passes\":4,\"swaps\":3,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"perturb_V_opt\",\"start\":0.05120230000466108,\"end\":0.05835760000627488,\"status\":\"completed\"},{\"stage\":\"perturb_V_expand\",\"start\":0.058361199975479394,\"end\":0.05864639999344945,\"status\":\"completed\"},{\"stage\":\"shuffle_0_raw\",\"start\":0.058650000020861626,\"end\":0.05932910001138225,\"status\":\"completed\"},{\"stage\":\"shuffle_0_passes\",\"start\":0.059339000028558075,\"end\":0.0677191999857314,\"passes\":4,\"swaps\":3,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"shuffle_0_opt\",\"start\":0.05933379998896271,\"end\":0.06772260001162067,\"status\":\"completed\"},{\"stage\":\"shuffle_0_expand\",\"start\":0.06772609998006374,\"end\":0.06781640002736822,\"status\":\"completed\"},{\"stage\":\"shuffle_1_raw\",\"start\":0.06781909998971969,\"end\":0.0682288000243716,\"status\":\"completed\"},{\"stage\":\"shuffle_1_passes\",\"start\":0.06823789997724816,\"end\":0.07506040000589564,\"passes\":4,\"swaps\":3,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"shuffle_1_opt\",\"start\":0.0682327999966219,\"end\":0.0750644999789074,\"status\":\"completed\"},{\"stage\":\"shuffle_1_expand\",\"start\":0.07509050000226125,\"end\":0.07576929999049753,\"status\":\"completed\"}],\"improvements\":[{\"seconds\":0.001962199981790036,\"steps\":11,\"source\":\"common_fallback\"}],\"core_finished\":true,\"method\":\"P2_MULTI\",\"budget\":19.999786100001074,\"seed\":20261022,\"fallback_selected\":true,\"overrun_gt_10ms\":false}}",
+  "post_candidate_time_remaining": 27.877049700007774,
+  "post_total_time_remaining": 29.877049700007774,
+  "post_response_utf8": "{\"id\":\"W1_P2_plan_2_P2\",\"L4\":11,\"Lshortcut_interval\":[\"11\",\"11\"],\"Lshortcut_display\":11.0,\"saving_display\":0.0,\"saving_ratio_display\":0.0,\"distance_budget\":98,\"resource_proof\":\"source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E\",\"vertices\":[[1,0],[1,1],[2,1],[3,1],[3,0],[4,0],[4,1],[0,1],[0,0]],\"edges\":[{\"left\":0,\"right\":1,\"a\":[1,0],\"b\":[1,1],\"part\":0,\"kind\":\"start_to_first\"},{\"left\":1,\"right\":2,\"a\":[1,1],\"b\":[2,1],\"part\":1,\"kind\":\"between_first_services\"},{\"left\":2,\"right\":3,\"a\":[2,1],\"b\":[3,1],\"part\":2,\"kind\":\"between_first_services\"},{\"left\":3,\"right\":4,\"a\":[3,1],\"b\":[3,0],\"part\":3,\"kind\":\"between_first_services\"},{\"left\":4,\"right\":5,\"a\":[3,0],\"b\":[4,0],\"part\":4,\"kind\":\"between_first_services\"},{\"left\":5,\"right\":6,\"a\":[4,0],\"b\":[4,1],\"part\":5,\"kind\":\"between_first_services\"},{\"left\":6,\"right\":10,\"a\":[4,1],\"b\":[0,1],\"part\":6,\"kind\":\"between_first_services\"},{\"left\":10,\"right\":11,\"a\":[0,1],\"b\":[0,0],\"part\":7,\"kind\":\"last_to_base\"}],\"parts\":[{\"left\":0,\"right\":1,\"kind\":\"start_to_first\",\"edge_start\":0,\"edge_end\":1,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":1,\"right\":2,\"kind\":\"between_first_services\",\"edge_start\":1,\"edge_end\":2,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":2,\"right\":3,\"kind\":\"between_first_services\",\"edge_start\":2,\"edge_end\":3,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":3,\"right\":4,\"kind\":\"between_first_services\",\"edge_start\":3,\"edge_end\":4,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":4,\"right\":5,\"kind\":\"between_first_services\",\"edge_start\":4,\"edge_end\":5,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":5,\"right\":6,\"kind\":\"between_first_services\",\"edge_start\":5,\"edge_end\":6,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":6,\"right\":10,\"kind\":\"between_first_services\",\"edge_start\":6,\"edge_end\":7,\"L4\":4,\"new_interval\":[\"4\",\"4\"]},{\"left\":10,\"right\":11,\"kind\":\"last_to_base\",\"edge_start\":7,\"edge_end\":8,\"L4\":1,\"new_interval\":[\"1\",\"1\"]}],\"locked_nominal_anchors\":[{\"point\":[1,1],\"index\":1},{\"point\":[2,1],\"index\":2},{\"point\":[3,1],\"index\":3},{\"point\":[3,0],\"index\":4},{\"point\":[4,0],\"index\":5},{\"point\":[4,1],\"index\":6},{\"point\":[0,1],\"index\":10}],\"credit_witnesses\":[{\"point\":[1,1],\"edge\":0,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":1,\"d\":1},{\"n\":9,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[2,1],\"edge\":1,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":19,\"d\":10},{\"n\":1,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[3,1],\"edge\":2,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":29,\"d\":10},{\"n\":1,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[3,0],\"edge\":3,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":3,\"d\":1},{\"n\":1,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[4,0],\"edge\":4,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":39,\"d\":10},{\"n\":0,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[4,1],\"edge\":5,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":4,\"d\":1},{\"n\":9,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[0,1],\"edge\":6,\"evidence\":{\"interval\":{\"lower\":{\"n\":19,\"d\":20},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":39,\"d\":40},\"point\":[{\"n\":1,\"d\":10},{\"n\":1,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}}],\"witness_order_differs_from_locked_anchors\":false,\"trace_cross_original_moves\":{\"start_to_first x unavailable\":1,\"between_first_services x unavailable\":9,\"last_to_base x unavailable\":1},\"counts\":{\"candidate\":8,\"source_validation\":11,\"output_validation\":8,\"service_intersections\":56,\"post_inside_tests\":7,\"post_service_intersections\":56},\"query_log\":[{\"i\":0,\"j\":1,\"legal\":true,\"part\":0},{\"i\":1,\"j\":2,\"legal\":true,\"part\":1},{\"i\":2,\"j\":3,\"legal\":true,\"part\":2},{\"i\":3,\"j\":4,\"legal\":true,\"part\":3},{\"i\":4,\"j\":5,\"legal\":true,\"part\":4},{\"i\":5,\"j\":6,\"legal\":true,\"part\":5},{\"i\":6,\"j\":10,\"legal\":true,\"part\":6},{\"i\":10,\"j\":11,\"legal\":true,\"part\":7}],\"fallback\":null,\"turns_original\":{\"nonzero_direction_changes\":6,\"total_turn_radians\":9.42477796076938},\"turns_new\":{\"nonzero_direction_changes\":6,\"total_turn_radians\":9.42477796076938},\"timing\":{\"parse_preprocess_source_validation\":0.004705399973317981,\"candidate\":0.0026391000137664378,\"main_validation_metrics\":0.013930299959611148}}",
+  "post_envelope": {
+    "entry_seconds": 0.021425799990538508,
+    "late": false,
+    "counts": {
+      "candidate": 8,
+      "source_validation": 11,
+      "output_validation": 8,
+      "service_intersections": 56,
+      "post_inside_tests": 7,
+      "post_service_intersections": 56
+    },
+    "fallback": null
+  },
+  "post": {
+    "id": "W1_P2_plan_2_P2",
+    "L4": 11,
+    "Lshortcut_interval": [
+      "11",
+      "11"
+    ],
+    "Lshortcut_display": 11.0,
+    "saving_display": 0.0,
+    "saving_ratio_display": 0.0,
+    "distance_budget": 98,
+    "resource_proof": "source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E",
+    "vertices": [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "edges": [
+      {
+        "left": 0,
+        "right": 1,
+        "a": [
+          1,
+          0
+        ],
+        "b": [
+          1,
+          1
+        ],
+        "part": 0,
+        "kind": "start_to_first"
+      },
+      {
+        "left": 1,
+        "right": 2,
+        "a": [
+          1,
+          1
+        ],
+        "b": [
+          2,
+          1
+        ],
+        "part": 1,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 2,
+        "right": 3,
+        "a": [
+          2,
+          1
+        ],
+        "b": [
+          3,
+          1
+        ],
+        "part": 2,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 3,
+        "right": 4,
+        "a": [
+          3,
+          1
+        ],
+        "b": [
+          3,
+          0
+        ],
+        "part": 3,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 4,
+        "right": 5,
+        "a": [
+          3,
+          0
+        ],
+        "b": [
+          4,
+          0
+        ],
+        "part": 4,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 5,
+        "right": 6,
+        "a": [
+          4,
+          0
+        ],
+        "b": [
+          4,
+          1
+        ],
+        "part": 5,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 6,
+        "right": 10,
+        "a": [
+          4,
+          1
+        ],
+        "b": [
+          0,
+          1
+        ],
+        "part": 6,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 10,
+        "right": 11,
+        "a": [
+          0,
+          1
+        ],
+        "b": [
+          0,
+          0
+        ],
+        "part": 7,
+        "kind": "last_to_base"
+      }
+    ],
+    "parts": [
+      {
+        "left": 0,
+        "right": 1,
+        "kind": "start_to_first",
+        "edge_start": 0,
+        "edge_end": 1,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 1,
+        "right": 2,
+        "kind": "between_first_services",
+        "edge_start": 1,
+        "edge_end": 2,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 2,
+        "right": 3,
+        "kind": "between_first_services",
+        "edge_start": 2,
+        "edge_end": 3,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 3,
+        "right": 4,
+        "kind": "between_first_services",
+        "edge_start": 3,
+        "edge_end": 4,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 4,
+        "right": 5,
+        "kind": "between_first_services",
+        "edge_start": 4,
+        "edge_end": 5,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 5,
+        "right": 6,
+        "kind": "between_first_services",
+        "edge_start": 5,
+        "edge_end": 6,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 6,
+        "right": 10,
+        "kind": "between_first_services",
+        "edge_start": 6,
+        "edge_end": 7,
+        "L4": 4,
+        "new_interval": [
+          "4",
+          "4"
+        ]
+      },
+      {
+        "left": 10,
+        "right": 11,
+        "kind": "last_to_base",
+        "edge_start": 7,
+        "edge_end": 8,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      }
+    ],
+    "locked_nominal_anchors": [
+      {
+        "point": [
+          1,
+          1
+        ],
+        "index": 1
+      },
+      {
+        "point": [
+          2,
+          1
+        ],
+        "index": 2
+      },
+      {
+        "point": [
+          3,
+          1
+        ],
+        "index": 3
+      },
+      {
+        "point": [
+          3,
+          0
+        ],
+        "index": 4
+      },
+      {
+        "point": [
+          4,
+          0
+        ],
+        "index": 5
+      },
+      {
+        "point": [
+          4,
+          1
+        ],
+        "index": 6
+      },
+      {
+        "point": [
+          0,
+          1
+        ],
+        "index": 10
+      }
+    ],
+    "credit_witnesses": [
+      {
+        "point": [
+          1,
+          1
+        ],
+        "edge": 0,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 1,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          2,
+          1
+        ],
+        "edge": 1,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 19,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          3,
+          1
+        ],
+        "edge": 2,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 29,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          3,
+          0
+        ],
+        "edge": 3,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 3,
+                "d": 1
+              },
+              {
+                "n": 1,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          4,
+          0
+        ],
+        "edge": 4,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 39,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          4,
+          1
+        ],
+        "edge": 5,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 4,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          0,
+          1
+        ],
+        "edge": 6,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 19,
+              "d": 20
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 39,
+              "d": 40
+            },
+            "point": [
+              {
+                "n": 1,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      }
+    ],
+    "witness_order_differs_from_locked_anchors": false,
+    "trace_cross_original_moves": {
+      "start_to_first x unavailable": 1,
+      "between_first_services x unavailable": 9,
+      "last_to_base x unavailable": 1
+    },
+    "counts": {
+      "candidate": 8,
+      "source_validation": 11,
+      "output_validation": 8,
+      "service_intersections": 56,
+      "post_inside_tests": 7,
+      "post_service_intersections": 56
+    },
+    "query_log": [
+      {
+        "i": 0,
+        "j": 1,
+        "legal": true,
+        "part": 0
+      },
+      {
+        "i": 1,
+        "j": 2,
+        "legal": true,
+        "part": 1
+      },
+      {
+        "i": 2,
+        "j": 3,
+        "legal": true,
+        "part": 2
+      },
+      {
+        "i": 3,
+        "j": 4,
+        "legal": true,
+        "part": 3
+      },
+      {
+        "i": 4,
+        "j": 5,
+        "legal": true,
+        "part": 4
+      },
+      {
+        "i": 5,
+        "j": 6,
+        "legal": true,
+        "part": 5
+      },
+      {
+        "i": 6,
+        "j": 10,
+        "legal": true,
+        "part": 6
+      },
+      {
+        "i": 10,
+        "j": 11,
+        "legal": true,
+        "part": 7
+      }
+    ],
+    "fallback": null,
+    "turns_original": {
+      "nonzero_direction_changes": 6,
+      "total_turn_radians": 9.42477796076938
+    },
+    "turns_new": {
+      "nonzero_direction_changes": 6,
+      "total_turn_radians": 9.42477796076938
+    },
+    "timing": {
+      "parse_preprocess_source_validation": 0.004705399973317981,
+      "candidate": 0.0026391000137664378,
+      "main_validation_metrics": 0.013930299959611148
+    }
+  },
+  "post_main_audit": {
+    "points": [
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 11,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 11,
+        "d": 1
+      },
+      "high": {
+        "n": 11,
+        "d": 1
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 16,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "region_traverse",
+        "cell": [
+          1,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 1,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          2,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 19,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 29,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 3,
+                "d": 1
+              },
+              {
+                "n": 1,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 39,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 4,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          0,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 19,
+              "d": 20
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 39,
+              "d": 40
+            },
+            "point": [
+              {
+                "n": 1,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": -1,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "D": [
+        [
+          2,
+          0
+        ]
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 349,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 349,
+          "d": 4
+        },
+        "high": {
+          "n": 349,
+          "d": 4
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 51,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 51,
+          "d": 4
+        },
+        "high": {
+          "n": 51,
+          "d": 4
+        }
+      }
+    },
+    "valid": true
+  },
+  "full_route": [
+    [
+      {
+        "n": 11,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 2,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 3,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 3,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ]
+  ],
+  "q_locked_index": 1,
+  "full_main_audit": {
+    "points": [
+      [
+        {
+          "n": 11,
+          "d": 8
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 91,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 91,
+        "d": 8
+      },
+      "high": {
+        "n": 91,
+        "d": 8
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 9,
+        "d": 64
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 16,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "region_traverse",
+        "cell": [
+          1,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 1,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          2,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 19,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 29,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 3,
+                "d": 1
+              },
+              {
+                "n": 1,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 39,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 4,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          0,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 19,
+              "d": 20
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 39,
+              "d": 40
+            },
+            "point": [
+              {
+                "n": 1,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": -1,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "D": [
+        [
+          2,
+          0
+        ]
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 349,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 349,
+          "d": 4
+        },
+        "high": {
+          "n": 349,
+          "d": 4
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 51,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 51,
+          "d": 4
+        },
+        "high": {
+          "n": 51,
+          "d": 4
+        }
+      }
+    },
+    "valid": true
+  },
+  "main_passed": true,
+  "auditor_identity_after_main": {
+    "namespace": {
+      "modules": {
+        "center_credit_v02_20261022": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\__init__.py",
+          "sha256": "2f4cbfb21877dd7cb704069f63d6a1a027bc131fefa3995321c7824a98bb9762",
+          "object_id": 1974581378352,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\__init__.py"
+        },
+        "center_credit_v02_20261022.utils": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\utils.py",
+          "sha256": "6c4c8b7bed422fa2378597fbcaa01ad4a5dfc9b3ee88bb9cfe051e8dfadf0228",
+          "object_id": 1974586068800,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\utils.py"
+        },
+        "center_credit_v02_20261022.resume": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\resume.py",
+          "sha256": "c21c10e05a48100f2d19b0741be8c9e9866696caa43323cb916649f5af2c4ab5",
+          "object_id": 1974581548496,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\resume.py"
+        },
+        "center_credit_v02_20261022.exact": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\exact.py",
+          "sha256": "edaaad61912db8d14805cd1111b04af3a1dc4a1178eac85554ebbcf6cc7acb45",
+          "object_id": 1974586205632,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\exact.py"
+        },
+        "center_credit_v02_20261022.geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\geometry.py",
+          "sha256": "6d5b1ee4ff284a76e0ea1a748ad5ecf05f2e6099fbcae26bdc88bd91c1dc22cb",
+          "object_id": 1974586210352,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\geometry.py"
+        },
+        "center_credit_v02_20261022.service": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\service.py",
+          "sha256": "9516e463686bab7fa4a18a5bc21078efc3ad974cf5f55be2eed0d278d529e17b",
+          "object_id": 1974586210832,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\service.py"
+        },
+        "center_credit_v02_20261022.connector": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\connector.py",
+          "sha256": "ca59d5c87300a44478c803e39c2170d25160f9b00da945d8b8cfcc5888b4ed3b",
+          "object_id": 1974586207792,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\connector.py"
+        },
+        "center_credit_v02_20261022.public_contract": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\public_contract.py",
+          "sha256": "11fbfa52092a522282aa3bfe89013ab88d29dd0e433c1dce645c890b1742fc6f",
+          "object_id": 1974586211232,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\public_contract.py"
+        },
+        "center_credit_v02_20261022.pipeline": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\pipeline.py",
+          "sha256": "fdb413ec2e924ff6fb8b7bf414e59bac90e695ab78d547395285718670e71b7e",
+          "object_id": 1974586202032,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\pipeline.py"
+        },
+        "center_credit_v02_20261022.detector": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\detector.py",
+          "sha256": "6084071c2f673fd825552bba8096218c5fc001a3ef12a6302920943f64b7c236",
+          "object_id": 1974586364432,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\detector.py"
+        },
+        "center_credit_v02_20261022.executor": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\executor.py",
+          "sha256": "09fde1770bedc96f9ffc66746d783d28f7d158ee5b20dfde9bce5b4d6a956c5a",
+          "object_id": 1974586211072,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\executor.py"
+        },
+        "center_credit_v02_20261022.observe": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\observe.py",
+          "sha256": "258dc4032b09ad5e0e713b8a18c31b1e3596ca3302a627e56dea781ba9edc5ab",
+          "object_id": 1974586368432,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\observe.py"
+        },
+        "center_credit_v02_20261022.audit._common": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_common.py",
+          "sha256": "8d20ac6ab1cec2a631046c1c600f93b530f1de661ff79f66e10e9a681c9e7be3",
+          "object_id": 1974615772352,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_common.py"
+        },
+        "center_credit_v02_20261022.audit._geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_geometry.py",
+          "sha256": "5480fe9a3e613849dd5e948be5dcbd931db207b2a6c77966b58dd89dee025956",
+          "object_id": 1974615772912,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_geometry.py"
+        },
+        "center_credit_v02_20261022.audit._h1": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_h1.py",
+          "sha256": "10ada2cb9632fe1d5302b685ad0b7cfe7dac6a5efdc46e36877806ca62119c30",
+          "object_id": 1974615774032,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_h1.py"
+        },
+        "center_credit_v02_20261022.audit._detect": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_detect.py",
+          "sha256": "92ddf0d4a87c85df6329ea08e25fb85c9abb8e3b7c01d18588b32f844b5bf160",
+          "object_id": 1974615774832,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_detect.py"
+        },
+        "center_credit_v02_20261022.audit.region": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\region.py",
+          "sha256": "ddd294f9b9d7e882ee742242e9e53712a05cfb27ad2d11838f2b6754bc53a111",
+          "object_id": 1974615777552,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\region.py"
+        },
+        "center_credit_v02_20261022.audit._audit": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_audit.py",
+          "sha256": "20cbbdfd6f2d55412e8f76c02a4641f5b2bdbe33500f7c77e0e6d780cae5f294",
+          "object_id": 1974615771392,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_audit.py"
+        },
+        "center_credit_v02_20261022.audit": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\__init__.py",
+          "sha256": "1b290ec1aeec1ac22f2cfa0a82a514d3d3561088958197bdac7847b9cb926ae7",
+          "object_id": 1974615770752,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\__init__.py"
+        },
+        "center_credit_v02_20261022.audit._post_geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_geometry.py",
+          "sha256": "1a07e8659d6504e97c68691b5acca48d6f6a13c7e1e25cb53eba6e2585dfa329",
+          "object_id": 1974615783232,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_geometry.py"
+        },
+        "center_credit_v02_20261022.audit._post_saved": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_saved.py",
+          "sha256": "52769e706866edfc1ebd556d11e9fb7ce49427ac9264cf95e53bd45c93d84d18",
+          "object_id": 1974615774192,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_saved.py"
+        },
+        "center_credit_v02_20261022.audit.pure": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\pure.py",
+          "sha256": "efb0e6b20e8aa8d6660d66b37b35c3d34ad3a73932c04994b6d6eb4519edf83e",
+          "object_id": 1974615784752,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\pure.py"
+        },
+        "center_credit_v02_20261022.post": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\__init__.py",
+          "sha256": "6d57c09d0b9d9dfa5fca7d5d30f0c147c9c1cca7b85583aa26b4069591dcf0f3",
+          "object_id": 1974615785312,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\__init__.py"
+        },
+        "center_credit_v02_20261022.post.geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\geometry.py",
+          "sha256": "3ddf572046673912970396a2356de1c37f096d42be5dfe553c00e550a00c6137",
+          "object_id": 1974616343952,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\geometry.py"
+        },
+        "center_credit_v02_20261022.post.engine": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\engine.py",
+          "sha256": "62c0f474cd3b4ee6532c27221fad4cf4eb151373617aa35e9893310bd9aa23fa",
+          "object_id": 1974615782672,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\engine.py"
+        },
+        "center_credit_v02_20261022.context": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\context.py",
+          "sha256": "a619c3ab17dccb230129649c24af72a4c934fec745225c893ed086dec5f9a490",
+          "object_id": 1974586360752,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\context.py"
+        },
+        "center_credit_v02_20261022.worker": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\worker.py",
+          "sha256": "46b884893b4d116f6860f730b38267756c1a1820ef64fdd2ca3b055dfb7c64be",
+          "object_id": 1974586068960,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\worker.py"
+        }
+      },
+      "primary_service_function": {
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\service.py",
+        "id": 1974586480480
+      },
+      "independent_service_function": {
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\region.py",
+        "id": 1974615984544
+      }
+    },
+    "baseline": {
+      "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "sha256": "6d5b95890a1ca666970c72cb306ec40ffc48495c9458d69cfc2bd702fa74d20f",
+      "id": 1974616325184
+    }
+  },
+  "independent": {
+    "passed": true,
+    "counts": {
+      "independent_pipeline_audits": 1,
+      "independent_geometry": 46,
+      "independent_distance": 38,
+      "independent_forbidden_box_checks": 5,
+      "independent_saved_choice_comparisons": 4,
+      "independent_collect_here_checks": 4,
+      "independent_region_point_tests": 886,
+      "independent_service_intersections": 346,
+      "independent_region_boundary_parameters": 692,
+      "independent_route_audits": 3,
+      "independent_frozen_post_audits": 1
+    },
+    "frozen_post_receipt": {
+      "passed": true,
+      "id": "W1_P2_plan_2_P2",
+      "input_sha256": "7f762569edc763bf2e8451d942c9b385fa0234e6bdc8290cd5afe8c4a7183348",
+      "output_sha256": "2d9f3d26db4c2939815c5ce3a6e8a1ebf526f164a90b012737f7b631429a5870",
+      "counts": {
+        "geometry": 8,
+        "service_intersections": 56,
+        "independent_region_point_tests": 162,
+        "independent_service_intersections": 56,
+        "independent_region_boundary_parameters": 112
+      },
+      "seconds": 0.002771099971141666,
+      "independent_length_interval": [
+        "11",
+        "11"
+      ],
+      "geometry_method": "closed forbidden squares exact slab intersection; bounding-box exterior forbidden",
+      "service_method": "independent strict-region boundary partition and interior witness per task"
+    },
+    "seconds": 0.02021039999090135,
+    "scope": "optimistic_public_map_only_not_unexecuted_truth_safety"
+  },
+  "auditor_identity_after_independent": {
+    "namespace": {
+      "modules": {
+        "center_credit_v02_20261022": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\__init__.py",
+          "sha256": "2f4cbfb21877dd7cb704069f63d6a1a027bc131fefa3995321c7824a98bb9762",
+          "object_id": 1974581378352,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\__init__.py"
+        },
+        "center_credit_v02_20261022.utils": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\utils.py",
+          "sha256": "6c4c8b7bed422fa2378597fbcaa01ad4a5dfc9b3ee88bb9cfe051e8dfadf0228",
+          "object_id": 1974586068800,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\utils.py"
+        },
+        "center_credit_v02_20261022.resume": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\resume.py",
+          "sha256": "c21c10e05a48100f2d19b0741be8c9e9866696caa43323cb916649f5af2c4ab5",
+          "object_id": 1974581548496,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\resume.py"
+        },
+        "center_credit_v02_20261022.exact": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\exact.py",
+          "sha256": "edaaad61912db8d14805cd1111b04af3a1dc4a1178eac85554ebbcf6cc7acb45",
+          "object_id": 1974586205632,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\exact.py"
+        },
+        "center_credit_v02_20261022.geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\geometry.py",
+          "sha256": "6d5b1ee4ff284a76e0ea1a748ad5ecf05f2e6099fbcae26bdc88bd91c1dc22cb",
+          "object_id": 1974586210352,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\geometry.py"
+        },
+        "center_credit_v02_20261022.service": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\service.py",
+          "sha256": "9516e463686bab7fa4a18a5bc21078efc3ad974cf5f55be2eed0d278d529e17b",
+          "object_id": 1974586210832,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\service.py"
+        },
+        "center_credit_v02_20261022.connector": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\connector.py",
+          "sha256": "ca59d5c87300a44478c803e39c2170d25160f9b00da945d8b8cfcc5888b4ed3b",
+          "object_id": 1974586207792,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\connector.py"
+        },
+        "center_credit_v02_20261022.public_contract": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\public_contract.py",
+          "sha256": "11fbfa52092a522282aa3bfe89013ab88d29dd0e433c1dce645c890b1742fc6f",
+          "object_id": 1974586211232,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\public_contract.py"
+        },
+        "center_credit_v02_20261022.pipeline": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\pipeline.py",
+          "sha256": "fdb413ec2e924ff6fb8b7bf414e59bac90e695ab78d547395285718670e71b7e",
+          "object_id": 1974586202032,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\pipeline.py"
+        },
+        "center_credit_v02_20261022.detector": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\detector.py",
+          "sha256": "6084071c2f673fd825552bba8096218c5fc001a3ef12a6302920943f64b7c236",
+          "object_id": 1974586364432,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\detector.py"
+        },
+        "center_credit_v02_20261022.executor": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\executor.py",
+          "sha256": "09fde1770bedc96f9ffc66746d783d28f7d158ee5b20dfde9bce5b4d6a956c5a",
+          "object_id": 1974586211072,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\executor.py"
+        },
+        "center_credit_v02_20261022.observe": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\observe.py",
+          "sha256": "258dc4032b09ad5e0e713b8a18c31b1e3596ca3302a627e56dea781ba9edc5ab",
+          "object_id": 1974586368432,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\observe.py"
+        },
+        "center_credit_v02_20261022.audit._common": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_common.py",
+          "sha256": "8d20ac6ab1cec2a631046c1c600f93b530f1de661ff79f66e10e9a681c9e7be3",
+          "object_id": 1974615772352,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_common.py"
+        },
+        "center_credit_v02_20261022.audit._geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_geometry.py",
+          "sha256": "5480fe9a3e613849dd5e948be5dcbd931db207b2a6c77966b58dd89dee025956",
+          "object_id": 1974615772912,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_geometry.py"
+        },
+        "center_credit_v02_20261022.audit._h1": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_h1.py",
+          "sha256": "10ada2cb9632fe1d5302b685ad0b7cfe7dac6a5efdc46e36877806ca62119c30",
+          "object_id": 1974615774032,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_h1.py"
+        },
+        "center_credit_v02_20261022.audit._detect": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_detect.py",
+          "sha256": "92ddf0d4a87c85df6329ea08e25fb85c9abb8e3b7c01d18588b32f844b5bf160",
+          "object_id": 1974615774832,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_detect.py"
+        },
+        "center_credit_v02_20261022.audit.region": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\region.py",
+          "sha256": "ddd294f9b9d7e882ee742242e9e53712a05cfb27ad2d11838f2b6754bc53a111",
+          "object_id": 1974615777552,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\region.py"
+        },
+        "center_credit_v02_20261022.audit._audit": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_audit.py",
+          "sha256": "20cbbdfd6f2d55412e8f76c02a4641f5b2bdbe33500f7c77e0e6d780cae5f294",
+          "object_id": 1974615771392,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_audit.py"
+        },
+        "center_credit_v02_20261022.audit": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\__init__.py",
+          "sha256": "1b290ec1aeec1ac22f2cfa0a82a514d3d3561088958197bdac7847b9cb926ae7",
+          "object_id": 1974615770752,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\__init__.py"
+        },
+        "center_credit_v02_20261022.audit._post_geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_geometry.py",
+          "sha256": "1a07e8659d6504e97c68691b5acca48d6f6a13c7e1e25cb53eba6e2585dfa329",
+          "object_id": 1974615783232,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_geometry.py"
+        },
+        "center_credit_v02_20261022.audit._post_saved": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_saved.py",
+          "sha256": "52769e706866edfc1ebd556d11e9fb7ce49427ac9264cf95e53bd45c93d84d18",
+          "object_id": 1974615774192,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_saved.py"
+        },
+        "center_credit_v02_20261022.audit.pure": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\pure.py",
+          "sha256": "efb0e6b20e8aa8d6660d66b37b35c3d34ad3a73932c04994b6d6eb4519edf83e",
+          "object_id": 1974615784752,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\pure.py"
+        },
+        "center_credit_v02_20261022.post": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\__init__.py",
+          "sha256": "6d57c09d0b9d9dfa5fca7d5d30f0c147c9c1cca7b85583aa26b4069591dcf0f3",
+          "object_id": 1974615785312,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\__init__.py"
+        },
+        "center_credit_v02_20261022.post.geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\geometry.py",
+          "sha256": "3ddf572046673912970396a2356de1c37f096d42be5dfe553c00e550a00c6137",
+          "object_id": 1974616343952,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\geometry.py"
+        },
+        "center_credit_v02_20261022.post.engine": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\engine.py",
+          "sha256": "62c0f474cd3b4ee6532c27221fad4cf4eb151373617aa35e9893310bd9aa23fa",
+          "object_id": 1974615782672,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\engine.py"
+        },
+        "center_credit_v02_20261022.context": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\context.py",
+          "sha256": "a619c3ab17dccb230129649c24af72a4c934fec745225c893ed086dec5f9a490",
+          "object_id": 1974586360752,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\context.py"
+        },
+        "center_credit_v02_20261022.worker": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\worker.py",
+          "sha256": "46b884893b4d116f6860f730b38267756c1a1820ef64fdd2ca3b055dfb7c64be",
+          "object_id": 1974586068960,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\worker.py"
+        }
+      },
+      "primary_service_function": {
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\service.py",
+        "id": 1974586480480
+      },
+      "independent_service_function": {
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\region.py",
+        "id": 1974615984544
+      }
+    },
+    "baseline": {
+      "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "sha256": "6d5b95890a1ca666970c72cb306ec40ffc48495c9458d69cfc2bd702fa74d20f",
+      "id": 1974616325184
+    }
+  },
+  "independent_counts_actual_even_on_exception": {
+    "independent_pipeline_audits": 1,
+    "independent_geometry": 46,
+    "independent_distance": 38,
+    "independent_forbidden_box_checks": 5,
+    "independent_saved_choice_comparisons": 4,
+    "independent_collect_here_checks": 4,
+    "independent_region_point_tests": 886,
+    "independent_service_intersections": 346,
+    "independent_region_boundary_parameters": 692,
+    "independent_route_audits": 3,
+    "independent_frozen_post_audits": 1
+  }
+}

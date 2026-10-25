@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\PPCPP_LAST距离查询等价提速_v0.2_20261020\analyze.py", line 100, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP_LAST距离查询等价提速_v0.2_20261020\analyze.py", line 93, in main
+    d=compute();save(H/'analysis.json',d)
+      ^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP_LAST距离查询等价提速_v0.2_20261020\analyze.py", line 53, in compute
+    assert read(H/'imported_dependency_inventory.json')['files'][str(pp)]==sha(pp)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP_LAST距离查询等价提速_v0.2_20261020\common.py", line 4, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST距离查询等价提速_v0.2_20261020\\imported_dependency_inventory.json'

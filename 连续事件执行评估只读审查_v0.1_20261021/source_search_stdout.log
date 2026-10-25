@@ -1,0 +1,25 @@
+.\Cstar连接器等价提速_v0.7_20261020\runtime\history_core\public_map.py:163:def published_observation(free, published_targets):
+.\Cstar道路正确性验收_20261019\audit_inputs.py:28:    route=h['executed_route'];legal(initial['free'],route)
+.\Cstar等价效率修正_v0.6_20261020\runtime\history_core\public_map.py:163:def published_observation(free, published_targets):
+.\verify_continuous_preparation_20261016.py:28:        assert h['old_route']==route[index:] and h['executed_route']==route[:index+1] and h['remaining_budget']==c['distance_budget']-index
+.\verify_continuous_preparation_20261016.py:29:        event=read(Path(e['event_source']));out=publish(c,h,event);entry=dict(map_id=j['map_id'],initial_run=j['run_id'],initial_steps=len(route)-1,
+.\Cstar状态缓存验收_20261019\runtime\history_core\public_map.py:163:def published_observation(free, published_targets):
+.\test_continuous_history_20261016.py:11:        h=checkpoint(self.c,self.c['old_route']);self.assertEqual(h['executed_route']+h['old_route'][1:],self.c['old_route'])
+.\test_continuous_history_20261016.py:17:        h=checkpoint(self.c,self.c['old_route']);self.e['free']=[[0,0],[1,0],[3,0]];p=publish(self.c,h,self.e)['case'];self.assertEqual(p['metadata']['deferred_targets'],[[2,0]]);self.assertNotIn([2,0],p['covered'])
+.\test_continuous_history_20261016.py:19:        self.e['free']=[[0,0],[2,0],[3,0]];self.assertEqual(publish(self.c,checkpoint(self.c,self.c['old_route']),self.e)['status'],'unsupported_current_blocked')
+.\test_continuous_history_20261016.py:21:        self.e['free']=[[1,0],[2,0],[3,0]];self.assertEqual(publish(self.c,checkpoint(self.c,self.c['old_route']),self.e)['status'],'unsupported_base_blocked')
+.\test_continuous_history_20261016.py:23:        saved=copy.deepcopy(self.c);h=checkpoint(self.c,self.c['old_route']);publish(self.c,h,self.e);self.assertEqual(saved,self.c)
+.\基线复现准备_20261019\独立版_v0.2\experiment.py:41:        prefix=list(map(tuple,h['executed_route']));targets=set(map(tuple,initial['targets']))
+.\Cstar斜向运动敏感性_v0.2_20261020\runtime\history_core\public_map.py:163:def published_observation(free, published_targets):
+.\七算法共同预算比较_v0.2_20261020\verify.py:24:        prefix=h['executed_route'];assert prefix[-1]==c['current']
+.\七算法共同预算比较_v0.3_Cstar07_20261020\verify.py:24:        prefix=h['executed_route'];assert prefix[-1]==c['current']
+.\Cstar斜向运动敏感性_v0.1_20261020\runtime\history_core\public_map.py:163:def published_observation(free, published_targets):
+.\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_core\public_map.py:163:def published_observation(free, published_targets):
+.\Cstar历史适配验收_20261019\专项验收_v0.3\runtime\history_core\public_map.py:163:def published_observation(free, published_targets):
+.\continuous_history_inputs_20261016.py:19:            return dict(index=i,executed_route=copy.deepcopy(route[:i+1]),current=list(p),covered=[list(z) for z in sorted(seen)],
+.\continuous_history_inputs_20261016.py:22:def publish(initial,history,event):
+.\continuous_history_inputs_20261016.py:44:        h=checkpoint(c,c['old_route']);e=read(SOURCE/'cases'/(f['anchor']+'.json'));published=publish(c,h,e)
+.\Cstar历史适配验收_20261019\sources\src\cstar_core\public_map.py:163:def published_observation(free, published_targets):
+.\Cstar历史适配验收_20261019\runtime\history_core\public_map.py:163:def published_observation(free, published_targets):
+.\Cstar任务域修正_v0.5_20261020\service_only_runtime\history_core\public_map.py:163:def published_observation(free, published_targets):
+.\Cstar任务域修正_v0.5_20261020\runtime\history_core\public_map.py:163:def published_observation(free, published_targets):

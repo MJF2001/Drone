@@ -1,0 +1,30 @@
+--- accepted_OFF_worker
++++ diagnostic_R_worker
+@@ -15,7 +15,7 @@
+         if job['config']=='ON':obs=B.NativeObserver(runtime,p2)
+         else:assert job['config']=='OFF'
+         start=time.perf_counter();corestart=time.perf_counter()
+-        native=invoke_once(lambda:runtime.run_payload(payload,'PPCPP',20,job['seed']) if job['method']=='PPCPP' else p2.run_payload(payload,20,job['seed']),ledger,obs)
++        native=invoke_once(lambda:repair_runtime.run_payload(payload,20,job['seed']),ledger,obs)
+         coreend=time.perf_counter();result['native']=native;result['loaded_core_sources']={}
+         for key in ('runtime','p2_adapter','candidate','model','p2_search_audit','unified_geometry','bfs_metric_geometry'):
+             module=sys.modules.get(key)
+@@ -26,7 +26,7 @@
+         assert native['raw'].get('route'),'no complete original output'
+         assert native['raw']['status'] in ('core_complete','finished','deadline')
+         corewire=json.dumps(native,ensure_ascii=False,separators=(',',':'));route=json.loads(corewire)['raw']['route']
+-        rawname='A' if job['method']=='PPCPP' else 'C0';postname='B' if rawname=='A' else 'C'
++        rawname='A';postname='B'  # R raw/post aliases; job.branch identifies diagnostic R
+         result['views'][rawname]=evaluate(c,route,grid=True)
+         json.dumps(result['views'][rawname],ensure_ascii=False,separators=(',',':'));rawend=time.perf_counter()
+         request={'id':job['id'],'input':c,'raw':json.loads(corewire)['raw']};wire=json.dumps(request,ensure_ascii=False,separators=(',',':')).encode()
+@@ -48,7 +48,8 @@
+             'main_measured_includes':'same raw/post virtual execution and encoding, post-return actual-source hashes, common single-entry dispatch, ON original profile only',
+             'outside_main':'pre-start frozen-source hashes, cold import, two actual evidence flushes, independent audit, process creation'}
+         result['main_passed']=True;dump(dest,result)
+-        independent_start=time.perf_counter();result['independent']=B.audit_result(result);result['independent_wall_seconds']=time.perf_counter()-independent_start
++        independent_start=time.perf_counter();result['independent']=B.audit_result(result);result['independent']['repair_structure']=repair_runtime.audit_saved(c,result['native'])
++        result['independent_wall_seconds']=time.perf_counter()-independent_start
+         result['identity_after']=B.identity();assert result['identity_before']==result['identity_after'];result['passed']=True
+     except BaseException as exc:
+         sys.setprofile(None);result['failure']={'reason':repr(exc),'traceback':traceback.format_exc()}

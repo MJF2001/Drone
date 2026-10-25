@@ -1,0 +1,41 @@
+--- E:\无人机研究项目_接续包_20261014\覆盖受阻恢复目标单变量诊断_v0.1_20261023\recovery_diag_worker.py
++++ eventdep_diag_worker.py
+@@ -1,17 +1,17 @@
+ from pathlib import Path
+ from copy import deepcopy
+ import sys,json,time,traceback
+-import recovery_diag_decision_audit as decision_audit
+-from recovery_diag_compare import compare_old_off,claim_destination
++import eventdep_diag_decision_audit as decision_audit
++from eventdep_diag_compare import compare_old_off,claim_destination
+ def worker(job):
+     dest=H/'outputs'/(job['id']+'.json');assert not dest.exists();claim_destination(dest)
+-    result={'job':job,'passed':False,'views':{},'started_utc':time.time(),'configuration':job['config']};obs=None;ledger={'started':0,'returned':0,'exceptions':0}
++    result={'environment':job['environment'],'target_label':job['target_label'],'target_intervention_enabled':job['target_intervention_enabled'],'job':job,'passed':False,'views':{},'started_utc':time.time(),'configuration':job['config']};obs=None;ledger={'started':0,'returned':0,'exceptions':0}
+     wall=time.perf_counter()
+     try:
+         for name,digest in read(H/'active_freeze.json').items():assert sha(H/name)==digest,name
+         guards=read(H/'source_guards.json')
+         for name,digest in guards.items():assert sha(name)==digest,name
+-        cold=time.perf_counter();runtime,p2=B.load_native();import recovery_diag_runtime as DRun;result['cold_import_seconds']=time.perf_counter()-cold
++        cold=time.perf_counter();runtime,p2=B.load_native();import eventdep_diag_runtime as DRun;result['cold_import_seconds']=time.perf_counter()-cold
+         for module in (runtime,p2,runtime.native):
+             path=str(Path(module.__file__).resolve());assert path in guards and sha(path)==guards[path]
+         payload=(H/job['input']).read_bytes();c=json.loads(payload);original=deepcopy(c);result['input']=c;diagnostic_spec=read(H/job['spec'])
+@@ -21,14 +21,14 @@
+         else:assert job['config']=='OFF'
+         start=time.perf_counter();corestart=time.perf_counter()
+         native=invoke_once(lambda:DRun.run_payload(payload,'PPCPP',20,job['seed'],diagnostic_spec=diagnostic_spec,target_intervention_enabled=job['target_intervention_enabled']),ledger,obs)
+-        coreend=time.perf_counter();result['native']=native;result['loaded_core_sources']={}
++        coreend=time.perf_counter();native.update(environment=job['environment'],target_label=job['target_label'],target_intervention_enabled=job['target_intervention_enabled']);result['native']=native;result['loaded_core_sources']={}
+         for key in ('runtime','p2_adapter','candidate','model','p2_search_audit','unified_geometry','bfs_metric_geometry'):
+             module=sys.modules.get(key)
+             if module is not None:
+                 path=str(Path(module.__file__).resolve());assert path in guards and sha(path)==guards[path],('unbound core',path)
+                 result['loaded_core_sources'][path]=sha(path)
+         result['loaded_diagnostic_sources']={}
+-        for key in ('recovery_diag_runtime','recovery_diag_native','recovery_diag_candidate','recovery_diag_hook','recovery_diag_decision_audit','recovery_diag_compare'):
++        for key in ('eventdep_diag_runtime','eventdep_diag_native','eventdep_diag_candidate','eventdep_diag_hook','eventdep_diag_decision_audit','eventdep_diag_compare'):
+             module=sys.modules[key];path=Path(module.__file__).resolve();rel=str(path.relative_to(H));assert sha(path)==read(H/'active_freeze.json')[rel];result['loaded_diagnostic_sources'][str(path)]=sha(path)
+         flush=time.perf_counter();dump(H/'outputs'/(job['id']+'_native_raw.json'),native);native_flush=time.perf_counter()-flush
+         assert native['raw'].get('route'),'no complete original output'

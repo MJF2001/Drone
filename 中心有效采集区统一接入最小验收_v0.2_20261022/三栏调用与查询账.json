@@ -1,0 +1,666 @@
+{
+  "new_native_observed": {
+    "shared_region_queries_total": 473,
+    "scope_wrapper_prediction_region_queries": 21,
+    "core_started": 5,
+    "heading_parse_calls": 1,
+    "context_calls": 5,
+    "context_BFS_started": 5,
+    "context_BFS_completed": 5,
+    "geometry_precheck_calls": 5,
+    "reward_calls": 1,
+    "scored_neighbor_rows": 0,
+    "geometry_distance_calls": 7631,
+    "distance_row_BFS_started": 17,
+    "distance_row_BFS_completed": 17,
+    "geometry_path_calls": 502,
+    "astar_calls": 68,
+    "Astar_started": 68,
+    "Astar_completed": 68,
+    "heading_update_calls": 5,
+    "main_audit_calls": 102,
+    "main_audit_returns": 102,
+    "main_audit_valid": 102,
+    "core_returned": 5,
+    "core_complete": 5,
+    "scope_wrapper_native_region_queries": 98,
+    "post_entry_calls": 5,
+    "post_source_geometry": 45,
+    "post_candidate_geometry": 48,
+    "post_output_geometry": 31,
+    "scope_engine_region_queries": 174,
+    "post_service_queries_total_protected": 260,
+    "post_service_intersections": 174,
+    "post_interval_calls": 31,
+    "scope_wrapper_post_region_queries": 86,
+    "scope_wrapper_full_region_queries": 94
+  },
+  "new_wrapper_observed": {
+    "parse": 5,
+    "input_geometry": 5,
+    "primary_domain_points": 697,
+    "selector": 3,
+    "candidate_checks": 31,
+    "candidate_distance": 29,
+    "candidate_geometry": 29,
+    "candidate_resource_checks": 29,
+    "candidate_rejected": 19,
+    "candidate_comparisons": 10,
+    "prediction_collect_here": 5,
+    "prediction_inside_tests": 21,
+    "prediction_service_intersections": 21,
+    "native_adapter_calls": 5,
+    "native_route_audits": 5,
+    "native_collect_here": 5,
+    "native_inside_tests": 21,
+    "native_geometry": 45,
+    "native_distance": 45,
+    "native_service_intersections": 98,
+    "native_resource_checks": 5,
+    "post_route_audits": 5,
+    "post_collect_here": 5,
+    "post_inside_tests": 21,
+    "post_geometry": 31,
+    "post_distance": 31,
+    "post_service_intersections": 86,
+    "post_resource_checks": 5,
+    "full_route_audits": 5,
+    "full_collect_here": 5,
+    "full_inside_tests": 21,
+    "full_geometry": 34,
+    "full_distance": 34,
+    "full_service_intersections": 94,
+    "full_resource_checks": 5,
+    "initial_zero_entry": 2
+  },
+  "new_plan_independent_actual_including_exception": {
+    "independent_pipeline_audits": 5,
+    "independent_geometry": 175,
+    "independent_forbidden_box_checks": 25,
+    "independent_distance": 144,
+    "independent_saved_choice_comparisons": 10,
+    "independent_collect_here_checks": 20,
+    "independent_region_point_tests": 2759,
+    "independent_service_intersections": 1124,
+    "independent_region_boundary_parameters": 2266,
+    "independent_H1_decision_audits": 1,
+    "independent_H1_unit_edge_checks": 5,
+    "independent_route_audits": 15,
+    "independent_frozen_post_audits": 5
+  },
+  "new_execution_observed_excluding_old_base_action": {
+    "planning_wait_records": 5,
+    "execution_action_calls": 36,
+    "detector_probes": 36,
+    "safety_box_queries": 36,
+    "detector_box_queries": 20,
+    "execution_distance": 36,
+    "execution_truth_geometry": 36,
+    "primary_domain_points": 170,
+    "execution_collect_here": 7,
+    "execution_inside_tests": 45,
+    "execution_service_intersections": 110,
+    "first_discoveries": 3,
+    "known_obstacles_not_republished": 16
+  },
+  "old_base_action_reused_once": 1,
+  "turns_saved_diagnostic": {
+    "W1_H1": {
+      "nonzero_direction_changes": 8,
+      "diagnostic_direction_pair_tests": 12
+    },
+    "W1_P2": {
+      "nonzero_direction_changes": 8,
+      "diagnostic_direction_pair_tests": 10
+    },
+    "W2_P2": {
+      "nonzero_direction_changes": 4,
+      "diagnostic_direction_pair_tests": 4
+    }
+  },
+  "precheck": {
+    "passed": true,
+    "tests": [
+      {
+        "id": "engine_only",
+        "passed": true,
+        "branches": [
+          {
+            "observer": "old",
+            "counts": {
+              "post_service_intersections": 2
+            },
+            "engine": {
+              "post_inside_tests": 1,
+              "service_intersections": 2,
+              "post_service_intersections": 2
+            },
+            "wrapper": {},
+            "caught_expected_errors": 0
+          },
+          {
+            "observer": "new",
+            "counts": {
+              "shared_region_queries_total": 2,
+              "scope_engine_region_queries": 2,
+              "post_service_queries_total_protected": 2,
+              "post_service_intersections": 2
+            },
+            "engine": {
+              "post_inside_tests": 1,
+              "service_intersections": 2,
+              "post_service_intersections": 2
+            },
+            "wrapper": {},
+            "caught_expected_errors": 0
+          }
+        ],
+        "old_conflation_exposed": false
+      },
+      {
+        "id": "wrapper_only",
+        "passed": true,
+        "branches": [
+          {
+            "observer": "old",
+            "counts": {
+              "post_service_intersections": 1
+            },
+            "engine": {},
+            "wrapper": {
+              "post_route_audits": 1,
+              "post_collect_here": 1,
+              "post_inside_tests": 1,
+              "post_geometry": 2,
+              "primary_domain_points": 10,
+              "post_distance": 2,
+              "post_service_intersections": 1,
+              "post_resource_checks": 1
+            },
+            "caught_expected_errors": 0
+          },
+          {
+            "observer": "new",
+            "counts": {
+              "shared_region_queries_total": 1,
+              "scope_wrapper_post_region_queries": 1,
+              "post_service_queries_total_protected": 1
+            },
+            "engine": {},
+            "wrapper": {
+              "post_route_audits": 1,
+              "post_collect_here": 1,
+              "post_inside_tests": 1,
+              "post_geometry": 2,
+              "primary_domain_points": 10,
+              "post_distance": 2,
+              "post_service_intersections": 1,
+              "post_resource_checks": 1
+            },
+            "caught_expected_errors": 0
+          }
+        ],
+        "old_conflation_exposed": true
+      },
+      {
+        "id": "sequential",
+        "passed": true,
+        "branches": [
+          {
+            "observer": "old",
+            "counts": {
+              "post_service_intersections": 3
+            },
+            "engine": {
+              "post_inside_tests": 1,
+              "service_intersections": 2,
+              "post_service_intersections": 2
+            },
+            "wrapper": {
+              "post_route_audits": 1,
+              "post_collect_here": 1,
+              "post_inside_tests": 1,
+              "post_geometry": 2,
+              "primary_domain_points": 10,
+              "post_distance": 2,
+              "post_service_intersections": 1,
+              "post_resource_checks": 1
+            },
+            "caught_expected_errors": 0
+          },
+          {
+            "observer": "new",
+            "counts": {
+              "shared_region_queries_total": 3,
+              "scope_engine_region_queries": 2,
+              "post_service_queries_total_protected": 3,
+              "post_service_intersections": 2,
+              "scope_wrapper_post_region_queries": 1
+            },
+            "engine": {
+              "post_inside_tests": 1,
+              "service_intersections": 2,
+              "post_service_intersections": 2
+            },
+            "wrapper": {
+              "post_route_audits": 1,
+              "post_collect_here": 1,
+              "post_inside_tests": 1,
+              "post_geometry": 2,
+              "primary_domain_points": 10,
+              "post_distance": 2,
+              "post_service_intersections": 1,
+              "post_resource_checks": 1
+            },
+            "caught_expected_errors": 0
+          }
+        ],
+        "old_conflation_exposed": true
+      },
+      {
+        "id": "variable_counts",
+        "passed": true,
+        "branches": [
+          {
+            "observer": "old",
+            "counts": {
+              "post_service_intersections": 9
+            },
+            "engine": {
+              "post_inside_tests": 3,
+              "service_intersections": 6,
+              "post_service_intersections": 6
+            },
+            "wrapper": {
+              "post_route_audits": 3,
+              "post_collect_here": 3,
+              "post_inside_tests": 3,
+              "post_geometry": 6,
+              "primary_domain_points": 30,
+              "post_distance": 6,
+              "post_service_intersections": 3,
+              "post_resource_checks": 3
+            },
+            "caught_expected_errors": 0
+          },
+          {
+            "observer": "new",
+            "counts": {
+              "shared_region_queries_total": 9,
+              "scope_engine_region_queries": 6,
+              "post_service_queries_total_protected": 9,
+              "post_service_intersections": 6,
+              "scope_wrapper_post_region_queries": 3
+            },
+            "engine": {
+              "post_inside_tests": 3,
+              "service_intersections": 6,
+              "post_service_intersections": 6
+            },
+            "wrapper": {
+              "post_route_audits": 3,
+              "post_collect_here": 3,
+              "post_inside_tests": 3,
+              "post_geometry": 6,
+              "primary_domain_points": 30,
+              "post_distance": 6,
+              "post_service_intersections": 3,
+              "post_resource_checks": 3
+            },
+            "caught_expected_errors": 0
+          }
+        ],
+        "old_conflation_exposed": true
+      },
+      {
+        "id": "nested_exception_cleanup",
+        "passed": true,
+        "branches": [
+          {
+            "observer": "old",
+            "counts": {
+              "post_service_intersections": 5
+            },
+            "engine": {
+              "post_inside_tests": 2,
+              "service_intersections": 3,
+              "post_service_intersections": 3
+            },
+            "wrapper": {
+              "post_route_audits": 1,
+              "post_collect_here": 1,
+              "post_inside_tests": 1,
+              "post_geometry": 2,
+              "primary_domain_points": 10,
+              "post_distance": 2,
+              "post_service_intersections": 2
+            },
+            "caught_expected_errors": 1
+          },
+          {
+            "observer": "new",
+            "counts": {
+              "shared_region_queries_total": 5,
+              "scope_engine_region_queries": 3,
+              "post_service_queries_total_protected": 5,
+              "post_service_intersections": 3,
+              "scope_wrapper_post_region_queries": 2
+            },
+            "engine": {
+              "post_inside_tests": 2,
+              "service_intersections": 3,
+              "post_service_intersections": 3
+            },
+            "wrapper": {
+              "post_route_audits": 1,
+              "post_collect_here": 1,
+              "post_inside_tests": 1,
+              "post_geometry": 2,
+              "primary_domain_points": 10,
+              "post_distance": 2,
+              "post_service_intersections": 2
+            },
+            "caught_expected_errors": 1
+          }
+        ],
+        "old_conflation_exposed": true
+      },
+      {
+        "id": "serialization_identity",
+        "passed": true,
+        "branches": [
+          {
+            "observer": "old",
+            "counts": {
+              "post_service_intersections": 3
+            },
+            "engine": {
+              "post_inside_tests": 1,
+              "service_intersections": 2,
+              "post_service_intersections": 2
+            },
+            "wrapper": {
+              "post_route_audits": 1,
+              "post_collect_here": 1,
+              "post_inside_tests": 1,
+              "post_geometry": 2,
+              "primary_domain_points": 10,
+              "post_distance": 2,
+              "post_service_intersections": 1,
+              "post_resource_checks": 1
+            },
+            "caught_expected_errors": 0
+          },
+          {
+            "observer": "new",
+            "counts": {
+              "shared_region_queries_total": 3,
+              "scope_engine_region_queries": 2,
+              "post_service_queries_total_protected": 3,
+              "post_service_intersections": 2,
+              "scope_wrapper_post_region_queries": 1
+            },
+            "engine": {
+              "post_inside_tests": 1,
+              "service_intersections": 2,
+              "post_service_intersections": 2
+            },
+            "wrapper": {
+              "post_route_audits": 1,
+              "post_collect_here": 1,
+              "post_inside_tests": 1,
+              "post_geometry": 2,
+              "primary_domain_points": 10,
+              "post_distance": 2,
+              "post_service_intersections": 1,
+              "post_resource_checks": 1
+            },
+            "caught_expected_errors": 0
+          }
+        ],
+        "old_conflation_exposed": true
+      }
+    ],
+    "cold": {
+      "cold_import_seconds": 0.10978580004302785,
+      "import_task_calls": [],
+      "actual_h1_native_source": "E:\\无人机研究项目_接续包_20261014\\PPCPP真实来向H1最小验收_v0.1_20261022\\derived\\ppcpp.py",
+      "source_alias_byte_verified": true
+    },
+    "new_core_calls": 0,
+    "post_search_calls": 0,
+    "graph_search_calls": 0,
+    "identity_after": {
+      "namespace": {
+        "modules": {
+          "center_credit_v02_20261022": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\__init__.py",
+            "sha256": "2f4cbfb21877dd7cb704069f63d6a1a027bc131fefa3995321c7824a98bb9762",
+            "object_id": 2505386867856,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\__init__.py"
+          },
+          "center_credit_v02_20261022.utils": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\utils.py",
+            "sha256": "6c4c8b7bed422fa2378597fbcaa01ad4a5dfc9b3ee88bb9cfe051e8dfadf0228",
+            "object_id": 2505391558384,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\utils.py"
+          },
+          "center_credit_v02_20261022.resume": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\resume.py",
+            "sha256": "c21c10e05a48100f2d19b0741be8c9e9866696caa43323cb916649f5af2c4ab5",
+            "object_id": 2505387038000,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\resume.py"
+          },
+          "center_credit_v02_20261022.exact": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\exact.py",
+            "sha256": "edaaad61912db8d14805cd1111b04af3a1dc4a1178eac85554ebbcf6cc7acb45",
+            "object_id": 2505420999552,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\exact.py"
+          },
+          "center_credit_v02_20261022.service": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\service.py",
+            "sha256": "9516e463686bab7fa4a18a5bc21078efc3ad974cf5f55be2eed0d278d529e17b",
+            "object_id": 2505391693936,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\service.py"
+          },
+          "center_credit_v02_20261022.geometry": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\geometry.py",
+            "sha256": "6d5b1ee4ff284a76e0ea1a748ad5ecf05f2e6099fbcae26bdc88bd91c1dc22cb",
+            "object_id": 2505421006112,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\geometry.py"
+          },
+          "center_credit_v02_20261022.connector": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\connector.py",
+            "sha256": "ca59d5c87300a44478c803e39c2170d25160f9b00da945d8b8cfcc5888b4ed3b",
+            "object_id": 2505421004272,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\connector.py"
+          },
+          "center_credit_v02_20261022.public_contract": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\public_contract.py",
+            "sha256": "11fbfa52092a522282aa3bfe89013ab88d29dd0e433c1dce645c890b1742fc6f",
+            "object_id": 2505421006832,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\public_contract.py"
+          },
+          "center_credit_v02_20261022.pipeline": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\pipeline.py",
+            "sha256": "fdb413ec2e924ff6fb8b7bf414e59bac90e695ab78d547395285718670e71b7e",
+            "object_id": 2505420999312,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\pipeline.py"
+          },
+          "center_credit_v02_20261022.detector": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\detector.py",
+            "sha256": "6084071c2f673fd825552bba8096218c5fc001a3ef12a6302920943f64b7c236",
+            "object_id": 2505421010832,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\detector.py"
+          },
+          "center_credit_v02_20261022.executor": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\executor.py",
+            "sha256": "09fde1770bedc96f9ffc66746d783d28f7d158ee5b20dfde9bce5b4d6a956c5a",
+            "object_id": 2505421006672,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\executor.py"
+          },
+          "center_credit_v02_20261022.observe": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\observe.py",
+            "sha256": "258dc4032b09ad5e0e713b8a18c31b1e3596ca3302a627e56dea781ba9edc5ab",
+            "object_id": 2505421009312,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\observe.py"
+          },
+          "center_credit_v02_20261022.audit._common": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_common.py",
+            "sha256": "8d20ac6ab1cec2a631046c1c600f93b530f1de661ff79f66e10e9a681c9e7be3",
+            "object_id": 2505421407392,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_common.py"
+          },
+          "center_credit_v02_20261022.audit._geometry": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_geometry.py",
+            "sha256": "5480fe9a3e613849dd5e948be5dcbd931db207b2a6c77966b58dd89dee025956",
+            "object_id": 2505421408032,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_geometry.py"
+          },
+          "center_credit_v02_20261022.audit._h1": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_h1.py",
+            "sha256": "10ada2cb9632fe1d5302b685ad0b7cfe7dac6a5efdc46e36877806ca62119c30",
+            "object_id": 2505421409232,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_h1.py"
+          },
+          "center_credit_v02_20261022.audit._detect": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_detect.py",
+            "sha256": "92ddf0d4a87c85df6329ea08e25fb85c9abb8e3b7c01d18588b32f844b5bf160",
+            "object_id": 2505421410032,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_detect.py"
+          },
+          "center_credit_v02_20261022.audit.region": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\region.py",
+            "sha256": "ddd294f9b9d7e882ee742242e9e53712a05cfb27ad2d11838f2b6754bc53a111",
+            "object_id": 2505421412592,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\region.py"
+          },
+          "center_credit_v02_20261022.audit._audit": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_audit.py",
+            "sha256": "20cbbdfd6f2d55412e8f76c02a4641f5b2bdbe33500f7c77e0e6d780cae5f294",
+            "object_id": 2505421406272,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_audit.py"
+          },
+          "center_credit_v02_20261022.audit": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\__init__.py",
+            "sha256": "1b290ec1aeec1ac22f2cfa0a82a514d3d3561088958197bdac7847b9cb926ae7",
+            "object_id": 2505421012592,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\__init__.py"
+          },
+          "center_credit_v02_20261022.audit._post_geometry": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_geometry.py",
+            "sha256": "1a07e8659d6504e97c68691b5acca48d6f6a13c7e1e25cb53eba6e2585dfa329",
+            "object_id": 2505421418112,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_geometry.py"
+          },
+          "center_credit_v02_20261022.audit._post_saved": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_saved.py",
+            "sha256": "52769e706866edfc1ebd556d11e9fb7ce49427ac9264cf95e53bd45c93d84d18",
+            "object_id": 2505421010752,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\_post_saved.py"
+          },
+          "center_credit_v02_20261022.audit.pure": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\pure.py",
+            "sha256": "efb0e6b20e8aa8d6660d66b37b35c3d34ad3a73932c04994b6d6eb4519edf83e",
+            "object_id": 2505421419632,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\pure.py"
+          },
+          "center_credit_v02_20261022.post": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\__init__.py",
+            "sha256": "6d57c09d0b9d9dfa5fca7d5d30f0c147c9c1cca7b85583aa26b4069591dcf0f3",
+            "object_id": 2505421420592,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\__init__.py"
+          },
+          "center_credit_v02_20261022.post.geometry": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\geometry.py",
+            "sha256": "3ddf572046673912970396a2356de1c37f096d42be5dfe553c00e550a00c6137",
+            "object_id": 2505421421712,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\geometry.py"
+          },
+          "center_credit_v02_20261022.post.engine": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\engine.py",
+            "sha256": "62c0f474cd3b4ee6532c27221fad4cf4eb151373617aa35e9893310bd9aa23fa",
+            "object_id": 2505421419392,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\post\\engine.py"
+          },
+          "center_credit_v02_20261022.context": {
+            "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\context.py",
+            "sha256": "a619c3ab17dccb230129649c24af72a4c934fec745225c893ed086dec5f9a490",
+            "object_id": 2505391558544,
+            "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\context.py"
+          }
+        },
+        "primary_service_function": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\service.py",
+          "id": 2505420994048
+        },
+        "independent_service_function": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\center_credit_v02_20261022\\audit\\region.py",
+          "id": 2505421473728
+        }
+      },
+      "baseline": {
+        "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+        "sha256": "6d5b95890a1ca666970c72cb306ec40ffc48495c9458d69cfc2bd702fa74d20f",
+        "id": 2505421763376
+      }
+    },
+    "new_queries": {
+      "region": 46
+    }
+  },
+  "saved_reuse": {
+    "passed": true,
+    "scope_derived": {
+      "engine": 90,
+      "wrapper_prediction": 9,
+      "wrapper_native": 45,
+      "wrapper_post": 45,
+      "wrapper_full": 45
+    },
+    "counts": {
+      "independent_pipeline_audits": 1,
+      "independent_geometry": 41,
+      "independent_distance": 31,
+      "independent_collect_here_checks": 4,
+      "independent_region_point_tests": 877,
+      "independent_service_intersections": 400,
+      "independent_H1_decision_audits": 1,
+      "independent_H1_unit_edge_checks": 10,
+      "independent_route_audits": 3,
+      "independent_region_boundary_parameters": 780,
+      "independent_frozen_post_audits": 1
+    },
+    "new_core_calls": 0,
+    "new_post_calls": 0,
+    "old_failed_retained": true,
+    "input_config_initial_equal": true
+  },
+  "verify_new_queries": {
+    "independent_pipeline_audits": 5,
+    "independent_geometry": 224,
+    "independent_distance": 186,
+    "independent_collect_here_checks": 28,
+    "independent_region_point_tests": 4099,
+    "independent_service_intersections": 1714,
+    "independent_H1_decision_audits": 2,
+    "independent_H1_unit_edge_checks": 15,
+    "independent_route_audits": 15,
+    "independent_region_boundary_parameters": 3406,
+    "independent_frozen_post_audits": 5,
+    "independent_forbidden_box_checks": 10,
+    "independent_saved_choice_comparisons": 8,
+    "independent_execution_audits": 3,
+    "independent_action_log_checks": 42,
+    "independent_execution_commits_checked": 37,
+    "independent_safety_box_queries": 37,
+    "independent_detector_box_queries": 21,
+    "independent_legacy_center_controls": 20
+  },
+  "old_core_calls": 1,
+  "new_core_calls": 5,
+  "cross_version_core_calls": 6,
+  "old_post_calls": 1,
+  "new_post_calls": 5,
+  "old_failure_independent_counter_still_missing": true
+}

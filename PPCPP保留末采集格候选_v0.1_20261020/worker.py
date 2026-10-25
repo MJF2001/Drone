@@ -1,0 +1,19 @@
+import sys,json,time,os
+from pathlib import Path
+from runtime import run_payload
+from candidate import solve as _preload_candidate
+def main():
+ job=json.loads(Path(sys.argv[1]).read_text(encoding='utf-8'));dest=Path(sys.argv[2]);inp=Path(job['input']).resolve();reads=[]
+ # Runtime imports finish before timing. During planning only this raw input
+ # may be read; reference files cannot be opened. Loaded module sources are logged.
+ def audit(event,args):
+  if event=='open' and isinstance(args[0],(str,bytes,os.PathLike)):
+   p=Path(os.fsdecode(args[0])).resolve();mode=args[1];isread=not isinstance(mode,str) or ('r' in mode or '+' in mode)
+   if isread:
+    reads.append(str(p));assert p==inp,('unapproved planning file read',str(p))
+ sys.addaudithook(audit)
+ payload=inp.read_bytes();out=run_payload(payload,job['method'],job['budget'],job['seed'])
+ out['job']=job;out['runtime_reads']=reads;out['imported_modules']=sorted({str(Path(m.__file__).resolve()) for m in list(sys.modules.values()) if getattr(m,'__file__',None) and not str(m.__file__).startswith('<')})
+ # Output is a write, outside the timed complete-result encoding.
+ dest.write_text(json.dumps(out,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
+if __name__=='__main__':main()

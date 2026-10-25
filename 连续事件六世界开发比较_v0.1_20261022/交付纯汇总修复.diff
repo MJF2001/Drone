@@ -1,0 +1,11 @@
+--- bound deliver.ledger
++++ saved-only export ledger
+@@ -11,7 +11,7 @@
+         p=H/'sessions'/(sj['id']+'.json')
+         if p.exists():bfs_main+=len(read(p)['environment_BFS'])
+     audits=[json.loads(x) for x in (H/'independent_audit_BFS.jsonl').read_text(encoding='utf8').splitlines()] if (H/'independent_audit_BFS.jsonl').exists() else []
+-    technical=[dict(round=p.parent.name,**read(p)) for p in (H/'technical_rounds').glob('round_*/result.json')];static=sum(r['static_BFS'] for r in technical);verifies=[]
++    technical=[dict(round_directory=p.parent.name,**read(p)) for p in (H/'technical_rounds').glob('round_*/result.json')];static=sum(r['static_BFS'] for r in technical);verifies=[]
+     for p in sorted(H.glob('verify*_execution.log')):
+         try:verifies.append(dict(log=p.name,**json.loads(p.read_text(encoding='utf8').strip().splitlines()[-1])))
+         except (ValueError,IndexError):pass

@@ -1,0 +1,231 @@
+[
+  {
+    "field": "native.raw.seconds",
+    "clock": "expand_native.solve begin L9 to seconds L45; REF uses independent ppcpp.py matching interval",
+    "unit": "s",
+    "contains": "contract/geometry/decision/recovery/return/native single_cell_audit and Diagnostic choose+record when present",
+    "nested_in": "native_entry_seconds",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "current_native"
+    ]
+  },
+  {
+    "field": "native.raw.accepted_seconds",
+    "clock": "after native audit passed, before final deadline tick and result seconds",
+    "unit": "s",
+    "contains": "elapsed solver prefix up to accepted result",
+    "nested_in": "native.raw.seconds; not another component",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "current_native"
+    ]
+  },
+  {
+    "field": "native_entry_seconds == timing.native_entry_seconds",
+    "clock": "worker begin L14 to native_end L24",
+    "unit": "s",
+    "contains": "phase_validate/snapshot, entry/returned disk log, solver, norm(raw), diag.export, REF saved-trace scanner, json.dumps(out)",
+    "nested_in": "timing.raw_common_end_to_end then combined_end_to_end",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "current_worker_before_clock",
+      "current_main_clocks",
+      "current_entry_return_log"
+    ]
+  },
+  {
+    "field": "diagnostic.diagnostic_hook_seconds",
+    "clock": "sum of choose try/finally L35-48 plus record L50-53",
+    "unit": "s",
+    "contains": "target old-order scan, 2 explanatory distance queries and full pending/decision/segment records",
+    "nested_in": "native.raw.seconds; excludes export and later serialization",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "current_trigger"
+    ]
+  },
+  {
+    "field": "timing.raw_common_end_to_end",
+    "clock": "same worker begin to rawend after metrics A L26",
+    "unit": "s",
+    "contains": "native_entry plus full raw metrics.evaluate; required credit/resource checks mixed with reporting metrics",
+    "nested_in": "combined_end_to_end",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "current_main_clocks",
+      "metrics_credit_check",
+      "metrics_report_turns"
+    ]
+  },
+  {
+    "field": "timing.post_increment",
+    "clock": "rawend L26 to mainend L29",
+    "unit": "s",
+    "contains": "request norm/JSON/UTF8, post entry/returned disk log, engine process, response parse, metrics B, json.dumps(full out)",
+    "nested_in": "combined_end_to_end, disjoint from raw_common_end_to_end",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "current_main_clocks",
+      "current_entry_return_log"
+    ]
+  },
+  {
+    "field": "post_envelope.entry_seconds == timing.post_engine_seconds",
+    "clock": "engine process start L54 to elapsed L93",
+    "unit": "s",
+    "contains": "decode/preprocess/source geometry, candidate search, output legality, complete center credits, interval resource proof, turns/trace tables, encode",
+    "nested_in": "post_increment",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "post_clocks_checks"
+    ]
+  },
+  {
+    "field": "post.timing.parse_preprocess_source_validation",
+    "clock": "engine start to after first anchors/split L61",
+    "unit": "s",
+    "contains": "parse, free/U sets, grid/source geometry validation and anchors",
+    "nested_in": "post_engine_seconds",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "post_clocks_checks"
+    ]
+  },
+  {
+    "field": "post.timing.candidate",
+    "clock": "engine candidate loop phase L62-78",
+    "unit": "s",
+    "contains": "all shortcut candidate legality checks, fallback/cap logic, edge/part creation",
+    "nested_in": "post_engine_seconds",
+    "separable": true,
+    "single_observation": true,
+    "evidence": [
+      "post_clocks_checks"
+    ]
+  },
+  {
+    "field": "post.timing.main_validation_metrics",
+    "clock": "after candidates to engine L91 before encoding",
+    "unit": "s",
+    "contains": "output legality, center credits, length/resource, parts, diagnostic trace cross and turn metrics",
+    "nested_in": "post_engine_seconds",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "post_clocks_checks"
+    ]
+  },
+  {
+    "field": "post.timing.encoding",
+    "clock": "assigned AFTER encoded=json.dumps(r) at engine L91",
+    "unit": "s",
+    "contains": "not present in saved decoded response in this version; envelope includes encoding",
+    "nested_in": "post_engine_seconds",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "post_clocks_checks"
+    ],
+    "missing": true
+  },
+  {
+    "field": "timing.combined_end_to_end",
+    "clock": "worker begin L14 to mainend L29",
+    "unit": "s",
+    "contains": "raw_common_end_to_end + post_increment only; solver/hook/engine already nested",
+    "nested_in": "worker_wall_seconds",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "current_main_clocks"
+    ]
+  },
+  {
+    "field": "independent.seconds and decision_audit.seconds",
+    "clock": "their internal function clocks; worker invokes both at L32",
+    "unit": "s",
+    "contains": "independent full views/post audit and per-decision BFS/reward/exception audit",
+    "nested_in": "independent_seconds total; not add to it",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "current_audit_outer",
+      "independent_views_post"
+    ]
+  },
+  {
+    "field": "independent_seconds (top level)",
+    "clock": "worker astart L32 to after both audits",
+    "unit": "s",
+    "contains": "research saved-output independent audits plus function/bookkeeping overhead",
+    "nested_in": "worker_wall_seconds, outside combined main; not online selection safety substituted away",
+    "separable": true,
+    "single_observation": true,
+    "evidence": [
+      "current_audit_outer"
+    ]
+  },
+  {
+    "field": "worker_wall_seconds == diagnostic_total_seconds",
+    "clock": "wall L8 after exclusive claim to finally L45 before final dump",
+    "unit": "s",
+    "contains": "guards/imports/hash/input read/main/first output dump/audits/OFF equivalence/last guard, excludes final output dump and print",
+    "nested_in": "parent_wall_seconds",
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "current_worker_before_clock",
+      "current_audit_outer"
+    ]
+  },
+  {
+    "field": "parent_wall_seconds",
+    "clock": "run before L10 through subprocess/log/output read to L20 before final parent dump",
+    "unit": "s",
+    "contains": "process startup including worker top-level imports/claim, whole worker, final worker dump/print/exit, parent initial attempt log and log write/read",
+    "nested_in": null,
+    "separable": false,
+    "single_observation": true,
+    "evidence": [
+      "current_parent_clock"
+    ]
+  },
+  {
+    "field": "clean online required checks vs reporting-only exact costs",
+    "clock": "no separate original timer",
+    "unit": "s",
+    "contains": "not identifiable by existing aggregate timestamps; missing, not zero",
+    "nested_in": "mixed stages above",
+    "separable": false,
+    "single_observation": false,
+    "evidence": [
+      "metrics_credit_check",
+      "metrics_report_turns",
+      "post_clocks_checks"
+    ]
+  },
+  {
+    "field": "candidate acquisition / state-copy / REF scanner exact costs",
+    "clock": "no separate timer; hook total mixes select and record, validation/snapshot mixed in native_entry",
+    "unit": "s",
+    "contains": "missing; immutable snapshot and private pending shown in source, integrated double-branch copy not timed",
+    "nested_in": "native_entry / solver / hook; do not subtract to claim clean cost",
+    "separable": false,
+    "single_observation": false,
+    "evidence": [
+      "current_REF_scan",
+      "current_trigger",
+      "current_native",
+      "current_worker_before_clock"
+    ]
+  }
+]

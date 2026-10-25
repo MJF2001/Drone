@@ -1,0 +1,433 @@
+{
+  "utc": "2026-10-22T18:15:44.487237+00:00",
+  "worlds": [
+    {
+      "id": "W1",
+      "label": "双格宽直路",
+      "public": {
+        "F_nominal": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "P": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E": 100,
+        "seed": 20261022
+      },
+      "private": {
+        "O_truth": [
+          [
+            2,
+            0
+          ]
+        ],
+        "exists_since_initialization": true
+      },
+      "design": "手工固定微型几何，不随任一方法返回路线移动障碍；未保证每法必斜向触发"
+    },
+    {
+      "id": "W2",
+      "label": "双格宽拐角",
+      "public": {
+        "F_nominal": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "P": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            3
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E": 100,
+        "seed": 20261022
+      },
+      "private": {
+        "O_truth": [
+          [
+            2,
+            2
+          ]
+        ],
+        "exists_since_initialization": true
+      },
+      "design": "手工固定微型几何，不随任一方法返回路线移动障碍；未保证每法必斜向触发"
+    },
+    {
+      "id": "W3",
+      "label": "有侧向连接的矩形",
+      "public": {
+        "F_nominal": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ]
+        ],
+        "P": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            2
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E": 100,
+        "seed": 20261022
+      },
+      "private": {
+        "O_truth": [
+          [
+            2,
+            1
+          ]
+        ],
+        "exists_since_initialization": true
+      },
+      "design": "手工固定微型几何，不随任一方法返回路线移动障碍；未保证每法必斜向触发"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "W1_H1",
+      "world": "W1",
+      "method": "H1",
+      "seed": 20261022,
+      "display_method": "PPCPP-H1 + 中心区信用适配"
+    },
+    {
+      "id": "W1_P2",
+      "world": "W1",
+      "method": "P2",
+      "seed": 20261022,
+      "display_method": "P2 + 中心区信用适配"
+    },
+    {
+      "id": "W2_P2",
+      "world": "W2",
+      "method": "P2",
+      "seed": 20261022,
+      "display_method": "P2 + 中心区信用适配"
+    },
+    {
+      "id": "W2_H1",
+      "world": "W2",
+      "method": "H1",
+      "seed": 20261022,
+      "display_method": "PPCPP-H1 + 中心区信用适配"
+    },
+    {
+      "id": "W3_H1",
+      "world": "W3",
+      "method": "H1",
+      "seed": 20261022,
+      "display_method": "PPCPP-H1 + 中心区信用适配"
+    },
+    {
+      "id": "W3_P2",
+      "world": "W3",
+      "method": "P2",
+      "seed": 20261022,
+      "display_method": "P2 + 中心区信用适配"
+    }
+  ],
+  "technical_fixtures": [],
+  "cell_length_m": 1,
+  "strict_delta_m": "1/5",
+  "region_side_m": "2/5",
+  "detection_band_unchanged": "1/8 L_infinity",
+  "cases": 35,
+  "classes": 16,
+  "all_technical_session_cap": 48,
+  "technical_round_cap": 2,
+  "repair_policy": "at most one further bounded round, only failed/unrun; 48 total cases absolute cap",
+  "real_core_cap": 12,
+  "sessions": 6,
+  "core_cap_per_session": 2,
+  "event_cap_per_session": 1,
+  "nonzero_segment_cap_per_session": 1000,
+  "execution_action_cap_per_session": 212,
+  "pipeline_seconds": 30,
+  "core_seconds_max": 20,
+  "connector_seconds": 2,
+  "post_candidate_absolute_seconds": 28,
+  "no_adaptive_world_changes": true,
+  "per_pipeline_caps": {
+    "candidate": 25,
+    "wrapper_geometry": 327,
+    "wrapper_distance": 326,
+    "wrapper_service": 3624,
+    "post_candidates": 4096,
+    "post_source": 100,
+    "post_output": 100,
+    "post_service": 1200,
+    "independent_geometry": 427,
+    "independent_distance": 327,
+    "independent_service": 4824,
+    "independent_region_point_tests": 60000,
+    "independent_region_boundary_parameters": 24000
+  },
+  "per_execution_caps": {
+    "actions": 212,
+    "main_boxes": 424,
+    "independent_boxes": 424,
+    "main_truth_geometry": 212,
+    "independent_truth_geometry": 212,
+    "main_service": 2544,
+    "independent_service": 2544
+  },
+  "all_pure_caps": {
+    "cases": 48,
+    "actions_per_case": 8,
+    "main_boxes": 1536,
+    "independent_boxes": 1536,
+    "main_geometry": 450,
+    "independent_geometry": 450,
+    "main_service": 4608,
+    "independent_service": 15000,
+    "main_candidates": 25,
+    "independent_region_point_tests": 180000,
+    "independent_region_boundary_parameters": 60000,
+    "negative_audit_attempts": 2
+  },
+  "no_core_mechanism_changes": true,
+  "nominal_grid_anchors_retained": true,
+  "real_coverage_goal": "at least one diagonal actual segment with region credit but without crossing target center; if absent report unverified, do not extend",
+  "new_core_cap": 11,
+  "cross_version_core_cap": 12,
+  "technical_cases": 6,
+  "reuse_old_pure_cases": 35
+}

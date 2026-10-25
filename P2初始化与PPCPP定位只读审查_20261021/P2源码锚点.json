@@ -1,0 +1,54 @@
+{
+  "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\p2_search_audit.py",
+  "sha256": "d1b93bd741b80af02c8f398b495441da570ae75f27008d512e9d873844a0385a",
+  "anchors": [
+    {
+      "line": 7,
+      "text": "def solve(s,budget,variant,seed):"
+    },
+    {
+      "line": 22,
+      "text": "    def opt(points,limit,label):"
+    },
+    {
+      "line": 39,
+      "text": "        g=UnifiedGeometry(s,time.perf_counter()+budget)"
+    },
+    {
+      "line": 42,
+      "text": "            offer(s.old_route,'old_suffix');left=set(s.targets-s.covered);visits=[]"
+    },
+    {
+      "line": 43,
+      "text": "            for p in s.old_route:"
+    },
+    {
+      "line": 46,
+      "text": "            offer(g.expand(visits),'common_fallback')"
+    },
+    {
+      "line": 48,
+      "text": "        demand=s.targets-s.covered-g.views[s.current];scans={};optimized=[]"
+    },
+    {
+      "line": 54,
+      "text": "            for label,initial in ((axis+'_scan',points),(axis+'_NN',nn)):"
+    },
+    {
+      "line": 61,
+      "text": "                order=stage(label+'_deep',lambda:opt(p,120,label+'_deep'))"
+    },
+    {
+      "line": 62,
+      "text": "                stage(label+'_deep_expand',lambda:offer(g.expand(order),label+'_deep'))"
+    },
+    {
+      "line": 64,
+      "text": "        if variant=='multi':"
+    },
+    {
+      "line": 66,
+      "text": "            extra=[('reverse_H',list(reversed(scans['H']))),('reverse_V',list(reversed(scans['V'])))]"
+    }
+  ]
+}

@@ -1,0 +1,554 @@
+--- v0.3/audit_inputs.py
++++ v0.4/audit_inputs.py
+@@ -0,0 +1,17 @@
++"""Pre-event read-only input audit using the exact saved verify geometry block."""
++from common import *
++import ast
++def main():
++    require('technical');require('prep');require('generated')
++    # Reuse the independently checking code of verify, without its later
++    # complete-experiment assertions. No planner imports or route generation.
++    tree=ast.parse((H/'verify.py').read_text(encoding='utf8'))
++    fn=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name=='verify')
++    start=next(i for i,n in enumerate(fn.body) if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='maps' for t in n.targets))
++    end=next(i for i in range(start,len(fn.body)) if isinstance(fn.body[i],ast.Expr) and isinstance(fn.body[i].value,ast.Call) and isinstance(fn.body[i].value.func,ast.Name) and fn.body[i].value.func.id=='print')
++    namespace=dict(globals());exec(compile(ast.Module(body=fn.body[start:end],type_ignores=[]),'<exact readonly verify input block>','exec'),namespace)
++    assert namespace['BFS']==24
++    save(H/'input_audit.json',dict(passed=True,ordinary_BFS=24,groups=12,states=48,real_histories=6,planner_calls=0,source='exact AST geometry/history/candidate/witness block of bound verify.py'))
++    receipt('inputs_audited',[H/'input_audit.json',H/'groups.json',H/'states.json',*sorted((H/'history').glob('*.json')),*sorted((H/'inputs').glob('*.json')),*sorted((H/'witnesses').glob('*.json'))])
++    print('PASS independent48 input/history/candidate/feasibility audit; ordinary BFS24; planner calls0',flush=True)
++if __name__=='__main__':main()
+--- v0.3/deliver.py
++++ v0.4/deliver.py
+@@ -0,0 +1,75 @@
++"""Read saved evidence only: route diagrams, plain report, final ledgers/manifest."""
++from common import *
++import sys,html,datetime
++def diagram(st,a):
++    c=read(H/st['input']);F=set(map(tuple,c['free']));T=set(map(tuple,c['targets']));hist=set(map(tuple,c['covered']));A=set(map(tuple,st['A']));s=12;panel=(st['L']+8)*s+28;height=(st['w']+8)*s+110
++    parts=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{3*panel}" height="{height}" viewBox="0 0 {3*panel} {height}"><rect width="100%" height="100%" fill="white"/><style>text{{font-family:Microsoft YaHei,Arial,sans-serif;font-size:11px}}</style>']
++    for k,method in enumerate(('INPUT','PPCPP','P2_MULTI')):
++        x0=k*panel+12;y0=42
++        label=method;route=[]
++        if method!='INPUT':
++            jid=f'formal_{st["id"]}_20261020_{method}';r=next(r for r in a['rows'] if r['id']==jid)
++            if (H/'outputs'/f'{jid}.json').exists():route=read(H/'outputs'/f'{jid}.json')['result']['raw'].get('route',[])
++            label+=f' L={r["metrics"]["length"] if r["metrics"] else "NA"} valid={r["valid"]} timely={r["timely"]}'
++        parts.append(f'<text x="{x0}" y="16">{html.escape(st["id"] if k==0 else label)}</text>')
++        if k==0:parts.append(f'<text x="{x0}" y="31">H={len(hist)}/{st["T0_count"]}, new={len(A)}, seed=20261020</text>')
++        for x,y in sorted(F):
++            p=(x,y);fill='#ffb64d' if p in A else '#8bb7ec' if p in hist else '#ffeaaa' if p in T else '#f4f4f4'
++            parts.append(f'<rect x="{x0+x*s}" y="{y0+y*s}" width="{s}" height="{s}" fill="{fill}" stroke="#ccc" stroke-width=".4"/>')
++        if route:
++            pts=' '.join(f'{x0+(p[0]+.5)*s},{y0+(p[1]+.5)*s}' for p in route)
++            parts.append(f'<polyline points="{pts}" fill="none" stroke="{"#206e31" if method=="PPCPP" else "#663db8"}" stroke-width="1.7" opacity=".82"/>')
++        for p,color,radius in [(c['base'],'black',3),(c['current'],'#e50070',4)]:parts.append(f'<circle cx="{x0+(p[0]+.5)*s}" cy="{y0+(p[1]+.5)*s}" r="{radius}" fill="{color}"/>')
++    parts.append(f'<text x="12" y="{height-14}">橙：新增A　蓝：历史H　黄：旧待检　灰：可飞非目标　黑：基地　红：当前位置。失败/迟到保留，固定首seed，不换例。</text></svg>')
++    p=H/'figures'/f'{st["id"]}.svg'
++    with p.open('x',encoding='utf8') as f:f.write(''.join(parts))
++    return p.name
++def main():
++    a=read(H/'analysis.json');verifylog=(H/'verify_execution.log').read_text(encoding='utf8');assert 'ALL PASS' in verifylog
++    states=read(H/'states.json');links=[]
++    for st in states:
++        name=diagram(st,a);links.append(f'<h3>{html.escape(st["id"])}</h3><a href="figures/{name}"><img style="max-width:100%" src="figures/{name}"/></a>')
++    with (H/'48状态路线图.html').open('x',encoding='utf8') as f:f.write('<!doctype html><meta charset="utf-8"><title>固定48状态：输入与两路线</title><h1>开发固定批，seed20261020</h1>'+''.join(links))
++    order=[json.loads(x) for x in (H/'actual_order.jsonl').read_text(encoding='utf8').splitlines()];receipts=[read(p) for p in (H/'logs').glob('*.receipt.json')]
++    synthetic=[]
++    for p in (H/'technical_rounds').rglob('outputs/*.json'):
++        try:x=read(p)
++        except (json.JSONDecodeError,UnicodeDecodeError):continue
++        if 'actual_core_calls' in x:synthetic.append(dict(path=str(p.relative_to(H)),stub_cores=len(x['actual_core_calls'])))
++    ledger=dict(real_cap=306,attempted_processes=len(order),real_entries=sum(r['markers']['entry_starts'] for r in receipts),real_cores=sum(r['markers']['core_starts'] for r in receipts),phase_processes=dict(collections.Counter(j['phase'] for j in order)),generation_BFS=read(H/'generation_ledger.json')['ordinary_BFS'],pre_event_input_audit_BFS=read(H/'input_audit.json')['ordinary_BFS'],final_verify_BFS=24,ordinary_BFS_total=read(H/'generation_ledger.json')['ordinary_BFS']+read(H/'input_audit.json')['ordinary_BFS']+24,coverage_exact_searches=0,synthetic_output_records=len(synthetic),synthetic_core_calls_in_saved_outputs=sum(x['stub_cores'] for x in synthetic),synthetic_records=synthetic,cold_real_dependency_import_checks=len(list((H/'technical_rounds').glob('*/B1.json'))),cold_production_inventory_imports=1,no_retry=True,holdout_used=False)
++    save(H/'call_ledger_final.json',ledger)
++    groups=a['views']['timely']['groups'];table='\n'.join(f'|{g["group"]}|{g["three_seed_H_U_complete"]}|{g["mean_DH_minus_DU"]}|{g["classification"]}|' for g in groups)
++    examples='\n'.join(f'- {g["selection"]}：{g["group"]}，均值{g["mean_DH_minus_DU"]}；四条件见48图入口。' for g in a['detailed_examples'])
++    report=f'''# 侧向拓宽固定开发批结果
++
++真实入口{ledger['real_entries']}/306，核心{ledger['real_cores']}，未补跑。完整技术门槛第三轮通过；前两轮错误、修复与回归保留。技术通过与研究支持分别判断。
++
++主及时配对：{json.dumps(a['views']['timely']['all'],ensure_ascii=False)}。
++事件：{json.dumps(a['views']['timely']['events'],ensure_ascii=False)}；控制：{json.dumps(a['views']['timely']['controls'],ensure_ascii=False)}。
++包含迟到的全部合法附录：{json.dumps(a['views']['legal']['all'],ensure_ascii=False)}。缺失与失败见144配对账；未将失败记0。
++
++原有限继续判据：{json.dumps(a['signal'],ensure_ascii=False)}。此结论仅针对固定开发数据；P2是可行参照，不是oracle。三seed不当独立地图，同一几何两个历史切点不重复计为两张图。
++
++|匹配组|三seed H/U完整|平均D_H−D_U|分类|
++|---|---|---|---|
++{table}
++
++D=L_PPCPP−L_P2。比较位置时当前/基地距离和任务布局也变化，D_H−D_U及事件减CONTROL均为描述性，不能当纯历史因果损失或可直接删除步数。各seed C+R、四移动类型和转弯见完整指标，访问/实际trace见嵌套原始字段。
++
++详细组按预登记最大、最小、绝对值最小顺序去重：
++{examples}
++
++耗时、完整/及时/迟到/失败：{json.dumps(a['time_summary'],ensure_ascii=False)}。
++
++48状态路线图.html固定首seed20261020，输入/两方法并列；失败不换seed。真实6历史、12前缀、候选全表和48输入均保留；独立输入审计与最终只读verify通过。普通BFS总{ledger['ordinary_BFS_total']}次单列，无覆盖精确、LAST、四方向、混合、留出或新地图。冻结源码不改，Git未提交推送。完成后停止，交负责人审核，不启动下一研究轮次。
++'''
++    with (H/'实验报告.md').open('x',encoding='utf8') as f:f.write(report)
++    with (H/'review_packet.md').open('x',encoding='utf8') as f:f.write('# 审核入口\n\n先读实验报告.md、technical_repairs.md、call_ledger_final.json；再看48状态路线图.html、144全部配对与不可用原因.csv、signal.json及verify_execution.log。两阶段seal与最终manifest保留。技术总PASS来自第三轮实际检查，历史失败不覆盖。\n')
++    root=R/'当前进度与下一步.md';old=root.read_bytes()
++    with (H/'root_progress_before_completion.md').open('xb') as f:f.write(old)
++    addition=f'# 最新完成：侧向拓宽v0.4固定批封存（2026-10-21）\n\n真实入口{ledger["real_entries"]}/306、核心{ledger["real_cores"]}，技术第三轮通过，原6准备＋12门槛＋288正式按序完成，全部原始失败与技术修复保留。原有限继续信号registered_pass={a["signal"]["registered_pass"]}，支持几何{a["signal"]["support_geometries"]}；仅开发诊断，不是普遍因果或主算法确认。双指标、48输入及候选历史、严格及时/含迟到配对、全部48固定seed路线图和只读verify保留。详见PPCPP侧向拓宽开发诊断_v0.4_20261021/实验报告.md。冻结原件及旧版本不改，留出不用，Git不提交推送，完成停止待审核。\n\n---\n\n'
++    with root.open('wb') as f:f.write(addition.encode('utf8')+old)
++    with (H/'root_progress_after_completion.md').open('xb') as f:f.write(root.read_bytes())
++    save(H/'manifest.json',{str(p.relative_to(H)):sha(p) for p in sorted(H.rglob('*')) if p.is_file() and p.name not in ('manifest.json','delivery_execution.log')})
++    print(json.dumps(dict(status='SEALED_COMPLETE',ledger=ledger,signal=a['signal']),ensure_ascii=False),flush=True)
++if __name__=='__main__':main()
+--- v0.3/prepare_v04.py
++++ v0.4/prepare_v04.py
+@@ -0,0 +1,26 @@
++"""Byte-preserving v0.4 preparation; no planner imports."""
++from pathlib import Path
++import hashlib,json,difflib,ast
++H=Path(__file__).resolve().parent;R=H.parent;OLD=R/'PPCPP侧向拓宽开发诊断_v0.3_20261021'
++def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
++def save(p,x):
++    with p.open('x',encoding='utf8') as f:json.dump(x,f,ensure_ascii=False,indent=2)
++def main():
++    old= json.loads((OLD/'completion_manifest.json').read_text(encoding='utf8'))['files']
++    for n,h in old.items():assert sha(OLD/n)==h,n
++    rows=[]
++    for n in ('common.py','visit_a.py','generate.py','stat_stubs.py','worker.py','run.py','analysis.py','verify.py','protocol.md','maps.json','prep_order.json'):
++        src=OLD/n;target=H/n
++        with target.open('xb') as f:f.write(src.read_bytes())
++        rows.append(dict(source=str(src),source_sha256=sha(src),target=str(target),initial_sha256=sha(target),reason='unchanged v0.3 bytes'))
++    for folder in ('inputs','jobs','frozen_source_bytes'):
++        (H/folder).mkdir()
++        for src in sorted((OLD/folder).glob('*')):
++            if src.is_file():
++                target=H/folder/src.name
++                with target.open('xb') as f:f.write(src.read_bytes())
++                rows.append(dict(source=str(src),source_sha256=sha(src),target=str(target),initial_sha256=sha(target),reason='unchanged initial/job/frozen reference'))
++    for folder in ('preflight','receipts','outputs','logs','history','witnesses','figures','technical_rounds'):(H/folder).mkdir()
++    save(H/'source_manifest_initial.json',rows);save(H/'old_v03_hashes.json',{str(OLD/n):h for n,h in old.items()})
++    print('Prepared v0.4 independent active copies; no previous PASS/seal/results copied; no solve')
++if __name__=='__main__':main()
+--- v0.3/reference_contract.py
++++ v0.4/reference_contract.py
+@@ -0,0 +1,30 @@
++"""Three frozen byte references only: validate source first, never overwrite."""
++from pathlib import Path
++import hashlib,os,stat
++NAMES=('runtime.py','candidate.py','p2_adapter.py')
++def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
++def ordinary(p):
++    s=p.lstat()
++    assert stat.S_ISREG(s.st_mode) and not p.is_symlink() and not getattr(s,'st_file_attributes',0)&getattr(stat,'FILE_ATTRIBUTE_REPARSE_POINT',1024),('unexpected_reference_type',str(p))
++def references(source_dir,target_dir,expected):
++    source_dir=Path(source_dir);target_dir=Path(target_dir)
++    assert target_dir.name=='frozen_source_bytes' and target_dir.is_dir() and not target_dir.is_symlink()
++    s=target_dir.lstat();assert not getattr(s,'st_file_attributes',0)&getattr(stat,'FILE_ATTRIBUTE_REPARSE_POINT',1024)
++    # Check ALL inherited source hashes before creating any reference.
++    for name in NAMES:
++        src=source_dir/name;ordinary(src);assert str(src.resolve()) in expected,('missing_inherited_hash',str(src))
++        assert sha(src)==expected[str(src.resolve())],('frozen_source_drift',str(src))
++    rows=[]
++    for name in NAMES:
++        src=source_dir/name;dst=target_dir/name;assert dst.parent.resolve()==target_dir.resolve()
++        raw=src.read_bytes();existed=dst.exists() or dst.is_symlink();before=dst.lstat().st_mtime_ns if existed else None
++        if not existed:
++            try:
++                with dst.open('xb') as f:f.write(raw)
++                action='created'
++            except FileExistsError:action='race_read_validation'
++        else:action='reused_read_only'
++        ordinary(dst);assert dst.read_bytes()==raw,('reference_bytes_mismatch',str(dst))
++        if existed:assert dst.lstat().st_mtime_ns==before,('reference_timestamp_changed',str(dst))
++        rows.append(dict(name=name,action=action,sha256=sha(dst),existing_mtime_unchanged=existed))
++    return rows
+--- v0.3/seal.py
++++ v0.4/seal.py
+@@ -1,26 +1,28 @@
+-"""Two real seals; preserve inherited expected hashes, never rebase drift."""
++"""Two immutable production seals; references read-validated, append logs final-bound."""
+ from common import *
++from reference_contract import references
+ import sys,subprocess,os,datetime
++def fixed_file(p):
++    # Root execution transcripts and actual_order are deliberately appended.
++    # They remain evidence and are hashed by the final manifest.
++    return '__pycache__' not in p.parts and p.name!='actual_order.jsonl' and not (p.parent==H and p.name.endswith('_execution.log'))
+ def run(stage):
+-    require('technical')
+-    assert stage in (1,2)
+-    require('stat_stubs')
++    require('technical');assert stage in (1,2);require('stat_stubs')
+     if stage==1:
+-        assert not (H/'actual_order.jsonl').exists();files=read(S/'formal_seal.json');env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
++        assert not (H/'actual_order.jsonl').exists();files=read(S/'formal_seal.json')
++        ref=references(P,H/'frozen_source_bytes',files)
++        save(H/'reference_contract_audit.json',ref)
++        env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
+         p=subprocess.run([sys.executable,'-B','-X','utf8',str(H/'worker.py'),'inventory'],env=env,capture_output=True,check=True);x=json.loads(p.stdout);save(H/'import_inventory.json',x)
+         for path in x['paths']:
+             now=sha(path)
+             if path in files:assert now==files[path],('frozen_hash_drift',path)
+             files[path]=now
+-        for name in ('runtime.py','candidate.py','p2_adapter.py'):
+-            source=P/name;target=H/'frozen_source_bytes'/name;target.parent.mkdir(exist_ok=True)
+-            with target.open('xb') as f:f.write(source.read_bytes())
+-            assert source.read_bytes()==target.read_bytes()
+     else:
+-        require('generated');require('prep');require('seal1');files=read(H/'seal1.json')['files']
++        require('generated');require('prep');require('inputs_audited');require('seal1');files=read(H/'seal1.json')['files']
+         for p,h in files.items():assert sha(p)==h,p
+     for p in H.rglob('*'):
+-        if p.is_file() and '__pycache__' not in p.parts and p.name not in ('actual_order.jsonl','seal1_execution.log','seal2_execution.log'):
++        if p.is_file() and fixed_file(p):
+             path=str(p.resolve());now=sha(p)
+             if path in files:assert now==files[path],path
+             files[path]=now
+--- v0.3/tech_child.py
++++ v0.4/tech_child.py
+@@ -0,0 +1,235 @@
++"""Isolated technical cases. Synthetic interfaces never import real planners."""
++from pathlib import Path
++import sys,os,json,hashlib,types,runpy,subprocess,ast,shutil,importlib,time
++H=Path(__file__).resolve().parent
++def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
++def read(p):return json.loads(Path(p).read_text(encoding='utf8'))
++def save(p,x):
++    with Path(p).open('x',encoding='utf8') as f:json.dump(x,f,ensure_ascii=False,indent=2)
++def put(p,b):
++    p=Path(p);p.parent.mkdir(parents=True,exist_ok=True)
++    with p.open('xb') as f:f.write(b)
++def file_state():return {str(p.relative_to(H)):[p.stat().st_size,p.stat().st_mtime_ns] for p in H.rglob('*') if p.is_file()}
++def b1(out):
++    before=file_state();sys.path.insert(0,str(H.parent/'PPCPP_LAST_P2共同预算开发比较_v0.1_20261020'))
++    import runtime,candidate,p2_adapter
++    pp=runtime.native.solve;p2=p2_adapter.p2_solve;events=[];registrations=[]
++    forbidden={f.__code__ for f in (pp,p2,runtime.run_payload,p2_adapter.run_payload,p2_adapter.solve,candidate.solve)}
++    def profile(frame,event,arg):
++        if event=='call' and frame.f_code in forbidden:raise AssertionError('real solver/entry forbidden in B1')
++    def monitor(event,args):
++        if event=='open' and isinstance(args[0],(str,bytes,os.PathLike)):
++            p=Path(os.fsdecode(args[0])).resolve()
++            if H in p.parents and any(x in p.parts for x in ('inputs','jobs','outputs','logs','receipts')):events.append([event,str(p),str(args[1])]);raise AssertionError('task artifact access in import')
++    register=sys.addaudithook;register(monitor)
++    def reject(hook):registrations.append(repr(hook));raise AssertionError('task audit hook installed by import')
++    sys.addaudithook=reject;sys.setprofile(profile);sys.argv=['ordinary_import_without_task_arguments']
++    for name in ('worker','run','analysis','verify','generate','seal','reference_contract'):importlib.import_module(name)
++    sys.setprofile(None)
++    assert runtime.native.solve is pp and p2_adapter.p2_solve is p2 and not registrations and not events
++    assert file_state()==before
++    paths=sorted({str(Path(m.__file__).resolve()) for m in sys.modules.values() if getattr(m,'__file__',None) and Path(m.__file__).is_file()}|{str(Path(runtime.native.__file__).resolve()),str(Path(runtime.native.core.__file__).resolve()),str(Path(runtime.validate.__code__.co_filename).resolve())})
++    save(out,dict(status='PASS',native_solve_identity_unchanged=True,p2_solve_identity_unchanged=True,
++         native_source=pp.__code__.co_filename,p2_source=p2.__code__.co_filename,audit_registration_attempts=registrations,task_accesses=events,before=before,after=file_state(),paths=paths,real_entry_core_calls=0,method='own audit observer installed using saved original; public addaudithook rejects; profile forbids real entry/core functions'))
++    print('PASS B1 ordinary real-dependency import; zero task effects / solve / hook registration')
++def setup_fixture(f):
++    f=Path(f);f.mkdir();p=f/'STUB_FROZEN_NOT_REAL';p.mkdir()
++    for n in ('inputs','jobs','outputs','logs','receipts','frozen_source_bytes','history','witnesses','figures'):(f/n).mkdir()
++    for src in H.glob('*.py'):put(f/src.name,src.read_bytes())
++    for n in ('protocol.md','maps.json'):put(f/n,(H/n).read_bytes())
++    for n in ('runtime.py','candidate.py','p2_adapter.py'):put(p/n,b'# SYNTHETIC_NOT_EXPERIMENT: stub provenance placeholder\n');put(f/'frozen_source_bytes'/n,(p/n).read_bytes())
++    put(f/'基线复现准备_20261019/独立版_v0.2/ppcpp.py',b'# SYNTHETIC_NOT_EXPERIMENT native stub source\n')
++    put(p/'reward_stub.py',b'# SYNTHETIC_NOT_EXPERIMENT reward stub source\n')
++    put(f/'PPCPP侧向拓宽固定批诊断执行稿_给sol_20261021.md',b'SYNTHETIC_NOT_EXPERIMENT protocol placeholder')
++    put(f/'PPCPP场景证据只读整理_20261021/整理结论.md',b'SYNTHETIC_NOT_EXPERIMENT provenance placeholder')
++    save(f/'PPCPP场景证据只读整理_20261021/54状态读取核对.json',dict(synthetic=True))
++    save(f/'formal_seal.json',{str(x.resolve()):sha(x) for x in p.glob('*.py')})
++    save(f/'binding_files.json',sorted([x.name for x in f.glob('*.py')]+['protocol.md','maps.json','binding_files.json']))
++    save(f/'SYNTHETIC_NOT_EXPERIMENT.json',dict(real_planner_allowed=False,production_protocol_unchanged=True))
++    return f
++def stub_environment(f):
++    # Real common I/O/hash/receipt implementation; only root/source directories
++    # and the planner module interfaces are replaced in this child process.
++    import common
++    f=Path(f).resolve();common.H=f;common.R=f;common.P=f/'STUB_FROZEN_NOT_REAL';common.S=f
++    runtime=types.ModuleType('runtime');runtime.__file__=str(common.P/'runtime.py')
++    candidate=types.ModuleType('candidate');candidate.__file__=str(common.P/'candidate.py')
++    adapter=types.ModuleType('p2_adapter');adapter.__file__=str(common.P/'p2_adapter.py')
++    native=types.ModuleType('SYNTHETIC_NOT_EXPERIMENT_native');native.__file__=str(f/'基线复现准备_20261019/独立版_v0.2/ppcpp.py');native.core=types.SimpleNamespace(__file__=str(common.P/'reward_stub.py'))
++    calls=[]
++    def pp_original(c):calls.append('PP_STUB');return dict(route=c['SYNTHETIC_FIXED_RETURN'],status='core_complete',mode='PPCPP',branches={'P0':{}},source='SYNTHETIC_NOT_EXPERIMENT')
++    def p2_original(c):calls.append('P2_STUB');return dict(route=c['SYNTHETIC_FIXED_RETURN'],status='core_complete',source='SYNTHETIC_NOT_EXPERIMENT')
++    native.solve=pp_original;adapter.p2_solve=p2_original;runtime.native=native
++    def pp_entry(payload,mode,budget,seed):
++        assert mode=='PPCPP' and budget==20
++        return dict(raw=native.solve(json.loads(payload)),entry_seconds=.001,budget=budget,seed=seed,method=mode)
++    def p2_entry(payload,budget,seed):
++        assert budget==20
++        return dict(raw=adapter.p2_solve(json.loads(payload)),entry_seconds=.001,budget=budget,seed=seed,method='P2_MULTI')
++    runtime.run_payload=pp_entry;adapter.run_payload=p2_entry
++    sys.modules.update(runtime=runtime,candidate=candidate,p2_adapter=adapter)
++    return common,calls,pp_original,p2_original
++def synthetic_input():
++    return dict(name='SYNTHETIC_NOT_EXPERIMENT',free=[[0,0],[1,0],[0,1],[1,1]],targets=[[1,0]],published_targets=[[1,0]],initial_targets=[[1,0]],covered=[],deferred_targets=[],current=[0,0],base=[0,0],previous=None,predator=[-1,0],distance_budget=100,old_route=[],SYNTHETIC_FIXED_RETURN=[[0,0],[1,0],[0,0]])
++def synthetic_credentials(c,jobs):
++    # Fresh test-only receipts use the actual hash/require code and fixture files.
++    c.receipt('technical',[c.H/'SYNTHETIC_NOT_EXPERIMENT.json'])
++    runpy.run_path(str(H/'stat_stubs.py'),run_name='__main__')
++    for j in jobs:save(c.H/'jobs'/f'{j["id"]}.json',j)
++    files={str(Path(m.__file__).resolve()):sha(m.__file__) for m in list(sys.modules.values()) if getattr(m,'__file__',None) and Path(m.__file__).is_file()}
++    for p in c.H.rglob('*'):
++        if p.is_file():files[str(p.resolve())]=sha(p)
++    save(c.H/'seal1.json',dict(complete=True,binding=c.binding(),critical={},files=files))
++    c.receipt('seal1',[c.H/'seal1.json'])
++def worker_child(f,args):
++    c,calls,original_pp,original_p2=stub_environment(f);closure={}
++    def profile(frame,event,arg):
++        if event=='return' and frame.f_code.co_name=='main' and Path(frame.f_code.co_filename).name=='worker.py':
++            loc=frame.f_locals
++            if 'counts' in loc:
++                closure.update(j_local=loc['j']['id'],inp=str(loc['inp']),reads_same_object=True,counts=loc['counts'],original_pp_identity=loc['original_pp'] is original_pp,original_p2_identity=loc['original_p2'] is original_p2)
++                for name,expect in [('pp',{'counts','original_pp'}),('p2',{'counts','original_p2'}),('audit',{'inp','reads'})]:
++                    fn=loc[name];assert set(fn.__code__.co_freevars)==expect,(name,fn.__code__.co_freevars)
++                    cells=dict(zip(fn.__code__.co_freevars,[x.cell_contents for x in fn.__closure__]));assert cells.get('counts',loc['counts']) is loc['counts'];assert cells.get('reads',loc['reads']) is loc['reads'];closure[name+'_freevars']=list(fn.__code__.co_freevars)
++    sys.setprofile(profile);sys.argv=[str(c.H/'worker.py')]+args
++    try:runpy.run_path(str(c.H/'worker.py'),run_name='__main__')
++    finally:
++        sys.setprofile(None);print('SYNTHETIC_CLOSURE '+json.dumps(dict(closure=closure,stub_calls=calls,real_planners_loaded=False)),file=sys.stderr if args==['inventory'] else sys.stdout,flush=True)
++def worker_fixture(mode,f,out):
++    setup_fixture(f);c,calls,pp,p2=stub_environment(f)
++    save(c.H/'inputs/tiny.json',synthetic_input())
++    job=dict(id='SYNTHETIC_'+mode,phase='prep',case='tiny',input='inputs/tiny.json',method='P2_MULTI' if mode=='P2' else 'PPCPP',seed=20261021,budget=20,seal='seal1.json')
++    synthetic_credentials(c,[job])
++    if mode=='stale':
++        with (c.H/'protocol.md').open('ab') as z:z.write(b'\nSYNTHETIC_STALE_BINDING')
++    argv=['inventory'] if mode=='inventory' else [str(c.H/'jobs'/f'{job["id"]}.json'),str(c.H/'outputs/result.json')]
++    p=subprocess.run([sys.executable,'-B','-X','utf8',str(Path(__file__).resolve()),'worker_child',str(c.H),*argv],capture_output=True)
++    put(c.H/'fixture_stdout.log',p.stdout);put(c.H/'fixture_stderr.log',p.stderr)
++    count=dict(entries=p.stdout.count(b'ENTRY_START '),cores=p.stdout.count(b'CORE_START '))
++    if mode in ('PP','P2'):
++        assert p.returncode==0,p.stderr.decode();assert count==dict(entries=1,cores=1)
++        x=read(c.H/'outputs/result.json');assert x['job']==job and len(x['actual_core_calls'])==1 and set(x['runtime_reads'])=={str(c.H/'inputs/tiny.json')}
++        assert x['actual_core_calls'][0]['kind']==('P2_multi_core' if mode=='P2' else 'PPCPP_native')
++        info=json.loads(next(x for x in p.stdout.decode().splitlines() if x.startswith('SYNTHETIC_CLOSURE ')).split(' ',1)[1]);assert info['closure']['original_pp_identity'] and info['closure']['original_p2_identity'];assert info['stub_calls']==(['P2_STUB'] if mode=='P2' else ['PP_STUB'])
++    else:
++        assert count==dict(entries=0,cores=0) and not (c.H/'outputs/result.json').exists()
++        assert (p.returncode==0) if mode=='inventory' else (p.returncode!=0 and b'AssertionError' in p.stderr)
++    save(out,dict(status='PASS',synthetic=True,mode=mode,child_exit=p.returncode,markers=count,actual_worker_source_sha256=sha(c.H/'worker.py'),real_entry_core_calls=0))
++def reference_tests(f,out):
++    from reference_contract import references,NAMES
++    f=Path(f);f.mkdir();rows=[]
++    for mode in ('absent','identical','different','source_drift'):
++        d=f/mode;d.mkdir();src=d/'source';src.mkdir();dst=d/'frozen_source_bytes';dst.mkdir()
++        for n in NAMES:put(src/n,('SYNTHETIC_NOT_EXPERIMENT '+n).encode())
++        expected={str((src/n).resolve()):sha(src/n) for n in NAMES}
++        if mode!='absent':
++            for n in NAMES:put(dst/n,(src/n).read_bytes())
++        if mode=='different':
++            with (dst/NAMES[0]).open('ab') as z:z.write(b'BAD')
++        if mode=='source_drift':
++            with (src/NAMES[0]).open('ab') as z:z.write(b'DRIFT')
++        before={str(p):[sha(p),p.stat().st_mtime_ns] for p in d.rglob('*') if p.is_file()}
++        try:r=references(src,dst,expected);error=None
++        except AssertionError as ex:r=None;error=repr(ex)
++        assert bool(error)==(mode in ('different','source_drift'))
++        for p,v in before.items():assert [sha(p),Path(p).stat().st_mtime_ns]==v
++        assert not (d/'seal1.json').exists()
++        rows.append(dict(case=mode,passed=True,error=error,result=r))
++    save(out,dict(status='PASS',cases=rows,real_entry_core_calls=0))
++def export_case(f,out):
++    import analysis,verify
++    f=Path(f);f.mkdir();analysis.H=f;verify.H=f
++    nested=dict(中文='引号"，逗号,\n第二行',nested=[None,False,{'x':'长'*180000}])
++    rows=[dict(id='SYNTHETIC_NOT_EXPERIMENT_'+str(i),condition='CONTROL' if i==1 else 'H_SIDE',valid=i!=2,timely=i!=2,metrics=None if i==2 else dict(length=3+i),visits_A=dict(classification='not_applicable') if i==1 else nested,pp_first_A_event=nested) for i in range(4)]
++    a=dict(rows=rows,pairs=[dict(id='SYNTHETIC',nested=nested)],views={v:dict(all={},events={},controls={},states=[{'synthetic':nested}],groups=[{'synthetic':nested}],contrasts=[{'synthetic':nested}],strata={'synthetic':{'x':{'synthetic':nested}}}) for v in ('timely','legal')},signal={'synthetic':True},detailed_examples=[],time_summary={})
++    analysis.compute=lambda:a;analysis.export()
++    tree=ast.parse((H/'analysis.py').read_text(encoding='utf8'))
++    call=next(n for n in ast.walk(tree) if isinstance(n,ast.Call) and isinstance(n.func,ast.Name) and n.func.id=='csvsave' and any(isinstance(k,ast.Constant) and k.value=='288正式调用完整指标.csv' for k in ast.walk(n.args[0])))
++    expected=eval(compile(ast.Expression(body=call.args[1]),'<actual export flatten AST>','eval'),analysis.__dict__,{'a':a})
++    verify.csvcheck('288正式调用完整指标.csv',expected);verify.csvcheck('144全部配对与不可用原因.csv',a['pairs'])
++    import csv
++    with (f/'288正式调用完整指标.csv').open(encoding='utf-8-sig',newline='') as z:actual=list(csv.DictReader(z))
++    assert len(actual)==4 and actual[2]['length']=='' and actual[2]['valid']=='False' and json.loads(actual[1]['visits_A'])['classification']=='not_applicable'
++    assert json.loads(actual[0]['visits_A'])==nested and max(len(v) for r in actual for v in r.values())>131072
++    save(out,dict(status='PASS',synthetic=True,rows=4,actual_export_and_csvcheck=True,flatten_expression=ast.unparse(call.args[1]),long_field=True,failed_metric_empty_not_zero=True,real_entry_core_calls=0))
++def negatives(f,out):
++    from tech_lib import syntax_gate
++    f=Path(f);f.mkdir();bad=f/'INTENTIONALLY_INVALID_NOT_ACTIVE.py';put(bad,b'def broken(:\n')
++    sentinel=f/'UNREACHABLE_AFTER_SYNTAX.json'
++    try:syntax_gate([bad],lambda:save(sentinel,dict(bad=True)));raise AssertionError('syntax allowed')
++    except SyntaxError:pass
++    assert not sentinel.exists()
++    d=f/'stale';setup_fixture(d);c,*_=stub_environment(d);c.receipt('technical',[d/'SYNTHETIC_NOT_EXPERIMENT.json'])
++    with (d/'protocol.md').open('ab') as z:z.write(b'INVALIDATE')
++    try:c.require('technical');save(f/'UNREACHABLE_AFTER_HASH.json',{});raise RuntimeError('stale accepted')
++    except AssertionError:pass
++    assert not (f/'UNREACHABLE_AFTER_HASH.json').exists()
++    save(out,dict(status='PASS',syntax_negative=True,stale_hash_negative=True,post_gate_sentinels=0,real_entry_core_calls=0))
++def integration(f,out):
++    blocked=[]
++    for kind in ('mismatch_reference','stale_PASS'):
++        neg=Path(f).parent/(Path(f).name+'_'+kind);setup_fixture(neg);cc,*_=stub_environment(neg)
++        cc.receipt('technical',[neg/'SYNTHETIC_NOT_EXPERIMENT.json']);cc.receipt('stat_stubs',[neg/'SYNTHETIC_NOT_EXPERIMENT.json'])
++        target=neg/'frozen_source_bytes/runtime.py' if kind=='mismatch_reference' else neg/'protocol.md'
++        with target.open('ab') as z:z.write(b'SYNTHETIC_NEGATIVE')
++        before=target.read_bytes();control=runpy.run_path(str(H/'seal.py'),run_name='synthetic_negative_seal')
++        try:control['run'](1);raise RuntimeError('invalid seal accepted')
++        except AssertionError:pass
++        assert target.read_bytes()==before and not (neg/'seal1.json').exists() and not (neg/'actual_order.jsonl').exists()
++        blocked.append(kind)
++    setup_fixture(f);c,*_=stub_environment(f);f=c.H
++    save(f/'inputs/tiny.json',synthetic_input());jobs={}
++    for phase,n in [('prep',6),('gate',12),('formal',2)]:
++        order=[]
++        for i in range(n):
++            j=dict(id=f'SYNTHETIC_{phase}_{i:02d}',phase=phase,case='tiny',input='inputs/tiny.json',method='PPCPP' if phase=='prep' or i%2==0 else 'P2_MULTI',seed=20261021,budget=20,seal='seal1.json' if phase=='prep' else 'seal2.json');order.append(j);save(f/'jobs'/f'{j["id"]}.json',j)
++        jobs[phase]=order;save(f/({'prep':'prep_order.json','gate':'gate_order.json','formal':'order.json'}[phase]),order)
++    c.receipt('technical',[f/'SYNTHETIC_NOT_EXPERIMENT.json']);runpy.run_path(str(H/'stat_stubs.py'),run_name='__main__')
++    # Preserve real control code. Only launching the worker is redirected to a
++    # child which injects the clearly labelled stub modules before run_path.
++    real_run=subprocess.run
++    def launch(argv,**kw):
++        if len(argv)>4 and Path(argv[4]).name=='worker.py':argv=[sys.executable,'-B','-X','utf8',str(Path(__file__).resolve()),'worker_child',str(f),*argv[5:]]
++        return real_run(argv,**kw)
++    subprocess.run=launch
++    seal=runpy.run_path(str(H/'seal.py'),run_name='synthetic_seal_control')
++    runner=runpy.run_path(str(H/'run.py'),run_name='synthetic_run_control')
++    seal['run'](1);runner['run']('prep')
++    # Synthetic generation stand-in: no geometry claim; stage products and
++    # generated receipt use actual common I/O/hash code, not production inputs.
++    save(f/'states.json',[dict(synthetic=True)]);c.receipt('generated',[f/'states.json']);c.receipt('inputs_audited',[f/'states.json'])
++    seal['run'](2)
++    before=(f/'actual_order.jsonl').read_bytes()
++    try:runner['run']('formal');raise RuntimeError('missing gate accepted')
++    except FileNotFoundError:pass
++    assert (f/'actual_order.jsonl').read_bytes()==before
++    runner['run']('gate');runner['run']('formal')
++    for stage in ('technical','stat_stubs','seal1','prep','generated','seal2','gate','formal'):c.require(stage)
++    for name in ('seal1.json','seal2.json'):
++        for p,h in c.check_seal(name)['files'].items():assert sha(p)==h,p
++    order=[json.loads(x) for x in (f/'actual_order.jsonl').read_text(encoding='utf8').splitlines()];assert len(order)==20
++    import analysis,verify
++    analysis.H=f;verify.H=f
++    rows=[analysis.job_row(j) for j in jobs['formal']];a=dict(rows=rows,pairs=[{'synthetic':True}],views={v:dict(all={},events={},controls={},states=[],groups=[],contrasts=[],strata={}) for v in ('timely','legal')},signal={'synthetic':True},detailed_examples=[],time_summary={})
++    analysis.compute=lambda:a;analysis.export()
++    flatten=[{**{k:v for k,v in r.items() if k not in ('metrics','visits_A','pp_first_A_event')},**(r['metrics'] or {}),'visits_A':r['visits_A'],'pp_first_A_event':r['pp_first_A_event']} for r in rows]
++    verify.csvcheck('288正式调用完整指标.csv',flatten);assert all(r['valid'] and r['timely'] for r in rows)
++    # Existing-output failure at the real runner, before any new subprocess.
++    # Clone the initial controls; do not remove, mutate or reuse old evidence.
++    neg=f.parent/(f.name+'_EXISTING_OUTPUT');setup_fixture(neg);c.H=neg
++    save(neg/'inputs/tiny.json',synthetic_input());j=jobs['prep'][0];save(neg/'prep_order.json',[j]);save(neg/'jobs'/f'{j["id"]}.json',j);put(neg/'outputs'/f'{j["id"]}.json',b'SYNTHETIC_EXISTING_RESULT_DO_NOT_OVERWRITE')
++    c.receipt('technical',[neg/'SYNTHETIC_NOT_EXPERIMENT.json']);c.receipt('stat_stubs',[neg/'SYNTHETIC_NOT_EXPERIMENT.json']);save(neg/'seal1.json',dict(complete=True,binding=c.binding(),critical={},files={}));c.receipt('seal1',[neg/'seal1.json'])
++    r2=runpy.run_path(str(H/'run.py'),run_name='synthetic_existing_output_control')
++    try:r2['run']('prep');raise RuntimeError('output overwrite allowed')
++    except AssertionError:pass
++    assert not (neg/'actual_order.jsonl').exists() and (neg/'outputs'/f'{j["id"]}.json').read_bytes()==b'SYNTHETIC_EXISTING_RESULT_DO_NOT_OVERWRITE'
++    save(out,dict(status='PASS',synthetic=True,actual_control_sources=['seal.py','run.py','worker.py','analysis.export','verify.csvcheck','common.require/check_seal'],simulation_counts=dict(prep=6,gate=12,formal=2,stub_entries=20,stub_cores=20),production_counts_unchanged=[6,12,288],negative_seals_blocked=blocked,missing_gate_blocked=True,existing_output_blocked_before_entry=True,interfaces_replaced=['planner runtime/candidate/p2_adapter','worker subprocess bootstrap','synthetic generation stage product and input-audit receipt','analysis.compute synthetic selection only'],real_entry_core_calls=0))
++if __name__=='__main__':
++    mode=sys.argv[1]
++    if mode=='b1':b1(Path(sys.argv[2]))
++    elif mode=='worker_child':worker_child(sys.argv[2],sys.argv[3:])
++    elif mode=='worker':worker_fixture(sys.argv[2],Path(sys.argv[3]),Path(sys.argv[4]))
++    elif mode=='refs':reference_tests(Path(sys.argv[2]),Path(sys.argv[3]))
++    elif mode=='export':export_case(Path(sys.argv[2]),Path(sys.argv[3]))
++    elif mode=='negatives':negatives(Path(sys.argv[2]),Path(sys.argv[3]))
++    elif mode=='integration':integration(Path(sys.argv[2]),Path(sys.argv[3]))
+--- v0.3/tech_lib.py
++++ v0.4/tech_lib.py
+@@ -0,0 +1,22 @@
++"""Pure technical checks, shared by real preflight and negative fixture."""
++from pathlib import Path
++import ast,hashlib,json
++def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
++def syntax_gate(paths,after=None):
++    rows=[]
++    for p in sorted(set(map(Path,paths))):
++        ast.parse(p.read_text(encoding='utf-8-sig'),filename=str(p));rows.append(dict(path=str(p.resolve()),sha256=sha(p),passed=True))
++    if after:after()
++    return rows
++def guarded_worker(path,old):
++    t=ast.parse(Path(path).read_text(encoding='utf8'));s=Path(old).read_text(encoding='utf8');prefix=s[:s.index('assert Path(runtime.__file__).resolve()')]
++    original=ast.parse(s).body[len(ast.parse(prefix).body):]
++    main=next(n for n in t.body if isinstance(n,ast.FunctionDef) and n.name=='main');body=list(main.body);gate=ast.parse("require('technical')").body[0]
++    i=[i for i,n in enumerate(body) if ast.dump(n)==ast.dump(gate)];assert len(i)==1;body.pop(i[0]);assert ast.dump(ast.Module(body=body,type_ignores=[]))==ast.dump(ast.Module(body=original,type_ignores=[]))
++    forbidden={'read','save','require','check_seal','sys.addaudithook','runtime.run_payload','p2_adapter.run_payload'}
++    for n in t.body:
++        if isinstance(n,(ast.FunctionDef,ast.Import,ast.ImportFrom)) or isinstance(n,ast.If):continue
++        for c in ast.walk(n):
++            if isinstance(c,ast.Call):assert ast.unparse(c.func) not in forbidden,ast.unparse(c)
++    assert not any(isinstance(n,ast.Global) for n in ast.walk(main))
++    return dict(task_AST_equal_except_one_technical_gate=True,no_global_added=True,task_calls_inside_guard=True)
+--- v0.3/tech_preflight.py
++++ v0.4/tech_preflight.py
+@@ -0,0 +1,67 @@
++"""At most three no-solve integration rounds; no production PASS on any failure."""
++from pathlib import Path
++import sys,os,json,subprocess,hashlib,ast,datetime,difflib
++from tech_lib import syntax_gate,guarded_worker
++H=Path(__file__).resolve().parent;R=H.parent
++def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
++def read(p):return json.loads(Path(p).read_text(encoding='utf8'))
++def save(p,x):
++    with Path(p).open('x',encoding='utf8') as f:json.dump(x,f,ensure_ascii=False,indent=2)
++def initial():
++    assert not (H/'binding_files.json').exists()
++    deps={'technical':[], 'stat_stubs':[], 'seal1':['technical','stat_stubs'], 'prep':['technical','stat_stubs','seal1'], 'generated':['prep'], 'seal2':['technical','stat_stubs','seal1','prep','generated'], 'gate':['technical','stat_stubs','seal2','prep','generated'], 'formal':['technical','stat_stubs','seal2','prep','generated','gate']}
++    save(H/'stage_dependencies.json',dict(dependencies=deps,production_counts=[6,12,288],cap=306,clock=dict(warm_entry_seconds=20,watchdog_seconds=90,threads=1),synthetic_plan='6 prep +12 gate +2 formal tests existing fixed past-count assertions; does not alter production orders'))
++    names=[str(p.relative_to(H)) for p in H.glob('*.py')]+['binding_files.json','protocol.md','maps.json','prep_order.json','stage_dependencies.json','source_manifest_initial.json','old_v03_hashes.json']
++    names += [str(p.relative_to(H)) for folder in ('inputs','jobs','frozen_source_bytes') for p in (H/folder).glob('*') if p.is_file()]
++    names += ['../PPCPP侧向拓宽固定批诊断执行稿_给sol_20261021.md','../PPCPP侧向拓宽v0.2技术修复接续执行稿_给sol_20261021.md','../PPCPP侧向拓宽v0.3入口守卫修复接续执行稿_给sol_20261021.md','../PPCPP侧向拓宽v0.4准备链集成修复执行稿_给sol_20261021.md']
++    save(H/'binding_files.json',sorted(names))
++def main():
++    if not (H/'binding_files.json').exists():initial()
++    rounds=sorted((H/'technical_rounds').glob('round_*'));number=len(rounds)+1;assert number<=3,'three-round limit reached'
++    d=H/'technical_rounds'/f'round_{number:02d}';d.mkdir()
++    assert not (H/'actual_order.jsonl').exists() and not list((H/'outputs').glob('*'))
++    for p,h in read(H/'old_v03_hashes.json').items():assert sha(p)==h,p
++    save(d/'source_snapshot.json',{str(p.relative_to(H)):sha(p) for p in H.glob('*.py')})
++    for p in H.glob('*.py'):
++        with (d/('source_'+p.name)).open('xb') as f:f.write(p.read_bytes())
++    structure=guarded_worker(H/'worker.py',R/'PPCPP侧向拓宽开发诊断_v0.2_20261021/worker.py');save(d/'worker_structure.json',structure)
++    paths=list(H.glob('*.py'))+list((H/'frozen_source_bytes').glob('*.py'))
++    oldinv=R/'PPCPP侧向拓宽开发诊断_v0.1_20261021/import_inventory.json'
++    if oldinv.exists():paths += [Path(p) for p in read(oldinv)['paths'] if Path(p).suffix=='.py']
++    syntax=syntax_gate(paths);save(d/'A_initial_syntax.json',dict(files=syntax,passed=True))
++    env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
++    cases=[('B1',['b1',str(d/'B1.json')])]
++    cases += [('B2_'+m,['worker',m,str(d/('SYNTHETIC_NOT_EXPERIMENT_'+m)),str(d/('B2_'+m+'.json'))]) for m in ('inventory','PP','P2','stale')]
++    cases += [('references',['refs',str(d/'SYNTHETIC_NOT_EXPERIMENT_references'),str(d/'references.json')]),('C',['export',str(d/'SYNTHETIC_NOT_EXPERIMENT_export'),str(d/'C.json')]),('negative_gates',['negatives',str(d/'SYNTHETIC_NOT_EXPERIMENT_negative'),str(d/'negative_gates.json')]),('integration',['integration',str(d/'SYNTHETIC_NOT_EXPERIMENT_INTEGRATION'),str(d/'integration.json')])]
++    results=[]
++    for label,args in cases:
++        p=subprocess.run([sys.executable,'-B','-X','utf8',str(H/'tech_child.py'),*args],env=env,capture_output=True,timeout=180)
++        for suffix,b in [('stdout',p.stdout),('stderr',p.stderr)]:
++            with (d/f'{label}.{suffix}.log').open('xb') as f:f.write(b)
++        success=p.returncode==0;results.append(dict(case=label,passed=success,exit_code=p.returncode))
++        print('TECH',number,label,'PASS' if success else 'FAIL',flush=True)
++        if not success:print(p.stderr.decode('utf8',errors='replace')[-3500:],flush=True)
++    # Eight original statistic cases run afresh, even if another independent
++    # technical stage failed; no production receipt is emitted in this call.
++    p=subprocess.run([sys.executable,'-B','-X','utf8','-c',"import stat_stubs,json; print(json.dumps(stat_stubs.run(),ensure_ascii=False))"],cwd=H,env=env,capture_output=True)
++    with (d/'eight_statistical_stubs.stdout.log').open('xb') as f:f.write(p.stdout)
++    with (d/'eight_statistical_stubs.stderr.log').open('xb') as f:f.write(p.stderr)
++    results.append(dict(case='eight_statistical_stubs',passed=p.returncode==0,exit_code=p.returncode))
++    if p.returncode==0:save(d/'eight_statistical_stubs.json',json.loads(p.stdout))
++    if (d/'B1.json').exists():paths += [Path(p) for p in read(d/'B1.json')['paths'] if Path(p).suffix=='.py']
++    save(d/'A_final_syntax.json',dict(files=syntax_gate(paths),passed=True))
++    assert not (H/'actual_order.jsonl').exists() and not list((H/'outputs').glob('*'))
++    expected=read(R/'复杂障碍压力开发测试_v0.1_20261021/formal_seal.json');frozen=[]
++    for p in [R/'PPCPP_LAST_P2共同预算开发比较_v0.1_20261020'/n for n in ('runtime.py','candidate.py','p2_adapter.py')]+[R/'基线复现准备_20261019/独立版_v0.2/ppcpp.py']:
++        key=str(p.resolve());assert key in expected and sha(p)==expected[key],('frozen_drift',str(p));frozen.append(dict(path=key,sha256=sha(p)))
++    save(d/'frozen_and_zero_real_check.json',dict(frozen=frozen,real_entries=0,real_cores=0,actual_order_exists=False))
++    save(d/'round_result.json',dict(round=number,passed=all(x['passed'] for x in results),stages=results,complete_to_endpoint=any(x['case']=='integration' and x['passed'] for x in results),real_entry_core_calls=0))
++    if not all(x['passed'] for x in results):
++        print('ROUND FAILED; no production PASS/seal; preserve evidence and repair only authorized helper scope',flush=True);return 2
++    import common
++    x=read(d/'eight_statistical_stubs.json');common.save(H/'stat_stub_results.json',x);common.receipt('stat_stubs',[H/'stat_stub_results.json'])
++    artifacts=[p for p in d.rglob('*') if p.is_file()]
++    common.receipt('technical',artifacts)
++    print('PASS FULL NO-SOLVE TECHNICAL ROUND',number,'final hash-bound receipts created; real entries/cores=0',flush=True)
++    return 0
++if __name__=='__main__':sys.exit(main())
+--- v0.3/verify.py
++++ v0.4/verify.py
+@@ -6,6 +6,7 @@
+     with (H/name).open(encoding='utf-8-sig',newline='') as f:actual=list(csv.DictReader(f))
+     keys=list(dict.fromkeys(k for r in rows for k in r));expected=[{k:json.dumps(r.get(k),ensure_ascii=False) if isinstance(r.get(k),(list,dict,tuple)) else '' if r.get(k) is None else str(r.get(k)) for k in keys} for r in rows];assert actual==expected,name
+ def verify():
++    require('technical');require('inputs_audited')
+     csv.field_size_limit(max(131072,max((p.stat().st_size for p in H.glob('*.csv')),default=0)))
+     for name in ('seal1','seal2'):
+         require(name);s=check_seal(name+'.json');assert sha(sys.executable)==s['python_sha256']
+@@ -13,6 +14,8 @@
+     for stage in ('stat_stubs','prep','generated','gate','formal'):require(stage)
+     if (H/'manifest.json').exists():
+         for p,h in read(H/'manifest.json').items():assert sha(H/p)==h,p
++    if (H/'completion_manifest.json').exists():
++        for p,h in read(H/'completion_manifest.json')['files'].items():assert sha(H/p)==h,p
+     assert read(H/'stat_stub_results.json')['passed'] and len(read(H/'stat_stub_results.json')['tests'])==8
+     for name in ('runtime.py','candidate.py','p2_adapter.py'):assert (H/'frozen_source_bytes'/name).read_bytes()==(P/name).read_bytes()
+     maps=read(H/'maps.json');groups=read(H/'groups.json');states=read(H/'states.json');assert len(maps)==6 and len(groups)==12 and len(states)==48;BFS=0

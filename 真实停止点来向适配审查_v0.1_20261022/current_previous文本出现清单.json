@@ -1,0 +1,421 @@
+{
+  "note": "Text occurrences include inactive LAST and historical helpers. Activation classification is in 01; occurrences are not a dynamic call trace.",
+  "sources": [
+    {
+      "id": "S01",
+      "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\runtime.py",
+      "occurrences": [
+        {
+          "number": 11,
+          "text": "def snapshot(c):return Snapshot(c['name'],frozenset(map(tuple,c['free'])),frozenset(map(tuple,c['targets'])),frozenset(map(tuple,c['covered'])),tuple(c['current']),tuple(c['base']),tuple(map(tuple,c['old_route'])),0,c['distance_budget'])"
+        },
+        {
+          "number": 21,
+          "text": "  raw=solve(s,set(map(tuple,c['initial_targets'])),mode,seed,tuple(c['predator']),tuple(c['previous']) if c['previous'] else None,begin,deadline,phases,mark,clock,geometry)"
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\candidate.py",
+      "occurrences": [
+        {
+          "number": 9,
+          "text": "def solve(s,initial,mode,seed,predator,previous,begin,deadline,phases,mark,clock,geometry):"
+        },
+        {
+          "number": 13,
+          "text": "  mark('p0_before');a=clock();p0=native.solve(s,initial,deadline-clock(),seed,predator,previous,_clock=clock,_geometry=geometry);phases['p0']=clock()-a;out['branches']['P0']=p0"
+        },
+        {
+          "number": 17,
+          "text": "  u=set(s.targets)-set(s.covered)-{s.current}"
+        },
+        {
+          "number": 22,
+          "text": "   branch=dict(status='building',route=(),diagnostic_route=[s.current],trace=[],reserved=e,work_free_count=len(s.free)-1,cache_scopes=['original_full','alternative_full','alternative_work'],phase1_end=None,accepted_seconds=None)"
+        },
+        {
+          "number": 23,
+          "text": "   out['branches']['P1']=branch;route=[s.current];trace=branch['trace'];pending=set(u)-{e};a=clock()"
+        },
+        {
+          "number": 36,
+          "text": "       mark('phase1');cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+        },
+        {
+          "number": 37,
+          "text": "       opts=native.core.reward_options(cur,prev,pending,work_snapshot.free,predator,(2.,.5))"
+        },
+        {
+          "number": 38,
+          "text": "       event=dict(phase='work',index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))"
+        },
+        {
+          "number": 39,
+          "text": "       if opts:goal=native.core.choose_neighbor(opts);segment=(cur,goal);event.update(kind='local',goal=goal,options=opts)"
+        },
+        {
+          "number": 40,
+          "text": "       else:goal=min(pending,key=lambda q:(work.distance(cur,q),q));segment=work.path(cur,goal);event.update(kind='recovery',goal=goal)"
+        },
+        {
+          "number": 44,
+          "text": "     trace.append(dict(phase='released',kind='reserved',index=len(route)-1,current=route[-1],goal=e,pending_count=1));move(full.path(route[-1],e))"
+        },
+        {
+          "number": 45,
+          "text": "     mark('return');trace.append(dict(phase='released',kind='return',index=len(route)-1,current=route[-1],goal=s.base,pending_count=0));move(full.path(route[-1],s.base))"
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "path": "E:\\无人机研究项目_接续包_20261014\\基线复现准备_20261019\\独立版_v0.2\\ppcpp.py",
+      "occurrences": [
+        {
+          "number": 8,
+          "text": "def solve(s,initial,budget,seed,predator,previous,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit):"
+        },
+        {
+          "number": 20,
+          "text": "        if previous is not None and sum(abs(a-b) for a,b in zip(previous,s.current))!=1:raise ValueError('historical heading must be adjacent')"
+        },
+        {
+          "number": 24,
+          "text": "            pending=set(s.targets)-set(s.covered)-{s.current};route=[s.current]"
+        },
+        {
+          "number": 26,
+          "text": "                tick();cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+        },
+        {
+          "number": 27,
+          "text": "                options=core.reward_options(cur,prev,pending,s.free,predator,(2.,.5));tick()"
+        },
+        {
+          "number": 28,
+          "text": "                event=dict(index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))"
+        },
+        {
+          "number": 30,
+          "text": "                    goal=core.choose_neighbor(options);event.update(kind='local',options=options,goal=goal);segment=(cur,goal)"
+        },
+        {
+          "number": 32,
+          "text": "                    goal=min(pending,key=lambda q:(g.distance(cur,q),q));tick();segment=g.path(cur,goal)"
+        },
+        {
+          "number": 35,
+          "text": "            tick();trace.append(dict(kind='return',index=len(route)-1,current=route[-1],goal=s.base,pending_count=0))"
+        },
+        {
+          "number": 44,
+          "text": "        seconds=seconds,budget=budget,seed=seed,seed_used=False,predator=predator,initial_previous=previous,weights=(2.,.5),"
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP结构候选新开发验证_v0.1_20261020\\validation.py",
+      "occurrences": [
+        {
+          "number": 14,
+          "text": "    point(c['current']);point(c['base'])"
+        },
+        {
+          "number": 25,
+          "text": "    if tuple(c['current']) not in f or tuple(c['base']) not in f or not t<=f or not (t|h)<=published or (published&f)-h-t:raise ValueError('snapshot ledger')"
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "path": "E:\\无人机研究项目_接续包_20261014\\基线复现准备_20261019\\ppcpp_independent.py",
+      "occurrences": []
+    },
+    {
+      "id": "S06",
+      "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\candidate_baselines\\PPCPP_CORE4\\v0.1_20261014\\source\\candidate_ppcpp_core4_20261014.py",
+      "occurrences": [
+        {
+          "number": 25,
+          "text": "def reward_options(current,previous,pending,free,predator,weights):"
+        },
+        {
+          "number": 27,
+          "text": "    options=sorted(q for q in adjacent(current) if q in pending and q in free)"
+        },
+        {
+          "number": 33,
+          "text": "        if previous is None:rs=0.0"
+        },
+        {
+          "number": 35,
+          "text": "            old=(current[0]-previous[0],current[1]-previous[1])"
+        },
+        {
+          "number": 36,
+          "text": "            new=(q[0]-current[0],q[1]-current[1])"
+        },
+        {
+          "number": 90,
+          "text": "    s=g.s;pending=set(s.targets-s.covered-g.views[s.current]);route=[s.current]"
+        },
+        {
+          "number": 95,
+          "text": "        g.check_time();before=len(pending);current=route[-1]"
+        },
+        {
+          "number": 96,
+          "text": "        options=reward_options(current,route[-2] if len(route)>1 else None,pending,s.free,predator,weights)"
+        },
+        {
+          "number": 99,
+          "text": "            credit_segment(g,route,pending,(current,goal));detail['local_moves']+=1"
+        },
+        {
+          "number": 103,
+          "text": "            goal=min(pending,key=lambda p:(g.distance(current,p),p))"
+        },
+        {
+          "number": 104,
+          "text": "            segment=g.path(current,goal)"
+        },
+        {
+          "number": 107,
+          "text": "            detail['recoveries'].append(dict(start=current,goal=goal,"
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\p2_adapter.py",
+      "occurrences": []
+    },
+    {
+      "id": "S08",
+      "path": "E:\\无人机研究项目_接续包_20261014\\连续事件六世界开发比较_v0.1_20261022\\executor.py",
+      "occurrences": [
+        {
+          "number": 16,
+          "text": "        self.current=tuple(start);self.previous=None;self.H=set();self.M=0;self.E=E0;self.waits=0;self.plan=None;self.cursor=0"
+        },
+        {
+          "number": 19,
+          "text": "    def suffix(self):return self.plan[self.cursor:] if self.plan is not None else [list(self.current)]"
+        },
+        {
+          "number": 21,
+          "text": "        return dict(current=self.current,previous=self.previous,H=sorted(self.H),M=self.M,E=self.E,waits=self.waits,plan=self.plan,cursor=self.cursor,U=sorted((P&F)-self.H),D=sorted(P-F-self.H))"
+        },
+        {
+          "number": 28,
+          "text": "        x=dict(name='stub_snapshot',free=sorted(F),targets=sorted(P&F),covered=sorted(self.H),published_targets=sorted(P),deferred_targets=sorted(P-F-self.H),initial_targets=sorted(P_before|self.H),current=self.current,previous=self.previous,base=base,predator=[-1,0],old_route=self.suffix(),distance_budget=self.E,radius=0)"
+        },
+        {
+          "number": 45,
+          "text": "            if s.current not in F or base not in F:"
+        },
+        {
+          "number": 46,
+          "text": "                s.end('environment_termination','current_blocked' if s.current not in F else 'base_blocked',tick,P,F);frame['after']=safe(s.record(P,F));continue"
+        },
+        {
+          "number": 47,
+          "text": "            s.credit(s.current,tick,'publication',P,origin,epoch)"
+        },
+        {
+          "number": 48,
+          "text": "            reached=reach(F,s.current,bfs,name,tick);U=(P&F)-s.H"
+        },
+        {
+          "number": 51,
+          "text": "            if tick>=final_tick and not U and s.current==base:"
+        },
+        {
+          "number": 69,
+          "text": "                if nxt not in F or abs(nxt[0]-s.current[0])+abs(nxt[1]-s.current[1])!=1:"
+        },
+        {
+          "number": 72,
+          "text": "                old=s.current;kind='non_target' if nxt not in P else 'session_repeat' if nxt in s.H else 'fresh_target'"
+        },
+        {
+          "number": 74,
+          "text": "                if s.previous is not None:"
+        },
+        {
+          "number": 75,
+          "text": "                    dot=(old[0]-s.previous[0])*(nxt[0]-old[0])+(old[1]-s.previous[1])*(nxt[1]-old[1]);angle=90 if dot==0 else 180 if dot==-1 else 0"
+        },
+        {
+          "number": 78,
+          "text": "                s.current=nxt;s.previous=old;s.M+=1;s.E-=1;s.cursor+=1;s.move_classes[kind]+=1;s.credit(nxt,tick+1,'arrival',P,origin,epoch)"
+        },
+        {
+          "number": 79,
+          "text": "            elif s.current==base and not ((P&F)-s.H):"
+        },
+        {
+          "number": 80,
+          "text": "                s.actions.append(dict(kind='wait',tick=tick,end_tick=tick+1,current=list(s.current),previous=list(s.previous) if s.previous is not None else None));s.waits+=1"
+        },
+        {
+          "number": 87,
+          "text": "        result['sessions'][name]=dict(terminal=s.terminal,actions=s.actions,requests=s.requests,credits=s.credits,frames=s.frames,summary=safe(dict(status=s.terminal['status'],reason=s.terminal['reason'],finish_tick=s.terminal['tick'],M=s.M,E=s.E,waits=s.waits,current=s.current,previous=s.previous,H=sorted(s.H),P=sorted(P),F=sorted(F),U=sorted((P&F)-s.H),D=sorted(P-F-s.H),historical_now_blocked=sorted(s.H-F),returned=s.current==base,response_calls=len(s.requests),move_classes=s.move_classes,turns90=s.turns90,turns180=s.turns180,first_credit=s.credits,zero_move_credits=sum(e['source']=='publication' for e in s.credits),benchmark_eligible=False)))"
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "path": "E:\\无人机研究项目_接续包_20261014\\连续事件六世界开发比较_v0.1_20261022\\contracts.py",
+      "occurrences": [
+        {
+          "number": 4,
+          "text": "SNAPSHOT_KEYS={'name','free','targets','covered','published_targets','deferred_targets','initial_targets','current','previous','base','predator','old_route','distance_budget','radius'}"
+        },
+        {
+          "number": 35,
+          "text": "    if path[0]!=snapshot['current'] or path[-1]!=snapshot['base'] or not points(path)<=f:return 'invalid_route','endpoint_or_collision'"
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py",
+      "occurrences": [
+        {
+          "number": 27,
+          "text": "    current: Point"
+        },
+        {
+          "number": 49,
+          "text": "        if snapshot.current not in snapshot.free:"
+        },
+        {
+          "number": 51,
+          "text": "        self.reachable = {snapshot.current}"
+        },
+        {
+          "number": 52,
+          "text": "        queue = deque([snapshot.current])"
+        },
+        {
+          "number": 110,
+          "text": "        route = [self.s.current]"
+        },
+        {
+          "number": 111,
+          "text": "        covered = set(self.s.covered) | self.views[self.s.current]"
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\unified_geometry.py",
+      "occurrences": [
+        {
+          "number": 24,
+          "text": "    if route[0]!=s.current:errors.append('wrong_start')"
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\bfs_metric_geometry.py",
+      "occurrences": []
+    },
+    {
+      "id": "S13",
+      "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\p2_search_audit.py",
+      "occurrences": [
+        {
+          "number": 8,
+          "text": "    begin=time.perf_counter();g=None;best=None;source=None;events=[];improvements=[];current='geometry'"
+        },
+        {
+          "number": 16,
+          "text": "        nonlocal current"
+        },
+        {
+          "number": 17,
+          "text": "        current=label;t=elapsed()"
+        },
+        {
+          "number": 28,
+          "text": "                    a=s.current if i==0 else visits[i-1];b=visits[i]"
+        },
+        {
+          "number": 48,
+          "text": "        demand=s.targets-s.covered-g.views[s.current];scans={};optimized=[]"
+        },
+        {
+          "number": 81,
+          "text": "    return dict(route=best or (),source=source,status=status,seconds=elapsed(),active_stage=current,"
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "path": "E:\\无人机研究项目_接续包_20261014\\portable_frozen.py",
+      "occurrences": []
+    },
+    {
+      "id": "S15",
+      "path": "E:\\无人机研究项目_接续包_20261014\\任意方向合法直达有限诊断_v0.1_20261022\\engine.py",
+      "occurrences": [
+        {
+          "number": 45,
+          "text": "    assert path[0]==tuple(c['current']) and path[-1]==tuple(c['base']);assert n<=Decimal(str(c['distance_budget']))"
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "path": "E:\\无人机研究项目_接续包_20261014\\任意方向合法直达有限诊断_v0.1_20261022\\geometry.py",
+      "occurrences": []
+    },
+    {
+      "id": "S17",
+      "path": "E:\\无人机研究项目_接续包_20261014\\任意方向合法直达有限诊断_v0.1_20261022\\audit_geometry.py",
+      "occurrences": []
+    },
+    {
+      "id": "S18",
+      "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP直达质量时间开发比较_v0.1_20261022\\run.py",
+      "occurrences": [
+        {
+          "number": 25,
+          "text": "    result,times,wire,post=pipeline(payload,j['method'],j['seed'],fn,engine);c=result['audit_payload']['input'];route=result['native']['raw']['route'];F=set(map(tuple,c['free']));T=set(map(tuple,c['targets']))-set(map(tuple,c['covered']));assert tuple(route[0])==tuple(c['current']) and tuple(route[-1])==tuple(c['base']);assert all(tuple(p) in F for p in route) and T<=set(map(tuple,route));assert all(abs(a[0]-b[0])+abs(a[1]-b[1])==1 for a,b in zip(route,route[1:]));assert len(route)-1<=c['distance_budget']"
+        },
+        {
+          "number": 40,
+          "text": "    _,_,engine,_,_=modules();c={'free':[[0,0]],'targets':[],'covered':[],'published_targets':[],'deferred_targets':[],'current':[0,0],'base':[0,0],'distance_budget':0};payload=json.dumps(c).encode();records=[]"
+        }
+      ]
+    },
+    {
+      "id": "S19",
+      "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\baseline_suite.py",
+      "occurrences": [
+        {
+          "number": 19,
+          "text": "    if not s.current in s.free or not s.base in s.free:raise ValueError('start/base outside free map')"
+        },
+        {
+          "number": 40,
+          "text": "        pending=s.targets-s.covered-g.views[s.current]"
+        },
+        {
+          "number": 43,
+          "text": "        # Keep these old ranks as change references; only current pending cells are serviced."
+        },
+        {
+          "number": 44,
+          "text": "        service=old_services(s.old_route,set(initial_targets)-set(s.covered)-g.views[s.current])"
+        }
+      ]
+    }
+  ]
+}

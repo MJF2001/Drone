@@ -1,0 +1,120 @@
+[
+  {
+    "item": "候选规则",
+    "classification": "仍需适配",
+    "old": "原最近、距基地最近、距基地最远，按坐标平局去重，最多3",
+    "current": "原默认q0、旧任务序第一个仍pending且不同于q0的q1，固定2；不能照搬旧THREE候选",
+    "evidence": [
+      "old_candidates",
+      "current_candidates",
+      "current_trigger"
+    ]
+  },
+  {
+    "item": "触发资格",
+    "classification": "当前模型已验证能力",
+    "old": "第一次无邻接未检即分支；pending可以只剩1",
+    "current": "第一次pending至少2的恢复且旧序有不同候选；本12例触发恰都等于首次恢复，已从保存trace核，不主张任意输入等价",
+    "evidence": [
+      "old_prefix_geometry",
+      "current_trigger",
+      "current_REF_scan"
+    ]
+  },
+  {
+    "item": "克隆和完整续跑",
+    "classification": "代码已有能力",
+    "old": "list(path)、deepcopy(trace)、set(pending)，真实previous由路径或历史来向取得，finish至完成并返航",
+    "current": "OFF/ALT独立完整求解已验证；当前中心区模型下共享前缀克隆/续跑未实现或验收",
+    "evidence": [
+      "old_clone_heading",
+      "old_prefix_geometry",
+      "old_candidates",
+      "current_native"
+    ]
+  },
+  {
+    "item": "选择目标函数",
+    "classification": "仍需适配",
+    "old": "len(native route)择短，同值最先原分支；没有公共直达",
+    "current": "必须对两臂完整轨迹做同版公共直达并中心区验证后按认证距离选；L_A_p25原生+2而post改善，旧步数择优会漏掉",
+    "evidence": [
+      "old_candidates",
+      "old_deadline_return",
+      "post_clocks_checks"
+    ]
+  },
+  {
+    "item": "信用和物理H",
+    "classification": "当前模型已验证能力",
+    "old": "分支私有原生pending逐格discard，不改s.covered/initial；不含中心区虚拟信用",
+    "current": "当前两独立臂保留事件物理H并对完整原生/post进行中心区信用核验，阶段分离已验证；将旧FIRST共享分支接入仍要验收",
+    "evidence": [
+      "old_clone_heading",
+      "old_prefix_geometry",
+      "current_native",
+      "current_main_clocks",
+      "metrics_credit_check"
+    ]
+  },
+  {
+    "item": "几何缓存共享",
+    "classification": "代码已有能力",
+    "old": "一个g在完整分支之间共享，路径/任务/trace另复制；旧保存门槛与等价证据只覆盖旧合同",
+    "current": "现臂每次新UnifiedGeometry，原端点排序规则已冻结；共享同一g接两臂及post缓存/状态隔离未在当前模型验证，不能据代码相似称兼容或节时",
+    "evidence": [
+      "old_prefix_geometry",
+      "old_clone_heading",
+      "current_native",
+      "old_branch_checks"
+    ]
+  },
+  {
+    "item": "共同截止",
+    "classification": "仍需适配",
+    "old": "全部分支共一次20秒；后续试走deadline会整体不给及时完整路线，原分支留证不保证默认及时率",
+    "current": "OFF/ALT各自20秒native、post18软/20迟到且各独立父150秒；两臂独立成功不证明一个共同截止的双候选入口及时或不退化",
+    "evidence": [
+      "old_deadline_return",
+      "old_worker_boundary",
+      "old_deadline_tests",
+      "current_main_clocks",
+      "current_parent_clock"
+    ]
+  },
+  {
+    "item": "共享前缀与额外费用",
+    "classification": "仍需适配",
+    "old": "局部前缀只跑一次、默认分支先完成并留存；旧worker编码全部原结果，共同入口计时",
+    "current": "当前保存臂从事件起点各跑全程，重复前缀和几何上下文；没有整合后的候选复制、双post、选择及返回总计时；不把当前两个独立成本相加改名共享实现",
+    "evidence": [
+      "old_prefix_geometry",
+      "old_candidates",
+      "old_worker_boundary",
+      "current_run_order",
+      "current_main_clocks"
+    ]
+  },
+  {
+    "item": "复用选中完整计划",
+    "classification": "代码已有能力",
+    "old": "直接selected.route/trace返回，没有重新跑赢家",
+    "current": "保存结果足够定义两候选较短者参照；新双候选总入口尚不存在，复用性质不能冒称已经做过当前在线选优",
+    "evidence": [
+      "old_deadline_return",
+      "current_run_order"
+    ]
+  },
+  {
+    "item": "诊断和审核可复用范围",
+    "classification": "仍需适配",
+    "old": "旧分支审核重算原生奖励/BFS和唯一首恢复例外，旧静态门槛证据留存",
+    "current": "当前完整中心信用/post审核可复用；若去完整pending记录，须先纯桩验证轻量候选钩子身份及来源，不能把详细profile OFF当无诊断",
+    "evidence": [
+      "old_branch_checks",
+      "current_trigger",
+      "current_audit_outer",
+      "independent_views_post"
+    ]
+  }
+]

@@ -1,0 +1,29 @@
+--- frozen_original
++++ recovery_diag_native.py
+@@ -1,11 +1,11 @@
+ """Frozen-input four-neighbor PPCPP adaptation; core only, no external candidates."""
+ import sys,time,math
+ from pathlib import Path
+-ROOT=Path(__file__).resolve().parents[2]
++ROOT=Path(__file__).resolve().parent.parent
+ sys.path.insert(0,str(ROOT/'基线复现准备_20261019'))
+ from ppcpp_independent import core,UnifiedGeometry,single_cell_audit,check_contract,DeadlineExceeded,NoPath
+ VERSION='PPCPP_CORE4_FIXED_HISTORY_v0.2_20261019'
+-def solve(s,initial,budget,seed,predator,previous,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit):
++def solve(s,initial,budget,seed,predator,previous,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit,_diag=None):
+     begin=_clock();deadline=begin+budget;route=[];trace=[];status='not_started';reason=None;accepted=None
+     def tick():
+         if _clock()>=deadline:raise DeadlineExceeded()
+@@ -29,8 +29,11 @@
+                 if options:
+                     goal=core.choose_neighbor(options);event.update(kind='local',options=options,goal=goal);segment=(cur,goal)
+                 else:
+-                    goal=min(pending,key=lambda q:(g.distance(cur,q),q));tick();segment=g.path(cur,goal)
++                    goal=min(pending,key=lambda q:(g.distance(cur,q),q));tick()
++                    if _diag is not None:goal=_diag.choose(trace,route,cur,prev,pending,goal,g);tick()
++                    segment=g.path(cur,goal)
+                     event.update(kind='recovery',goal=goal)
++                if _diag is not None:_diag.record(trace,event,pending,route,segment);tick()
+                 trace.append(event);move(segment,pending)
+             tick();trace.append(dict(kind='return',index=len(route)-1,current=route[-1],goal=s.base,pending_count=0))
+             move(g.path(route[-1],s.base),pending);tick()

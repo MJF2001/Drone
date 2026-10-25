@@ -1,0 +1,1479 @@
+=== PDF PAGE 1 ===
+1
+TRACE: Coverage Path Planning for Unknown
+Environments Using Hierarchical Coverage Tree
+Zongyuan Shen 1, Haodong Liu 1, Gao Wang 1, Shancheng Zhao 1, Dehua Zhou 1, Yaming Ou 2,
+Zhongqiang Ren 3, Yikui Zhai 4, and C. L. Philip Chen 5,Life Fellow, IEEE
+Abstract—This paper presents a novel online coverage path
+planning (CPP) algorithm, called TRACE, for real-time coverage
+of unknown environments. TRACE is built upon a hierarchical
+coverage tree that provides a global representation of the evolving
+connectivity of the uncovered space. As the environment is
+incrementally revealed and covered, newly discovered obstacles
+and covered cells may fragment the remaining uncovered space
+into disconnected regions. TRACE recursively expands the cor-
+responding tree nodes to explicitly represent these regions and
+organize them for subsequent coverage planning. Based on the
+updated tree, an incremental global tour is maintained to guide
+the coverage process. TRACE locally refines only the affected
+portions while preserving the visiting order of unchanged regions,
+thereby reducing the computational burden of global replanning
+and maintaining a consistent coverage progression. Guided by the
+global tour, a local planner generates back-and-forth coverage
+paths and switches to global-tour-aware planning to efficiently
+complete the target regions. Theoretical analysis establishes the
+computational complexity and complete coverage property of
+TRACE, and derives an approximation bound for the incremental
+global tour refinement. The performance of TRACE is evaluated
+through extensive high-fidelity simulations and real-robot exper-
+iments using a mobile robot. Comparative evaluations against six
+existing CPP methods demonstrate significant improvements in
+coverage time, path length, overlap ratio, and number of turns.
+Index Terms—Coverage path planning, motion and path plan-
+ning, unknown environments, autonomous robots.
+I. INTRODUCTION
+Coverage path planning (CPP) is a fundamental problem in
+robotics that aims to generate a trajectory allowing a robot
+to completely cover a target workspace while minimizing
+task-related costs such as path length, overlap ratio, number
+of turns, and coverage time [1]. CPP has a broad range
+of applications, including agricultural operations (e.g., weed-
+ing [2] and harvesting [3]); household services (e.g., floor
+cleaning [4] and lawn mowing [5]); environmental monitoring
+(e.g., underwater mapping [6] and oil spill cleaning [7]); and
+industrial tasks (e.g., quality inspection [8], crack filling [9],
+and spray painting [10]). In many practical applications,
+however, complete environmental information is unavailable
+prior to deployment. Therefore, it is essential to develop online
+1College of Information Science and Technology, Jinan University,
+Guangzhou 510632, China.
+2School of Artificial Intelligence, University of Chinese Academy of
+Sciences, Beijing 100049, China.
+3Global College, Shanghai Jiao Tong University, Shanghai 200240, China.
+4School of Electronics and Information Engineering, Wuyi University,
+Jiangmen 529000, China.
+5School of Computer Science and Engineering, South China University of
+Technology, Guangzhou 510006, China.
+CPP methods that can incrementally discover the workspace
+through onboard sensing while simultaneously adapting the
+coverage path according to newly acquired information.
+Various methods have been developed for online CPP. One
+line of works generates coverage trajectories by selecting
+the next target cell in the robot’s local neighborhood using
+lightweight deterministic rules [11]–[14], potential fields [15]–
+[18], or reward functions [19]. Although such strategies are
+computationally efficient, they do not explicitly account for
+the global structure and evolution of the remaining uncovered
+space. In complex environments, locally reasonable decisions
+may fragment the remaining uncovered space into discon-
+nected regions, causing some regions to be bypassed and later
+revisited through long return paths. To mitigate this problem,
+some methods [20]–[22] incorporate connectivity preservation
+into target selection by evaluating whether visiting a can-
+didate cell would disconnect the remaining uncovered area.
+By avoiding connectivity-breaking decisions, these methods
+reduce fragmentation-induced redundant travel. However, they
+still rely on local feasibility checks and may fail when all
+locally available candidates would disconnect the uncovered
+area. In such cases, fragmented residual regions may still
+emerge, resulting in considerable redundant travel. Another
+line of works explicitly handles fragmented regions after they
+emerge, either by organizing disconnected regions within the
+currently obstacle-free space for subsequent coverage [23] or
+by covering potentially isolated regions near the robot before
+they are bypassed [1]. However, their detection and handling
+of fragmentation are still largely driven by local environmental
+information. As a result, fragmented regions arising away from
+robot vicinity may not be explicitly considered when they
+emerge, which can lead to additional backtracking and reduced
+coverage efficiency in complex environments.
+In this regard, this paper presents TRACE, a novel online
+CPP algorithm that maintains a global representation of the
+evolving uncovered space using a hierarchical coverage tree,
+which tracks connectivity changes of the remaining uncovered
+regions and guides the subsequent coverage process. As the
+environment is incrementally revealed and covered, newly
+discovered obstacles and newly covered cells may alter the
+connectivity of the residual region associated with a leaf
+node. If a residual region is split into multiple disconnected
+components, the corresponding leaf node is expanded into
+multiple child nodes, each representing one of these compo-
+nents. Throughout this process, the tree progressively evolves
+from a coarse representation of the entire workspace into a
+hierarchical representation of the remaining uncovered regions.
+arXiv:2609.21777v1  [cs.RO]  18 Sep 2026
+
+=== PDF PAGE 2 ===
+2
+The resulting leaf nodes represent candidate regions to be
+considered in subsequent coverage planning. Based on the
+updated hierarchical coverage tree, a global tour is maintained
+to determine the visiting order of the remaining candidate
+regions. Rather than replanning the entire tour whenever the
+tree changes, TRACE incrementally refines only the portions
+affected by tree expansion. Specifically, when a leaf node
+is expanded, its position in the current tour is replaced by
+an optimized visiting sequence of the newly generated child
+nodes, while the relative order of the unaffected nodes is
+preserved. This incremental update reduces the computational
+burden of global replanning while avoiding unnecessary re-
+ordering of unaffected regions and maintaining a consistent
+coverage progression. Guided by the updated global tour, the
+local planner progressively covers the selected target region
+using a back-and-forth strategy and switches to a global-
+tour-aware strategy once the region becomes fully explored.
+This adaptive local planning scheme improves local coverage
+efficiency while maintaining consistency with the global tour.
+In summary, our contributions are as follows:
+•A hierarchical coverage tree globally represents the
+evolving connectivity of the uncovered space and sup-
+ports efficient coverage path planning.
+•A global tour planning method locally refines changed
+tour segments while preserving unchanged visiting or-
+ders, providing global guidance for subsequent coverage.
+•A local path planning method provides efficient dead-end
+recovery and global-tour-aware coverage path generation,
+reducing redundant travel and facilitating efficient transi-
+tions between successive target regions.
+•Comparative evaluations of proposed algorithm through
+high-fidelity simulations and real-robot experiments.
+The remaining paper is organized as follows. Section II re-
+views the related work. Section III describes the CPP problem.
+Section IV presents the details of the TRACE algorithm. Sec-
+tion V provides the algorithm analysis. Section VI shows the
+comparative evaluation results of TRACE. Finally, Section VII
+concludes the paper with recommendations for future work.
+II. RELATEDWORK
+Detailed surveys of existing CPP methods are presented
+in [24], [25]. CPP methods can be classified as offline or online
+according to the availability of environmental knowledge.
+Offline methods assume that the environment is known and
+generate coverage paths before deployment. For example, Cao
+et al. [26] sampled candidate viewpoints from a prior map and
+then locally selected viewpoints for detailed coverage, Shen et
+al. [27] utilized a graph neural network to generate coverage
+paths from occupancy grid maps, Ramesh et al. [28] formu-
+lated turn-minimizing coverage as an optimization problem,
+and Lu et al. [29] partitioned the workspace into rectangular
+subareas for coverage planning. However, their performance
+can degrade if the prior information is incomplete and/or incor-
+rect. In contrast, online CPP methods generate coverage paths
+in real time using environmental information acquired during
+navigation, thus they are suitable for unknown environments.
+A large class of online CPP methods generates coverage
+paths by selecting target cells in the robot’s local neighbor-
+hood. Gabriely and Rimon [11] proposed the spanning tree
+covering (STC) algorithm, which constructs a spanning tree
+over a two-resolution grid and generates a coverage path
+by circumnavigating the tree. Gonzalez et al. [12] proposed
+the backtracking spiral algorithm (BSA), which follows the
+boundary of uncovered and obstacle regions to generate a
+spiral coverage path. Ferranti et al. [13] developed the brick-
+and-mortar (BM) algorithm, which progressively enlarges in-
+accessible regions by selecting the neighboring uncovered cell
+with the most surrounding inaccessible cells. Viet et al. [14]
+proposed the BA ∗ algorithm, which follows a predefined
+directional priority to generate a back-and-forth coverage path.
+Luo and Yang [15] proposed the bio-inspired neural network
+(BINN) algorithm, where each grid cell is associated with a
+neural activity such that uncovered cells provide excitatory
+inputs while obstacle cells provide inhibitory inputs. The
+neighboring cell with the highest neural activity is selected as
+the target. Later variants [16], [17] simplified the neural activ-
+ity update to reduce computational time. Song and Gupta [18]
+proposed theε ∗ algorithm, which constructs a multi-level po-
+tential field for online coverage. The robot normally selects the
+neighboring cell with the highest potential at the lowest level
+and switches to higher-level fields when escaping dead-ends.
+Hassan and Liu [19] proposed the predator-prey CPP (PPCPP)
+algorithm, which evaluates neighboring cells using a reward
+function combining predation avoidance, motion smoothness,
+and boundary coverage, and selects the cell with the highest re-
+ward as the target. These methods are computationally efficient
+and suitable for real-time operation; however, their decisions
+are mainly based on local information and may generate
+myopic decision, leading to dead-ends, fragmented uncovered
+regions, and redundant travel in complex environments.
+To improve the coverage efficiency, several methods in-
+corporate the connectivity of uncovered region into coverage
+decision-making. Li et al. [20] adapted the spiral direction
+to select target cells that preserve the connectivity of the
+uncovered region, while Huo et al. [21] similarly avoided
+target cells whose visitation would cause disconnection. Li et
+al. [22] extended this idea to the subarea level by partitioning
+the environment into stripe-shaped regions and prioritizing the
+coverage of subareas whose removal preserves the connectivity
+of the remaining uncovered space. However, these methods
+still rely on local feasibility checks. When all candidate targets
+would disconnect the uncovered area, fragmented regions
+may still be produced, leading to considerable redundant
+travel. Other methods instead handle disconnected regions
+once they arise. Shen et al. [23] proposed the CAP algorithm,
+which identifies disconnected subareas around the robot and
+computes a global traversal tour to guide their subsequent
+coverage. Shen et al. [1] proposed the C ∗ algorithm, which
+performs back-and-forth coverage while identifying potential
+disconnected regions near the robot that may otherwise be
+bypassed. These regions are covered in situ using TSP-based
+local trajectories before the robot resumes back-and-forth
+coverage. However, fragmented regions arising away from
+robot vicinity may not be explicitly considered when they
+
+=== PDF PAGE 3 ===
+3
+emerge, which can lead to additional backtracking and reduced
+coverage efficiency in complex environments.
+III. PROBLEMDESCRIPTION
+As shown in Fig. 1, consider a mobile robot equipped with:
+•A range detector (e.g., LiDAR) to detect obstacles within
+its field of view and map the environment.
+•A localization device (e.g., IMU) to provide position
+information of the robot.
+•A coverage device or sensor (e.g., cleaning brush) to
+perform the task (e.g., floor cleaning).
+LetX ⊂R 2 be the initially unknown area whose boundary
+is defined either by a hard border (e.g., a wall) or a soft barrier
+(e.g., user-defined buffer zone). The area is populated by static
+obstacles. For environment mapping and coverage planning, a
+uniform tiling ofXis constructed as defined below.
+Definition III.1(Uniform Tiling).A setT={τ j ⊂R 2, j=
+1, . . . ,|T |}is called a uniform tiling ofXif its elements,
+called cells, satisfy the following conditions:
+•Each cellτ j is a square of identical size;
+•The interiors of any two distinct cells do not overlap, i.e.,
+int(τi)∩int(τ j) =∅, i̸=j;
+•The areaXis contained in the union of all cells, i.e.,
+X ⊆ S
+τj ∈T τj.
+Definition III.2(Path-Connected Region).A regionS ⊆ T
+is said to be path-connected if, for any two cellsτ i, τj ∈ S,
+there exists a collision-free path consisting entirely of cells in
+Sthat connectsτ i andτ j.
+LetT o ⊂ Tdenote the subset of cells occupied by obstacles.
+The obstacle-free cell setT f =T \ T o constitutes the path-
+connected coverage space to be covered by the robot.
+Definition III.3(Coverage Path).Letτ(k)∈ T f denote the
+obstacle-free cell visited by the robot at discrete stepk∈Z ≥0.
+A coverage path is defined as the ordered cell sequenceΓ K =
+[τ(0), τ(1), . . . , τ(K)], whereτ(0)andτ(K)denote the start
+and end cells, respectively.
+LetC(τ(k))⊂ T f denote the set of cells covered by the
+coverage device when the robot visits cellτ(k). The objective
+of the proposed algorithm is to generate a coverage path that
+achieves complete coverage ofT f , as defined below.
+Definition III.4(Complete Coverage).Given a coverage path
+ΓK = [τ(0), τ(1), . . . , τ(K)], the coverage ofT f is complete
+if there exists a finiteK∈Z + such thatT f ⊆SK
+k=0 C(τ(k)).
+IV. TRACE ALGORITHM
+This section presents the details of the proposed TRACE
+algorithm, which adaptively updates the coverage path as the
+environment is revealed through onboard sensing. An overview
+of the TRACE algorithm is shown in Fig. 1. During navigation,
+the symbolic map is continuously updated according to sensor
+measurements and coverage progress (Sec. IV-A). Based on
+the updated map, a hierarchical coverage tree is incrementally
+constructed to represent the remaining coverage regions and
+their connectivity changes (Sec. IV-B). The active leaf nodes
+Hierarchical 
+Coverage Tree 
+Construction
+Global Tour
+Planning
+Symbolic Map
+Update
+Local Coverage
+Path Planning
+LiDAR IMU
+SLAM
+Coverage path
+Target 
+node
+Sensor & 
+coverage 
+information
+Active 
+leaf nodes
+Updated 
+map
+Robot System
+Fig. 1. Overview of the proposed TRACE algorithm.
+representing the remaining coverage regions are then extracted
+from the updated tree. The global visiting order of the active
+leaf nodes is maintained through incremental tour refinement,
+where only the portions affected by tree expansion are locally
+updated while the visiting order of unaffected regions is
+retained (Sec. IV-C). A target node is then selected from the
+updated global tour, and the local planner generates a coverage
+path within its subarea (Sec. IV-D). These steps are repeated
+until complete coverage of the obstacle-free space is achieved.
+A. Symbolic Map Update
+During navigation, the robot continuously updates a sym-
+bolic representation of the environment using onboard sensor
+measurements. This representation jointly encodes the occu-
+pancy and coverage status of each cell, as defined below.
+Definition IV .1(State Encoding of Cell).LetΦ :T →
+{U, O, F c, F u}be the symbolic state encoding of the tilingT.
+All cells are initially assigned the stateU. As environmental
+information is acquired during navigation, a cell occupied by
+an obstacle is assignedO. A free cell is assignedF c after it
+has been covered by the robot andF u otherwise.
+A morphological closing operator [30] is applied to the
+symbolic map. This operation first dilates and then erodes the
+obstacle regions to smooth obstacle boundaries and suppress
+small-scale obstacles that are typically caused by sensor noise.
+The updated symbolic map provides the basis for the incre-
+mental construction of the hierarchical coverage tree.
+B. Hierarchical Coverage Tree Construction
+The hierarchical coverage tree serves three main purposes: i)
+recording the hierarchical decomposition of the search space,
+ii) tracking coverage progress, and iii) supporting coverage
+decision-making. The tree is formally defined as follows.
+Definition IV .2(Hierarchical Coverage Tree).A hierarchical
+coverage treeG= (N,E)is defined as a rooted tree, where:
+•For each levelℓ= 1, . . . , L, whereLis the current depth
+of the tree, letN ℓ ={n ℓ
+i :i= 1, . . . , I ℓ}be the node set
+at levelℓ, withN= SL
+ℓ=1 N ℓ. Each noden ℓ
+i maintains:
+a)associated subareaA(n ℓ
+i), which is assigned when
+the node is created and remains fixed thereafter;
+
+=== PDF PAGE 4 ===
+4
+Hierarchical 
+Coverage Tree
+Unknown area Root node
+Robot
+(a) Tree initialization.
+Hierarchical 
+Coverage Tree
+Target node (b) First tree expansion and global tour planning.
+Hierarchical 
+Coverage Tree
+Target node (c) Subsequent tree expansion and tour update.
+Exploring subarea Explored subarea Subarea center Tree node Coverage pathGlobal tourCovered cell
+Fig. 2. Illustration of hierarchical coverage tree evolution and incremental coverage planning. (a) The entire unknown workspace is initially
+represented by the root noden 1
+1. (b) As the environment is revealed and covered, the residual region ofn 1
+1 is divided into three disconnected
+subareas, represented by child nodesn 2
+1,n 2
+2, andn 2
+3. A global tour is then generated to guide their subsequent coverage. (c) With further
+environmental discovery and coverage progress, the residual region associated withn 2
+2 is further divided into two disconnected subareas,
+represented by child nodesn 3
+1 andn 3
+2. The hierarchical coverage tree and global tour are updated accordingly.
+b)residual regionR(n ℓ
+i) ={τ∈ A(n ℓ
+i) : Φ(τ)∈
+{U, F u}}, which contains only unknown and free-
+uncovered cells;
+c)center positionp(n ℓ
+i)of the residual region; and
+d)symbolic stateQ(n ℓ
+i).
+•E={e α :α= 1, . . . ,|E|}is the edge set. Each edge
+eα ≡(n ℓ
+i , nℓ+1
+i′ )connects a parent noden ℓ
+i at levelℓto
+one of its child nodesn ℓ+1
+i′ at levelℓ+ 1.
+Definition IV .3(Exploring Region).A regionS ⊆ Tis said
+to be exploring if it contains at least one unknown cell, i.e.,
+∃τ∈ Ssuch thatΦ(τ) =U. Otherwise, it is explored.
+Definition IV .4(State Encoding of Node).LetQ:N →
+{C, E, ¯E}assign a symbolic stateQ(n ℓ
+i)to each noden ℓ
+i ∈
+N. The stateCindicates that the residual regionR(n ℓ
+i)is
+empty, and thus the corresponding coverage task has been
+completed. In contrast,Eand ¯Eindicate nodes whose residual
+regions are explored and exploring, respectively.
+As shown in Fig. 2a, since the environment is initially
+unknown, the tree is initialized with a single root noden 1
+1,
+whereA(n 1
+1) =R(n 1
+1) =T. The center positionp(n 1
+1)
+is computed as the average position of all cells inA(n 1
+1).
+The symbolic state is set asQ(n 1
+1) = ¯E. Since the tree
+contains only the root node, the edge set is initially empty, i.e.,
+E=∅. During online operation, the hierarchical coverage tree
+is incrementally updated through two steps: 1) node update
+and 2) tree expansion, as outlined in Alg. 1.
+Definition IV .5(Changed Cell Set).Let∆T ⊆ Tdenote the
+set of cells whose symbolic states change during the latest
+map update, i.e.,∆T={τ j ∈ T: Φ new(τj)̸= Φ old(τj)},
+whereΦ old(τj)andΦ new(τj)are the symbolic maps before
+and after the latest map update, respectively.
+Definition IV .6(Leaf Index Map).LetN leaf ⊆ Nbe the set of
+leaf nodes of the tree. LetΨ :T → N leaf ∪{∅}be an indexing
+function that associates each cellτ j ∈ Twith the unique leaf
+node whose associated subarea contains the cell. Specifically,
+Ψ(τj) =n ℓ
+i ifτ j ∈ A(n ℓ
+i)andn ℓ
+i ∈ Nleaf; otherwise,Ψ(τ j) =
+∅. At tree initialization, all cells are indexed to the root node,
+i.e.,Ψ(τ j) =n 1
+1,∀τ j ∈ T.
+1) Node Update:After each update of the symbolic mapΦ,
+the changed cells are mapped to their corresponding leaf nodes
+to identify the set of affected leaf nodes∆N leaf ={Ψ(τ j) :
+τj ∈∆T,Ψ(τ j)̸=∅}(Alg. 1, Lines 1-6). The information of
+each noden ℓ
+i ∈∆N leaf is then updated according to the latest
+cell states (Alg. 1, Line 8). Specifically, the residual region
+R(nℓ
+i)is refined by removing obstacles or free-covered cells.
+The centerp(n ℓ
+i)is obtained by averaging the positions of
+all cells inR(n ℓ
+i). Due to irregular geometry, the resulting
+center may fall into obstacles or other regions. In such cases,
+it is projected to the position of the nearest cell withinR(n ℓ
+i).
+Finally, the symbolic stateQ(n ℓ
+i)is updated according to
+Defn. IV .4. A node is assignedCif its residual region is
+empty; otherwise, it is assignedEor ¯Edepending on whether
+the residual region isexploredorexploring, respectively.
+2) Tree Expansion:Following node update, the connec-
+tivity of the residual regions of the affected leaf nodes may
+change, since newly identified obstacle cells and covered free
+cells have been removed. Therefore, each affected leaf node
+nℓ
+i ∈∆N leaf with a nonempty residual region is examined to
+determine whetherR(n ℓ
+i)remains path-connected.
+For each such node, the process begins by selecting an
+unlabeled cell fromR(n ℓ
+i)and assigning it a region indexj.
+Starting from this cell, a flood-fill search recursively labels all
+four-connected neighboring cells withinR(n ℓ
+i)using the same
+indexj. The search terminates when no further eligible cells
+remain, and the labeled cells form a maximal path-connected
+componentS j. This procedure is repeated until every cell in
+R(nℓ
+i)has been labeled, resulting inR(n ℓ
+i) =SJ
+j=1 Sj, where
+Sj ∩ Sj′ =∅,∀j̸=j ′ ∈ {1, . . . , J}(Alg. 1, Line 10).
+IfJ= 1,R(n ℓ
+i)remains path-connected and the tree
+structure associated withn ℓ
+i remains unchanged. IfJ >1,
+R(nℓ
+i)is separated into several disjoint portions. In this
+case,Jchild nodes are created at levelℓ+ 1, denoted by
+{nℓ+1
+Iℓ+1+j}J
+j=1, whereI ℓ+1 is the number of existing nodes
+at levelℓ+ 1(Alg. 1, Line 17). Each portion is assigned to
+one child node as its associated subarea and residual region,
+
+=== PDF PAGE 5 ===
+5
+i.e.,A(n ℓ+1
+Iℓ+1+j) =R(n ℓ+1
+Iℓ+1+j) =S j. The center of each
+child node is computed by following the same procedure
+described in the node update step, and its symbolic state is
+assigned according to Defn. IV .4. An edge(n ℓ
+i , nℓ+1
+Iℓ+1+j)is
+then added toGto connect the parent noden ℓ
+i to its child node
+nℓ+1
+Iℓ+1+j (Alg. 1, Line 19). The parent noden ℓ
+i remains in the
+tree as an internal node, while its child nodes become new
+leaf nodes, thereby preserving the hierarchical decomposition
+history. The leaf index mapΨis updated accordingly. For
+each cellτ∈ A(n ℓ+1
+Iℓ+1+j), its leaf index is reassigned as
+Ψ(τ) =n ℓ+1
+Iℓ+1+j. Cells in the parent subarea that are not
+assigned to any child subarea no longer belong to a current
+leaf node and are assignedΨ(τ) =∅.
+Fig. 2b shows an example of tree expansion. The residual
+region associated with the root noden 1
+1 is separated into three
+disconnected components due to newly discovered obstacles
+and covered cells. Accordingly,n 1
+1 is expanded into three child
+nodesn 2
+1,n 2
+2, andn 2
+3. The parent noden 1
+1 becomes an internal
+node, while its three child nodes become the new leaves of the
+tree. As coverage proceeds, Fig. 2c shows thatn 2
+2 is further
+expanded into child nodesn 3
+1 andn 3
+2. The updated hierarchical
+coverage tree is subsequently used to incrementally update the
+global tour, as described in the next subsection.
+C. Incremental Global Tour Planning
+As the environment is incrementally revealed and covered,
+only a small portion of the hierarchical coverage tree is
+typically updated at each planning step, while most remaining
+regions stay unchanged. A complete recomputation of the
+global tour, however, may drastically alter the visiting order
+of these unchanged regions when several candidate orders
+have similar travel costs. This can lead to indecisive coverage
+behavior, unnecessary backtracking, and reduced execution
+consistency. To address these issues, the proposed algorithm
+retains the visiting order of unaffected regions in the global
+tour, while locally updating the affected portion.
+LetN active ={n ℓ
+i ∈ N leaf :Q(n ℓ
+i)̸=C}be the set of
+active leaf nodes whose coverage has not yet been completed.
+Let the global tour before the current update be represented
+as an ordered sequenceγ −
+global = [vm]M
+m=1, wherev m denotes
+them-th node in the tour. Eachv m is examined sequentially
+with respect to the updated hierarchical coverage tree. Ifv m
+remains an active leaf node, its relative position in the tour is
+retained. If its coverage has been completed, it is removed
+from the tour. Ifv m has been expanded and becomes an
+internal node, it is replaced by an optimized visiting sequence
+of its newly generated child nodes. Specifically, consider the
+m-th tour nodev m =n ℓ
+i that has been expanded intoJchild
+nodes{n ℓ+1
+i1 , . . . , nℓ+1
+iJ }. Letn a andn b denote the predecessor
+and successor ofv m in the current global tour, respectively, if
+they exist. A local tour starting fromn a, visiting allJchild
+nodes, and ending atn b is formulated as a Traveling Salesman
+Problem (TSP) with fixed start and end conditions.
+A complete weighted graph ˆG= ( ˆN, ˆE)is constructed
+for the TSP, where ˆN={n a, nℓ+1
+i1 , . . . , nℓ+1
+iJ , nb}, and ˆE
+contains an edge between every pair of distinct nodes in
+ˆN. LetT tr ={τ j ∈ T: Φ(τ j)̸=O}denote the cells
+Algorithm 1:Tree Update (Secs. IV-B1 and IV-B2)
+Input:TreeG, symbolic map of tilingΦ, changed cell set
+∆T, leaf index mapΨ
+Output:Updated treeGand leaf index mapΨ
+1∆N leaf ← ∅;
+2foreachτ j ∈∆Tdo
+3ifΨ(τ j)̸=∅then
+4∆N leaf ←∆N leaf ∪ {Ψ(τj)};
+5end
+6end
+7foreachn ℓ
+i ∈∆N leaf do
+8{R(n ℓ
+i), p(nℓ
+i),Q(n ℓ
+i)} ←updateNodeInfo(n ℓ
+i ,Φ);
+9ifQ(n ℓ
+i)̸=Cthen
+10{S j}J
+j=1 ←searchDisjointPortion(R(n ℓ
+i));
+11ifJ >1then
+12foreachτ j ∈ A(n ℓ
+i)do
+13Ψ(τ j)← ∅;
+14end
+15I ℓ+1 ← |N ℓ+1|;
+16forj←1toJdo
+17n ℓ+1
+Iℓ+1+j ←createChildNode(S j, ℓ+1);
+18G.addNode(n ℓ+1
+Iℓ+1+j);
+19G.addEdge(n ℓ
+i , nℓ+1
+Iℓ+1+j);
+20foreachτ∈ S j do
+21Ψ(τ)←n ℓ+1
+Iℓ+1+j;
+22end
+23end
+24end
+25end
+26end
+not currently identified as obstacles. The weight of each
+edge is defined as the shortest-path distance between the
+centers of its incident nodes overT tr, computed using the A*
+algorithm [31]. The 2-opt method [32] is then employed to
+obtain an approximate solutionˆπfor the TSP. The tour node
+vm is replaced by the resulting child-node sequence, yielding
+γ+
+global = [v 1, . . . , vm−1, nℓ+1
+iˆπ(1)
+, . . . , nℓ+1
+iˆπ(J)
+, vm+1, . . . , vM].
+The same procedure is applied to all other expanded nodes
+in the global tour. In this way, the visiting order outside the
+locally refined portions is preserved, while the newly generated
+child nodes are locally arranged to reduce the travel cost. The
+first element ofγ +
+global is selected as the target noden target
+for local coverage planning. An example of global tour and
+corresponding target node is shown in Figs. 2b and 2c.
+D. Local Coverage Path Planning
+Given the target noden target selected from the updated
+global tour, the local planner progressively covers its residual
+regionR(n target). At each planning step, a target cell is
+selected to guide the robot’s next coverage motion. The target-
+cell selection strategy is described below.
+Remark IV .1.IfR(n target)is not adjacent to the robot’s
+current position, the robot first follows a collision-free path to
+reach the target region and then proceeds with local coverage.
+1) Target Cell Selection Strategy:Letτ R denote the robot’s
+current cell. LetH(τ R)⊆ Tbe the local vicinity defined as
+the3×3tiling centered atτ R, as shown in Fig. 3a. Then,
+
+=== PDF PAGE 6 ===
+6
+Laps
+Target cell
+Robot
+Local vicinity
+(a) Local target cell selection.
+Target cell
+Dead-end
+Covered area (b) Dead-end escape.
+Fig. 3. Illustration of local target-cell selection and dead-end recovery.
+(a) The target cell is selected within the local vicinity according to
+the priority of neighboring laps, generating a back-and-forth coverage
+pattern. (b) When no candidate target cell is available in the local
+vicinity, the robot reaches a dead-end. The nearest free-uncovered cell
+adjacent to the covered area is then selected as the target, allowing
+the robot to escape the dead-end and resume coverage.
+a setV(τ R)⊆ H(τ R)is constructed to contain all candidate
+cells for target selection.
+Definition IV .7(Candidate Cell).A cellτ∈ H(τ R)is con-
+sidered as a candidate if: i)τ∈ R(n target), ii)Φ(τ) =F u,
+and iii) the straight-line path fromτ R toτis collision-free.
+Definition IV .8(Lap).A lap is a collision-free straight line
+passing through a sequence of cells and oriented perpendicu-
+lar to the sweep direction of the coverage path.
+Next, target cell is selected withinV(τ R)according to
+the priority of the left lap, current lap, and right lap. These
+directions are defined with respect to a fixed sweep direction.
+When multiple candidates exist on the same lap, the nearest
+one is selected. This strategy generates a systematic back-
+and-forth coverage pattern as follows. At any cell, the robot
+first attempts to move toward a target cell on the left lap and
+continues covering along the selected lap. When no eligible
+cell remains on the left lap, the robot proceeds along the
+current lap and subsequently shifts to the right lap. In this
+way, the robot performs the back-and-forth coverage lap by
+lap while shifting laps from left to right as they are covered.
+2) State Update Strategy:Once the target cell is selected,
+the state of the current cellτ R is updated toΦ(τ R) =F c
+unless both cells immediately above and belowτ R on the
+current lap remain free and uncovered. In the latter case,
+Φ(τR)remainsF u to avoid premature interruption of the lap
+and preserve the structured back-and-forth coverage pattern.
+Following the cell-state update, newly acquired sensor mea-
+surements and coverage progress are incorporated into the
+symbolic mapΦ. The residual regionR(n target)and the
+node stateQ(n target)are then updated accordingly. If the
+node becomes explored, i.e.,Q(n target) =E, its remaining
+residual region contains only free-uncovered cells and the
+planner switches to the global-tour-aware coverage strategy
+described below. IfQ(n target) =C, coverage of the target
+node is completed. In addition, if the updated residual region
+becomes disconnected, the target node is expanded; the global
+tour is then updated and a new target node is selected.
+3) Dead-End Recovery Strategy:During navigation it is
+possible that the robot reaches a cell where it is unable to
+find the target cell because it is surrounded by only obstacles
+and covered regions, as shown in Fig. 3b. This is known as a
+dead-end situation defined below.
+Definition IV .9(Dead-end).A dead-end occurs at the robot’s
+current cellτ R ifV(τ R) =∅whileQ(n target)̸=C, i.e.,
+no candidate target cell is available although coverage of the
+target node remains incomplete.
+When a dead-end occurs, directly selecting an arbitrary
+uncovered cell withinR(n target)may introduce unnecessary
+traversal and disrupt the structured sweeping process. The
+robot therefore searches for the nearest free-uncovered cell
+adjacent to the covered area, as shown in Fig. 3b. Then it
+follows the shortest path to this cell and resumes the target
+cell selection strategy from that location.
+4) Global-Tour-Aware Coverage Strategy:When the target
+node becomes explored, i.e.,Q(n target) =E, all cells in
+R(ntarget)are known to be free and uncovered. A local cov-
+erage path is generated by formulating a TSP that starts from
+the robot’s current cellτ R and visits every cell inR(n target).
+To maintain consistency with the global tour, letn next denote
+the node followingn target, if it exists. The centerp(n next)is
+introduced as a virtual terminal point of the local coverage
+path. This encourages the path to terminate at a location
+favorable for transitioning to the next target node, thereby
+reducing transition cost. Ifn next does not exist, the terminal
+location is left unconstrained and the corresponding open TSP
+is solved with a fixed start and free end. After the resulting
+coverage path is executed, all cells inR(n target)become
+covered and the node state is updated toQ(n target) =C.
+V. ALGORITHMANALYSIS
+This section presents a formal analysis of both computa-
+tional complexity and theoretical guarantees.
+Lemma V .1.Hierarchical coverage tree update has a time
+complexity ofO(|T |).
+Proof.As described in Alg. 1, the affected leaf-node set
+∆Nleaf is first identified by mapping each changed cell
+τj ∈∆Tto its corresponding leaf node through the leaf
+index mapΨ. Since each lookup ofΨ(τ j)takes constant
+time, this step requiresO(|∆T |). Consider an affected leaf
+noden ℓ
+i ∈∆N leaf. Updating the node information requires
+at most linear time in the size of its residual region, with
+complexityO(|R(n ℓ
+i)|). The subsequent flood-fill search visits
+each cell inR(n ℓ
+i)at most once and therefore requires
+O(|R(nℓ
+i)|). If the residual region remains path-connected,
+no modification of the tree is required. If it is divided into
+multiple disjoint portions, new child nodes are created and
+the leaf index mapΨis updated. This operation requires at
+most one traversal of the associated subarea and the identified
+components, giving a complexity ofO(|A(n ℓ
+i)|+|R(n ℓ
+i)|).
+Therefore, the total complexity of the tree update isO(|∆T |+P
+nℓ
+i ∈∆Nleaf
+(|A(nℓ
+i)|+|R(n ℓ
+i)|)). SinceR(n ℓ
+i)⊆ A(n ℓ
+i), this
+simplifies toO(|∆T |+ P
+nℓ
+i ∈∆Nleaf
+|A(nℓ
+i)|). Moreover, the
+
+=== PDF PAGE 7 ===
+7
+associated subareas of distinct leaf nodes are mutually disjoint,
+such that P
+nℓ
+i ∈∆Nleaf
+|A(nℓ
+i)| ≤ |T |. Since∆T ⊆ T, the
+overall complexity of the tree update isO(T).
+Lemma V .2.The incremental global tour planning has a time
+complexity ofO(M+ PH
+h=1 J2
+h).
+Proof.LetMdenote the number of nodes in the current
+global tour,Hthe number of expanded tour nodes, andJ h the
+number of child nodes generated by theh-th expanded node.
+Examining allMtour nodes against the updated tree requires
+O(M)time. For theh-th expanded node, the corresponding
+local TSP contains at mostJ h+2nodes, including itsJ h child
+nodes and the predecessor and successor, when available. The
+2-opt method has complexity ofO((J h + 2)2) =O(J 2
+h)[33].
+Therefore, updating all expanded nodes requiresO( PH
+h=1 J2
+h)
+time, yielding an overall complexity ofO(M+ PH
+h=1 J2
+h).
+Lemma V .3.The local coverage path planning has a time
+complexity ofO(|R(n target)|2).
+Proof.By default, target cell is selected within a3×3local
+vicinity. Since at most eight neighboring cells are examined,
+this operation requiresO(1)time. When a dead-end occurs,
+searching for the target cell requires at mostO(|R(n target)|)
+time. For anexploredtarget node, the remaining coverage
+problem is formulated as a TSP over at most|R(n target)|
+cells. The 2-opt method therefore requiresO(|R(n target)|2)
+time [33]. Since the TSP-based planning dominates the other
+steps, the overall time complexity isO(|R(n target)|2).
+Theorem V .1.The proposed algorithm has a time complexity
+ofO(|T | 2)for each planning and update cycle.
+Proof.From Lemmas V .1-V .3, the proposed algorithm has
+a complexity ofO
+
+|T |+M+ PH
+h=1 J2
+h +|R(n target)|2
+
+.
+SinceM≤ |T |and|R(n target)| ≤ |T |, the complexity
+simplifies toO(|T |+ PH
+h=1 J2
+h). Moreover, the child nodes
+generated from different expanded leaf nodes correspond to
+mutually disjoint portions of the tiling, yielding PH
+h=1 Jh ≤
+|T |and thus PH
+h=1 J2
+h ≤
+PH
+h=1 Jh
+2
+≤ |T | 2. Therefore, the
+time complexity of the proposed algorithm isO(|T | 2).
+Lemma V .4.For a finite tilingT, the hierarchical coverage
+tree undergoes at most|T | −1expansion events.
+Proof.The tree is initialized with a single node. A tree
+expansion occurs only when the residual region of a leaf node
+is divided intoJ >1disjoint components. The expanded node
+then becomes an internal node and is replaced byJchild leaf
+nodes. Therefore, each expansion increases the number of leaf
+nodes byJ−1≥1. Since the associated subareas of distinct
+leaf nodes are mutually disjoint and each leaf node contains
+at least one cell, the total number of leaf nodes is bounded
+by|T |. Starting from a single leaf node, the number of tree-
+expansion events is therefore at most|T | −1.
+Theorem V .2(Complete Coverage).The proposed algorithm
+achieves complete coverage of the obstacle-free space.
+Proof.According to Lemma V .4, the hierarchical coverage
+tree undergoes only finitely many expansion events. Whenever
+(a) Office.
+ (b) Warehouse.
+(c) Forest.
+ (d) Mall 1.
+(e) Mall 2.
+ (f) Mall 3.
+Fig. 4. An Overview of the test scenarios for simulation experiments.
+a leaf node is expanded, its residual region is partitioned into
+disjoint child regions whose union equals the residual region
+of the parent. Hence, tree expansion does not discard any
+uncovered region. After each tree update,N active contains
+all leaf nodes whose coverage has not yet been completed,
+and these nodes are maintained in the global tour. During
+local coverage, the selected target node progressively explores
+or covers its residual region until it becomes explored, is
+completed, or is expanded; in the latter case, its residual region
+is inherited by its child nodes and remains in the global
+tour. SinceTis finite and tree expansion can occur only
+finitely many times, repeated application of the above process
+eventually eliminates all active leaf nodes, i.e.,N active =∅.
+Consequently, no obstacle-free cell remains uncovered, and
+complete coverage of the obstacle-free space is achieved.
+Theorem V .3(Approximation Ratio of Local Tour Refine-
+ment).AfterKtour updates induced by tree expansion, the
+global tour maintained by the proposed algorithm satisfies
+σinc = lK
+l∗
+K
+≤1 + 2 PK
+k=1(Jk+1)rk
+l∗
+K
+.
+Proof.Consider thek-th tree expansion. Letl k andl ∗
+k denote
+the lengths of the updated tour and globally optimal tour,
+respectively. Suppose the expanded noden pk generatesJ k
+child nodesC k. We define the refinement radius asr k =
+maxn∈Ck d(npk , n), which represents the maximum distance
+between the parent node and its child nodes. Since every
+child node is within distancer k ofn pk, the triangle inequality
+implies that replacing the parent by any feasible ordering of
+itsJ k child nodes introduces at mostr k at each boundary
+connection and at most2r k between two consecutive child
+
+=== PDF PAGE 8 ===
+8
+Ours
+ IBINN
+ 0*
+BA*
+ BINN
+ PPCPP
+Coverage time (min)
+OursIBINN
+0* BA*BINNPPCPP
+10
+20
+30
+40
+50
+Offline TSP solution
+Path length (km)
+OursIBINN
+0* BA*BINNPPCPP
+1
+1.5
+2
+2.5
+3
+Overlap rate (%)
+OursIBINN
+0* BA*BINNPPCPP
+0
+20
+40
+60
+80
+ Number of turns
+OursIBINN
+0* BA*BINNPPCPP
+100
+175
+250
+325
+400
+Fig. 5.Office Scenario:Performance comparison with the baseline algorithms.
+Ours
+ IBINN
+ 0*
+BA*
+ BINN
+ PPCPP
+Coverage time (min)
+OursIBINN
+0* BA*BINNPPCPP
+10
+20
+30
+40
+50
+Offline TSP solution
+Path length (km)
+OursIBINN
+0* BA*BINNPPCPP
+1
+1.5
+2
+2.5
+3
+Overlap rate (%)
+OursIBINN
+0* BA*BINNPPCPP
+0
+20
+40
+60
+80
+ Number of turns
+OursIBINN
+0* BA*BINNPPCPP
+100
+175
+250
+325
+400
+Fig. 6.Warehouse Scenario:Performance comparison with the baseline algorithms.
+nodes. Hence, the resulting increase in tour length is bounded
+byr k +2(J k −1)r k +r k = 2Jkrk, yieldingl k ≤l k−1 +2J krk.
+If the expanded parent is an endpoint of the tour, one boundary
+connection is absent and the same upper bound still holds.
+Next, consider the globally optimal tour. We construct a
+feasible tour for the pre-expansion node set from this optimal
+tour. Specifically, all but one child node inC k are removed
+by directly connecting their predecessor and successor nodes.
+By the triangle inequality, these shortcut operations do not
+increase the tour length. The remaining child node is then
+replaced by its parentn pk. Since the distance between the
+parent and any child is at mostr k, this replacement increases
+the two incident connections by at most2r k in total. Therefore,
+the constructed pre-expansion tour has length no greater than
+l∗
+k + 2rk. Letl ∗
+k−1 be the globally optimal tour length before
+expansion, we obtainl ∗
+k ≥l ∗
+k−1 −2r k. Letϵ k =l k −l ∗
+k denote
+the suboptimality gap between the updated tour and globally
+optimal tour. Combining the above results givesϵ k ≤ϵ k−1 +
+2(Jk+1)rk. The initial global tour contains only the root node
+and is therefore trivially optimal, givingϵ 0 = 0. Recursively
+applying this inequality over theKexpansion events yields
+lK −l ∗
+K ≤2 PK
+k=1(Jk + 1)rk. Therefore, forl ∗
+K >0, the
+approximation ratio satisfiesσ inc = lK
+l∗
+K
+≤1+ 2 PK
+k=1(Jk+1)rk
+l∗
+K
+.
+The bound indicates that the approximation ratio introduced
+by incremental tour refinement is determined by the number
+of newly generated child nodes and their spatial deviations
+from the corresponding parent nodes. Since tree expansion is
+local, the refinement radiusr k is typically small, leading to a
+limited degradation from global optimality.
+VI. RESULTS ANDDISCUSSION
+This section evaluates TRACE through high-fidelity simu-
+lations in Gazebo and real-robot experiments. The simulation
+studies compare TRACE with five baseline algorithms in terms
+of coverage time, path length, overlap ratio, and number of
+
+=== PDF PAGE 9 ===
+9
+Ours
+ IBINN
+ 0*
+BA*
+ BINN
+ PPCPP
+Coverage time (min)
+OursIBINN
+0* BA*BINNPPCPP
+10
+20
+30
+40
+50
+Offline TSP solution
+Path length (km)
+OursIBINN
+0* BA*BINNPPCPP
+1
+1.5
+2
+2.5
+3
+Overlap rate (%)
+OursIBINN
+0* BA*BINNPPCPP
+0
+20
+40
+60
+80
+ Number of turns
+OursIBINN
+0* BA*BINNPPCPP
+100
+175
+250
+325
+400
+Fig. 7.Forest Scenario:Performance comparison with the baseline algorithms.
+Ours
+ IBINN
+ 0*
+BA*
+ BINN
+ PPCPP
+Coverage time (min)
+OursIBINN
+0* BA*BINNPPCPP
+5
+10
+15
+20
+25
+Offline TSP solution
+Path length (km)
+OursIBINN
+0* BA*BINNPPCPP
+0
+0.5
+1
+1.5
+2
+Overlap rate (%)
+OursIBINN
+0* BA*BINNPPCPP
+0
+15
+30
+45
+60
+ Number of turns
+OursIBINN
+0* BA*BINNPPCPP
+0
+50
+100
+150
+200
+Fig. 8.Mall 1 Scenario:Performance comparison with the baseline algorithms.
+turns, and further examine its path quality and robustness to
+sensing and localization uncertainties.
+A. Validation on a Simulation Platform
+1) Simulated Robot and Test Scenarios:A mobile robot
+is simulated with motion constraints including a maximum
+translational velocity of2 m/sand a minimum turning radius
+of1 m. It is equipped with a LiDAR providing a360 ◦ field of
+view and a maximum sensing range of12 m. Six90 m×90 m
+with different obstacle arrangements and spatial structures are
+constructed for evaluation, as shown in Fig. 4. The scenarios
+include representations of an office, warehouse, forest, and
+mall and are designed to cover different levels of obstacle
+density, corridor structure, and spatial complexity. Each envi-
+ronment is represented by a30×30tiling for mapping and
+coverage planning. At the beginning of each run, the interior
+obstacle layout is unknown to the robot and is progressively
+revealed through onboard sensing during coverage.
+2) Baseline Algorithms:The proposed algorithm is com-
+pared with five online CPP algorithms: BINN [15], BA ∗ [14],
+ϵ∗ [18], PPCPP [19], and IBINN [21]. All algorithms are
+implemented in C++and evaluated using the same robot
+model, sensing configuration, map resolution, starting condi-
+tions, and computing platform. The experiments are conducted
+on a computer equipped with a2.60-GHz processor and32
+GB of RAM. Algorithm-specific parameters follow the settings
+recommended in the corresponding publications.
+3) Performance Metrics:The following performance met-
+rics are used to quantitatively compare the algorithms:
+•Coverage Time: elapsed time from the start of operation
+until all obstacle-free cells are covered. This metric
+jointly reflects travel distance and maneuvering costs
+under the robot motion constraints.
+•Path Length: total distance traveled by the robot from
+initialization until complete coverage.
+•Overlap Ratio: the amount of repeated coverage normal-
+
+=== PDF PAGE 10 ===
+10
+Ours
+ IBINN
+ 0*
+BA*
+ BINN
+ PPCPP
+Coverage time (min)
+OursIBINN
+0* BA*BINNPPCPP
+10
+20
+30
+40
+50
+Offline TSP solution
+Path length (km)
+OursIBINN
+0* BA*BINNPPCPP
+1
+1.5
+2
+2.5
+3
+Overlap rate (%)
+OursIBINN
+0* BA*BINNPPCPP
+0
+20
+40
+60
+80
+ Number of turns
+OursIBINN
+0* BA*BINNPPCPP
+100
+175
+250
+325
+400
+Fig. 9.Mall 2 Scenario:Performance comparison with the baseline algorithms.
+Ours
+ IBINN
+ 0*
+BA*
+ BINN
+ PPCPP
+Coverage time (min)
+OursIBINN
+0* BA*BINNPPCPP
+10
+20
+30
+40
+50
+Offline TSP solution
+Path length (km)
+OursIBINN
+0* BA*BINNPPCPP
+1
+1.5
+2
+2.5
+3
+Overlap rate (%)
+OursIBINN
+0* BA*BINNPPCPP
+0
+20
+40
+60
+80
+ Number of turns
+OursIBINN
+0* BA*BINNPPCPP
+100
+175
+250
+325
+400
+Fig. 10.Mall 3 Scenario:Performance comparison with the baseline algorithms.
+ized by the total obstacle-free area.
+•Number of Turns: the cumulative heading change along
+the executed trajectory, normalized by90 ◦.
+4) Comparative Evaluation Results:Figs. 5-10 shows the
+coverage paths generated by TRACE and the baseline methods
+in six scenarios. The robot starts from the bottom-left corner
+and initially has no knowledge of the interior obstacle layout.
+As coverage proceeds, each method updates its plan using
+the newly observed environment until all reachable free cells
+have been covered. As observed, TRACE produces efficient
+coverage paths with significantly less overlap across the six
+scenarios. These figures also present the quantitative results,
+where TRACE achieves favorable performance in coverage
+time, path length, overlap ratio, and number of turns. The aver-
+age total computation time of TRACE per iteration, including
+hierarchical coverage tree construction, global tour planning,
+and local coverage path generation, is on the order of10 −2 s.
+0 0.02 0.04 0.06 0.08 0.1 0.12
+<localization
+95
+96
+97
+98
+99
+100Coverage rate (%)
+Warehouse Forest
+Fig. 11. Coverage rate versus localization noise.
+5) Comparison with the Offline TSP Solution:We further
+assess the path quality of TRACE against an offline TSP
+
+=== PDF PAGE 11 ===
+11
+Overlap rate (%)
+ Number of turns
+Ours IBINN 𝝐*
+BA* BINN PPCPP
+Coverage time (min)
+Start
+Path length (m)
+Fig. 12.Real-Robot Experiment:Performance comparison with the baseline algorithms in a laboratory with complex obstacle layout.
+Robot
+Obstacles
+Workspace border
+Fig. 13. Scenario for real-robot experiment.
+solution. For each test environment, a cell-level TSP is con-
+structed using the full map and solved exactly with the Lin-
+Kernighan-Helsgaun algorithm [34]. The resulting path length
+provides an offline reference for the shortest traversal under
+the adopted graph-distance formulation. As shown in Figs. 5-
+10, the online paths generated by TRACE remain close to this
+reference across all six scenarios, despite operating without
+prior knowledge of the obstacle layout.
+6) Performance in the Presence of Uncertainties:To exam-
+ine the robustness of TRACE to imperfect onboard perception,
+additional simulations are conducted with noise applied to
+range sensing, heading estimation, and localization. These
+perturbations affect both obstacle placement in the map and
+the estimated robot pose used for online planning. Independent
+zero-mean Gaussian noise is added to the corresponding
+measurements. The range and heading noise levels are fixed
+atσ range = 1.5 cmandσ heading = 0.5 ◦, respectively, while
+localization uncertainty is varied fromσ localization = 0.02 mto
+0.12 m[1]. Robustness is evaluated using the actual coverage
+rate, computed from the ground-truth robot trajectory and
+obstacle map. The coverage rate is defined as the fraction
+of ground-truth obstacle-free cells reached by the robot’s
+coverage footprint during execution. Fig. 11 summarizes the
+results over10Monte Carlo trials at each localization-noise
+level for warehouse and forest scenarios. Each box reports the
+distribution of the resulting coverage rates, with the center line
+indicating the median and the lower and upper box boundaries
+corresponding to the25th and75th percentiles, respectively.
+B. Validation by Real Experiments
+The performance of TRACE is further evaluated through
+real-robot experiments. As shown in Fig 13, the scenario is
+conducted in a7 m×7 mlaboratory space with multiple
+obstacles. The mobile robot is equipped with an RPLIDAR
+S2L with a sensing range of8m for obstacle detection
+and an MPU9250 IMU for estimating velocity, acceleration,
+and orientation. The gmapping algorithm [35] is used for
+localization. All sensing, mapping, localization, and coverage
+planning are performed on an NVIDIA Jetson Nano.
+TRACE is compared with the same five baseline algorithms
+used in the simulations. All these methods are evaluated using
+the same robot platform, map resolution, and initial position.
+For each method, the robot incrementally maps the initially
+unknown environment and generates its coverage path until
+complete coverage is achieved. Fig. 12 shows the coverage
+paths generated by TRACE and the baseline algorithms. As
+seen, TRACE produces more coherent trajectories with fewer
+long revisiting segments and less repeated traversal than
+the baseline methods. This figure also provides quantitative
+comparison results in terms of coverage time, path length,
+overlap ratio, and number of turns. Overall, TRACE achieves
+significant improvements over the baseline algorithms in all
+metrics, thus validating its effectiveness on real robots.
+VII. CONCLUSIONS ANDFUTUREWORK
+This paper presents a novel online CPP algorithm, called
+TRACE, for real-time coverage of unknown environments. A
+hierarchical coverage tree is constructed to globally represent
+the evolving connectivity of the uncovered space as new
+obstacles are discovered and coverage progresses. Based on
+the updated tree, an incremental global tour is maintained by
+locally refining only the portions affected by tree expansion
+while preserving the visiting order of unchanged regions.
+Guided by this tour, the local planner performs efficient dead-
+end recovery and generates global-tour-aware coverage paths
+
+=== PDF PAGE 12 ===
+12
+to reduce redundant travel. Theoretical analysis established
+the computational complexity and complete coverage prop-
+erty of TRACE, and provided an approximation bound for
+the incremental global tour refinement. Extensive simulations
+and real-world robot experiments demonstrated that TRACE
+consistently improves coverage efficiency over existing online
+CPP methods in terms of coverage time, path length, overlap
+ratio, and number of turns. Future work will investigate
+extensions of TRACE to dynamic environments [36], [37] and
+coverage problems in three-dimensional environments [38].
+REFERENCES
+[1] Z. Shen, J. P. Wilson, and S. Gupta, “C ∗: A coverage path planning
+algorithm for unknown environments using rapidly covering graphs,”
+IEEE Transactions on Robotics, vol. 42, pp. 1233–1253, 2026.
+[2] P. Maini, B. M. Gonultas, and V . Isler, “Online coverage planning for
+an autonomous weed mowing robot with curvature constraints,”IEEE
+Robotics and Automation Letters, vol. 7, no. 2, pp. 5445–5452, 2022.
+[3] T. Yi, D. Zhang, L. Luo, and J. Luo, “View planning for grape harvesting
+based on active vision strategy under occlusion,”IEEE Robotics and
+Automation Letters, vol. 9, no. 3, pp. 2535–2542, 2024.
+[4] M. Ramesh, F. Imeson, B. Fidan, and S. L. Smith, “Anytime replanning
+of robot coverage paths for partially unknown environments,”IEEE
+Transactions on Robotics, vol. 40, pp. 4190–4206, 2024.
+[5] H. Zhou, P. Zhang, Z. Liang, H. Li, and X. Li, “Coverage trajectory
+planning problem on 3D terrains with safety constraints for automated
+lawn mower: exact and heuristic approaches,”Robotics and Autonomous
+Systems, vol. 193, p. 105109, 2025.
+[6] Y . Ou, J. Fan, C. Zhou, S. Kang, Z. Zhang, Z.-G. Hou, and M. Tan,
+“Structured light-based underwater collision-free navigation and dense
+mapping system for refined exploration in unknown dark environments,”
+IEEE Transactions on Systems, Man, and Cybernetics, vol. 55, no. 1,
+pp. 110–123, 2025.
+[7] C. Luo, L. Wang, J. Jin, Z. Du, and W. Miao, “Entropy-based incremen-
+tal coverage path planning for multi-UA V persistent monitoring,”IEEE
+Robotics and Automation Letters, vol. 11, no. 1, pp. 378–385, 2025.
+[8] S. Wang, Y . Tong, X. Shang, and Z. Zhang, “Hierarchical view-
+point planning for complex surfaces in industrial product inspection,”
+IEEE/ASME Transactions on Mechatronics, vol. 29, no. 5, pp. 3289–
+3299, 2023.
+[9] V . Veeraraghavan, K. Hunte, J. Yi, and K. Yu, “Complete and near-
+optimal robotic crack coverage and filling in civil infrastructure,”IEEE
+Transactions on Robotics, vol. 40, pp. 2850–2867, 2024.
+[10] T. Yang, J. V . Miro, Y . Wang, and R. Xiong, “An improved maximal
+continuity graph solver for non-redundant manipulator non-revisiting
+coverage,”IEEE Transactions on Automation Science and Engineering,
+vol. 22, pp. 3822–3834, 2024.
+[11] Y . Gabriely and E. Rimon, “Spanning-tree based coverage of contin-
+uous areas by a mobile robot,”Annals of Mathematics and Artificial
+Intelligence, vol. 31, no. 1-4, pp. 77–98, 2001.
+[12] E. Gonzalez, O. Alvarez, Y . Diaz, C. Parra, and C. Bustacara, “BSA:
+a complete coverage algorithm,” inIEEE International Conference on
+Robotics and Automation, 2005, pp. 2040–2044.
+[13] E. Ferranti, N. Trigoni, and M. Levene, “Brick&Mortar: An on-line
+multi-agent exploration algorithm,” inIEEE International Conference
+on Robotics and Automation, 2007, pp. 761–767.
+[14] H. H. Viet, V .-H. Dang, M. N. U. Laskar, and T. Chung, “BA*: an online
+complete coverage algorithm for cleaning robots,”Applied Intelligence,
+vol. 39, no. 2, pp. 217–235, 2013.
+[15] C. Luo and S. X. Yang, “A bioinspired neural network for real-time
+concurrent map building and complete coverage robot navigation in
+unknown environments,”IEEE Transactions on Neural Networks and
+Learning Systems, vol. 19, no. 7, pp. 1279–1298, 2008.
+[16] B. Sun, D. Zhu, C. Tian, and C. Luo, “Complete coverage autonomous
+underwater vehicles path planning based on glasius bio-inspired neural
+network algorithm for discrete and centralized programming,”IEEE
+Transactions on Cognitive and Developmental Systems, vol. 11, no. 1,
+pp. 73–84, 2019.
+[17] W. Cai, S. Zhang, M. Zhang, and C. Wang, “Improved BINN-based
+underwater topography scanning coverage path planning for auv in
+internet of underwater things,”IEEE Internet of Things Journal, vol. 10,
+no. 20, pp. 18 375–18 386, 2023.
+[18] J. Song and S. Gupta, “ϵ ⋆: An online coverage path planning algorithm,”
+IEEE Transactions on Robotics, vol. 34, no. 2, pp. 526–533, 2018.
+[19] M. Hassan and D. Liu, “PPCPP: A predator–prey-based approach
+to adaptive coverage path planning,”IEEE Transactions on Robotics,
+vol. 36, no. 1, pp. 284–301, 2019.
+[20] L. Li, D. Shi, S. Jin, S. Yang, Y . Lian, and H. Liu, “SP2E: Online
+spiral coverage with proactive prevention extremum for unknown envi-
+ronments,”Journal of Intelligent & Robotic Systems, vol. 108, no. 2,
+p. 30, 2023.
+[21] L. Huo, Y . Liu, Z. Chen, Y . Yang, X. Yan, H. Xia, and Q. Sun,
+“Complete coverage path planning algorithm based on improved bio-
+logically inspired neural networks in spray painting,”IEEE Robotics
+and Automation Letters, vol. 10, no. 6, pp. 5697–5704, 2025.
+[22] L. Li, D. Shi, S. Jin, X. Zhou, Y . Li, and B. Bai, “Hierarchy coverage
+path planning with proactive extremum prevention in unknown envi-
+ronments,”IEEE Robotics and Automation Letters, vol. 10, no. 4, pp.
+3358–3365, 2025.
+[23] Z. Shen, B. Shirose, P. Sriganesh, and M. Travers, “CAP: A connectivity-
+aware hierarchical coverage path planning algorithm for unknown en-
+vironments using coverage guidance graph,” inIEEE/RSJ International
+Conference on Intelligent Robots and Systems, 2025, pp. 13 244–13 249.
+[24] E. Galceran and M. Carreras, “A survey on coverage path planning for
+robotics,”Robotics and Autonomous systems, vol. 61, no. 12, pp. 1258–
+1276, 2013.
+[25] Z. Shen, S. Gupta, S. Zhao, D. Zhou, G. Wang, Z. Ren, Y . Ou, Y . Zhai,
+and C. L. P. Chen, “Coverage path planning: Classical foundations, re-
+cent advances, and future directions,”arXiv preprint arXiv:2607.10649,
+2026.
+[26] C. Cao, J. Zhang, M. Travers, and H. Choset, “Hierarchical coverage
+path planning in complex 3D environments,” inIEEE International
+Conference on Robotics and Automation, 2020, pp. 3206–3212.
+[27] Z. Shen, P. Agrawal, J. P. Wilson, R. Harvey, and S. Gupta, “CPPNet: A
+coverage path planning network,” inOCEANS 2021: San Diego–Porto.
+IEEE, 2021, pp. 1–5.
+[28] M. Ramesh, F. Imeson, B. Fidan, and S. L. Smith, “Optimal partitioning
+of non-convex environments for minimum turn coverage planning,”
+IEEE Robotics and Automation Letters, vol. 7, no. 4, pp. 9731–9738,
+2022.
+[29] J. Lu, B. Zeng, J. Tang, T. L. Lam, and J. Wen, “TMSTC*: A path
+planning algorithm for minimizing turns in multi-robot coverage,”IEEE
+Robot. Autom. Lett., vol. 8, no. 8, pp. 5275–5282, 2023.
+[30] P. Soille,Morphological image analysis: principles and applications.
+Berlin, Germany: Springer Science & Business Media, 2013.
+[31] P. E. Hart, N. J. Nilsson, and B. Raphael, “A formal basis for the heuristic
+determination of minimum cost paths,”IEEE Transactions on Systems,
+Man, and Cybernetics, vol. 4, no. 2, pp. 100–107, 1968.
+[32] E. Aarts, E. H. Aarts, and J. K. Lenstra,Local search in combinatorial
+optimization. Princeton University Press, 2003.
+[33] Z. Shen, J. Song, K. Mittal, and S. Gupta, “CT-CPP: Coverage path
+planning for 3D terrain reconstruction using dynamic coverage trees,”
+IEEE Robotics and Automation Letters, vol. 7, no. 1, pp. 135–142, 2022.
+[34] K. Helsgaun, “An effective implementation of the lin-kernighan traveling
+salesman heuristic,”European Journal of Operational Research, vol.
+126, no. 1, pp. 106–130, 2000.
+[35] G. Grisetti, C. Stachniss, and W. Burgard, “Improved techniques for grid
+mapping with Rao-Blackwellized particle filters,”IEEE Transactions on
+Robotics, vol. 23, no. 1, pp. 34–46, 2007.
+[36] Z. Shen, J. P. Wilson, S. Gupta, and R. Harvey, “SMART: Self-morphing
+adaptive replanning tree,”IEEE Robotics and Automation Letters, vol. 8,
+no. 11, pp. 7312–7319, 2023.
+[37] Z. Shen, Y . Ou, S. Gupta, S. Zhao, D. Zhou, G. Wang, Z. Ren, J. Fan,
+and L. Cheng, “Motion planning in dynamic environments: A survey
+from classical to modern methods,”arXiv preprint arXiv:2606.02677,
+2026.
+[38] Y . Ou, S. Xia, J. Fan, C. Zhou, Y . Huang, P. Shuai, Y . Xue, and
+Z. Hou, “PL-V AP: A tightly coupled self-localization framework for
+underwater robots using point-line features and visual-acoustic-pressure
+sensor fusion,”IEEE/ASME Transactions on Mechatronics, vol. 30,
+no. 6, pp. 4116–4128, 2025.

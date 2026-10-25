@@ -1,0 +1,494 @@
+{
+  "status": "PASS",
+  "categories": 12,
+  "subcases": 23,
+  "sessions": 25,
+  "stub_responses": 43,
+  "all_round_cap": 48,
+  "main_environment_BFS": 107,
+  "independent_audit_BFS": 107,
+  "future_snapshot_byte_identity": true,
+  "same_tick_one_response": true,
+  "expected_NaN_technical_stop_is_last": true,
+  "real_planner_calls": 0,
+  "real_cores": 0,
+  "candidate_trials": 0,
+  "automatic_routes": 0,
+  "handwritten_route_responses": 43,
+  "simulated_sessions": 25,
+  "technical_round": 1,
+  "binding": {
+    "auditor.py": "9247b0cca96eed7b752fca25376e2652de70b202ee1234ac622105c7a4c7922f",
+    "call_plan.json": "ed6ba7afea32e94eaac1f9489c16840879a9b12b73a708a942fbf27f477cd643",
+    "contracts.py": "bb26ee04199033747f154989333f1e2ac5f9ba1a80e0602e803faa1c4e7ae748",
+    "deliver.py": "18e316aad39b33813f4c4a2d56f27de4ec3a380e8c8e692bbe0f3add48846f67",
+    "executor.py": "b61973e026f177e49f7b2001e59e148e50ad6988c718a2f459cc2a776ed71f27",
+    "fixed_files.json": "68671cce8f2bebcb6f0744b27f402a35a1dc7f668fbecbfa56d39b1b0c37d4e4",
+    "fixture_source.py": "c9f520330b5b2e9836e1664fb0d7c3b0a00d3e6ab8252be55ab3a93a4efe4de4",
+    "fixture_spec.json": "04e0c21dfd8773ab30091ac531a7642dc71af7fb6e26e0447b181f55b525072b",
+    "run_acceptance.py": "fd2dd1e9494083bd3d4c89e75a22a4241b90c91bc149061a439bd485121d4a37",
+    "safety.py": "97828522f3c0e317b1b70a9b5e8adba437df297f8c3396cd41b5dcec4a9c6840",
+    "source_hashes.json": "db75b166d085904685b8076cafdfcf56f885fae1459a1de2a45a18bcecb2621b",
+    "verify.py": "054da309db8049ff7aaff0650080a7f8e51c1307f901c4f55403754ed53fca9d",
+    "只读核验.ps1": "7af11d1f4d0bfb81bda1c258b27cff0f53a5408cee7d7bba3e688c8a932bb51e",
+    "执行稿.md": "7c891441134e89527d861ffe38a7e44d4399a0c25b553168631f32569cdc8c9a",
+    "状态与时序合同.md": "211aade44e79da68d5bb28521f1931889915f5815b1ac454fa329345f104838f"
+  },
+  "proofs": [
+    {
+      "passed": true,
+      "category": 1,
+      "subcase": "01_two_event_chain",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 7,
+          "actual_moves": 6,
+          "waits": 0,
+          "requests": 3,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 7,
+      "main_environment_BFS": 7,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 2,
+      "subcase": "02_independent_histories",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 7,
+          "actual_moves": 6,
+          "waits": 0,
+          "requests": 3,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        },
+        "B": {
+          "passed": true,
+          "frames": 7,
+          "actual_moves": 6,
+          "waits": 0,
+          "requests": 3,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 14,
+      "main_environment_BFS": 14,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 3,
+      "subcase": "03_early_finish_wait",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 17,
+          "actual_moves": 12,
+          "waits": 4,
+          "requests": 3,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 17,
+      "main_environment_BFS": 17,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 4,
+      "subcase": "04_current_new_credit",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 3,
+          "actual_moves": 2,
+          "waits": 0,
+          "requests": 2,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 3,
+      "main_environment_BFS": 3,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 5,
+      "subcase": "05_block_history_and_pending",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 5,
+          "actual_moves": 4,
+          "waits": 0,
+          "requests": 2,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 5,
+      "main_environment_BFS": 5,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 6,
+      "subcase": "06_only_A_current_blocked",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 2,
+          "actual_moves": 1,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        },
+        "B": {
+          "passed": true,
+          "frames": 9,
+          "actual_moves": 8,
+          "waits": 0,
+          "requests": 2,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 10,
+      "main_environment_BFS": 10,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 7,
+      "subcase": "07a_base_blocked",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 2,
+          "actual_moves": 1,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 1,
+      "main_environment_BFS": 1,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 7,
+      "subcase": "07b_pending_disconnected",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 2,
+          "actual_moves": 1,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 2,
+      "main_environment_BFS": 2,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 7,
+      "subcase": "07c_return_disconnected",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 3,
+          "actual_moves": 2,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 3,
+      "main_environment_BFS": 3,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 8,
+      "subcase": "08a_time_19_999",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 3,
+          "actual_moves": 2,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 3,
+      "main_environment_BFS": 3,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 8,
+      "subcase": "08b_time_20_000",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 1,
+          "actual_moves": 0,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 1,
+      "main_environment_BFS": 1,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 8,
+      "subcase": "08c_time_20_001",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 1,
+          "actual_moves": 0,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 1,
+      "main_environment_BFS": 1,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 9,
+      "subcase": "09a_invalid_no_old_fallback",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 2,
+          "actual_moves": 1,
+          "waits": 0,
+          "requests": 2,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 2,
+      "main_environment_BFS": 2,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 9,
+      "subcase": "09b_missing_no_old_fallback",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 2,
+          "actual_moves": 1,
+          "waits": 0,
+          "requests": 2,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 2,
+      "main_environment_BFS": 2,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 10,
+      "subcase": "10a_exact_resource_success",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 3,
+          "actual_moves": 2,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 3,
+      "main_environment_BFS": 3,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 10,
+      "subcase": "10b_resource_event_reject",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 2,
+          "actual_moves": 1,
+          "waits": 0,
+          "requests": 2,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 2,
+      "main_environment_BFS": 2,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 10,
+      "subcase": "10c_Tmax_arrival_success",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 3,
+          "actual_moves": 2,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 3,
+      "main_environment_BFS": 3,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 10,
+      "subcase": "10d_Tmax_cannot_move",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 2,
+          "actual_moves": 1,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 2,
+      "main_environment_BFS": 2,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 11,
+      "subcase": "11a_wait_keeps_turn_repeat",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 8,
+          "actual_moves": 6,
+          "waits": 1,
+          "requests": 2,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 8,
+      "main_environment_BFS": 8,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 11,
+      "subcase": "11b_cross_plan_right_angle",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 5,
+          "actual_moves": 4,
+          "waits": 0,
+          "requests": 2,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 5,
+      "main_environment_BFS": 5,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 12,
+      "subcase": "12a_merged_future_A",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 5,
+          "actual_moves": 4,
+          "waits": 0,
+          "requests": 2,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 5,
+      "main_environment_BFS": 5,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 12,
+      "subcase": "12b_merged_future_B",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 7,
+          "actual_moves": 6,
+          "waits": 0,
+          "requests": 2,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 7,
+      "main_environment_BFS": 7,
+      "manual_expectations_original": true
+    },
+    {
+      "passed": true,
+      "category": 8,
+      "subcase": "08d_NaN_expected_technical_stop_LAST",
+      "methods": {
+        "A": {
+          "passed": true,
+          "frames": 1,
+          "actual_moves": 0,
+          "waits": 0,
+          "requests": 1,
+          "hand_expectations_passed": true,
+          "source_prefix_and_all_snapshots_passed": true
+        }
+      },
+      "independent_audit_BFS": 1,
+      "main_environment_BFS": 1,
+      "manual_expectations_original": true
+    }
+  ]
+}

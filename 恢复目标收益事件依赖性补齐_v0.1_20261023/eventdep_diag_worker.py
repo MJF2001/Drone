@@ -1,0 +1,69 @@
+from pathlib import Path
+from copy import deepcopy
+import sys,json,time,traceback
+import eventdep_diag_decision_audit as decision_audit
+from eventdep_diag_compare import compare_old_off,claim_destination
+def worker(job):
+    dest=H/'outputs'/(job['id']+'.json');assert not dest.exists();claim_destination(dest)
+    result={'environment':job['environment'],'target_label':job['target_label'],'target_intervention_enabled':job['target_intervention_enabled'],'job':job,'passed':False,'views':{},'started_utc':time.time(),'configuration':job['config']};obs=None;ledger={'started':0,'returned':0,'exceptions':0}
+    wall=time.perf_counter()
+    try:
+        for name,digest in read(H/'active_freeze.json').items():assert sha(H/name)==digest,name
+        guards=read(H/'source_guards.json')
+        for name,digest in guards.items():assert sha(name)==digest,name
+        cold=time.perf_counter();runtime,p2=B.load_native();import eventdep_diag_runtime as DRun;result['cold_import_seconds']=time.perf_counter()-cold
+        for module in (runtime,p2,runtime.native):
+            path=str(Path(module.__file__).resolve());assert path in guards and sha(path)==guards[path]
+        payload=(H/job['input']).read_bytes();c=json.loads(payload);original=deepcopy(c);result['input']=c;diagnostic_spec=read(H/job['spec'])
+        assert tuple(c['current']) in ps(c['covered']);result['initial_collect_here']={'new_H':[],'reason':'same supplied H, explicit idempotent collection'}
+        result['identity_before']=B.identity()
+        if job['config']=='ON':obs=B.NativeObserver(runtime,p2)
+        else:assert job['config']=='OFF'
+        start=time.perf_counter();corestart=time.perf_counter()
+        native=invoke_once(lambda:DRun.run_payload(payload,'PPCPP',20,job['seed'],diagnostic_spec=diagnostic_spec,target_intervention_enabled=job['target_intervention_enabled']),ledger,obs)
+        coreend=time.perf_counter();native.update(environment=job['environment'],target_label=job['target_label'],target_intervention_enabled=job['target_intervention_enabled']);result['native']=native;result['loaded_core_sources']={}
+        for key in ('runtime','p2_adapter','candidate','model','p2_search_audit','unified_geometry','bfs_metric_geometry'):
+            module=sys.modules.get(key)
+            if module is not None:
+                path=str(Path(module.__file__).resolve());assert path in guards and sha(path)==guards[path],('unbound core',path)
+                result['loaded_core_sources'][path]=sha(path)
+        result['loaded_diagnostic_sources']={}
+        for key in ('eventdep_diag_runtime','eventdep_diag_native','eventdep_diag_candidate','eventdep_diag_hook','eventdep_diag_decision_audit','eventdep_diag_compare'):
+            module=sys.modules[key];path=Path(module.__file__).resolve();rel=str(path.relative_to(H));assert sha(path)==read(H/'active_freeze.json')[rel];result['loaded_diagnostic_sources'][str(path)]=sha(path)
+        flush=time.perf_counter();dump(H/'outputs'/(job['id']+'_native_raw.json'),native);native_flush=time.perf_counter()-flush
+        assert native['raw'].get('route'),'no complete original output'
+        assert native['raw']['status'] in ('core_complete','finished','deadline')
+        corewire=json.dumps(native,ensure_ascii=False,separators=(',',':'));route=json.loads(corewire)['raw']['route']
+        rawname='A' if job['method']=='PPCPP' else 'C0';postname='B' if rawname=='A' else 'C'
+        result['views'][rawname]=evaluate(c,route,grid=True)
+        json.dumps(result['views'][rawname],ensure_ascii=False,separators=(',',':'));rawend=time.perf_counter()
+        request={'id':job['id'],'input':c,'raw':json.loads(corewire)['raw']};wire=json.dumps(request,ensure_ascii=False,separators=(',',':')).encode()
+        postwire,envelope=engine.process(wire,limit=4096,soft=18,total=20)
+        result.update(post_request_utf8=wire.decode(),post_response_utf8=postwire,post_envelope=envelope)
+        flush=time.perf_counter();dump(H/'outputs'/(job['id']+'_post_raw.json'),{'request':request,'response_utf8':postwire,'envelope':envelope});post_flush=time.perf_counter()-flush
+        post=json.loads(postwire);result['post']=post;result['views'][postname]=evaluate(c,post['vertices'])
+        json.dumps(result,ensure_ascii=False,separators=(',',':'));end=time.perf_counter()
+        assert c==original and ledger=={'started':1,'returned':1,'exceptions':0}
+        if obs:assert obs.c['core_started']==obs.c['core_returned']==1
+        counts={'engine':post['counts']['service_intersections'],'raw_execution':result['views'][rawname]['counts'].get('execute_service_intersections',0),'post_execution':result['views'][postname]['counts'].get('execute_service_intersections',0)}
+        counts['total']=sum(counts.values());assert all(type(v) is int and v>=0 for v in counts.values())
+        n=len(route)-1;u=len(ps(c['targets'])-ps(c['covered']));assert counts['engine']<=n*u;result['query_scope_schema']=counts
+        result['timing']={'native_entry_seconds':coreend-corestart,'raw_common_end_to_end':rawend-start-native_flush,'post_increment':end-rawend-post_flush,'combined_end_to_end':end-start-native_flush-post_flush,'artifact_flush_excluded_seconds':native_flush+post_flush,
+            'native_late':coreend-corestart>=20,'raw_stage_late':rawend-start-native_flush>20,'combined_late':end-start-native_flush-post_flush>40,'post_late':end-rawend-post_flush>20 or envelope['late'],
+            'native_status':native['raw'].get('status'),'termination':'budget' if native['raw'].get('status')=='deadline' else 'natural',
+            'raw_necessary_wrapper_seconds':rawend-start-native_flush-(coreend-corestart),'post_engine_seconds':envelope['entry_seconds'],
+            'post_necessary_wrapper_seconds':end-rawend-post_flush-envelope['entry_seconds'],
+            'main_measured_includes':'same raw/post virtual execution and encoding, post-return actual-source hashes, common single-entry dispatch, ON original profile only',
+            'outside_main':'pre-start frozen-source hashes, cold import, two actual evidence flushes, independent audit, process creation'}
+        result['main_passed']=True;dump(dest,result)
+        independent_start=time.perf_counter();result['independent']=B.audit_result(result);result['decision_audit']=decision_audit.audit(c,native,diagnostic_spec,job['target_intervention_enabled'])
+        result['off_equivalence']=compare_old_off(result) if not job['target_intervention_enabled'] else None
+        result['independent_wall_seconds']=time.perf_counter()-independent_start
+        result['identity_after']=B.identity();assert result['identity_before']==result['identity_after'];result['passed']=True
+    except BaseException as exc:
+        sys.setprofile(None);result['failure']={'reason':repr(exc),'traceback':traceback.format_exc()}
+    finally:
+        result['entry_ledger']=ledger;result['native_observation']=detail(obs);result['native_counts_actual']=dict(obs.c) if obs is not None else None
+        result['worker_wall_seconds']=time.perf_counter()-wall;dump(dest,result)
+    print(json.dumps({'id':job['id'],'passed':result['passed'],'failure':result.get('failure'),'seconds':result['worker_wall_seconds']},ensure_ascii=False))
+    if not result['passed']:raise SystemExit(1)

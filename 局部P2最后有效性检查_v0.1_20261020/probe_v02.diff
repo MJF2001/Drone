@@ -1,0 +1,11 @@
+--- probe_v1
++++ probe_v2
+@@ -10,7 +10,7 @@
+    patch=r['route'];F=pts(problem['free']);assert patch[0]==problem['entry'] and patch[-1]==problem['exit'] and pts(patch)<=F
+    assert all(abs(a[0]-b[0])+abs(a[1]-b[1])==1 for a,b in zip(patch,patch[1:]));assert pts(problem['required'])<=pts(problem['local_H'])|pts(patch)
+    assert len(patch)-1==r['length'];assert r['length']==len(problem['old_patch'])-1,'Unexpected exact gap: requires separate observer replay within protocol cap; stop for trace setup, never silent success.'
+-   def fake_base(*a,**k):return old['raw']['P0']
++   def fake_base(*a,**k):return {**old['raw']['P0'],'route':tuple(map(tuple,old['raw']['P0']['route']))}
+    def acceptance_probe(s,b,v,seed,accept):
+     assert s.free==frozenset(F) and s.targets==frozenset(pts(problem['required'])) and s.covered==frozenset(pts(problem['local_H'])) and s.current==tuple(problem['entry']) and s.base==tuple(problem['exit']) and s.old_route==tuple(map(tuple,problem['old_patch'])) and s.distance_budget==problem['distance_budget']
+     assert accept(tuple(map(tuple,patch)),algorithm)

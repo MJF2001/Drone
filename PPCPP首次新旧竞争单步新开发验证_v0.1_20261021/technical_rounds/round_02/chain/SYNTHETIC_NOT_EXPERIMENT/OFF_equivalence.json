@@ -1,0 +1,34 @@
+[
+  {
+    "job": {
+      "id": "gate_SYNTHETIC_STATE_OFF",
+      "phase": "gate",
+      "mode": "OFF",
+      "state": "SYNTHETIC_STATE",
+      "input": "inputs/tiny.json",
+      "seed": 20261020,
+      "budget": 20,
+      "seal": "seal2.json"
+    },
+    "equivalence": {
+      "passed": true,
+      "route_equal": true,
+      "full_non_time_P0_trace_equal": true,
+      "all_other_result_fields_equal_after_explicit_exclusions": true,
+      "exclusions": {
+        "result.entry_seconds": "independent execution time",
+        "result.phase_seconds": "independent phase times",
+        "result.raw.branches.P0.seconds": "native execution time",
+        "result.raw.branches.P0.budget": "remaining shared entry deadline depends on elapsed overhead",
+        "result.raw.branches.P0.accepted_seconds": "native acceptance time",
+        "result.raw.branches.P0.overrun_gt_10ms": "time classification separately required timely",
+        "result.raw.branches.P0.version": "explicit diagnostic version",
+        "result.raw.branches.P0.method": "explicit diagnostic method",
+        "result.raw.branches.P0.diagnostic": "new independent diagnostic metadata; OFF must be empty",
+        "result.diagnostic_entry": "explicit new entry identifier",
+        "result.diagnostic_mode": "explicit OFF/ON identifier"
+      }
+    },
+    "all_metrics_equal": true
+  }
+]

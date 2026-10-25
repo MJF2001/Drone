@@ -1,0 +1,6 @@
+def check_contract(s,initial_targets,budget):
+    if s.radius!=0:raise ValueError('one-cell downward footprint required')
+    if budget<=0:raise ValueError('positive soft budget required')
+    if not s.targets<=s.free:raise ValueError('blocked targets must be deferred before planning')
+    if not s.current in s.free or not s.base in s.free:raise ValueError('start/base outside free map')
+    if not s.covered<=set(initial_targets):raise ValueError('covered history must belong to initial published targets')

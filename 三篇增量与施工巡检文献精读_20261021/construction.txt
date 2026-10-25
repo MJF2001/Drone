@@ -1,0 +1,698 @@
+
+PAGE 1
+Practical Considerations and Case Study for Implementing 
+Autonomous UAV Video Collection of Construction Activities  
+Yusheng Huang1, Amin Hammad1* 
+1Concordia University, Canada 
+yusheng.huang@mail.concordia.ca; amin.hammad@concordia.ca (*corresponding author) 
+ 
+Abstract –  
+Various methods have been proposed in recent 
+years to extract valuable insights from images and 
+videos of construction activities to improve project 
+management. Previous studies have proposed 
+automated video collection using camera-equipped 
+multirotor unmanned aerial vehicles (CE-MUAVs) to 
+enable the collection of construction videos with the 
+ability to fit the camera’s field of view (FOV) 
+automatically to the specific areas where the activities 
+are happening. However, multiple practical 
+considerations should be addressed before 
+implementing autonomous UAV video collection of 
+construction activities to fulfill the technical, safety, 
+and data quality requirements, while respecting the 
+legal regulations. This paper aims to identify these 
+considerations and to develop a workflow for 
+implementing an effective video collection of 
+construction activities using autonomous CE-MUAVs. 
+A test on an actual construction site is conducted to 
+validate the applicability of the workflow. 
+Keywords – 
+Construction activity; Video Collection; Path 
+planning; 4D Simulation; UAV. 
+1 Introduction 
+With the emergence of advanced computer vision 
+(CV) techniques, it is possible to automatically extract 
+rich semantics and high-level knowledge from digital 
+images and videos, enabling more comprehensive and 
+efficient analysis for different construction management 
+applications [1], including activity monitoring [2], 
+progress monitoring [3, 4], and health and safety 
+monitoring [5–7]. However, the complexity and high 
+costs associated with video collection have significantly 
+constrained the widespread adoption of these methods. 
+Collecting high-quality videos of specific areas of 
+interest on construction sites, where activities happen, 
+according to the project schedule remains challenging 
+with conventional approaches, such as stationary 
+cameras, handheld devices, equipment-mounted cameras, 
+and wearable systems [1]. 
+Over the past decade, considerable attention has been 
+paid to automated video collection using camera-
+equipped multirotor unmanned aerial vehicles (CE-
+MUAV), which provides mobility to the camera to fit its 
+field of view (FOV) automatically to the important parts 
+of the construction site while ensuring high efficiency 
+and reasonable cost [8–10]. Previous studies have 
+proposed generating collision-free UAV paths based on 
+a BIM model to support visual inspection tasks of 
+buildings [11, 12]. Other studies proposed methods for 
+sampling the viewpoints to achieve full visual coverage 
+of the structure considering the sensor (i.e., camera or 
+laser scanner) specifications, such as FOV, focal length, 
+and sensor size [13, 14]. Then, routing algorithms are 
+applied to generate the optimal path through the sampled 
+viewpoints. In addition, Ibrahim et al. [15] proposed a 
+method of UAV path planning for progress monitoring 
+during the construction phase considering the schedule 
+using waypoints. However, current implementations of 
+CE-MUAVs primarily focus on scanning static objects in 
+outdoor and indoor environments for purposes like 3D 
+reconstruction and inspection. On the other hand, limited 
+research is available about collecting videos of 
+construction activities using autonomous UAVs. 
+To address this research gap, the authors previously 
+proposed a method to perform simulation-based 
+optimization of path planning for CE-MUAVs 
+considering multiple construction activities according to 
+the as-planned micro-schedule [16]. This method 
+identifies the top-ranking viewpoints (VPs) to collect 
+high-quality videos about the construction activities in 
+the micro-schedule with good coverage of the workspace 
+while minimizing the distance to the workspace. In 
+addition, the method generates optimized paths that 
+minimize the travel duration between the top-ranking 
+VPs while avoiding collisions. While effective in a 
+virtual environment, this approach has yet to be tested in 
+real-world scenarios. However, multiple practical 
+considerations should be addressed before implementing 
+autonomous UAV video collection of construction 
+activities to fulfill the technical, safety, and data quality 
+requirements, while respecting the legal regulations. This 
+paper aims to identify these considerations and to 
+develop a workflow for implementing an effective video 
+collection of construction activities using autonomous 
+42nd International Symposium on Automation and Robotics in Construction (ISARC 2025)
+1559
+
+PAGE 2
+CE-MUAVs. A test on an actual construction site is 
+conducted to validate the applicability of the workflow. 
+2 Simulation-Based Optimization of Path 
+Planning for CE-MUAV 
+Figure 1 shows the method of simulation-based 
+optimization of path planning for CE-MUAVs proposed 
+in the previous work of the authors [16]. This method 
+identifies the top-ranking viewpoints (VPs) to collect 
+high-quality videos of construction activities based on 
+the micro-schedule with good coverage of the 
+workspaces, while minimizing the distance to these 
+workspaces. In addition, the method generates an 
+optimized path that enables the UAV to collect videos 
+based on the identified VPs while minimizing travel time 
+and avoiding collisions. It has been demonstrated that 
+aerial videos captured while the UAV is hovering offer 
+distinct advantages, as they enable the capture of finer 
+scene details and intricacies [17]. It is assumed that the 
+CE-MUAV will collect videos during traveling and 
+hovering states. However, the focus is on spending more 
+time to collect videos while hovering. There are three 
+main modules in the simulation-based path planning: (1) 
+Preparation of the simulation environment; (2) VPs 
+optimization; and (3) Path planning for the UAV to 
+minimize the travel duration.  
+In the simulation environment preparation module, 
+the workspaces for a certain period are identified from 
+the as-planned 4D simulation of the project. Then, the 
+solution variables of the UAV are identified according to 
+the selected model of the UAV. The search spaces for 
+different workspaces are then defined considering the 
+safety risks in the construction site, the CV requirements 
+(e.g., range of camera, tilt angle), and the compliance 
+with legal regulations, which will be further explained in 
+Section 3.  At last, cubic cells are generated within the 
+workspaces for calculating the camera coverage. 
+In the VPs optimization module, the top-ranking VPs 
+for each workspace, where the FOV of the hovering 
+camera can provide good coverage while minimizing the 
+distance, are identified by integrating a multi-objective 
+genetic algorithm (MOGA) with simulation. Two 
+objective functions are defined: maximizing coverage 
+and minimizing the camera-to-workspace distance. For 
+each workspace, multiple top-ranking VPs will be 
+identified. With these VPs, the path optimization module 
+solves the generalized traveling salesman problem 
+(GTSP) to optimize the cycle path with the least travel 
+duration to collect videos from one of the top-ranking 
+VPs for each workspace. It is worth noting that in this 
+paper, the Theta* algorithm is utilized to generate a more 
+efficient collision-free path to travel between the VPs 
+compared with the A* algorithm used in our previous 
+paper  [16]. This optimized cycle path consists of 
+multiple waypoints, each specifying the location and pan 
+angle of the UAV and the tilt angle of the camera. At last, 
+the hovering duration at each VP of the optimized cycle 
+path is defined according to the importance level of the 
+task in different workspaces.  
+ Figure 1. Simulation-Based Optimization of Path Planning for CE-MUAV 
+42nd International Symposium on Automation and Robotics in Construction (ISARC 2025)
+1560
+
+PAGE 3
+3 Practical Considerations for 
+Implementation 
+Multiple practical considerations must be addressed 
+before implementing autonomous UAV video collection 
+of outdoor construction activities in actual projects using 
+the optimized path generated by the proposed method in 
+Section 2.  
+3.1 Technical requirements 
+To ensure effective implementation, several technical 
+requirements must be addressed. Here, the technical 
+requirements can be considered in two aspects, the 
+hardware requirements and software requirements. The 
+hardware requirements mainly refer to the requirements 
+in selecting an appropriate UAV that is capable of 
+performing the task. First, the UAV should support pre-
+planned flight operations and offer an application 
+programming interface (API) to enable importing the 
+optimized flight path from the simulation console. The 
+UAV should also have a reliable antenna for Global 
+Navigation Satellite System (GNSS) or alternative 
+systems to maintain accurate flight paths. The operational 
+range and battery life must be sufficient to complete the 
+video collection tasks. In addition, the UAV should be 
+equipped with a camera capable of collecting high-
+quality video to meet the data requirements for CV, 
+which are explained in Section 3.4. Moreover, sufficient 
+onboard storage for videos is essential. Automated data 
+transmission using 5G communication to a remote 
+console or database is highly preferable, as it enhances 
+efficiency by eliminating manual data retrieval. 
+ 
+On the other hand, appropriate software tools should 
+be selected. For example, to develop a detailed 
+construction 4D simulation model, Naviswork [18] was 
+used in the author’s previous work [16]. This model was 
+then imported into Unity 3D game engine [19], which has 
+a realistic physics engine for simulating the UAV 
+operations. In addition, converting waypoints from 
+simulation coordinates into UAV-readable data is 
+necessary. The implementation process involves three 
+coordinate systems: (a) coordinate system of the 
+construction 4D simulation, (b) coordinate system of the 
+simulation for path planning, and (c) coordinate system 
+for UAV navigation. Typically, models are developed in 
+a local coordinate system specific to the software tools 
+[20]. To incorporate the geospatial context of the 
+coordinate system of (a) and (b), a geographic 
+information system (GIS) can be used to show the 
+positions in a projected coordinate system (PCS) [21]. 
+However, UAV navigation uses a geographic coordinate 
+system (GCS). For example, DJI UAV navigation [22] 
+uses a geodetic coordinate system. Therefore, to navigate 
+the UAV, it is necessary to have a tool to translate the 
+coordinates of the waypoints of the optimized path from 
+the PCS to GCS. 
+3.2 Safety requirements 
+The integration of UAVs in construction may encounter 
+several safety risks [23–25], highlighting the need for 
+careful operation planning and UAV selection to ensure 
+safe and effective operations. The major risk is collisions 
+with workers or objects on construction sites. During the 
+planning phase, risk assessment should be performed to 
+identify all potential collision risks based on the site 
+layout. In the simulation environment preparation 
+module, safety buffers should be assigned to workspaces 
+and high-risk areas. In addition, selecting UAV models 
+equipped with active collision avoidance can further 
+mitigate these risks [29]. UAVs may also encounter 
+motor malfunctions or communication loss, necessitating 
+a detailed emergency contingency plan to address such 
+scenarios before deployment. Moreover, the selection of 
+a UAV model should consider risk mitigation features, 
+such as pre-flight fault detection, automatic return-to-
+home functionality in case of loss of connection, and a 
+reliable and secure communication system to prevent 
+unauthorized access or interference to the UAV. 
+Furthermore, UAVs may pose safety risks to workers on-
+site due to distractions [24].  Selecting light-weight UAV 
+models that generate less noise can help reduce this issue.  
+3.3 Compliance with legal regulations  
+UAV deployment must comply with the legal 
+requirements. The UAV should be properly registered in 
+accordance with local laws and regulations. The 
+operators must undergo training and obtain the necessary 
+licenses or certifications before conducting operations. If 
+the operation takes place in controlled airspace, the 
+necessary certificates and permits must be obtained as 
+required by regulations. In addition, detailed 
+documentation of the operational risk assessment, 
+precautions for risk mitigation, and an emergency 
+contingency plan may be required by the responsible 
+department (e.g., Transport Canada) when applying for 
+special flight operations [26]. 
+In simulation environment preparation module, 
+zones where the project team does not have permission 
+to operate the UAV, such as areas near surrounding 
+buildings, should be clearly defined to prevent 
+unauthorized intrusion. The compliance of such 
+regulations should be verified through virtual verification 
+after generating the optimized path and confirmed again 
+during on-site verification before deployment. 
+Moreover, the selection of UAV model should take 
+into account the ease of obtaining operational 
+permissions. For instance, basic operations that do not 
+require a special flight operations certificate apply to 
+UAVs weighing less than 25 kg in Canada [27]. It is 
+42nd International Symposium on Automation and Robotics in Construction (ISARC 2025)
+1561
+
+PAGE 4
+worth noting that exceptions may apply to micro-UAVs 
+weighing under 250 g in some countries [26], which may 
+reduce the complex process of obtaining permission to 
+fly. Operating a micro-UAV does not require a pilot 
+license or certificate if the operator ensures safe 
+operations with good practices and compliance with all 
+applicable requirements and regulations.  
+Furthermore, during the operation, the UAV use must 
+respect the privacy of workers and other individuals 
+captured in the video. The project team should obtain 
+consent from workers before deployment. In addition, the 
+team is responsible for developing secure data 
+communication and storage methods to protect the 
+privacy of the collected data. 
+3.4 CV requirements 
+The video collection process must meet specific CV 
+requirements to ensure the captured frames are suitable. 
+A proper tilt angle should be maintained to clearly show 
+the pose of workers and equipment. In addition, CV 
+methods (either object detection or activity recognition) 
+are usually susceptible to aerial imagery with the small 
+size of objects and variable tilt angle of view [17, 28, 29]. 
+Therefore, the distance from the camera to the objects 
+should be less than a certain maximum value to avoid the 
+low resolution of objects in the frame while maintaining 
+the coverage of the designated workspace. This CV 
+requirement is fulfilled through the VPs optimization 
+module, as explained in Section 2. In addition, a stable 
+FOV with minor vibration and motion blur improves the 
+quality of CV results. It has been suggested that aerial 
+videos captured while the UAV is hovering offer distinct 
+advantages, as they enable the capture of finer scene 
+details and intricacies [17]. Moreover, hovering time 
+should be sufficient for gathering essential data from the 
+optimal VPs.  
+Table 1 lists the considerations of the requirements in 
+different processes during the implementation. It should 
+be mentioned that these requirements are often 
+interconnected.  
+4 Implementation Workflow 
+The proposed method for implementing optimized 
+video collection of construction activities using CE-
+MUAVs based on optimized path planning is shown in 
+Figure 2. The implementation can be divided into three 
+phases under three different coordinate systems as 
+mentioned in Section 3.1. In the model preparation phase, 
+a high LOD as-planned 4D simulation is developed. Then, 
+the as-planned 4D model is integrated with the GIS data 
+to show the geospatial context of the project. By 
+reviewing the 4D simulation, risk assessment is 
+performed and requirements are identified according to 
+the key considerations as mentioned in Section 3. Based 
+on these requirements, the type of UAV is selected. Then, 
+the 4D simulation model is transferred to the simulation 
+platform for UAV path planning. 
+Table 1. Practical considerations during implementation 
+Implementation step Technical requirements Safety requirements Legal regulations 
+compliance 
+CV requirements 
+UAV model selection - UAV and sensor 
+specifications 
+- Pre-planned flight 
+function 
+- Reliable antenna and 
+navigation system 
+- Robust accident 
+prevention functionalities 
+- Malfunctions handling  
+- Light-weight UAV to 
+avoid distractions 
+- Secure communication 
+method 
+ 
+- Weight of the UAV 
+ 
+- UAV performance 
+to avoid vibrations 
+and motion blur 
+- Camera 
+specifications 
+ 
+Simulation modelling 
+and path optimization 
+- Simulation tool 
+- Tool to translate 
+coordinates of 
+waypoints 
+- Operational range and 
+battery life 
+- Safety buffer to avoid 
+collision risks 
+ 
+- Unauthorized flight 
+zones 
+ 
+- Defining reasonable 
+search space 
+Pre-flight planning  -  Risk assessment 
+- Contingency plan 
+- Precautionary measures 
+- Operation certificate 
+and flight permit 
+- Privacy protection 
+ 
+42nd International Symposium on Automation and Robotics in Construction (ISARC 2025)
+1562
+
+PAGE 5
+ 
+Figure 2. Implementation workflow of Autonomous UAV Video collection based on optimized path planning 
+ 
+Simulation-based path planning of CE-MUAVs is 
+performed to find the optimized path for automated and 
+effective data collection of construction activities using 
+4D as-planned simulation as explained in Section 2. In 
+the simulation environment preparation module, the 
+search spaces, safety buffer, and unauthorized flight 
+zones should be defined considering the safety 
+requirements, compliance with legal regulations, and the 
+CV requirements as mentioned in Section 3. At the end 
+of this phase, virtual verification is conducted to verify 
+the efficiency and effectiveness of video collection along 
+the optimized path. This is achieved by running a 
+simulation in which the virtual UAV follows the same 
+path within the virtual environment. The verification 
+process involves reviewing the UAV’s trajectory to 
+eliminate the safety risks and analyzing the camera's 
+FOV during hovering to ensure comprehensive coverage 
+of the workspace. 
+To navigate the UAV, the waypoints of the optimized 
+path in the simulation system are inverse-projected from 
+PCS to the GCS as mentioned in Section 3.1. Using the 
+waypoints in the GCS, a navigation file for the UAV is 
+generated. One commonly used format for the navigation 
+file is the .kmz format. Before deploying the UAV with 
+the navigation file, pre-flight planning is carried out to 
+outline precautionary measures and emergency 
+contingency procedures. Once these plans are 
+documented, an on-site verification test is conducted to 
+ensure the UAV follows the optimized path and hovers 
+VPs to collect videos of the expected workspaces of tasks. 
+The on-site test should also verify that the operation is 
+free of safety risks. In addition, it should ensure 
+compliance with legal regulations during the deployment 
+(e.g., preventing the collection of videos that infringe on 
+workers' privacy). To minimize disruptions, this test 
+should be conducted during off-peak hours, with the 
+UAV moving slowly to allow immediate stops if any 
+risks arise. Once verification is complete, the operation 
+plan with the optimized path will be deployed to collect 
+videos. 
+5 Case study 
+A field test was conducted on a construction site to 
+validate the applicability and effectiveness of the 
+proposed workflow. The test focused on activities carried 
+out during a short period of a park construction project, 
+which includes an outdoor skating rink and a pavilion. 
+Figure 3 shows the workflow implementation in this case 
+study.  
+As shown in the bird-view of the GIS integrated site 
+layout (Figure 3(a)), the construction site is divided into 
+two parts by a road. The left part is the main construction 
+area, where two tasks were underway: the workspace for 
+pouring concrete for the pavilion (WS3) and excavating 
+and leveling the area designated for the skating rink 
+(WS2). The right part contains a loading area used for 
+storing the excavated soil (WS1). As shown in Figure 
+3(a), this construction site is surrounded by three 
+buildings, each with a height of more than 25 meters, 
+resulting in potential collision risks. Therefore, safety 
+buffers are assigned to these buildings. Additionally, a 
+safety buffer was maintained along the road, creating a 
+danger zone with a height of 10 meters. 
+5.1 CE-MUAV selection and variable 
+identification 
+The UAV used in this case study is the DJI Mini 4 
+42nd International Symposium on Automation and Robotics in Construction (ISARC 2025)
+1563
+
+PAGE 6
+Pro [30], which features a maximum speed of 12 m/s and 
+a maximum ascent/descent speed of 5 m/s in “Normal 
+Mode”. Weighing 249 g with its standard battery, this 
+UAV simplifies regulatory compliance in most North 
+American jurisdictions as mentioned in Section 3.3, 
+making it ideal for construction projects. Its compact and 
+lightweight design minimizes safety risks while 
+maintaining excellent maneuverability. Furthermore, its 
+omnidirectional obstacle sensing system significantly 
+reduces the risk of collisions, enhancing operational 
+safety.  The maximum flight time is 30 minutes with the 
+standard battery. 
+ Figure 3. Workflow implementation in the case study 
+The UAV supports pre-planned flight operations 
+under GNSS and provides an API [22] for importing 
+mission files from a computer. Its camera captures 4K 
+videos in MP4 format at up to 100 fps and offers a 
+diagonal field of view (FOV) of 82.1° and a horizontal 
+FOV of 74.3°, ensuring high-quality video collection for 
+construction monitoring. 
+The variables for the viewpoint (VP) optimization 
+module are defined based on this UAV model. As 
+illustrated in Figure 3(b), the UAV provides ten degrees 
+of freedom (DoFs). Six of these are associated with the 
+UAV’s pose (x, y, z, pan, tilt, and roll), while the camera, 
+mounted on a 3-axis mechanical gimbal, introduces four 
+additional DoFs (pan-c, tilt-c, roll-c, and FOV). However, 
+the API does not allow the control of the tilt and roll 
+angles of the UAV, as well as the pan and roll angles of 
+the camera. In addition, the camera’s FOV is fixed at its 
+default value. Thus, the variables considered in the 
+optimization process are the UAV’s position (x, y, z), its 
+pan angle (𝜑), and the tilt angle of the camera (θ). 
+5.2 Prototype development  
+A prototype system was developed using Unity3D 
+game engine [19] to create a simulation platform for VPs 
+optimization and path planning. As mentioned in Section 
+3.1, a method for translating the waypoints of the 
+optimized path in the local coordinate of the path 
+simulation platform to the UAV-readable waypoints 
+under GCS is required. The 3D geospatial platform add-
+in for Unity named Cesium [31] is used for this purpose. 
+The prototype system is run on a computer with i7-6800k 
+CPU, 64 GB of random access memory (RAM), and two 
+GTX 1070 GPUs. 
+5.3 Results 
+The results from the simulation-based path planning 
+platform are multiple top-ranking VPs identified for each 
+workspace. Using these top-ranking VPs, the path 
+optimization module generates an optimized flight path 
+as shown in Figure 3(c). The time required to travel 
+between different waypoints is calculated. In this case 
+study, the expected number of cycles per operation is 30, 
+and the operation safety factor 𝛼 for calculating the total 
+operation time is set to 0.9. The traveling time between 
+VPs (𝑇௧௢௧௔௟ி ), the total hovering time(𝑇௧௢௧௔௟ு ), and the total 
+duration (𝑇஼௉) of one cycle path are calculated as shown 
+in Table 2, using the method outlined in [16].  
+ 
+Table 2 Path durations with 30 expected cycles 
+Operation Duration (s) 
+Base station  VP1 9.55 
+Total cycle path (𝑇஼௉) 53.36 
+       - Total flight time (𝑇௧௢௧௔௟ி ) 13.22 
+               - VP1 VP2 5.64 
+               - VP2 VP3 1.70 
+               - VP3 VP1 5.88 
+       - Total hovering time (𝑇௧௢௧௔௟ு ) 40.14 
+              - Hovering at VP1 10.04 
+              - Hovering at VP2 10.03 
+              - Hovering at VP3 20.07 
+VP1 Base station 9.55 
+Due to the higher level of interest associated with the 
+task of pouring concrete, a higher importance level 
+weight (𝑊ௐ௉ ) of 2 is assigned, while a weight of 1 is 
+given to other workspaces. The distributions of the 
+hovering durations for each VP are calculated as shown 
+42nd International Symposium on Automation and Robotics in Construction (ISARC 2025)
+1564
+
+PAGE 7
+in Table 2. Virtual verification is performed as shown in 
+Figure 3(c) to assess the efficiency and effectiveness of 
+video collection along the optimized path. Figure 3(d) 
+illustrates the simulated camera views when hovering at 
+three VPs along the optimized path. 
+Finally, an on-site test was conducted to validate the 
+optimized path, as shown in Figure 3(e). The results 
+demonstrate that the UAV successfully navigated to the 
+designated hovering waypoints and adjusted its FOV to 
+the intended angles, capturing videos of the areas of 
+interest where construction activities were happening 
+according to the schedule. 
+6 Conclusions and Future Work 
+This paper highlights the key practical considerations 
+for implementing autonomous UAV-based video 
+collection of outdoor construction activities. It also 
+proposes a workflow for achieving optimized and 
+efficient video collection using autonomous UAVs. A 
+case study on a construction site is conducted for 
+validation. The results of the case study demonstrate that 
+the workflow is effective in generating an operational 
+plan with optimized waypoints, enabling the UAV to 
+capture videos of construction activities from areas 
+where the main tasks are taking place. 
+Despite its effectiveness, several areas of the 
+proposed workflow require further refinement. The 
+proposed workflow focuses on collecting videos of 
+progress-related construction activities within predefined 
+workspaces according to the as-planned schedule. 
+However, the location of the workspaces may change, but 
+these changes are not reflected in the schedule. In 
+addition, other construction activities may occur outside 
+the predefined workspaces. Future studies will develop 
+methods for dynamically adjusting the UAV path during 
+the operation whenever workspace locations change or 
+new workspaces are identified. In addition, the case study 
+presented in this research is based on a medium-scale 
+construction site. Given the diverse and complex nature 
+of construction sites, further testing is needed across 
+various scenarios to evaluate the workflow’s robustness, 
+such as indoor environments. 
+References 
+[1]  Paneru, S. and Jeelani, I., “Computer vision 
+applications in construction: Current state, 
+opportunities & challenges,” Autom. Constr., 2021, 
+vol. 132. 
+[2]  Chen, C., Zhu, Z., and Hammad, A., “Automated 
+excavators activity recognition and productivity 
+analysis from construction site surveillance videos,” 
+Autom. Constr., 2020, vol. 110. 
+[3]  Wang, Z., Zhang, Q., Yang, B., et al., “Vision-
+Based Framework for Automatic Progress 
+Monitoring of Precast Walls by Using Surveillance 
+Videos during the Construction Phase,” J. Comput. 
+Civ. Eng., 2021, vol. 35, no. 1. 
+[4]  Arif, F. and Khan, W. A., “Smart Progress 
+Monitoring Framework for Building Construction 
+Elements Using Videography–MATLAB–BIM 
+Integration,” Int. J. Civ. Eng., 2021, vol. 19, no. 6, 
+pp. 717–732. 
+[5]  Tran, S. V.-T., Nguyen, T. L., Chi, H.-L., et al., 
+“Generative planning for construction safety 
+surveillance camera installation in 4D BIM 
+environment,” Autom. Constr., 2022, vol. 134. 
+[6]  Han, S. and Lee, S., “A vision-based motion capture 
+and recognition framework for behavior-based 
+safety management,” Autom. Constr., 2013, vol. 35, 
+pp. 131–141. 
+[7]  Soltani, M. M., Zhu, Z., and Hammad, A., 
+“Framework for Location Data Fusion and Pose 
+Estimation of Excavators Using Stereo Vision,” J. 
+Comput. Civ. Eng., 2018, vol. 32, no. 6. 
+[8]  Molina, A. A., Huang, Y., and Jiang, Y., “A Review 
+of Unmanned Aerial Vehicle Applications in 
+Construction Management: 2016–2021,” Standards, 
+2023, vol. 3, no. 2. 
+[9]  Guan, S., Zhu, Z., and Wang, G., “A Review on 
+UAV-Based Remote Sensing Technologies for 
+Construction and Civil Applications,” Drones, 2022, 
+vol. 6, no. 5. 
+[10]  Li, Y. and Liu, C., “Applications of multirotor 
+drone technologies in construction management,” 
+Int. J. Constr. Manag., 2019, vol. 19, no. 5, pp. 401–
+412. 
+[11]  Freimuth, H. and König, M., “Planning and 
+executing construction inspections with unmanned 
+aerial vehicles,” Autom. Constr., 2018, vol. 96, pp. 
+540–553. 
+[12]  Li, F., Zlatanova, S., Koopman, M., et al., 
+“Universal path planning for an indoor drone,” 
+Autom. Constr., 2018, vol. 95, pp. 275–283. 
+[13]  Bircher, A., Kamel, M., Alexis, K., et al., “Three-
+dimensional coverage path planning via viewpoint 
+resampling and tour optimization for aerial robots,” 
+Auton. Robots, 2016, vol. 40, no. 6, pp. 1059–1078. 
+[14]  Phung, M. D., Quach, C. H., Dinh, T. H., et al., 
+“Enhanced discrete particle swarm optimization 
+path planning for UAV vision-based surface 
+inspection,” Autom. Constr., 2017, vol. 81, pp. 25–
+33. 
+[15]  Ibrahim, A., Golparvar-Fard, M., and El-Rayes, K., 
+“Multiobjective Optimization of Reality Capture 
+Plans for Computer Vision–Driven Construction 
+Monitoring with Camera-Equipped UAVs,” J. 
+Comput. Civ. Eng., Sep. 2022, vol. 36, no. 5. 
+[16]  Huang, Y. and Hammad, A., “Simulation-Based 
+Optimization of Path Planning for Camera-
+Equipped UAVs That Considers the Location and 
+42nd International Symposium on Automation and Robotics in Construction (ISARC 2025)
+1565
+
+PAGE 8
+Time of Construction Activities,” Remote Sens., 
+2024,  16(13). 
+[17]  Othman, N. A. and Aydin, I., “Challenges and 
+Limitations in Human Action Recognition on 
+Unmanned Aerial Vehicles: A Comprehensive 
+Survey,” Trait. Signal, 2021, 38(5):1403–1411. 
+[18]  “Navisworks | Autodesk,” 
+https://www.autodesk.com/ca-
+en/products/navisworks/overview. 
+[19]  “Unity 2021.3,” 
+https://docs.unity3d.com/Manual/index.html. 
+[20]  Diakite, A. A. and Zlatanova, S., “Automatic geo-
+referencing of BIM in GIS environments using 
+building footprints,” Comput. Environ. Urban Syst., 
+Mar. 2020, vol. 80, p. 101453. 
+[21]  Jaud, Š., Donaubauer, A., Heunecke, O., et al., 
+“Georeferencing in the context of building 
+information modelling,” Autom. Constr., 2020, 118. 
+[22]  “Cloud API,” https://developer.dji.com/doc/cloud-
+api-tutorial/en/api-reference/dji-wpml/waylines-
+wpml.html. 
+[23]  Kakaletsis, E., Symeonidis, C., Tzelepi, M., et al., 
+“Computer Vision for Autonomous UAV Flight 
+Safety: An Overview and a Vision-based Safe 
+Landing Pipeline Example,” ACM Comput Surv, 
+Oct. 2021, vol. 54, no. 9, p. 181:1-181:37. 
+[24]  Jeelani, I. and Gheisari, M., “Safety challenges of 
+UAV integration in construction: Conceptual 
+analysis and future research roadmap,” Saf. Sci., 
+2021, vol. 144. 
+[25]  Balestrieri, E., Daponte, P., De Vito, L., et al., 
+“Sensors and Measurements for UAV Safety: An 
+Overview,” Sensors, 2021, vol. 21, no. 24. 
+[26] Canada, T., “Find your category of drone operation,” 
+AARV 13921205, Feb. 19, 2021, 
+https://tc.canada.ca/en/aviation/drone-safety/. 
+[27]  Canada, T., “Drone safety,” AEAD 14507934, 
+2023, https://tc.canada.ca/en/aviation/drone-safety. 
+[28]  Peng, H. and Razi, A., “Fully Autonomous UAV-
+Based Action Recognition System Using Aerial 
+Imagery,” in Advances in Visual Computing, Cham, 
+2020, pp. 276–290. 
+[29]  Aldahoul, N., Karim, H. A., Sabri, A. Q. Md., et al., 
+“A Comparison Between Various Human Detectors 
+and CNN-Based Feature Extractors for Human 
+Activity Recognition via Aerial Captured Video 
+Sequences,” IEEE Access, 2022, 10: 3532–63553. 
+[30]  “DJI Mini 4 Pro - Specs - DJI,” DJI Official, 
+https://www.dji.com/ca/mini-4-pro/specs. 
+[31]  “Cesium for Unity,” Cesium, Oct. 08, 2024, 
+https://cesium.com/learn/unity/. 
+ 
+42nd International Symposium on Automation and Robotics in Construction (ISARC 2025)
+1566

@@ -1,0 +1,628 @@
+{
+  "v01": {
+    "core": 1,
+    "post": 1,
+    "graph_search": 2,
+    "source": "v0.1 preserved failure; independent Counter missing stays missing"
+  },
+  "v02": {
+    "core": 5,
+    "post": 5,
+    "graph_search": 90,
+    "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\三栏调用与查询账.json"
+  },
+  "v03_native_actual": {
+    "shared_region_queries_total": 240,
+    "scope_engine_region_queries": 74,
+    "scope_wrapper_prediction_region_queries": 14,
+    "scope_wrapper_native_region_queries": 80,
+    "scope_wrapper_post_region_queries": 35,
+    "scope_wrapper_full_region_queries": 37,
+    "post_service_intersections": 74,
+    "post_service_queries_total_protected": 109,
+    "observer_started": 6,
+    "observer_finished": 6,
+    "observer_aborted": 0,
+    "core_started": 6,
+    "heading_parse_calls": 4,
+    "context_calls": 6,
+    "context_BFS_started": 6,
+    "context_BFS_completed": 6,
+    "geometry_precheck_calls": 6,
+    "reward_calls": 10,
+    "scored_neighbor_rows": 2,
+    "selection_calls": 2,
+    "heading_update_calls": 47,
+    "geometry_distance_calls": 662,
+    "distance_row_BFS_started": 12,
+    "distance_row_BFS_completed": 12,
+    "geometry_path_calls": 159,
+    "astar_calls": 23,
+    "Astar_started": 23,
+    "Astar_completed": 23,
+    "main_audit_calls": 58,
+    "main_audit_returns": 58,
+    "main_audit_valid": 58,
+    "core_returned": 6,
+    "core_complete": 6,
+    "post_entry_calls": 6,
+    "post_source_geometry": 65,
+    "post_candidate_geometry": 47,
+    "post_output_geometry": 26,
+    "post_interval_calls": 26
+  },
+  "v03_wrapper_actual": {
+    "parse": 6,
+    "input_geometry": 6,
+    "primary_domain_points": 886,
+    "initial_zero_entry": 3,
+    "candidate_checks": 42,
+    "prediction_collect_here": 6,
+    "prediction_inside_tests": 14,
+    "prediction_service_intersections": 14,
+    "native_adapter_calls": 6,
+    "native_route_audits": 6,
+    "native_collect_here": 6,
+    "native_inside_tests": 14,
+    "native_geometry": 65,
+    "native_distance": 65,
+    "native_service_intersections": 80,
+    "native_resource_checks": 6,
+    "post_route_audits": 6,
+    "post_collect_here": 6,
+    "post_inside_tests": 14,
+    "post_geometry": 26,
+    "post_distance": 26,
+    "post_service_intersections": 35,
+    "post_resource_checks": 6,
+    "full_route_audits": 6,
+    "full_collect_here": 6,
+    "full_inside_tests": 14,
+    "full_geometry": 29,
+    "full_distance": 29,
+    "full_service_intersections": 37,
+    "full_resource_checks": 6,
+    "selector": 3,
+    "candidate_distance": 39,
+    "candidate_geometry": 39,
+    "candidate_resource_checks": 39,
+    "candidate_rejected": 25,
+    "candidate_comparisons": 22
+  },
+  "v03_independent_actual": {
+    "independent_pipeline_audits": 6,
+    "independent_geometry": 191,
+    "independent_distance": 165,
+    "independent_collect_here_checks": 24,
+    "independent_region_point_tests": 1849,
+    "independent_service_intersections": 704,
+    "independent_H1_decision_audits": 4,
+    "independent_H1_unit_edge_checks": 47,
+    "independent_route_audits": 18,
+    "independent_region_boundary_parameters": 1606,
+    "independent_frozen_post_audits": 6,
+    "independent_forbidden_box_checks": 31,
+    "independent_saved_choice_comparisons": 14
+  },
+  "v03_execution_actual_excludes_old_prefix": {
+    "planning_wait_records": 7,
+    "execution_action_calls": 38,
+    "detector_probes": 38,
+    "safety_box_queries": 38,
+    "known_obstacles_not_republished": 21,
+    "execution_distance": 38,
+    "execution_truth_geometry": 38,
+    "primary_domain_points": 212,
+    "execution_collect_here": 10,
+    "detector_box_queries": 17,
+    "execution_inside_tests": 29,
+    "execution_service_intersections": 34,
+    "first_discoveries": 3
+  },
+  "eight_prechecks": [
+    {
+      "id": "all_zero",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 0,
+        "scope_engine_region_queries": 0,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 0,
+        "post_service_queries_total_protected": 0,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_route_audits": 1,
+        "post_collect_here": 1,
+        "post_resource_checks": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "one_scope",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 1,
+        "scope_engine_region_queries": 1,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 1,
+        "post_service_queries_total_protected": 1,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_inside_tests": 1,
+        "service_intersections": 1,
+        "post_service_intersections": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "multiple_scopes",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 2,
+        "scope_engine_region_queries": 1,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 1,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 1,
+        "post_service_queries_total_protected": 2,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_inside_tests": 2,
+        "service_intersections": 1,
+        "post_service_intersections": 2,
+        "post_route_audits": 1,
+        "post_collect_here": 1,
+        "post_geometry": 2,
+        "primary_domain_points": 10,
+        "post_distance": 2,
+        "post_resource_checks": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "empty_task_return",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 0,
+        "scope_engine_region_queries": 0,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 0,
+        "post_service_queries_total_protected": 0,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_route_audits": 1,
+        "post_collect_here": 1,
+        "post_geometry": 1,
+        "primary_domain_points": 5,
+        "post_distance": 1,
+        "post_resource_checks": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "zero_path",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 0,
+        "scope_engine_region_queries": 0,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 0,
+        "post_service_queries_total_protected": 0,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_route_audits": 1,
+        "post_collect_here": 1,
+        "post_resource_checks": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "serialization",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 1,
+        "scope_engine_region_queries": 1,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 1,
+        "post_service_queries_total_protected": 1,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_inside_tests": 1,
+        "service_intersections": 1,
+        "post_service_intersections": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "aborted_unstarted_unknown",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 0,
+        "scope_engine_region_queries": 0,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 0,
+        "post_service_queries_total_protected": 0,
+        "observer_started": 1,
+        "observer_finished": 0,
+        "observer_aborted": 1
+      },
+      "wrapper_or_engine_counts": {},
+      "expected_rejections": 3
+    },
+    {
+      "id": "missing_and_conservation_negative",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 1,
+        "scope_engine_region_queries": 1,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 1,
+        "post_service_queries_total_protected": 1,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_inside_tests": 1,
+        "service_intersections": 1,
+        "post_service_intersections": 1
+      },
+      "expected_rejections": 4
+    }
+  ],
+  "saved_W2_return_reaudit": {
+    "passed": true,
+    "source_sha256": "dd2dee113db7effcbe7bf14badb54c26d9e74ce85ebb809eabdb7c31a036f0d6",
+    "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\outputs\\W2_P2_plan_2.json",
+    "old_failed_retained": true,
+    "derived_schema": {
+      "source_sha256": "dd2dee113db7effcbe7bf14badb54c26d9e74ce85ebb809eabdb7c31a036f0d6",
+      "original_native_counts": {
+        "core_started": 1,
+        "context_calls": 1,
+        "context_BFS_started": 1,
+        "context_BFS_completed": 1,
+        "geometry_precheck_calls": 1,
+        "geometry_path_calls": 25,
+        "astar_calls": 1,
+        "Astar_started": 1,
+        "Astar_completed": 1,
+        "main_audit_calls": 25,
+        "main_audit_returns": 25,
+        "main_audit_valid": 25,
+        "core_returned": 1,
+        "core_complete": 1,
+        "post_entry_calls": 1,
+        "post_source_geometry": 7,
+        "post_candidate_geometry": 13,
+        "post_output_geometry": 3,
+        "post_interval_calls": 2
+      },
+      "derived_fields": {
+        "scope_engine_region_queries": {
+          "value": 0,
+          "evidence": "empty active responsibility before and after entry; engine service counter=0; complete wrapper audits and original normal returns"
+        },
+        "scope_wrapper_prediction_region_queries": {
+          "value": 0,
+          "evidence": "empty active responsibility before and after entry; engine service counter=0; complete wrapper audits and original normal returns"
+        },
+        "scope_wrapper_native_region_queries": {
+          "value": 0,
+          "evidence": "empty active responsibility before and after entry; engine service counter=0; complete wrapper audits and original normal returns"
+        },
+        "scope_wrapper_post_region_queries": {
+          "value": 0,
+          "evidence": "empty active responsibility before and after entry; engine service counter=0; complete wrapper audits and original normal returns"
+        },
+        "scope_wrapper_full_region_queries": {
+          "value": 0,
+          "evidence": "empty active responsibility before and after entry; engine service counter=0; complete wrapper audits and original normal returns"
+        },
+        "shared_region_queries_total": {
+          "value": 0,
+          "evidence": "empty active responsibility before and after entry; engine service counter=0; complete wrapper audits and original normal returns"
+        },
+        "post_service_intersections": {
+          "value": 0,
+          "evidence": "empty active responsibility before and after entry; engine service counter=0; complete wrapper audits and original normal returns"
+        },
+        "post_service_queries_total_protected": {
+          "value": 0,
+          "evidence": "empty active responsibility before and after entry; engine service counter=0; complete wrapper audits and original normal returns"
+        },
+        "observer_started": {
+          "value": 1,
+          "evidence": "derived legacy lifecycle: main_complete/main_passed, unchanged actual input, core started/returned/complete=1, post_entry=1; not original lifecycle trace"
+        },
+        "observer_finished": {
+          "value": 1,
+          "evidence": "derived legacy lifecycle: main_complete/main_passed, unchanged actual input, core started/returned/complete=1, post_entry=1; not original lifecycle trace"
+        },
+        "observer_aborted": {
+          "value": 0,
+          "evidence": "derived legacy lifecycle: main_complete/main_passed, unchanged actual input, core started/returned/complete=1, post_entry=1; not original lifecycle trace"
+        }
+      },
+      "status": "derived_legacy_schema_not_original_trace"
+    },
+    "counts": {
+      "independent_pipeline_audits": 1,
+      "independent_geometry": 29,
+      "independent_forbidden_box_checks": 15,
+      "independent_distance": 26,
+      "independent_saved_choice_comparisons": 2,
+      "independent_collect_here_checks": 4,
+      "independent_region_point_tests": 213,
+      "independent_service_intersections": 75,
+      "independent_region_boundary_parameters": 170,
+      "independent_route_audits": 3,
+      "independent_frozen_post_audits": 1
+    },
+    "new_core_calls": 0,
+    "new_post_calls": 0
+  },
+  "saved_final_verify_new_queries": {
+    "independent_pipeline_audits": 12,
+    "independent_geometry": 482,
+    "independent_distance": 415,
+    "independent_collect_here_checks": 66,
+    "independent_region_point_tests": 6594,
+    "independent_service_intersections": 2633,
+    "independent_H1_decision_audits": 6,
+    "independent_H1_unit_edge_checks": 62,
+    "independent_route_audits": 36,
+    "independent_region_boundary_parameters": 5522,
+    "independent_frozen_post_audits": 12,
+    "independent_forbidden_box_checks": 56,
+    "independent_saved_choice_comparisons": 24,
+    "independent_execution_audits": 6,
+    "independent_action_log_checks": 87,
+    "independent_execution_commits_checked": 75,
+    "independent_safety_box_queries": 75,
+    "independent_detector_box_queries": 38,
+    "independent_legacy_center_controls": 30
+  },
+  "cross_version_core_calls": 12,
+  "turns_saved_diagnostic": {
+    "W1_H1": {
+      "nonzero_direction_changes": 8,
+      "direction_pair_tests": 12
+    },
+    "W1_P2": {
+      "nonzero_direction_changes": 8,
+      "direction_pair_tests": 10
+    },
+    "W2_P2": {
+      "nonzero_direction_changes": 8,
+      "direction_pair_tests": 8
+    },
+    "W2_H1": {
+      "nonzero_direction_changes": 8,
+      "direction_pair_tests": 8
+    },
+    "W3_H1": {
+      "nonzero_direction_changes": 7,
+      "direction_pair_tests": 7
+    },
+    "W3_P2": {
+      "nonzero_direction_changes": 6,
+      "direction_pair_tests": 6
+    }
+  },
+  "planning_timing_by_source_no_pooled_comparison": [
+    {
+      "plan": "W1_H1_plan_1",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\outputs\\W1_H1_plan_1.json",
+      "source_sha256": "6a90a259b920fa553b20e121c3b6e747065ca670df2a316a518508c79daef551",
+      "timing": {
+        "connector_and_contract_seconds": 0.0031316999811679125,
+        "core_adapter_seconds": 0.060475500009488314,
+        "post_adapter_seconds": 0.01498199999332428,
+        "main_encoding_seconds": 0.0005382000235840678,
+        "pipeline_seconds": 0.10459499998250976,
+        "pipeline_late": false
+      },
+      "provenance": "reused_saved_reaudited"
+    },
+    {
+      "plan": "W1_H1_plan_2",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\outputs\\W1_H1_plan_2.json",
+      "source_sha256": "a4144806d5d78170c6e1d2becbd1b46fe7dc9897105ae454499747896e055ed5",
+      "timing": {
+        "connector_and_contract_seconds": 0.008098100021015853,
+        "core_adapter_seconds": 0.03746229998068884,
+        "post_adapter_seconds": 0.006750700005795807,
+        "main_encoding_seconds": 0.00036420003743842244,
+        "pipeline_seconds": 0.06462430005194619,
+        "pipeline_late": false
+      },
+      "provenance": "original_saved_or_new_by_source_path"
+    },
+    {
+      "plan": "W1_P2_plan_1",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\outputs\\W1_P2_plan_1.json",
+      "source_sha256": "13b48820601234b12eb690e179e907179d46cdd992de4c66dcb2c45c928f2fa9",
+      "timing": {
+        "connector_and_contract_seconds": 0.0032213000231422484,
+        "core_adapter_seconds": 0.09435120003763586,
+        "post_adapter_seconds": 0.015355799987446517,
+        "main_encoding_seconds": 0.000513100007083267,
+        "pipeline_seconds": 0.14621839998289943,
+        "pipeline_late": false
+      },
+      "provenance": "original_saved_or_new_by_source_path"
+    },
+    {
+      "plan": "W1_P2_plan_2",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\outputs\\W1_P2_plan_2.json",
+      "source_sha256": "ec6cc65c4905fea1533f92c501cf411a015701b29d955c044e1d33b2ddbcb69c",
+      "timing": {
+        "connector_and_contract_seconds": 0.013674999994691461,
+        "core_adapter_seconds": 0.09549810003954917,
+        "post_adapter_seconds": 0.022894299996551126,
+        "main_encoding_seconds": 0.0006990000256337225,
+        "pipeline_seconds": 0.17486309999367222,
+        "pipeline_late": false
+      },
+      "provenance": "original_saved_or_new_by_source_path"
+    },
+    {
+      "plan": "W2_P2_plan_1",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.2_20261022\\outputs\\W2_P2_plan_1.json",
+      "source_sha256": "af1c74d2b5cbb59b438a099f6542ef2db47d8bb0c04507c61604e04294d1e0f9",
+      "timing": {
+        "connector_and_contract_seconds": 0.002808299963362515,
+        "core_adapter_seconds": 0.026773400022648275,
+        "post_adapter_seconds": 0.011655300040729344,
+        "main_encoding_seconds": 0.0004010999691672623,
+        "pipeline_seconds": 0.059462099976371974,
+        "pipeline_late": false
+      },
+      "provenance": "old_accepted_saved"
+    },
+    {
+      "plan": "W2_P2_plan_2",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\outputs\\W2_P2_plan_2.json",
+      "source_sha256": "0857062315674cf83e35a1846fcaa5eb7a6f264b2941c2103e078743e5a80407",
+      "timing": {
+        "connector_and_contract_seconds": 0.008164700004272163,
+        "core_adapter_seconds": 0.018200999998953193,
+        "post_adapter_seconds": 0.010428500012494624,
+        "main_encoding_seconds": 0.00046980002662166953,
+        "pipeline_seconds": 0.0483403000398539,
+        "pipeline_late": false
+      },
+      "provenance": "reused_saved_reaudited"
+    },
+    {
+      "plan": "W2_H1_plan_1",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\outputs\\W2_H1_plan_1.json",
+      "source_sha256": "525b3b5b2867fa50d1d524faf34129a5f5e10e7506272bd4055036a12c513af0",
+      "timing": {
+        "connector_and_contract_seconds": 0.0028042999911122024,
+        "core_adapter_seconds": 0.0387763999751769,
+        "post_adapter_seconds": 0.013114500034134835,
+        "main_encoding_seconds": 0.0005459000240080059,
+        "pipeline_seconds": 0.07692680001491681,
+        "pipeline_late": false
+      },
+      "provenance": "original_saved_or_new_by_source_path"
+    },
+    {
+      "plan": "W2_H1_plan_2",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\outputs\\W2_H1_plan_2.json",
+      "source_sha256": "4225699209d83018b819cfc8bb71c4de173060e827f7f4726756a9c3250770bc",
+      "timing": {
+        "connector_and_contract_seconds": 0.008669399947393686,
+        "core_adapter_seconds": 0.015587000001687557,
+        "post_adapter_seconds": 0.008932899974752218,
+        "main_encoding_seconds": 0.0003195999888703227,
+        "pipeline_seconds": 0.043995399959385395,
+        "pipeline_late": false
+      },
+      "provenance": "original_saved_or_new_by_source_path"
+    },
+    {
+      "plan": "W3_H1_plan_1",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\outputs\\W3_H1_plan_1.json",
+      "source_sha256": "321033253f373401c24416cf6059bf7d6957fdaa49baa0cd6c21a011e6a5f33f",
+      "timing": {
+        "connector_and_contract_seconds": 0.004656699951738119,
+        "core_adapter_seconds": 0.026416599983349442,
+        "post_adapter_seconds": 0.01454649999504909,
+        "main_encoding_seconds": 0.00038600002881139517,
+        "pipeline_seconds": 0.07171209994703531,
+        "pipeline_late": false
+      },
+      "provenance": "original_saved_or_new_by_source_path"
+    },
+    {
+      "plan": "W3_H1_plan_2",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\outputs\\W3_H1_plan_2.json",
+      "source_sha256": "65d5562a893a670a5808895c7e40e996a56cd6608fd34cc0af7995a268567c34",
+      "timing": {
+        "connector_and_contract_seconds": 0.01853030000347644,
+        "core_adapter_seconds": 0.022683799965307117,
+        "post_adapter_seconds": 0.015562299988232553,
+        "main_encoding_seconds": 0.00059120001969859,
+        "pipeline_seconds": 0.07614530000137165,
+        "pipeline_late": false
+      },
+      "provenance": "original_saved_or_new_by_source_path"
+    },
+    {
+      "plan": "W3_P2_plan_1",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\outputs\\W3_P2_plan_1.json",
+      "source_sha256": "6ff54b54d3c21e32965172e09a53b6e634966669e367453c285bed2655d7b516",
+      "timing": {
+        "connector_and_contract_seconds": 0.00501520000398159,
+        "core_adapter_seconds": 0.04445420001866296,
+        "post_adapter_seconds": 0.01578959997277707,
+        "main_encoding_seconds": 0.0004732999950647354,
+        "pipeline_seconds": 0.09533050004392862,
+        "pipeline_late": false
+      },
+      "provenance": "original_saved_or_new_by_source_path"
+    },
+    {
+      "plan": "W3_P2_plan_2",
+      "source": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\outputs\\W3_P2_plan_2.json",
+      "source_sha256": "a94438f814f677fc3d04016c4ecb80a38f792f2f27ae7a72cf17fedafecd4345",
+      "timing": {
+        "connector_and_contract_seconds": 0.017628400004468858,
+        "core_adapter_seconds": 0.02179149998119101,
+        "post_adapter_seconds": 0.005783400032669306,
+        "main_encoding_seconds": 0.0005447000148706138,
+        "pipeline_seconds": 0.05915039998944849,
+        "pipeline_late": false
+      },
+      "provenance": "original_saved_or_new_by_source_path"
+    }
+  ],
+  "old_completed_W1_sessions_reused_without_execution": 2,
+  "newly_executed_continuation_sessions": 4,
+  "actual_diagonal_offcenter_credit_cases": 0,
+  "actual_detections": 6,
+  "diagonal_detection_cases": 2
+}

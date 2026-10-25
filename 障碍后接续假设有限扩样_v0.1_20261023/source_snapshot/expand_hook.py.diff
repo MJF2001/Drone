@@ -1,0 +1,102 @@
+--- recovery_diag_hook.py
++++ expand_hook.py
+@@ -1,51 +1,54 @@
+-"""One offline specified recovery replacement; no coverage rollout or selector."""
+-import json,time
++"""One prefix-only old-order alternative; never consumes a future route/result."""
+ from collections import Counter
+-def norm(x):return json.loads(json.dumps(x,ensure_ascii=False,allow_nan=False))
+-KEYS=('recovery_hook_calls','decision_records','matched','applied','explanatory_distance_queries','prefix_decision_checks','pending_cells_logged')
++import time
++from common import norm,ps
++def select(pending,default,old):
++ seen=set();ordered=[];ranks={}
++ for i,v in enumerate(old):
++  q=tuple(v)
++  if q not in seen:seen.add(q);ordered.append(q);ranks[q]=i
++ current=[q for q in ordered if q in pending]
++ alt=next((q for q in current if q!=default),None)
++ first=current[0] if current else None
++ return alt,{'q0_is_first_pending_in_old_order':default==first,'q0_old_rank':ranks.get(default),'q1_old_rank':ranks.get(alt),
++  'identity_class':'default_not_in_old_order' if default not in ranks else 'default_already_prioritizes_old_order' if default==first else 'alternative_precedes_default',
++  'first_pending_in_old_order':norm(first)}
++def packet(record,index,current,previous,pending,default,old):
++ alt,tags=select(pending,default,old)
++ return dict(trace_record=record,route_index=index,current=norm(current),previous=norm(previous),pending=norm(sorted(pending)),default_goal=norm(default),alternative_goal=norm(alt),tags=tags,status='applicable' if alt is not None else 'no_distinct_old_candidate')
++def scan_ref(events,prefix_stream,U,old,deadline):
++ pending=set(U);cursor=-1;calls=0;one=False;found=None
++ for i,e in enumerate(events):
++  assert time.perf_counter()<deadline,'selector_deadline'
++  while cursor<e['index']:
++   cursor,p=next(prefix_stream);pending.discard(tuple(p));calls+=1
++  assert len(pending)==e['pending_count']
++  if e['kind']=='recovery':
++   one=True
++   if len(pending)>=2:
++    found=packet(i,e['index'],e['current'],e['previous'],pending,tuple(e['goal']),old);break
++ return {'trigger':found,'status':found['status'] if found else 'singleton_recovery' if one else 'no_recovery','counts':{'prefix_vertices':calls}}
+ class Diagnostic:
+- def __init__(self,spec,enabled,clock=time.perf_counter):
+-  self.spec=spec;self.enabled=enabled;self.clock=clock;self.counts=Counter({k:0 for k in KEYS});self.records=[];self.trigger=None;self.seconds=0.
++ def __init__(self,old,enabled):
++  self.old=old;self.enabled=enabled;self.examined=False;self.trigger=None;self.records=[];self.seconds=0.;self.counts=Counter({k:0 for k in ['recovery_hook_calls','decision_records','matched','applied','explanatory_distance_queries','pending_cells_logged','old_order_cells_scanned']})
+  def choose(self,trace,route,current,previous,pending,default,geometry):
+-  start=self.clock()
++  start=time.perf_counter()
+   try:
+-   self.counts['recovery_hook_calls']+=1;i=len(trace);s=self.spec;k=s['trace_record']
+-   if i!=k:
+-    if i<k:
+-     expected=s['original_trace'][i];assert expected['kind']=='recovery' and norm(default)==expected['goal'],'early recovery mismatch'
+-     assert not (norm(current)==s['current'] and norm(previous)==s['previous'] and set(pending)==set(map(tuple,s['pending']))),'early matching state'
+-    else:assert self.counts['matched']==1,'specified trigger was missed'
+-    return default
+-   assert self.counts['matched']==0,'duplicate trigger'
+-   assert norm(trace)==s['original_trace'][:k],'semantic prefix mismatch'
+-   assert norm(route)==s['original_route_prefix'],'route prefix mismatch'
+-   assert norm(current)==s['current'] and norm(previous)==s['previous'],'state mismatch'
+-   assert sorted(pending)==sorted(map(tuple,s['pending'])),'full pending mismatch'
+-   assert norm(default)==s['default_goal'] and s['original_trace'][k]['kind']=='recovery','default target/type mismatch'
+-   alt=tuple(s['alternative_goal']);assert alt!=tuple(default) and alt in pending and alt in geometry.s.free and alt in geometry.reachable,'alternative not pending/free/reachable'
+-   # The normal min(pending, distance) has already executed. Only these two
+-   # explanatory repeat queries are added; both use the same original object.
+-   dd=geometry.distance(current,default);ad=geometry.distance(current,alt);self.counts['explanatory_distance_queries']+=2
+-   self.counts['matched']=1;self.counts['applied']=int(self.enabled)
+-   self.trigger={'trace_record':i,'route_index':len(route)-1,'current':norm(current),'previous':norm(previous),'pending':norm(sorted(pending)),'default_goal':norm(default),'alternative_goal':norm(alt),'default_distance':dd,'alternative_distance':ad,'chosen_goal':norm(alt if self.enabled else default),'replacement_enabled':self.enabled,'original_prefix_checked':True}
++   self.counts['recovery_hook_calls']+=1
++   if self.examined or len(pending)<2:return default
++   self.examined=True;self.counts['old_order_cells_scanned']+=len(self.old)
++   t=packet(len(trace),len(route)-1,current,previous,pending,default,self.old);self.trigger=t
++   if t['alternative_goal'] is None:return default
++   alt=tuple(t['alternative_goal']);assert alt in pending and alt in geometry.s.free and alt in geometry.reachable,'candidate_unavailable_contract_error'
++   d0=geometry.distance(current,default);d1=geometry.distance(current,alt);self.counts['explanatory_distance_queries']+=2
++   assert d1>=d0
++   t.update(default_distance=d0,alternative_distance=d1,chosen_goal=norm(alt if self.enabled else default),replacement_enabled=self.enabled)
++   self.counts['matched']+=1;self.counts['applied']+=int(self.enabled)
+    return alt if self.enabled else default
+-  finally:self.seconds+=self.clock()-start
++  finally:self.seconds+=time.perf_counter()-start
+  def record(self,trace,event,pending,route,segment):
+-  start=self.clock()
+-  try:
+-   i=len(trace);k=self.spec['trace_record'];e=norm(event)
+-   if i<k:
+-    assert e==self.spec['original_trace'][i],'pre-trigger full decision differs';self.counts['prefix_decision_checks']+=1
+-   if i==k:assert self.counts['matched']==1 and e['goal']==self.trigger['chosen_goal'],'missing/incorrect unique hook'
+-   self.records.append({'trace_record':i,'event':e,'pending':norm(sorted(pending)),'segment':norm(segment)});self.counts['decision_records']+=1;self.counts['pending_cells_logged']+=len(pending)
+-   if i==k:self.trigger['actual_recovery_path']=norm(segment)
+-  finally:self.seconds+=self.clock()-start
+- def finish(self,raw):
+-  start=self.clock()
+-  try:
+-   assert raw['status']=='core_complete','no complete core output'
+-   assert self.counts['matched']==1 and self.counts['applied']==int(self.enabled),'trigger missing/repeated'
+-   assert len(self.records)==len(raw['trace'])-1 and raw['trace'][-1]['kind']=='return','record coverage mismatch'
+-   assert self.trigger is not None and 'actual_recovery_path' in self.trigger
+-  finally:self.seconds+=self.clock()-start
+- def export(self):return {'target_intervention_enabled':self.enabled,'core_detail_profile_enabled':False,'counts':dict(self.counts),'diagnostic_hook_seconds':self.seconds,'trigger':self.trigger,'decision_states':self.records,'scope':'one full run, same default rule and path object; no internal normal rollout, no target competition, no reset at trigger'}
++  start=time.perf_counter();self.records.append(dict(trace_record=len(trace),event=norm(event),pending=norm(sorted(pending)),segment=norm(segment)))
++  self.counts['decision_records']+=1;self.counts['pending_cells_logged']+=len(pending)
++  if self.trigger and self.trigger['trace_record']==len(trace):self.trigger['actual_recovery_path']=norm(segment)
++  self.seconds+=time.perf_counter()-start
++ def export(self):return dict(target_intervention_enabled=self.enabled,core_detail_profile_enabled=False,trigger=self.trigger,decision_states=self.records,counts=dict(self.counts),diagnostic_hook_seconds=self.seconds)

@@ -1,0 +1,168 @@
+[
+  {
+    "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\candidate_baselines\\PPCPP_CORE4\\v0.1_20261014\\source\\candidate_ppcpp_core4_20261014.py",
+    "sha256": "613a18fe36ce4378b06c77aafa28f380d7c7c43136fc806927ea8044daa9de60",
+    "excerpts": [
+      {
+        "start": 25,
+        "end": 46,
+        "lines": [
+          {
+            "line": 25,
+            "text": "def reward_options(current,previous,pending,free,predator,weights):"
+          },
+          {
+            "line": 26,
+            "text": "    \"\"\"Pure scoring helper; neighbors are actual uncovered cardinal cells.\"\"\""
+          },
+          {
+            "line": 27,
+            "text": "    options=sorted(q for q in adjacent(current) if q in pending and q in free)"
+          },
+          {
+            "line": 28,
+            "text": "    if not options:return []"
+          },
+          {
+            "line": 29,
+            "text": "    ds={q:math.hypot(q[0]-predator[0],q[1]-predator[1]) for q in options}"
+          },
+          {
+            "line": 30,
+            "text": "    lo=min(ds.values());hi=max(ds.values());out=[]"
+          },
+          {
+            "line": 31,
+            "text": "    for q in options:"
+          },
+          {
+            "line": 32,
+            "text": "        rd=(ds[q]-lo)/(hi-lo) if hi>lo else 0.0"
+          },
+          {
+            "line": 33,
+            "text": "        if previous is None:rs=0.0"
+          },
+          {
+            "line": 34,
+            "text": "        else:"
+          },
+          {
+            "line": 35,
+            "text": "            old=(current[0]-previous[0],current[1]-previous[1])"
+          },
+          {
+            "line": 36,
+            "text": "            new=(q[0]-current[0],q[1]-current[1])"
+          },
+          {
+            "line": 37,
+            "text": "            rs=(old[0]*new[0]+old[1]*new[1]+1)/2"
+          },
+          {
+            "line": 38,
+            "text": "        n=sum(z in pending and z in free for z in adjacent(q))"
+          },
+          {
+            "line": 39,
+            "text": "        rb=(4-n)/4"
+          },
+          {
+            "line": 40,
+            "text": "        out.append(dict(cell=q,distance_reward=rd,straight_reward=rs,boundary_reward=rb,"
+          },
+          {
+            "line": 41,
+            "text": "                        score=rd+weights[0]*rs+weights[1]*rb))"
+          },
+          {
+            "line": 42,
+            "text": "    return out"
+          },
+          {
+            "line": 43,
+            "text": ""
+          },
+          {
+            "line": 44,
+            "text": ""
+          },
+          {
+            "line": 45,
+            "text": "def choose_neighbor(options):"
+          },
+          {
+            "line": 46,
+            "text": "    return min(options,key=lambda row:(-row['score'],row['cell']))['cell']"
+          }
+        ]
+      }
+    ],
+    "evidence": "Source-known rule only; not a reconstruction of unrecorded runtime scores."
+  },
+  {
+    "file": "E:\\无人机研究项目_接续包_20261014\\基线复现准备_20261019\\独立版_v0.2\\ppcpp.py",
+    "sha256": "0e1ab657bf76d3ddb682a54e451252d19ecdf5bbc77edf42ca98c3c95dfb8f51",
+    "excerpts": [
+      {
+        "start": 26,
+        "end": 38,
+        "lines": [
+          {
+            "line": 26,
+            "text": "                tick();cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+          },
+          {
+            "line": 27,
+            "text": "                options=core.reward_options(cur,prev,pending,s.free,predator,(2.,.5));tick()"
+          },
+          {
+            "line": 28,
+            "text": "                event=dict(index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))"
+          },
+          {
+            "line": 29,
+            "text": "                if options:"
+          },
+          {
+            "line": 30,
+            "text": "                    goal=core.choose_neighbor(options);event.update(kind='local',options=options,goal=goal);segment=(cur,goal)"
+          },
+          {
+            "line": 31,
+            "text": "                else:"
+          },
+          {
+            "line": 32,
+            "text": "                    goal=min(pending,key=lambda q:(g.distance(cur,q),q));tick();segment=g.path(cur,goal)"
+          },
+          {
+            "line": 33,
+            "text": "                    event.update(kind='recovery',goal=goal)"
+          },
+          {
+            "line": 34,
+            "text": "                trace.append(event);move(segment,pending)"
+          },
+          {
+            "line": 35,
+            "text": "            tick();trace.append(dict(kind='return',index=len(route)-1,current=route[-1],goal=s.base,pending_count=0))"
+          },
+          {
+            "line": 36,
+            "text": "            move(g.path(route[-1],s.base),pending);tick()"
+          },
+          {
+            "line": 37,
+            "text": "            checked=_audit(s,tuple(route));tick()"
+          },
+          {
+            "line": 38,
+            "text": "            if checked['valid']:accepted=_clock()-begin;tick();status='core_complete'"
+          }
+        ]
+      }
+    ],
+    "evidence": "Source-known rule only; not a reconstruction of unrecorded runtime scores."
+  }
+]

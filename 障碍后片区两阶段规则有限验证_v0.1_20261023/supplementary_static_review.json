@@ -1,0 +1,46 @@
+{
+  "passed": true,
+  "scope": "static type/call-chain and ledger/repair/frozen-source bookkeeping ONLY; no rerun of failing algorithm audit; archive limitation explicitly disclosed",
+  "fixed_unique_pure_cases": 16,
+  "case_executions": 32,
+  "pure_rounds": 2,
+  "both_rounds_passed": true,
+  "engineering_repairs_before_first_core": 1,
+  "post_entry_repairs": 0,
+  "pre_entry_worker_failures": 1,
+  "pre_entry_failure_evidence": "parent log/stdout + controller traceback only; worker JSON lost during basename-flattened archival",
+  "real_worker_jobs": 22,
+  "core_entries": 22,
+  "post_entries": 22,
+  "unspent_core": 22,
+  "unspent_post": 22,
+  "equivalence_slots_passed": [
+    "G1-A",
+    "G2-A",
+    "G5-A",
+    "G6-A"
+  ],
+  "qualified_slots": 9,
+  "ineligible_slots": [
+    "G2-B",
+    "G5-B",
+    "G6-B"
+  ],
+  "formal_valid_pairs": 0,
+  "formal_failed_outputs": 1,
+  "algorithm_sources_unchanged_after_registration": [
+    "region_native.py",
+    "region_rule.py",
+    "region_audit.py",
+    "worker.py",
+    "frozen_reference.py",
+    "plan.json",
+    "pure_cases.json"
+  ],
+  "engineering_changed_pre_entry": [
+    "precheck.py",
+    "register.py",
+    "runtime_guards.json"
+  ],
+  "no_algorithm_queries_after_error": true
+}

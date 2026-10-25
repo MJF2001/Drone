@@ -1,0 +1,68 @@
+def worker(job):
+    from .metrics import evaluate
+    from .post import engine
+    from . import service
+    dest=H/'outputs'/(job['id']+'.json');assert not dest.exists()
+    result={'job':job,'passed':False,'views':{},'started_utc':time.time()};obs=None
+    wall=time.perf_counter()
+    try:
+        freeze=read(H/'active_freeze.json')
+        for name,digest in freeze.items():assert sha(H/name)==digest,name
+        for name,digest in read(H/'old_source_guards.json').items():assert sha(name)==digest,name
+        cold=time.perf_counter();runtime,p2=load_native();result['cold_import_seconds']=time.perf_counter()-cold
+        guards=read(H/'old_source_guards.json')
+        for module in (runtime,p2,runtime.native):
+            path=str(Path(module.__file__).resolve());assert path in guards and sha(path)==guards[path]
+        payload=(H/job['input']).read_bytes();c=json.loads(payload);original=deepcopy(c);result['input']=c
+        # Current is already evidenced in supplied H; explicit collection is idempotent.
+        assert tuple(c['current']) in ps(c['covered']);result['initial_collect_here']={'new_H':[],'reason':'explicit action; current already in supplied history'}
+        result['identity_before']=identity();obs=NativeObserver(runtime,p2)
+        start=time.perf_counter();corestart=time.perf_counter();sys.setprofile(obs.profile)
+        try:native=runtime.run_payload(payload,'PPCPP',20,job['seed']) if job['method']=='PPCPP' else p2.run_payload(payload,20,job['seed'])
+        finally:sys.setprofile(None)
+        coreend=time.perf_counter();result['native']=native
+        result['loaded_core_sources']={}
+        for key in ('runtime','p2_adapter','candidate','model','p2_search_audit','unified_geometry','bfs_metric_geometry'):
+            module=sys.modules.get(key)
+            if module is not None:
+                path=str(Path(module.__file__).resolve());assert path in guards and sha(path)==guards[path],('unbound core',path)
+                result['loaded_core_sources'][path]=sha(path)
+        # Preserve native before post/audit. All variants share this one return.
+        flush=time.perf_counter();dump(H/'outputs'/(job['id']+'_native_raw.json'),native);native_flush=time.perf_counter()-flush
+        assert native['raw'].get('route'),'no complete original output'
+        corewire=json.dumps(native,ensure_ascii=False,separators=(',',':'));route=json.loads(corewire)['raw']['route']
+        rawname='A' if job['method']=='PPCPP' else 'C0';postname='B' if rawname=='A' else 'C'
+        result['views'][rawname]=evaluate(c,route,grid=True)
+        json.dumps(result['views'][rawname],ensure_ascii=False,separators=(',',':'));rawend=time.perf_counter()
+        request={'id':job['id'],'input':c,'raw':json.loads(corewire)['raw']};wire=json.dumps(request,ensure_ascii=False,separators=(',',':')).encode()
+        postwire,envelope=engine.process(wire,limit=4096,soft=18,total=20)
+        result.update(post_request_utf8=wire.decode(),post_response_utf8=postwire,post_envelope=envelope)
+        flush=time.perf_counter();dump(H/'outputs'/(job['id']+'_post_raw.json'),{'request':request,'response_utf8':postwire,'envelope':envelope});post_flush=time.perf_counter()-flush
+        post=json.loads(postwire);result['post']=post
+        result['views'][postname]=evaluate(c,post['vertices'])
+        json.dumps(result,ensure_ascii=False,separators=(',',':'));end=time.perf_counter()
+        assert c==original and obs.c['core_started']==obs.c['core_returned']==1
+        counts={'engine':post['counts']['service_intersections'],'raw_execution':result['views'][rawname]['counts'].get('execute_service_intersections',0),
+                'post_execution':result['views'][postname]['counts'].get('execute_service_intersections',0)}
+        counts['total']=sum(counts.values());assert all(type(v) is int and v>=0 for v in counts.values()) and counts['total']==counts['engine']+counts['raw_execution']+counts['post_execution']
+        n=len(route)-1;u=len(ps(c['targets'])-ps(c['covered']));assert counts['engine']<=n*u
+        result['query_scope_schema']=counts
+        result['timing']={'native_entry_seconds':coreend-corestart,'raw_common_end_to_end':rawend-start-native_flush,'post_increment':end-rawend-post_flush,'combined_end_to_end':end-start-native_flush-post_flush,'artifact_flush_excluded_seconds':native_flush+post_flush,
+            'native_late':coreend-corestart>=20,'raw_stage_late':rawend-start-native_flush>20,'combined_late':end-start-native_flush-post_flush>40,'post_late':end-rawend-post_flush>20 or envelope['late'],
+            'native_status':native['raw'].get('status'),'termination':'budget' if native['raw'].get('status')=='deadline' else 'natural',
+            'main_measured_includes':'native observer, decode/encode and necessary primary new-credit execution/metrics; post increment includes source/credit validation',
+            'outside_main':'cold import, hash checks, raw artifact flushes, independent audits, process creation'}
+        # Raw flush is persisted for failure evidence and separately excluded from timings below.
+        result['main_passed']=True;dump(dest,result)
+        independent_start=time.perf_counter()
+        result['independent']=audit_result(result)
+        result['independent_wall_seconds']=time.perf_counter()-independent_start
+        result['identity_after']=identity();assert result['identity_before']==result['identity_after']
+        result['passed']=True
+    except BaseException as e:
+        sys.setprofile(None);result['failure']={'reason':repr(e),'traceback':traceback.format_exc()}
+    finally:
+        if obs:result['native_counts_actual']=dict(obs.c)
+        result['worker_wall_seconds']=time.perf_counter()-wall;dump(dest,result)
+    print(json.dumps({'id':job['id'],'passed':result['passed'],'failure':result.get('failure'),'seconds':result['worker_wall_seconds']},ensure_ascii=False))
+    if not result['passed']:raise SystemExit(1)

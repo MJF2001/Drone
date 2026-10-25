@@ -1,0 +1,407 @@
+--- v0.1/independent_audit.py
++++ v0.2/independent_audit.py
+@@ -1,6 +1,37 @@
+ """Independent saved-output audit. No production/heading implementation imports."""
+ import math
+ from fractions import Fraction as F
++
++def coordinate(value, *, allow_none=False, grid=True):
++    """Validate coordinate values before ignoring only list/tuple representation."""
++    if value is None:
++        assert allow_none, 'coordinate_none_not_allowed'
++        return None
++    assert isinstance(value,(list,tuple)) and len(value)==2, 'coordinate_dimension_or_container'
++    if grid:
++        assert all(type(v) is int for v in value), 'integer_grid_coordinate_required'
++    else:
++        assert all(type(v) in (int,float) and math.isfinite(v) for v in value), 'finite_coordinate_required'
++    return tuple(value)
++
++def coordinate_field(mapping, key, *, allow_none=False, grid=True):
++    assert isinstance(mapping,dict) and key in mapping, 'missing_coordinate_field:'+key
++    return coordinate(mapping[key],allow_none=allow_none,grid=grid)
++
++def coordinate_sequence(values):
++    assert isinstance(values,(list,tuple)), 'coordinate_sequence_required'
++    return [coordinate(p) for p in values]
++
++def source_coordinates(actual, expected):
++    assert isinstance(actual,dict) and isinstance(expected,dict) and set(actual)==set(expected), 'heading_source_fields'
++    result=dict(actual)
++    for key in actual:
++        if key in ('start','end'):
++            a=coordinate_field(actual,key);b=coordinate_field(expected,key)
++            assert a==b, 'heading_source_coordinate_mismatch'
++            result[key]=list(a)
++        else:assert actual[key]==expected[key], 'heading_source_value_mismatch'
++    return result
+ 
+ def direction(raw):
+     if raw is None:return None
+@@ -56,9 +87,9 @@
+ 
+ def audit_output(c, heading, raw, newer):
+     assert raw['status']=='core_complete',raw['status']
+-    route=[tuple(p) for p in raw['route']];free=set(map(tuple,c['free']));targets=set(map(tuple,c['targets']));history=set(map(tuple,c['covered']))
+-    assert route and route[0]==tuple(c['current']) and route[-1]==tuple(c['base'])
+-    assert all(p in free and all(type(v) is int for v in p) for p in route)
++    route=coordinate_sequence(raw['route']);free=set(coordinate_sequence(c['free']));targets=set(coordinate_sequence(c['targets']));history=set(coordinate_sequence(c['covered']))
++    assert route and route[0]==coordinate_field(c,'current') and route[-1]==coordinate_field(c,'base')
++    assert all(p in free for p in route)
+     assert all(abs(a[0]-b[0])+abs(a[1]-b[1])==1 for a,b in zip(route,route[1:]))
+     assert len(route)-1<=c['distance_budget']
+     U=targets-history;seen=set();credits=[]
+@@ -68,19 +99,23 @@
+     events=raw['trace'];assert events and events[-1]['kind']=='return'
+     bits_used=[];decisions=[];updates=[]
+     for k,event in enumerate(events):
+-        i=event['index'];cur=route[i];assert tuple(event['current'])==cur
++        i=event['index'];cur=route[i];assert coordinate_field(event,'current')==cur
+         pend=U-set(route[:i+1])
+         h=direction(heading['vector']) if i==0 and heading['status']=='KNOWN' else None if i==0 else (cur[0]-route[i-1][0],cur[1]-route[i-1][1])
+         if newer:
+-            state=event['incoming_heading'];assert tuple(state['primitive'])==h if h is not None else state['primitive'] is None
+-            if i==0:assert state['source']==heading['source']
+-            else:assert state['source']==dict(kind='predicted_route_edge',start=list(route[i-1]),end=list(cur),end_index=i)
+-            updates.append(dict(index=i,heading=list(h) if h else None,source=state['source']))
++            state=event['incoming_heading'];assert coordinate_field(state,'primitive',allow_none=True)==h
++            expected_source=heading['source'] if i==0 else dict(kind='predicted_route_edge',start=list(route[i-1]),end=list(cur),end_index=i)
++            normalized_source=source_coordinates(state['source'],expected_source)
++            updates.append(dict(index=i,heading=list(h) if h else None,source=normalized_source))
+         else:
+-            prev=c['previous'] if i==0 else list(route[i-1]);assert event.get('previous',prev)==prev
++            prev=coordinate_field(c,'previous',allow_none=True) if i==0 else route[i-1]
++            # Frozen return events have no previous field by schema. Never fill
++            # a missing local/recovery field with the expected value.
++            if event['kind']!='return' or 'previous' in event:
++                assert coordinate_field(event,'previous',allow_none=True)==prev, 'previous_coordinate_mismatch'
+         expect=expected_options(cur,h,pend,free,c['predator'])
+         if event['kind']=='local':
+-            actual=event['options'];assert [tuple(z['cell']) for z in actual]==[z['cell'] for z in expect]
++            actual=event['options'];assert [coordinate_field(z,'cell') for z in actual]==[z['cell'] for z in expect]
+             for a,b in zip(actual,expect):
+                 for field in ('distance_reward','boundary_reward'):assert a[field]==b[field]
+                 if 'h1_certificate' in b:
+@@ -95,23 +130,34 @@
+                     assert a['straight_reward']==b['straight_reward'] and a['score']==b['score']
+             if expect and 'h1_certificate' in expect[0]:chosen,bits=certified_winner(expect);bits_used.append(bits)
+             else:chosen=min(expect,key=lambda z:(-z['score'],z['cell']))['cell']
+-            assert tuple(event['goal'])==chosen and route[i+1]==chosen
++            assert coordinate_field(event,'goal')==chosen and route[i+1]==chosen
+         elif event['kind']=='recovery':
+-            assert not expect and tuple(event['goal']) in pend
++            assert not expect and coordinate_field(event,'goal') in pend
+         elif event['kind']=='return':
+-            assert not pend and tuple(event['goal'])==tuple(c['base'])
++            assert not pend and coordinate_field(event,'goal')==coordinate_field(c,'base')
+         else:raise AssertionError('unknown decision')
+         end=events[k+1]['index'] if k+1<len(events) else len(route)-1
+-        assert end>=i and route[end]==tuple(event['goal'])
+-        decisions.append(dict(kind=event['kind'],index=i,current=list(cur),goal=event['goal'],pending_count=len(pend)))
++        assert end>=i and route[end]==coordinate_field(event,'goal')
++        decisions.append(dict(kind=event['kind'],index=i,current=list(cur),goal=list(coordinate_field(event,'goal')),pending_count=len(pend)))
+     return dict(valid=True,steps=len(route)-1,credits=credits,decisions=decisions,heading_updates=updates,
+                 interval_bits_used=bits_used,route_edge_checks=len(route)-1,trace_events=len(events),graph_searches=0,LOS_queries=0)
+ 
+ def equivalence(original, newer):
+     fields=('route','status','reason','seed','weights','predator')
+-    assert all(original.get(f)==newer.get(f) for f in fields)
++    for field in fields:
++        assert field in original and field in newer, 'missing_core_field:'+field
++        if field=='route':assert coordinate_sequence(original[field])==coordinate_sequence(newer[field])
++        elif field=='predator':assert coordinate(original[field],grid=False)==coordinate(newer[field],grid=False)
++        else:assert original[field]==newer[field]
+     assert len(original['trace'])==len(newer['trace'])
+     for a,b in zip(original['trace'],newer['trace']):
+-        for field in ('kind','index','current','pending_count','goal','options'):
+-            assert a.get(field)==b.get(field),field
++        for field in ('kind','index','current','pending_count','goal'):
++            assert field in a and field in b, 'missing_trace_field:'+field
++            if field in ('current','goal'):assert coordinate_field(a,field)==coordinate_field(b,field)
++            else:assert a[field]==b[field],field
++        if a['kind']=='local' or 'options' in a or 'options' in b:
++            assert 'options' in a and 'options' in b
++            def normalized_options(rows):
++                return [dict(row,cell=coordinate_field(row,'cell')) for row in rows]
++            assert normalized_options(a['options'])==normalized_options(b['options']), 'options'
+     return True
+--- v0.1/worker.py
++++ v0.2/worker.py
+@@ -69,6 +69,7 @@
+         return self.trace
+ 
+ def main(slot):
++    assert 2<=slot<=124, 'v0.2 only executes original unused slots 2..124; slot1 is reuse-only'
+     job=read(HERE/'jobs'/f'{slot:03d}.json');out=HERE/'outputs'/(job['id']+'.json');marker=HERE/'logs'/(job['id']+'_markers.jsonl')
+     assert not out.exists() and not marker.exists(),'slot already attempted'
+     frozen=read(HERE/'freeze.json')
+--- v0.1/run.py
++++ v0.2/run.py
+@@ -1,70 +1,108 @@
+-"""Freeze after pure gates, then run fixed real slots once with fail-stop."""
++"""Only continue the original unused slots 2..124; slot1 is immutable reuse."""
+ from pathlib import Path
+-import sys,json,hashlib,subprocess,os,traceback
++import sys,json,hashlib,subprocess,os,traceback,difflib,ast
+ from datetime import datetime,timezone
+ 
+-HERE=Path(__file__).resolve().parent
++HERE=Path(__file__).resolve().parent;OLD=HERE.parent/'PPCPP真实来向H1最小验收_v0.1_20261022'
+ def read(p):return json.loads(p.read_text(encoding='utf-8-sig'))
+ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+-def dump(p,obj):p.write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
++def dump(p,x):p.write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
++
++def check_bindings():
++    bindings=read(HERE/'准备与旧包绑定.json')
++    for rel,row in bindings['algorithm_bindings'].items():assert sha(HERE/rel)==sha(Path(row['source']))==row['sha256'],rel
++    assert read(OLD/'124槽实际账.json')[0]['status']=='failed'
++    manifest=read(OLD/'completion_manifest.json')
++    for rel,digest in manifest['files'].items():assert sha(OLD/rel)==digest
++    assert sha(OLD/'completion_manifest.json')==bindings['old_manifest_sha256']
+ 
+ def freeze():
+     assert not (HERE/'freeze.json').exists()
+-    results=[read(p) for p in sorted((HERE/'tech').glob('attempt_*_result.json'))];assert results and len(results)<=3 and results[-1]['passed']
+-    for rel,digest in results[-1]['source_hashes'].items():assert sha(HERE/rel)==digest
++    check_bindings()
++    rounds=[read(p) for p in sorted((HERE/'repair_rounds').glob('round_*_result.json'))]
++    assert 1<=len(rounds)<=3 and rounds[-1]['passed']
++    for rel,digest in rounds[-1]['source_hashes'].items():assert sha(HERE/rel)==digest
++    reuse=read(HERE/'reuse/slot_001_reaudit.json');assert reuse['old_status']=='failed' and len(reuse['audits'])==2 and all(x['audit']['valid'] for x in reuse['audits'])
++    assert sha(Path(reuse['source_path']))==reuse['source_sha256']
++    old=(OLD/'independent_audit.py').read_text(encoding='utf8');new=(HERE/'independent_audit.py').read_text(encoding='utf8')
++    def segments(text):return {n.name:ast.get_source_segment(text,n) for n in ast.parse(text).body if isinstance(n,ast.FunctionDef)}
++    a,b=segments(old),segments(new)
++    unchanged={name:hashlib.sha256(a[name].encode('utf8')).hexdigest() for name in ('direction','scalar_interval','certified_winner','expected_options')}
++    assert all(a[name]==b[name] for name in unchanged)
++    dump(HERE/'数值与评分审核函数未变.json',unchanged)
++    diffs=[];reasons={
++      'independent_audit.py':'Validated coordinate value equality; explicit required fields; stable coordinate reports. Scoring/math helper bodies unchanged.',
++      'worker.py':'Only reject real execution of slot1; all original entry and counting behavior retained.',
++      'run.py':'Continue unused original slots, reference old returned data, retain separate reuse provenance and cross-version cap.',
++      'verify.py':'Audit saved new/reused data only and historical progress snapshots, never launch core.'}
++    for name in reasons:
++        if (HERE/name).exists():
++            diffs.extend(difflib.unified_diff((OLD/name).read_text(encoding='utf8').splitlines(keepends=True),(HERE/name).read_text(encoding='utf8').splitlines(keepends=True),fromfile='v0.1/'+name,tofile='v0.2/'+name))
++    (HERE/'v0.2表示修复与包装.diff').write_text(''.join(diffs),encoding='utf8');dump(HERE/'修改项与理由.json',reasons)
+     files=[]
+-    for pattern in ('*.py','derived/*.py','inputs/*.json','jobs/*.json','source_snapshot/*.py'):
+-        files.extend(HERE.glob(pattern))
+-    files.extend(HERE/name for name in ('技术门槛预登记.json','计划_124槽.json','54输入来源清单.json','原来源hash.json','顶层导入静态审查.json','01_合同与数值策略_事前冻结.md','最小改动.diff'))
+-    dump(HERE/'freeze.json',dict(frozen_utc=datetime.now(timezone.utc).isoformat(),gate_attempt=results[-1]['attempt'],gate_cases=len(results[-1]['cases']),
+-        package_files={p.relative_to(HERE).as_posix():sha(p) for p in files},max_real_entries=124,budget=20,source_policy='no modifications or retries after real run starts'))
+-    print('FROZEN AFTER PURE GATES; NO REAL ENTRIES YET')
++    for pattern in ('*.py','derived/*.py','inputs/*.json','jobs/*.json','source_snapshot/*.py','reuse/*.json','repair_rounds/*'):
++        files.extend(p for p in HERE.glob(pattern) if p.is_file())
++    files.extend(HERE/name for name in ('计划_124槽.json','54输入来源清单.json','原来源hash.json','准备与旧包绑定.json',
++      '顶层导入静态审查.json','02_v0.2修复合同_事前登记.md','01_合同与数值策略_事前冻结.md','修复预检事前登记.json',
++      '技术门槛预登记.json','数值与评分审核函数未变.json','v0.2表示修复与包装.diff','修改项与理由.json'))
++    dump(HERE/'freeze.json',dict(frozen_utc=datetime.now(timezone.utc).isoformat(),package_files={p.relative_to(HERE).as_posix():sha(p) for p in files},
++      repair_round=rounds[-1]['round'],preflight_audit_calls=rounds[-1]['auditor_calls'],reused_slot1='v0.1 failed; returned data reaudited only',
++      new_entry_slots=[2,124],max_new_real_entries=123,max_cross_version_real_entries=124,budget=20,source_policy='no repairs/retries after continuation starts'))
++    print('FROZEN v0.2; original slot1 reused, no new real entries yet')
++
++def reference(case):
++    first=read(HERE/'计划_124槽.json')['jobs'][0]
++    if case==first['case']:
++        reuse=read(HERE/'reuse/slot_001_reaudit.json');old=read(Path(reuse['source_path']))
++        assert sha(Path(reuse['source_path']))==reuse['source_sha256']
++        return dict(entry=old['entry'],audit=reuse['audits'][0]['audit'],origin='v0.1_return_reaudited_v0.2',source_path=reuse['source_path'],source_sha256=reuse['source_sha256'])
++    p=HERE/'outputs'/f'legacy__{case}__ORIGINAL.json';x=read(p)
++    return dict(entry=x['entry'],audit=x['audit'],origin='v0.2_new_entry',source_path=str(p),source_sha256=sha(p))
+ 
+ def run():
+     frozen=read(HERE/'freeze.json')
+     for rel,digest in frozen['package_files'].items():assert sha(HERE/rel)==digest,rel
+-    assert not (HERE/'attempts.jsonl').exists(),'no rerun'
+-    plan=read(HERE/'计划_124槽.json');jobs=plan['jobs'];assert len(jobs)==124
+-    ledger=[dict(slot=j['slot'],id=j['id'],phase=j['phase'],method=j['method'],status='not_run',reason=None) for j in jobs]
+-    comparison=[];diagonal=[];failure=None
+-    dump(HERE/'124槽实际账.json',ledger)
++    check_bindings();assert not (HERE/'attempts.jsonl').exists(),'no retry or second continuation run'
++    plan=read(HERE/'计划_124槽.json');jobs=plan['jobs'];assert [j['slot'] for j in jobs]==list(range(1,125))
++    reuse=read(HERE/'reuse/slot_001_reaudit.json')
++    ledger=[dict(slot=j['slot'],id=j['id'],phase=j['phase'],method=j['method'],status='not_run',reason=None,new_execution=j['slot']!=1) for j in jobs]
++    ledger[0].update(status='reused_saved_reaudited',old_status='failed',source_path=reuse['source_path'],source_sha256=reuse['source_sha256'])
++    comparisons=[];diagonals=[];failure=None
++    dump(HERE/'124槽接续实际账.json',ledger);dump(HERE/'54等价证据.json',comparisons);dump(HERE/'16斜向技术证据.json',diagonals)
+     env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
+     from independent_audit import equivalence
+-    for j,slot in zip(jobs,ledger):
+-        if j['phase']=='diagonal' and not (len(comparison)==54 and all(c['equivalent'] for c in comparison)):
+-            failure=dict(reason='phase1_not_all_passed');break
+-        slot.update(status='attempted',reason=None)
++    for j,slot in zip(jobs[1:],ledger[1:]):
++        if j['phase']=='diagonal':assert len(comparisons)==54 and all(x['equivalent'] for x in comparisons),'phase1 gate not passed'
++        slot['status']='attempted'
+         with (HERE/'attempts.jsonl').open('a',encoding='utf8') as f:f.write(json.dumps(dict(slot=j['slot'],id=j['id'],event='started',utc=datetime.now(timezone.utc).isoformat()))+'\n')
+-        dump(HERE/'124槽实际账.json',ledger)
++        dump(HERE/'124槽接续实际账.json',ledger)
+         try:
+             process=subprocess.run([sys.executable,'-B','-X','utf8',str(HERE/'worker.py'),str(j['slot'])],env=env,capture_output=True,timeout=plan['watchdog_seconds'])
+             (HERE/'logs'/(j['id']+'.log')).write_bytes(process.stdout+process.stderr)
+-            output=HERE/'outputs'/(j['id']+'.json')
+-            if process.returncode!=0:raise RuntimeError('worker exit '+str(process.returncode))
+-            saved=read(output);assert saved['passed'] and saved['audit']['valid']
++            if process.returncode:raise RuntimeError('worker exit '+str(process.returncode))
++            p=HERE/'outputs'/(j['id']+'.json');saved=read(p);assert saved['passed'] and saved['audit']['valid']
+             slot['status']='passed'
+             if j['phase']=='legacy' and j['method']=='H1':
+-                a=read(HERE/'outputs'/f"legacy__{j['case']}__ORIGINAL.json")
+-                equivalent=equivalence(a['entry']['raw']['branches']['P0'],saved['entry']['raw']['branches']['P0'])
++                a=reference(j['case']);ok=equivalence(a['entry']['raw']['branches']['P0'],saved['entry']['raw']['branches']['P0'])
+                 assert a['audit']['credits']==saved['audit']['credits'] and a['audit']['decisions']==saved['audit']['decisions']
+-                comparison.append(dict(case=j['case'],equivalent=equivalent,original_slot=j['slot']-1,h1_slot=j['slot'],credits_equal=True,decisions_equal=True))
++                comparisons.append(dict(case=j['case'],equivalent=ok,original_slot=j['slot']-1,h1_slot=j['slot'],credits_equal=True,decisions_equal=True,
++                    original_origin=a['origin'],original_source_path=a['source_path'],original_source_sha256=a['source_sha256'],same_run_timing_pair=a['origin']=='v0.2_new_entry'))
+             if j['phase']=='diagonal':
+-                v=j['heading']['vector'];base=[1 if z>0 else -1 for z in v]
+-                key='diag__'+('_'.join(map(str,base)))+'__0'
+-                anchor=read(HERE/'outputs'/(key+'.json'))
+-                equivalent=equivalence(anchor['entry']['raw']['branches']['P0'],saved['entry']['raw']['branches']['P0'])
++                vector=j['heading']['vector'];base=[1 if z>0 else -1 for z in vector];key='diag__'+'_'.join(map(str,base))+'__0'
++                anchor=read(HERE/'outputs'/(key+'.json'));ok=equivalence(anchor['entry']['raw']['branches']['P0'],saved['entry']['raw']['branches']['P0'])
+                 assert anchor['audit']['credits']==saved['audit']['credits'] and anchor['audit']['decisions']==saved['audit']['decisions']
+-                diagonal.append(dict(slot=j['slot'],vector=v,repeat=j['repeat'],consistent=equivalent,reference_id=key,synthetic_not_actual_history=True))
++                diagonals.append(dict(slot=j['slot'],vector=vector,repeat=j['repeat'],consistent=ok,reference_id=key,synthetic_not_actual_history=True))
+         except BaseException as ex:
+-            slot.update(status='failed',reason=repr(ex));failure=dict(slot=j['slot'],id=j['id'],reason=repr(ex),traceback=traceback.format_exc())
++            slot.update(status='failed',reason=repr(ex));failure=dict(slot=j['slot'],id=j['id'],reason=repr(ex),traceback=traceback.format_exc(),native_output_exists=(HERE/'outputs'/(j['id']+'.json')).exists())
+         with (HERE/'attempts.jsonl').open('a',encoding='utf8') as f:f.write(json.dumps(dict(slot=j['slot'],id=j['id'],event='finished',status=slot['status']))+'\n')
+-        dump(HERE/'124槽实际账.json',ledger);dump(HERE/'54等价证据.json',comparison);dump(HERE/'16斜向技术证据.json',diagonal)
+-        dump(HERE/'status.json',dict(attempted=sum(x['status']!='not_run' for x in ledger),passed=sum(x['status']=='passed' for x in ledger),failure=failure,legacy_pairs=len(comparison),diagonal_entries=len(diagonal)))
++        dump(HERE/'124槽接续实际账.json',ledger);dump(HERE/'54等价证据.json',comparisons);dump(HERE/'16斜向技术证据.json',diagonals)
++        attempted=sum(x['status'] not in ('not_run','reused_saved_reaudited') for x in ledger)
++        dump(HERE/'status.json',dict(new_attempted=attempted,new_passed=sum(x['status']=='passed' for x in ledger),cross_version_attempts=attempted+1,reused_original_returns=1,
++            failure=failure,legacy_pairs=len(comparisons),diagonal_entries=len(diagonals)))
+         if failure:print('STOP FAILURE '+json.dumps(failure,ensure_ascii=False),flush=True);break
+-        if j['slot']%12==0 or j['slot']==124:print(f"PASS {j['slot']}/124; legacy pairs {len(comparison)}; diagonal {len(diagonal)}",flush=True)
+-    if not failure:print('COMPLETE STOP; DO NOT RUN FURTHER ENTRIES',flush=True)
++        if j['slot']%12==0 or j['slot']==124:print(f"PASS new {attempted}/123; original slot {j['slot']}; legacy pairs {len(comparisons)}; diagonal {len(diagonals)}",flush=True)
++    if not failure:print('COMPLETE STOP; 123 NEW + 1 HISTORICAL; NO MORE ENTRIES',flush=True)
+ 
+ if __name__=='__main__':
+     if sys.argv[1]=='freeze':freeze()
+     elif sys.argv[1]=='run':run()
+-    else:raise SystemExit('freeze or run only')
+--- v0.1/verify.py
++++ v0.2/verify.py
+@@ -1,67 +1,73 @@
+-"""Read saved results only: independent arithmetic/route audit, no core/search."""
++"""Saved-data-only audit of reuse and continuation; never import/run a core."""
+ from pathlib import Path
+-import sys,json,hashlib
++import json,hashlib
+ from independent_audit import audit_output,equivalence
+ 
+-HERE=Path(__file__).resolve().parent
++HERE=Path(__file__).resolve().parent;OLD=HERE.parent/'PPCPP真实来向H1最小验收_v0.1_20261022'
+ def read(p):return json.loads(p.read_text(encoding='utf-8-sig'))
+ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+ 
+ def main():
+     frozen=read(HERE/'freeze.json')
+     for rel,digest in frozen['package_files'].items():assert sha(HERE/rel)==digest,('frozen package changed',rel)
+-    for path,digest in read(HERE/'原来源hash.json').items():assert sha(Path(path))==digest,('source changed',path)
+-    inputs=read(HERE/'54输入来源清单.json');assert len(inputs)==54
+-    for item in inputs:assert sha(HERE/item['input'])==item['sha256']==sha(Path(item['source']))
+-    gates=[read(p) for p in sorted((HERE/'tech').glob('attempt_*_result.json'))]
+-    assert 1<=len(gates)<=3 and gates[-1]['passed'] and len(gates[-1]['cases'])==26
+-    assert all(len(v)<=4 for v in read(HERE/'技术门槛预登记.json')['classes'].values())
+-    for name,digest in gates[-1]['source_hashes'].items():assert sha(HERE/name)==digest
+-    plan=read(HERE/'计划_124槽.json')['jobs'];ledger=read(HERE/'124槽实际账.json');assert len(plan)==len(ledger)==124
++    bind=read(HERE/'准备与旧包绑定.json');old_manifest=read(OLD/'completion_manifest.json')
++    assert sha(OLD/'completion_manifest.json')==bind['old_manifest_sha256']
++    for rel,digest in old_manifest['files'].items():assert sha(OLD/rel)==digest,('old sealed artifact changed',rel)
++    assert read(OLD/'124槽实际账.json')[0]['status']=='failed' and read(OLD/'status.json')['attempted']==1
++    for rel,row in bind['algorithm_bindings'].items():assert sha(HERE/rel)==sha(Path(row['source']))==row['sha256']
++    for path,digest in read(HERE/'原来源hash.json').items():assert sha(Path(path))==digest
++    assert sha(OLD/'tech/attempt_1_result.json')==bind['legacy_gate_result_sha256']
++    rounds=[read(p) for p in sorted((HERE/'repair_rounds').glob('round_*_result.json'))];assert 1<=len(rounds)<=3 and rounds[-1]['passed']
++    reuse=read(HERE/'reuse/slot_001_reaudit.json');source=Path(reuse['source_path']);assert sha(source)==reuse['source_sha256']
++    old=read(source);assert old['passed'] is False
++    reaudit=audit_output(old['input'],old['job']['heading'],old['entry']['raw']['branches']['P0'],False)
++    assert all(x['audit']==reaudit for x in reuse['audits']);saved_audits=1
++    plan=read(HERE/'计划_124槽.json')['jobs'];ledger=read(HERE/'124槽接续实际账.json');assert len(plan)==len(ledger)==124
++    assert ledger[0]['status']=='reused_saved_reaudited' and ledger[0]['old_status']=='failed'
+     started=[json.loads(line) for line in (HERE/'attempts.jsonl').read_text(encoding='utf8').splitlines() if json.loads(line)['event']=='started']
+-    assert len(started)<=124 and len({x['slot'] for x in started})==len(started)
+-    assert [x['slot'] for x in started]==list(range(1,len(started)+1))
+-    assert sum(x['status']!='not_run' for x in ledger)==len(started)
+-    accounts={};saved_audits=0;actual_core_markers=0;warm_starts=0;outputs={}
+-    for job,slot in zip(plan,ledger):
+-        assert job['slot']==slot['slot'] and job['id']==slot['id']
+-        p=HERE/'outputs'/(job['id']+'.json');marker=HERE/'logs'/(job['id']+'_markers.jsonl')
+-        if slot['status']=='not_run':assert not p.exists() and not marker.exists();continue
+-        if marker.exists():
+-            marks=[json.loads(line) for line in marker.read_text(encoding='utf8').splitlines()]
+-            actual_core_markers+=sum(x['tag']=='core_started' for x in marks);warm_starts+=sum(x['tag']=='warm_entry_started' for x in marks)
+-        if not p.exists():assert slot['status']=='failed';continue
+-        result=read(p);outputs[job['id']]=result;assert result['job']==job
+-        assert result['source_input_sha256']==sha(HERE/job['input'])
++    assert len(started)<=123 and [x['slot'] for x in started]==list(range(2,len(started)+2))
++    outputs={};accounts={};warm=0;markers_core=0
++    for j,s in zip(plan[1:],ledger[1:]):
++        assert j['id']==s['id'] and j['slot']==s['slot']
++        p=HERE/'outputs'/(j['id']+'.json');markers=HERE/'logs'/(j['id']+'_markers.jsonl')
++        if s['status']=='not_run':assert not p.exists() and not markers.exists();continue
++        if markers.exists():
++            rows=[json.loads(line) for line in markers.read_text(encoding='utf8').splitlines()]
++            warm+=sum(x['tag']=='warm_entry_started' for x in rows);markers_core+=sum(x['tag']=='core_started' for x in rows)
++        if not p.exists():assert s['status']=='failed';continue
++        result=read(p);outputs[j['id']]=result;assert result['job']==j
++        assert result['source_input_sha256']==sha(HERE/j['input'])
+         assert hashlib.sha256(result['request_utf8'].encode('utf8')).hexdigest()==result['request_sha256']
+         req=json.loads(result['request_utf8'])
+-        if job['method']=='H1':assert 'previous' not in req and req['incoming_heading']==job['heading']
++        if j['method']=='H1':assert 'previous' not in req and req['incoming_heading']==j['heading']
+         else:assert req==result['input']
+-        for path,digest in result['loaded_source_hashes'].items():assert sha(Path(path))==digest,('loaded bytes changed',path)
++        for path,digest in result['loaded_source_hashes'].items():assert sha(Path(path))==digest
+         for key,value in result['accounts'].items():accounts[key]=accounts.get(key,0)+value
+-        if slot['status']=='passed':
++        if s['status']=='passed':
+             assert result['passed'] and result['entry']['eligible'] and result['entry']['entry_seconds']<20
+-            audit=audit_output(result['input'],job['heading'],result['entry']['raw']['branches']['P0'],job['method']=='H1')
++            audit=audit_output(result['input'],j['heading'],result['entry']['raw']['branches']['P0'],j['method']=='H1')
+             assert audit==result['audit'];saved_audits+=1
+-    assert accounts.get('core_started',0)==actual_core_markers
+-    pairs=read(HERE/'54等价证据.json');diagonals=read(HERE/'16斜向技术证据.json')
+-    for item in pairs:
+-        a=outputs[f"legacy__{item['case']}__ORIGINAL"];b=outputs[f"legacy__{item['case']}__H1"]
+-        assert equivalence(a['entry']['raw']['branches']['P0'],b['entry']['raw']['branches']['P0'])
++    assert accounts.get('core_started',0)==markers_core
++    assert sum(s['status'] not in ('not_run','reused_saved_reaudited') for s in ledger)==len(started)
++    pairs=read(HERE/'54等价证据.json');diags=read(HERE/'16斜向技术证据.json')
++    for row in pairs:
++        if row['original_origin']=='v0.1_return_reaudited_v0.2':a=dict(entry=old['entry'],audit=reaudit);assert row['original_source_sha256']==sha(source) and row['same_run_timing_pair'] is False
++        else:a=outputs['legacy__'+row['case']+'__ORIGINAL']
++        b=outputs['legacy__'+row['case']+'__H1'];assert equivalence(a['entry']['raw']['branches']['P0'],b['entry']['raw']['branches']['P0'])
+         assert a['audit']['credits']==b['audit']['credits'] and a['audit']['decisions']==b['audit']['decisions']
+-    for row in diagonals:
++    for row in diags:
+         j=plan[row['slot']-1];a=outputs[row['reference_id']];b=outputs[j['id']]
+         assert equivalence(a['entry']['raw']['branches']['P0'],b['entry']['raw']['branches']['P0'])
++    accepted=len(pairs)==54 and len(diags)==16 and all(s['status']=='passed' for s in ledger[1:])
+     if (HERE/'completion_manifest.json').exists():
+         manifest=read(HERE/'completion_manifest.json')
+-        for rel,digest in manifest['files'].items():assert sha(HERE/rel)==digest,('sealed file changed',rel)
+-        # Historical snapshots only: legitimate future root progress appends are allowed.
+-        assert sha(HERE/'根进度_执行前快照.md')==manifest['root_progress_before_sha256']
+-        assert sha(HERE/'根进度_执行后快照.md')==manifest['root_progress_after_sha256']
+-    print(json.dumps(dict(passed=True,attempted_slots=len(started),warm_entries=warm_starts,accounts=accounts,
+-        legacy_pairs=len(pairs),diagonal_entries=len(diagonals),saved_independent_audits=saved_audits,
+-        this_verify_added=dict(planning_entries=0,cores=0,graph_searches=0,LOS_queries=0,route_audits=saved_audits),
+-        all_real_passed=all(x['status']=='passed' for x in ledger),
+-        live_root_equality_required=False,sealed=(HERE/'completion_manifest.json').exists()),ensure_ascii=False))
++        for rel,digest in manifest['files'].items():assert sha(HERE/rel)==digest,('sealed artifact changed',rel)
++        for stage in ('before','after'):
++            name='根进度_执行前快照.md' if stage=='before' else '根进度_执行后快照.md'
++            assert sha(HERE/name)==manifest['root_progress_'+stage+'_sha256']
++    print(json.dumps(dict(file_and_saved_audit_verification=True,acceptance_target_passed=accepted,new_attempted=len(started),new_warm_entries=warm,
++        historical_entries=1,cross_version_attempts=len(started)+1,reused_results=1,legacy_pairs=len(pairs),diagonal_entries=len(diags),new_accounts=accounts,
++        added_by_this_verify=dict(saved_route_audits=saved_audits,core_calls=0,planning_entries=0,graph_searches=0,LOS_queries=0),
++        legacy_slot1_still_failed=True,live_root_equality_required=False,sealed=(HERE/'completion_manifest.json').exists()),ensure_ascii=False))
+ 
+ if __name__=='__main__':main()

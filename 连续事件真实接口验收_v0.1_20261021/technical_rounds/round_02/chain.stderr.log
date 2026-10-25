@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\technical.py", line 171, in <module>
+    elif a[0]=='--chain':chain(a[1],Path(a[2]))
+                         ^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\technical.py", line 127, in chain
+    seal.main();run.main()
+                ^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\run.py", line 12, in main
+    save(H/'STOP.json',dict(stage='real_session',session=sj,exit_code=p.returncode,no_retry=True));raise RuntimeError(('session_technical_stop',sj['id'],p.stderr.decode('utf8',errors='replace')[-2000:]))
+                                                                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: ('session_technical_stop', 'SYNTHETIC_PPCPP', 'Traceback (most recent call last):\r\n  File "E:\\无人机研究项目_接续包_20261014\\连续事件真实接口验收_v0.1_20261021\\technical.py", line 173, in <module>\r\n    elif a[0]==\'--boot-session\':boot_session(a[1],a[2:])\r\n                                ^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File "E:\\无人机研究项目_接续包_20261014\\连续事件真实接口验收_v0.1_20261021\\technical.py", line 120, in boot_session\r\n    sys.argv=[str(f/\'session.py\')]+args;session.main()\r\n                                        ^^^^^^^^^^^^^^\r\n  File "E:\\无人机研究项目_接续包_20261014\\连续事件真实接口验收_v0.1_20261021\\session.py", line 33, in main\r\n    j=read(sys.argv[1]);assert j in read(H/\'session_order.json\');run_session(j)\r\n                                                                 ^^^^^^^^^^^^^^\r\n  File "E:\\无人机研究项目_接续包_20261014\\连续事件真实接口验收_v0.1_20261021\\session.py", line 25, in run_session\r\n    try:result=run_world(world,{sj[\'method\']:callback})\r\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File "E:\\无人机研究项目_接续包_20261014\\连续事件真实接口验收_v0.1_20261021\\executor.py", line 89, in run_world\r\n    if fatal:raise TechnicalError(fatal,safe(result))\r\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\ncontracts.TechnicalError: callback_exception\r\n')

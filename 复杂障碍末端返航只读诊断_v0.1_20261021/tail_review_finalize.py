@@ -1,0 +1,29 @@
+"""Preserve passed verification and supply a reusable read-only successor."""
+from tail_analysis import H,sha,save
+def finalize():
+    original=(H/'tail_verify.py').read_text(encoding='utf8')
+    needle="    save(H/'call_ledger.json',"
+    replacement="    if not (H/'call_ledger.json').exists():save(H/'call_ledger.json',"
+    assert original.count(needle)==1
+    successor=original.replace(needle,replacement)
+    compile(successor,str(H/'tail_verify_v02.py'),'exec')
+    with (H/'tail_verify_v02.py').open('x',encoding='utf8') as f:f.write(successor)
+    note='''# 审核与复核补充
+
+先读通俗结论.md，再读通俗结论与归因报告.md。障碍主附分层.csv/events_only_strata.json仅含12障碍状态，control另列；原timely/legal分层包含全部16状态，尺寸与进度合计包含控制，标题已明确。
+
+本轮tail_verify.py实际一次运行全部通过，verify.log及call_ledger.json保留。该首版在末尾新建实际运算账，重复运行会在账已存在时拒绝覆盖。新增tail_verify_v02.py仅将这一写账语句改为“账不存在才新建”，不改任何核验、距离/指标计算、统计或来源；便于负责人重复只读审核。后继只做语法检查，未再次执行图距离或指标复算。本次实际累计仍为32 BFS、58 Dijkstra、192末端查询；未来手工复核次数另看该次日志，不冒充包含在本次原账中。
+
+此前一条辅助编辑命令因PowerShell引号解析失败，没有写文件；随后原版封存与实际verify均通过。原脚本、原结果及原manifest保留，没有分析结果错误、求解重跑或统计变更。
+
+verification_receipt_manifest.json在实际核验后覆盖原manifest、verify.log、call_ledger、此说明、后继脚本和收尾程序hash。它不伪称在统计之前已存在，也不重新执行任何规划或图查询。
+
+负责人可运行：运行环境/python/python.exe -B -X utf8 本目录/tail_verify_v02.py。已有call_ledger保留，不改实验输出；本次重算距离运算在该次stdout中，不倒填原账。
+
+已封存，待负责人审核。不自动开发新算法。
+'''
+    with (H/'审核复核补充说明.md').open('x',encoding='utf8') as f:f.write(note)
+    names=('manifest.json','verify.log','call_ledger.json','tail_verify_v02.py','审核复核补充说明.md','tail_review_finalize.py')
+    save(H/'verification_receipt_manifest.json',{name:sha(H/name) for name in names})
+    print('Actual verification receipt + reusable one-line successor sealed. No new analysis or graph-distance calls.')
+if __name__=='__main__':finalize()

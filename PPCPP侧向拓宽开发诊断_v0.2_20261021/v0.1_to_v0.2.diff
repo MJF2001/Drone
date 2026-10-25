@@ -1,0 +1,22 @@
+--- E:\无人机研究项目_接续包_20261014\PPCPP侧向拓宽开发诊断_v0.1_20261021\analysis.py
++++ E:\无人机研究项目_接续包_20261014\PPCPP侧向拓宽开发诊断_v0.2_20261021\analysis.py
+@@ -53,7 +53,7 @@
+         rr=[r for r in rows if r['method']==method];tt=[r['seconds'] for r in rr if r['seconds'] is not None];times[method]=dict(planned=len(rr),ran=sum(r['ran'] for r in rr),valid=sum(r['valid'] for r in rr),timely=sum(r['timely'] for r in rr),late_legal=sum(r['valid'] and not r['timely'] for r in rr),no_valid_route=sum(r['ran'] and not r['valid'] for r in rr),mean=statistics.mean(tt) if tt else None,median=statistics.median(tt) if tt else None,p95=percentile(tt,.95) if tt else None,max=max(tt) if tt else None,source_counts=dict(collections.Counter(r.get('source') for r in rr if r['ran'])))
+     return normal(dict(rows=rows,pairs=pairs,views=views,signal=dict(support_groups=[g['group'] for g in support],support_geometries=geoms,lengths=lengths,widths=widths,registered_pass=passed,threshold='>=3 base geometries, >=2 lengths, both widths; every seed DH>0 and DH-DU>0; mean DH-DU>=2'),detailed_examples=selected,time_summary=times))
+ def export():
+-    a=compute();save(H/'analysis.json',a);csvsave(H/'288正式调用完整指标.csv',[{**{k:v for k,v in r.items() if k not in ('metrics','visits_A','pp_first_A_event')},**(r['metrics'] or {}),visits_A=r['visits_A'],pp_first_A_event=r['pp_first_A_event']} for r in a['rows']]);csvsave(H/'144全部配对与不可用原因.csv',a['pairs'])
++    a=compute();save(H/'analysis.json',a);csvsave(H/'288正式调用完整指标.csv',[{**{k:v for k,v in r.items() if k not in ('metrics','visits_A','pp_first_A_event')},**(r['metrics'] or {}),'visits_A':r['visits_A'],'pp_first_A_event':r['pp_first_A_event']} for r in a['rows']]);csvsave(H/'144全部配对与不可用原因.csv',a['pairs'])
+     for name,v in a['views'].items():
+         csvsave(H/f'{name}_48状态三种子均值范围.csv',v['states']);csvsave(H/f'{name}_12匹配组信号.csv',v['groups']);csvsave(H/f'{name}_逐seed位置控制对比.csv',v['contrasts']);csvsave(H/f'{name}_分层.csv',[dict(dimension=d,value=value,**row) for d,vs in v['strata'].items() for value,row in vs.items()])
+     save(H/'signal.json',a['signal']);save(H/'detailed_example_selection.json',a['detailed_examples']);print(json.dumps(dict(main={z:a['views']['timely'][z] for z in ('all','events','controls')},signal=a['signal'],times=a['time_summary']),ensure_ascii=False),flush=True)
+--- E:\无人机研究项目_接续包_20261014\PPCPP侧向拓宽开发诊断_v0.1_20261021\verify.py
++++ E:\无人机研究项目_接续包_20261014\PPCPP侧向拓宽开发诊断_v0.2_20261021\verify.py
+@@ -48,7 +48,7 @@
+         if A:
+             first={p:r.index(p) for p in A};assert v['first_A_capture']==min(first.values()) and v['A_completion']==max(first.values());flags=[p in A for p in r];starts=[i for i,inside in enumerate(flags) if inside and (i==0 or not flags[i-1])];ends=[i for i,inside in enumerate(flags) if inside and (i+1==len(r) or not flags[i+1])];assert [(z['start'],z['end']) for z in v['visits']]==list(zip(starts,ends));unfinished=[e for e in ends if e+1<len(r) and A-set(r[:e+1])];assert len(unfinished)==len(v['unfinished_exits']);assert v['old_remaining_at_A_completion']==len((rect(4,4,st['L'],st['w'])-set(map(tuple,c['covered'])))-set(r[:max(first.values())+1]))
+         else:assert v['classification']=='not_applicable'
+-    csvcheck('288正式调用完整指标.csv',[{**{k:v for k,v in r.items() if k not in ('metrics','visits_A','pp_first_A_event')},**(r['metrics'] or {}),visits_A=r['visits_A'],pp_first_A_event=r['pp_first_A_event']} for r in a['rows']]);csvcheck('144全部配对与不可用原因.csv',a['pairs'])
++    csvcheck('288正式调用完整指标.csv',[{**{k:v for k,v in r.items() if k not in ('metrics','visits_A','pp_first_A_event')},**(r['metrics'] or {}),'visits_A':r['visits_A'],'pp_first_A_event':r['pp_first_A_event']} for r in a['rows']]);csvcheck('144全部配对与不可用原因.csv',a['pairs'])
+     for name,v in a['views'].items():
+         csvcheck(f'{name}_48状态三种子均值范围.csv',v['states']);csvcheck(f'{name}_12匹配组信号.csv',v['groups']);csvcheck(f'{name}_逐seed位置控制对比.csv',v['contrasts']);csvcheck(f'{name}_分层.csv',[dict(dimension=d,value=value,**row) for d,vs in v['strata'].items() for value,row in vs.items()])
+     assert read(H/'signal.json')==a['signal'] and read(H/'detailed_example_selection.json')==a['detailed_examples'];assert BFS==read(H/'generation_ledger.json')['ordinary_BFS']==24

@@ -1,0 +1,51 @@
+{
+  "classes": {
+    "G01": [
+      "east",
+      "north",
+      "west",
+      "south"
+    ],
+    "G02": [
+      "NE",
+      "SE",
+      "NW",
+      "SW"
+    ],
+    "G03": [
+      "integer_scale",
+      "rational_scale",
+      "non_equal_components"
+    ],
+    "G04": [
+      "axial_reverse",
+      "diagonal_reverse"
+    ],
+    "G05": [
+      "symmetric_exact_tie",
+      "sub_float_non_tie",
+      "whole_score_before_heading",
+      "square_norm_tie"
+    ],
+    "G06": [
+      "no_motion",
+      "unknown",
+      "invalid_vectors",
+      "missing_evidence"
+    ],
+    "G07": [
+      "known_zero_edge",
+      "no_motion_zero_edge",
+      "rational_wait"
+    ],
+    "G08": [
+      "bend_with_zero",
+      "recovery_then_score"
+    ]
+  },
+  "cases": 26,
+  "max_cases_per_class": 4,
+  "max_rounds": 3,
+  "expected": "G01 exact axis 1/.5/0; G02 diagonal B=sign component,N=2; G03 canonical direction/score/winner invariant; G04 rs(h)+rs(-h)=1; G05 exact ties use coordinate and distinct sub-float scores do not tie, full score priority and square norm; G06 no-motion rs0, UNKNOWN/invalid/no source rejected; G07 zero edge preserves state; G08 last nonzero edge controls next score.",
+  "real_planner_calls": 0
+}

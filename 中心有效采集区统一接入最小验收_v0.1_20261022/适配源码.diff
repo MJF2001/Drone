@@ -1,0 +1,607 @@
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\loop_utils.py
++++ center_credit_v01_20261022\utils.py
+@@ -3,7 +3,7 @@
+ from fractions import Fraction
+ import json, hashlib
+ 
+-HERE = Path(__file__).resolve().parent
++HERE = Path(__file__).resolve().parents[1]
+ ROOT = HERE.parent
+ 
+ def read(path):
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\public_contract.py
++++ center_credit_v01_20261022\public_contract.py
+@@ -1,8 +1,8 @@
+ """Dynamic public state adapter; approved arithmetic and known-heading selector reused."""
+ from fractions import Fraction as Q
+-from exact import Expr,Refusal,point,pt,rat,certificate
+-from connector import parse as known_parse,select as known_select,cellset,cells
+-import geometry
++from .exact import Expr,Refusal,point,pt,rat,certificate
++from .connector import parse as known_parse,select as known_select,cellset,cells
++from . import geometry
+ 
+ def state_save(s):
+     return {'S':pt(s['S']),'h':None if s['h'] is None else pt(s['h']),
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\pipeline.py
++++ center_credit_v01_20261022\pipeline.py
+@@ -3,11 +3,11 @@
+ from copy import deepcopy
+ from fractions import Fraction
+ import json, time
+-from common import HERE, sha
+-from exact import Expr, Refusal, point, pt, distance, certificate
+-from connector import collect, credit_move, cells
+-from public_contract import parse, select, state_save, heading as make_heading
+-import geometry
++from .utils import HERE, sha
++from .exact import Expr, Refusal, point, pt, distance, certificate
++from .connector import collect, credit_move, cells
++from .public_contract import parse, select, state_save, heading as make_heading
++from . import geometry
+ 
+ class PipelineStop(RuntimeError):
+     pass
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\connector.py
++++ center_credit_v01_20261022\connector.py
+@@ -3,8 +3,8 @@
+ from copy import deepcopy
+ from functools import cmp_to_key
+ from fractions import Fraction as Q
+-from exact import Expr, Refusal, Uncertain, point, pt, rat, squared, distance, certificate
+-import geometry as geo
++from .exact import Expr, Refusal, Uncertain, point, pt, rat, squared, distance, certificate
++from . import geometry as geo
+ 
+ def cellset(x):
+     if not isinstance(x, (list, tuple)):
+@@ -47,26 +47,7 @@
+         raise Refusal('unsafe_given_stop')
+     return s
+ 
+-def credit_move(s, a, b, c, phase):
+-    events = []
+-    for p in sorted(s['P'] & s['F'] - s['H']):
+-        t = geo.hit(a, b, p, c, phase)
+-        if t is not None and t > 0:
+-            events.append((t, p))
+-    events.sort()
+-    for t, p in events:
+-        s['H'].add(p)
+-    s['D'] = s['P']-s['F']-s['H']
+-    return [{'kind': 'arrival', 't': rat(t), 'cell': list(map(int, p))} for t, p in events]
+-
+-def collect(s, c, phase):
+-    c[phase+'_collect_here'] += 1
+-    p = s['S']
+-    if p in s['P'] & s['F'] - s['H']:
+-        s['H'].add(p)
+-        s['D'] = s['P']-s['F']-s['H']
+-        return [{'kind': 'collect_here', 'cell': list(map(int, p))}]
+-    return []
++from .service import collect,credit_move
+ 
+ def select(s, c):
+     c['selector'] += 1
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\executor.py
++++ center_credit_v01_20261022\executor.py
+@@ -3,16 +3,19 @@
+ from copy import deepcopy
+ from collections import Counter
+ import json,hashlib
+-from exact import Expr,point,pt,rat,distance,certificate
+-from connector import cellset,cells
+-from public_contract import state_save
+-import geometry,detector
++from .exact import Expr,point,pt,rat,distance,certificate
++from .connector import cellset,cells
++from .public_contract import state_save
++from . import geometry,detector
+ 
+ def digest(x):
+     return hashlib.sha256(json.dumps(x,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()).hexdigest()
+ 
++from .service import collect,credit_move
++
+ class Executor:
+-    def __init__(self,public,private,writer=None,initial=None):
++    def __init__(self,public,private,writer=None,initial=None,technical=False):
++        self.technical=technical
+         self.nominal=cellset(public['F_nominal'])
+         self.truth=cellset(private['O_truth'])
+         assert len(self.truth)==1 and self.truth<=self.nominal
+@@ -73,10 +76,12 @@
+         return self.append({'kind':'plan_wait','plan_id':plan_id,'before':before,'after':self.snapshot(),
+               'predicted_route':route,'plan_output_sha256':source_hash,'fixed_stub':stub})
+ 
+-    def action(self,kind,to=None):
++    def action(self,kind,to=None,before_event=False):
+         self.counts['execution_action_calls']+=1
+-        if self.counts['execution_action_calls']>204:
++        if self.counts['execution_action_calls']>212:
+             raise RuntimeError('execution_action_cap')
++        assert self.technical or not before_event
++        assert kind in ('move','collect_here')
+         before=self.snapshot()
+         a=self.s['S']
+         b=a if kind=='collect_here' else point(to)
+@@ -99,19 +104,14 @@
+             raise RuntimeError('nonzero_execution_segment_cap')
+         if not geometry.legal(self.nominal-self.truth,a,stop,self.counts,'execution_truth'):
+             raise RuntimeError('actual_prefix_not_truth_safe')
++        self.s['S']=a
++        end_open=probe['kind']=='detected' or before_event
+         credits=[]
+         if kind=='collect_here':
+-            self.counts['explicit_collect_checks']+=1
+-            if probe['kind']!='detected' and a in self.s['P']&self.s['F']-self.s['H']:
+-                credits=[{'kind':'collect_here','cell':list(map(int,a)),'t':rat(0)}]
++            if probe['kind']!='detected':
++                credits=collect(self.s,self.counts,'execution')
+         else:
+-            for cell in sorted(self.s['P']&self.s['F']-self.s['H']):
+-                hit=geometry.hit(a,b,cell,self.counts,'execution')
+-                if hit is not None and hit>0 and (hit<t if probe['kind']=='detected' else hit<=t):
+-                    credits.append({'kind':'arrival','cell':list(map(int,cell)),'t':rat(hit)})
+-            credits.sort(key=lambda x:(Q(x['t']['n'],x['t']['d']),x['cell']))
+-        for credit in credits:
+-            self.s['H'].add(tuple(credit['cell']))
++            credits=credit_move(self.s,a,stop,self.counts,'execution',end_open)
+         if a!=stop:
+             self.nonzero_segments+=1
+             self.s['h']=tuple(v-w for v,w in zip(stop,a))
+@@ -125,12 +125,29 @@
+         self.refresh()
+         record.update(status='detected' if probe['kind']=='detected' else 'committed',
+                       actual=[pt(a),pt(stop)],stop_parameter=rat(t),credits=credits,
+-                      distance=certificate(length),squared_source=square,after=self.snapshot())
++                      distance=certificate(length),squared_source=square,prefix_end_open=end_open,after=self.snapshot())
+         return self.append(record)
++
++    def publish(self,targets=(),blocked=()):
++        assert self.technical,'no real expansion/event extension'
++        before=self.snapshot()
++        extra=cellset(targets);new=cellset(blocked)
++        assert extra<=self.nominal and new<=self.nominal
++        self.s['P']|=extra
++        self.truth|=new
++        self.known|=new
++        self.refresh()
++        self.counts['technical_publications']+=1
++        return self.append({'kind':'technical_publish','targets':cells(extra),'blocked':cells(new),
++                            'before':before,'after':self.snapshot(),'status':'published',
++                            'ordering':'settled_prefix_then_publish_then_explicit_collection'})
+ 
+     def execute(self,route):
+         points=[point(p) for p in route]
+         assert points and points[0]==self.s['S']
++        collected=self.action('collect_here')
++        if collected['status']!='committed':
++            return collected['status']
+         for endpoint in points[1:]:
+             record=self.action('move',pt(endpoint))
+             if record['status']!='committed':
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\postsrc\engine.py
++++ center_credit_v01_20261022\post\engine.py
+@@ -2,7 +2,8 @@
+ import json,time,math
+ from decimal import Decimal
+ from collections import Counter
+-import geometry as G
++from . import geometry as G
++from .. import service as C
+ 
+ def ps(x):return set(map(tuple,x))
+ 
+@@ -19,16 +20,26 @@
+     f=[v['index'] for v in first]
+     return [(0,f[0],'start_to_first')]+[(a,b,'between_first_services') for a,b in zip(f,f[1:])]+[(f[-1],n,'last_to_base')]
+ 
+-def credits(path,U,counters,hit):
++def credits(path,U,counters):
+     seen=set();out=[]
+-    if path[0] in U:seen.add(path[0]);out.append({'point':list(path[0]),'edge':-1,'t':'0'})
++    for p in sorted(U):
++        if C.inside(path[0],p,counters,'post'):
++            seen.add(p)
++            out.append({'point':list(p),'edge':-1,'collect_here':True,
++                        'witness':{'t':C.rat(0),'point':C.pt(path[0])}})
+     for k,(a,b) in enumerate(zip(path,path[1:])):
+-        hits=[]
++        found=[]
+         for p in sorted(U):
+-            counters['service_intersections']+=1;t=hit(a,b,p)
+-            if t is not None and p not in seen:hits.append((t,p))
+-        for t,p in sorted(hits):
+-            if p not in seen:out.append({'point':list(p),'edge':k,'t':str(t)});seen.add(p)
++            counters['service_intersections']+=1
++            evidence=C.intersection(a,b,p,counters,'post')
++            if evidence is not None and p not in seen:
++                t=evidence['witness']['t'];found.append((None,p,evidence))
++        # Exact order is diagnostic witness order, not a claimed first internal time.
++        from fractions import Fraction
++        found.sort(key=lambda z:(Fraction(z[2]['witness']['t']['n'],z[2]['witness']['t']['d']),z[1]))
++        for _,p,evidence in found:
++            if p not in seen:
++                out.append({'point':list(p),'edge':k,'evidence':evidence});seen.add(p)
+     assert seen==U,('missing_credit',U-seen)
+     return out
+ 
+@@ -68,7 +79,7 @@
+     times['candidate']=time.perf_counter()-phase;phase=time.perf_counter()
+     output=[path[0]]+[tuple(e['b']) for e in edges]
+     for a,b in zip(output,output[1:]):counts['output_validation']+=1;assert G.legal(F,a,b)
+-    credited=credits(output,U,counts,G.hit);bounds=G.interval(output);lo,hi=map(Decimal,bounds);E=Decimal(str(c['distance_budget']))
++    credited=credits(output,U,counts);bounds=G.interval(output);lo,hi=map(Decimal,bounds);E=Decimal(str(c['distance_budget']))
+     assert hi<=Decimal(n) and hi<=E,('length_or_resource_interval',bounds,n,str(E))
+     assert len(edges)<=n and counts['candidate']<=limit and counts['service_intersections']<=n*len(U)
+     for p in partdata:p['L4']=p['right']-p['left'];p['new_interval']=G.interval([path[p['left']]]+[tuple(e['b']) for e in edges[p['edge_start']:p['edge_end']]])
+@@ -76,7 +87,7 @@
+     for p in partdata:
+         for k in range(p['left'],p['right']):
+             ts=[t for t in trace if t['index']<=k];tr=ts[-1]['kind'] if ts else 'unavailable';cross[p['kind']+' x '+tr]+=1
+-    r={'id':o['id'],'L4':n,'Lshortcut_interval':bounds,'Lshortcut_display':float((lo+hi)/2),'saving_display':float(Decimal(n)-(lo+hi)/2),'saving_ratio_display':float((Decimal(n)-(lo+hi)/2)/n) if n else 0.,'distance_budget':c['distance_budget'],'resource_proof':'source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E','vertices':output,'edges':edges,'parts':partdata,'first_original':first,'first_actual':credited,'actual_order_changed':[v['point'] for v in first]!=[v['point'] for v in credited],'trace_cross_original_moves':dict(cross),'counts':dict(counts),'query_log':querylog,'fallback':fallback,'turns_original':turns(path),'turns_new':turns(output),'timing':times}
++    r={'id':o['id'],'L4':n,'Lshortcut_interval':bounds,'Lshortcut_display':float((lo+hi)/2),'saving_display':float(Decimal(n)-(lo+hi)/2),'saving_ratio_display':float((Decimal(n)-(lo+hi)/2)/n) if n else 0.,'distance_budget':c['distance_budget'],'resource_proof':'source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E','vertices':output,'edges':edges,'parts':partdata,'locked_nominal_anchors':first,'credit_witnesses':credited,'witness_order_differs_from_locked_anchors':[v['point'] for v in first]!=[v['point'] for v in credited],'trace_cross_original_moves':dict(cross),'counts':dict(counts),'query_log':querylog,'fallback':fallback,'turns_original':turns(path),'turns_new':turns(output),'timing':times}
+     times['main_validation_metrics']=time.perf_counter()-phase;phase=time.perf_counter();encoded=json.dumps(r,ensure_ascii=False,separators=(',',':'));times['encoding']=time.perf_counter()-phase
+     # Return a fully encoded artifact plus an external timing envelope; encoding is inside the budget.
+     elapsed=time.perf_counter()-start
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\observe.py
++++ center_credit_v01_20261022\observe.py
+@@ -2,7 +2,7 @@
+ from collections import Counter
+ from pathlib import Path
+ import time, json
+-from pipeline import PipelineStop
++from .pipeline import PipelineStop
+ 
+ class Recorder:
+     def __init__(self, h1, p2, engine, marker):
+@@ -20,7 +20,7 @@
+                       h1.native.reward_options.__code__: 'reward', h1.native.choose_neighbor.__code__: 'selection',
+                       h1.native.parse_heading.__code__: 'heading_parse', h1.native.after_edge.__code__: 'heading_update',
+                       engine.process.__code__: 'post_entry', engine.G.legal.__code__: 'post_geometry',
+-                      engine.G.hit.__code__: 'post_hit', engine.G.interval.__code__: 'post_interval'}
++                      engine.C.intersection.__code__: 'post_hit', engine.G.interval.__code__: 'post_interval'}
+         self.lines = {}
+         patterns = {'context': {'start': 'queue = deque([snapshot.current])', 'done': 'self.views = {}'},
+                     'distance': {'start': 'ds={a:0};queue=deque([a])', 'done': 'self.bfs_rows_built+=1'},
+@@ -54,6 +54,8 @@
+         if event == 'call':
+             kind = self.codes.get(code)
+             if kind is None:
++                return None
++            if kind=='post_hit' and frame.f_locals.get('phase')!='post':
+                 return None
+             row = {'kind': kind, 'started': False, 'done': False}
+             self.rows[id(frame)] = row
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\diagonal_loop_audit_v01_20261022\_post_saved.py
++++ center_credit_v01_20261022\audit\_post_saved.py
+@@ -8,6 +8,7 @@
+ import hashlib,json,time,math
+ from collections import Counter
+ from . import _post_geometry as A
++from . import region as Z
+ H=Path(__file__).resolve().parent
+ def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+ def read(p):return json.loads(p.read_text(encoding='utf-8-sig'))
+@@ -18,10 +19,12 @@
+     for k,p in enumerate(path):
+         p=tuple(p)
+         if p in U and p not in seen:seen.add(p);original.append({'point':list(p),'index':k})
+-    assert seen==U and original==r['first_original']
++    assert seen==U and original==r['locked_nominal_anchors']
+     expected_cuts=([0]+[x['index'] for x in original]+[n]) if original else [0,n];assert len(r['parts'])==len(expected_cuts)-1
+     cursor=0;sum_sq=[];bykind=Counter();credit_candidates={};points=[tuple(p) for p in v]
+-    if points[0] in U:credit_candidates[points[0]]=(-1,Fraction(0))
++    for p in sorted(U):
++        if Z.internal(points[0],p,counts):
++            credit_candidates[p]=(-1,Fraction(0),None)
+     for k,e in enumerate(r['edges']):
+         left,right=e['left'],e['right'];assert left==cursor and left<right<=n;cursor=right;assert e['a']==path[left]==v[k] and e['b']==path[right]==v[k+1]
+         p=r['parts'][e['part']];assert p['left']<=left<right<=p['right'];assert p['edge_start']<=k<p['edge_end'];assert e['kind']==p['kind']
+@@ -29,13 +32,22 @@
+         # Independent credit algorithm records the lexicographically earliest
+         # (edge, rational parameter) per task, rather than primary's seen sweep.
+         for q in sorted(U):
+-            counts['service_intersections']+=1;t=A.hit(points[k],points[k+1],q)
+-            if t is not None:
+-                when=(k,t)
+-                if q not in credit_candidates or when<credit_candidates[q]:credit_candidates[q]=when
++            counts['service_intersections']+=1
++            evidence=Z.intersection(points[k],points[k+1],q,counts)
++            if evidence is not None:
++                rtime=evidence['witness']['t'];when=(k,Fraction(rtime['n'],rtime['d']),evidence)
++                if q not in credit_candidates or when[:2]<credit_candidates[q][:2]:
++                    credit_candidates[q]=when
+         sq=sum((a-b)**2 for a,b in zip(v[k],v[k+1]));assert sq<=(right-left)**2;sum_sq.append(sq)
+     assert cursor==n or n==0;assert set(credit_candidates)==U
+-    actual=[{'point':list(p),'edge':when[0],'t':str(when[1])} for p,when in sorted(credit_candidates.items(),key=lambda z:(z[1],z[0]))];assert actual==r['first_actual'];assert r['actual_order_changed']==([x['point'] for x in original]!=[x['point'] for x in actual])
++    actual=[]
++    for p,when in sorted(credit_candidates.items(),key=lambda z:(z[1][:2],z[0])):
++        if when[0]==-1:
++            actual.append({'point':list(p),'edge':-1,'collect_here':True,'witness':{'t':Z.rat(Fraction(0)),'point':Z.pt(points[0])}})
++        else:
++            actual.append({'point':list(p),'edge':when[0],'evidence':when[2]})
++    assert actual==r['credit_witnesses']
++    assert r['witness_order_differs_from_locked_anchors']==([x['point'] for x in original]!=[x['point'] for x in actual])
+     def bounds(squares):
+         with localcontext() as cx:
+             cx.prec=60;lo=hi=Decimal(0)
+@@ -58,7 +70,7 @@
+     assert dict(cross)==r['trace_cross_original_moves']
+     assert r['counts']['candidate']==len(r['query_log'])<=job['limits']['candidate_geometry'];assert r['counts']['source_validation']==n;assert r['counts']['output_validation']==len(r['edges']);assert r['counts']['service_intersections']==len(r['edges'])*len(U)
+     assert counts['geometry']<=job['limits']['independent_geometry'] and counts['service_intersections']<=job['limits']['independent_service_intersections']
+-    return {'passed':True,'id':job['id'],'input_sha256':hashlib.sha256(payload_bytes).hexdigest(),'output_sha256':hashlib.sha256(output_bytes).hexdigest(),'counts':dict(counts),'seconds':time.perf_counter()-start,'independent_length_interval':[str(lo),str(hi)],'geometry_method':'closed forbidden squares exact slab intersection; bounding-box exterior forbidden','service_method':'earliest exact coordinate-parameter intersection per task'}
++    return {'passed':True,'id':job['id'],'input_sha256':hashlib.sha256(payload_bytes).hexdigest(),'output_sha256':hashlib.sha256(output_bytes).hexdigest(),'counts':dict(counts),'seconds':time.perf_counter()-start,'independent_length_interval':[str(lo),str(hi)],'geometry_method':'closed forbidden squares exact slab intersection; bounding-box exterior forbidden','service_method':'independent strict-region boundary partition and interior witness per task'}
+ def main():
+     for p,v in read(H/'frozen_manifest.json')['files'].items():assert sha(H/p)==v,p
+     for p,v in read(H/'来源hash.json').items():assert sha(Path(p))==v,p
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\diagonal_loop_audit_v01_20261022\_audit.py
++++ center_credit_v01_20261022\audit\_audit.py
+@@ -7,6 +7,7 @@
+ from . import _geometry as A
+ from . import _h1 as h1_audit
+ from . import _detect as T
++from . import region as Z
+ 
+ def load_auditor():
+     from . import _post_saved
+@@ -38,13 +39,13 @@
+     path=[A.pos(p) for p in saved['points']]
+     assert path and path[0]==s['S'] and path[-1]==s['base']
+     f=deepcopy(s)
+-    events,total,squares=A.collect(f),{},[]
++    events,total,squares=Z.collect(f,c),{},[]
+     for a,b in zip(path,path[1:]):
+         assert A.legal(s['F'],a,b,c)
+         length,sq=A.metric(a,b,c)
+         total=A.add(total,length)
+         squares.append(sq)
+-        events+=A.service(f,a,b,c)
++        events+=Z.service(f,a,b,c)
+         if a!=b:
+             f['h']=(b[0]-a[0],b[1]-a[1])
+     assert not(s['P']&s['F']-f['H']) and A.sign(A.add(s['E'],total,-1))>=0
+@@ -97,7 +98,7 @@
+     A.certified(result['gamma_length'],gamma)
+     assert [A.pos(p) for p in result['gamma']]==[s['S'],q]
+     pred=deepcopy(s)
+-    events=A.collect(pred)+A.service(pred,s['S'],q,c)
++    events=Z.collect(pred,c)+Z.service(pred,s['S'],q,c)
+     pred['h']=(q[0]-s['S'][0],q[1]-s['S'][1]) if q!=s['S'] else s['h']
+     pred['S'],pred['E'],pred['M']=q,A.add(s['E'],gamma,-1),A.add(s['M'],gamma)
+     check_state(result['predicted_entry'],pred)
+@@ -150,6 +151,8 @@
+     c['independent_frozen_post_audits']+=1
+     c['independent_geometry']+=post_receipt['counts']['geometry']
+     c['independent_service_intersections']+=post_receipt['counts']['service_intersections']
++    for key in ('independent_region_point_tests','independent_region_boundary_parameters'):
++        c[key]+=post_receipt['counts'].get(key,0)
+     short=[A.pos(p,True) for p in post['vertices']]
+     full=([s['S']] if s['S']!=q else [])+short
+     assert [A.pos(p) for p in result['full_route']]==full
+@@ -175,8 +178,9 @@
+     assert A.cellset(saved['known'])==known and saved['last_motion']==last_motion
+     assert saved['event_count']==event_count and saved['nonzero_segments']==nonzero
+ 
+-def audit_execution(public,private,initial,records,final,plans=None,technical=False):
+-    c=Counter(independent_execution_audits=1)
++def audit_execution(public,private,initial,records,final,plans=None,technical=False,counts=None):
++    c=Counter() if counts is None else counts
++    c['independent_execution_audits']+=1
+     nominal=A.cellset(public['F_nominal'])
+     truth=A.cellset(private['O_truth'])
+     known=A.cellset(initial['known'])
+@@ -191,6 +195,7 @@
+     nonzero=initial['nonzero_segments']
+     tail='0'*64
+     detections=[]
++    offcenter=[]
+     waits=[]
+     for index,record in enumerate(records):
+         c['independent_action_log_checks']+=1
+@@ -218,6 +223,16 @@
+             waits.append(record['plan_id'])
+             tail=computed
+             continue
++        if record['kind']=='technical_publish':
++            assert technical
++            s['P']|=A.cellset(record['targets'])
++            new=A.cellset(record['blocked'])
++            truth|=new;known|=new
++            s['F']=nominal-known;s['D']=s['P']-s['F']-s['H']
++            ledger_snapshot_check(record['after'],s,known,last_motion,event_count,nonzero)
++            assert record['status']=='published'
++            tail=computed
++            continue
+         c['independent_execution_commits_checked']+=1
+         a,b=[A.pos(p) for p in record['proposed']]
+         assert a==s['S']
+@@ -241,20 +256,24 @@
+             tail=computed
+             continue
+         assert A.legal(nominal-truth,a,stop,c),'committed_actual_prefix_not_truth_safe'
+-        credits=[]
++        end_open=record['prefix_end_open']
++        assert technical or end_open==(kind=='detected')
+         if record['kind']=='collect_here':
+             assert a==b
+-            if kind!='detected' and a in s['P']&s['F']-s['H']:
+-                credits=[{'kind':'collect_here','cell':list(map(int,a)),'t':{'n':0,'d':1}}]
++            credits=[] if kind=='detected' else Z.collect(s,c)
+         else:
+             assert record['kind']=='move'
+-            for target in sorted(s['P']):
+-                hit=A.hit(a,b,target,c)
+-                if target in s['F'] and target not in s['H'] and hit is not None and hit>0 and (hit<stop_t if kind=='detected' else hit<=stop_t):
+-                    credits.append({'kind':'arrival','cell':list(map(int,target)),'t':{'n':hit.numerator,'d':hit.denominator}})
+-            credits.sort(key=lambda x:(A.number(x['t']),x['cell']))
++            credits=Z.service(s,a,stop,c,end_open)
+         assert credits==record['credits']
+         for credit in credits:
++            if record['kind']=='move':
++                p=tuple(credit['cell'])
++                dx,dy=stop[0]-a[0],stop[1]-a[1]
++                x,y=p[0]-a[0],p[1]-a[1]
++                c['independent_legacy_center_controls']+=1
++                center=(dx*y==dy*x and 0<=x*dx+y*dy<=dx*dx+dy*dy)
++                if not center and dx and dy:
++                    offcenter.append({'action_index':index,'cell':credit['cell'],'evidence':credit['evidence']})
+             s['H'].add(tuple(credit['cell']))
+         if a!=stop:
+             nonzero+=1
+@@ -278,12 +297,13 @@
+         tail=computed
+     ledger_snapshot_check(final,s,known,last_motion,event_count,nonzero)
+     completed=s['S']==s['base'] and not(s['P']&s['F']-s['H'])
+-    assert not(s['H']&truth),'blocked_target_credited'
++    if not technical:
++        assert not(s['H']&truth),'blocked_target_credited'
+     if completed:
+         assert not(s['P']-truth-s['H']),'true_serviceable_coverage_missing'
+     return {'passed':True,'counts':dict(c),'completed':completed,'detections':detections,
+             'interior_diagonal_detections':sum(x['interior_diagonal'] for x in detections),
+-            'covered':len(s['H']),'deferred_known':len(s['D']),'deferred_truth':len(s['P']&truth),
++            'diagonal_offcenter_credits':offcenter,'covered':len(s['H']),'deferred_known':len(s['D']),'deferred_truth':len(s['P']&truth),
+             'pending_known':len(s['P']&s['F']-s['H']),'nonzero_segments':nonzero,
+             'actual_length_exact':{'terms':[{'r':r,'c':{'n':v.numerator,'d':v.denominator}}
+                                  for r,v in sorted(s['M'].items()) if v]},
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\worker.py
++++ center_credit_v01_20261022\worker.py
+@@ -1,10 +1,10 @@
+ """One real session once. Truth never enters the public planning request."""
+ from collections import Counter
+ import sys,json,traceback,time
+-from loop_utils import HERE,read,dump,sha,now,evidence
+-from pipeline import run
+-from executor import Executor
+-from context import prepare_context,stable_context
++from .utils import HERE,read,dump,sha,now,evidence
++from .pipeline import run
++from .executor import Executor
++from .context import prepare_context,stable_context
+ 
+ def main(job_id):
+     reg=read(HERE/'registration.json')
+@@ -33,7 +33,7 @@
+         result.update(public_initial=public,private_truth_file='worlds_private/'+job['world']+'.json',initial=ex.initial)
+         assert ex.action('collect_here')['status']=='committed'
+         plans={}
+-        from observe import Recorder
++        from .observe import Recorder
+         for index in range(2):
+             ident=job_id+'_plan_'+str(index+1)
+             plan_file=HERE/'outputs'/(ident+'.json')
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\control.py
++++ center_credit_v01_20261022\control.py
+@@ -1,12 +1,13 @@
+ """Freeze gates, then dispatch six sessions once; stop on the first exception."""
+ from pathlib import Path
+ import sys,subprocess,json,ast
+-from loop_utils import HERE,ROOT,read,dump,sha,now
++from .utils import HERE,ROOT,read,dump,sha,now
+ 
+ def frozen_files():
+-    paths=list(HERE.rglob('*.py'))+[HERE/'registration.json',HERE/'bindings.json',HERE/'audit_expected_identity.json',
+-          HERE/'external_source_guards.json',HERE/'old_files.json',HERE/'合同与查询上限.md',HERE/'动态状态接入适配.diff',
+-          HERE/'管线数值审核与预算未改.json',HERE/'source_snapshot/执行稿.md']
++    paths=list(HERE.rglob('*.py'))+[HERE/'registration.json',HERE/'source_bindings.json',HERE/'namespace_expected.json',
++          HERE/'external_source_guards.json',HERE/'old_files.json',HERE/'统一信用合同与上限.md',HERE/'适配源码.diff',
++          HERE/'保留机制源码段.json',HERE/'source_snapshot/执行稿.md']
++    paths+=list((HERE/'source_snapshot').glob('*.md'))
+     paths+=list((HERE/'worlds_public').glob('*.json'))+list((HERE/'worlds_private').glob('*.json'))
+     return {str(p.relative_to(HERE)):sha(p) for p in sorted(set(paths))}
+ 
+@@ -43,12 +44,12 @@
+     passed=[p for p in (HERE/'technical_rounds').glob('round_*/receipt.json') if read(p)['passed']]
+     assert len(passed)==1
+     receipts=list((HERE/'technical_rounds').glob('round_*/receipt.json'))
+-    assert len(receipts)<=2 and sum(len(read(p)['sessions']) for p in receipts)<=24
+-    assert len(read(passed[0])['sessions'])==12
++    assert len(receipts)<=2 and sum(len(read(p)['sessions']) for p in receipts)<=48
++    assert len(read(passed[0])['sessions'])==len(read(HERE/'registration.json')['technical_fixtures'])
+     dump(HERE/'real_freeze.json',{'utc':now(),'files':frozen_files(),'technical_pass':str(passed[0].relative_to(HERE)),
+          'technical_receipt_sha256':sha(passed[0]),'worlds_unchanged':all(
+              sha(HERE/k)==v for k,v in read(HERE/'technical_freeze.json')['files'].items()
+-             if k.startswith(('worlds_public/','worlds_private/')) or k=='registration.json')})
++             if k.replace('\\','/').startswith(('worlds_public/','worlds_private/')) or k=='registration.json')})
+     assert read(HERE/'real_freeze.json')['worlds_unchanged']
+ 
+ def real():
+@@ -58,7 +59,7 @@
+     receipt={'utc':now(),'attempted':[],'not_run':[],'stopped_on_exception':False,'core_calls':0}
+     for i,job in enumerate(reg['jobs']):
+         try:
+-            done=subprocess.run([sys.executable,'-B','-X','utf8',str(HERE/'worker.py'),job['id']],cwd=ROOT,
++            done=subprocess.run([sys.executable,'-B','-X','utf8',str(HERE/'run_center.py'),'worker',job['id']],cwd=ROOT,
+                          capture_output=True,text=True,encoding='utf-8',timeout=105)
+             (HERE/'logs'/(job['id']+'_worker_stdout.log')).write_text(done.stdout,encoding='utf-8')
+             (HERE/'logs'/(job['id']+'_worker_stderr.log')).write_text(done.stderr,encoding='utf-8')
+
+--- E:\无人机研究项目_接续包_20261014\斜向执行障碍发现首次闭环_v0.1_20261022\verify.py
++++ center_credit_v01_20261022\verify.py
+@@ -2,10 +2,11 @@
+ from collections import Counter
+ from pathlib import Path
+ import sys,json,traceback,time
+-from loop_utils import HERE,ROOT,read,dump,sha,now,evidence
+-from pipeline import grid
+-from executor import Executor
+-from audit_binding import bind
++from .utils import HERE,ROOT,read,dump,sha,now,evidence
++from .pipeline import grid
++from .executor import Executor
++from .context import bind_saved as bind
++from .audit.pure import audit_entry,audit_forecast
+ 
+ def forbidden(frame,event,arg):
+     if event=='call' and frame.f_code.co_name in ('solve','run_payload','process','core_route','select','known_select','run'):
+@@ -29,14 +30,14 @@
+             assert sha(HERE/relative)==digest,('real_frozen_file_changed',relative)
+         for path,digest in read(HERE/'external_source_guards.json').items():
+             assert sha(path)==digest,('old_source_or_data_changed',path)
+-        for b in read(HERE/'bindings.json'):
+-            assert sha(ROOT/b['source'])==sha(HERE/b['copy'])==b['sha256']
++        for b in read(HERE/'source_bindings.json'):
++            assert sha(b['source'])==b['source_sha256']
+         binding=bind()
+         identity=binding.assert_stable()
+         sys.settrace(forbidden)
+         reg=read(HERE/'registration.json')
+         for file in sorted((HERE/'technical_rounds').glob('round_*/*.json')):
+-            if file.name in ('receipt.json','source_hashes.json'):
++            if file.name in ('receipt.json','source_hashes.json','preparation.json'):
+                 continue
+             saved=read(file)
+             if not saved['passed']:
+@@ -45,6 +46,20 @@
+             case=saved['case']
+             receipt=binding.package.audit_execution(case['public'],case['private'],saved['initial'],saved['records'],saved['final'],technical=True)
+             c.update(receipt['counts'])
++            if 'entry_prediction' in saved:
++                audit_entry(saved['entry_prediction'],c)
++            if 'fixed_forecast' in saved:
++                audit_forecast(saved['initial'],saved['fixed_forecast'],c)
++            if 'negative_controls' in saved:
++                for mutation in saved['negative_controls']:
++                    rejected=False
++                    negative_counts=Counter()
++                    try:
++                        binding.package.audit_execution(case['public'],case['private'],saved['initial'],mutation['records'],mutation['final'],technical=True,counts=negative_counts)
++                    except AssertionError:
++                        rejected=True
++                    assert rejected
++                    c.update(negative_counts)
+             result['technical'].append({'file':str(file.relative_to(HERE)),'passed':True,'receipt':receipt})
+         batch=read(HERE/'batch_receipt.json')
+         for entry in batch['attempted']:

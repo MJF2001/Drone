@@ -1,0 +1,11 @@
+--- accepted_worker
++++ report_only_worker
+@@ -10,7 +10,7 @@
+         for module in (runtime,p2,runtime.native):
+             path=str(Path(module.__file__).resolve());assert path in guards and sha(path)==guards[path]
+         payload=(H/job['input']).read_bytes();c=json.loads(payload);original=deepcopy(c);result['input']=c
+-        assert tuple(c['current']) in ps(c['covered']);result['initial_collect_here']={'new_H':[],'reason':'same supplied H, explicit idempotent collection'}
++        assert tuple(c['current']) in ps(c['covered']) or (c['current']==c['base'] and not c['covered'] and tuple(c['current']) not in ps(c['published_targets']));result['initial_collect_here']={'new_H':[],'reason':'idempotent history or initial non-task base'}
+         result['identity_before']=B.identity()
+         if job['config']=='ON':obs=B.NativeObserver(runtime,p2)
+         else:assert job['config']=='OFF'

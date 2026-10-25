@@ -1,0 +1,64 @@
+{
+  "passed": true,
+  "cases": [
+    {
+      "case": "absent",
+      "passed": true,
+      "result": [
+        {
+          "name": "runtime.py",
+          "action": "created",
+          "sha256": "1c0b6f5f62c2c673f217a3e720c5c6ce5328adc0d10d7d83057a5ea71e4e4fcd",
+          "existing_mtime_unchanged": false
+        },
+        {
+          "name": "candidate.py",
+          "action": "created",
+          "sha256": "e936974c033027bf7c3b7f928adffcc3267276493aba6d8a2a4bd9c10b784ebf",
+          "existing_mtime_unchanged": false
+        },
+        {
+          "name": "p2_adapter.py",
+          "action": "created",
+          "sha256": "ccdcdffca2c75fc73058c81603ea81a357e725e3c89bdb3f256d7d0a422fbe15",
+          "existing_mtime_unchanged": false
+        }
+      ]
+    },
+    {
+      "case": "identical",
+      "passed": true,
+      "result": [
+        {
+          "name": "runtime.py",
+          "action": "reused_read_only",
+          "sha256": "1c0b6f5f62c2c673f217a3e720c5c6ce5328adc0d10d7d83057a5ea71e4e4fcd",
+          "existing_mtime_unchanged": true
+        },
+        {
+          "name": "candidate.py",
+          "action": "reused_read_only",
+          "sha256": "e936974c033027bf7c3b7f928adffcc3267276493aba6d8a2a4bd9c10b784ebf",
+          "existing_mtime_unchanged": true
+        },
+        {
+          "name": "p2_adapter.py",
+          "action": "reused_read_only",
+          "sha256": "ccdcdffca2c75fc73058c81603ea81a357e725e3c89bdb3f256d7d0a422fbe15",
+          "existing_mtime_unchanged": true
+        }
+      ]
+    },
+    {
+      "case": "different",
+      "passed": true,
+      "blocked_without_changes": true
+    },
+    {
+      "case": "source_drift",
+      "passed": true,
+      "blocked_without_changes": true
+    }
+  ],
+  "real_entries": 0
+}

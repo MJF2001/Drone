@@ -1,0 +1,274 @@
+{
+  "kind": "fixture",
+  "name": "blocked_history",
+  "input": {
+    "name": "blocked_history",
+    "free": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "targets": [
+      [
+        2,
+        1
+      ]
+    ],
+    "covered": [
+      [
+        1,
+        0
+      ]
+    ],
+    "published_targets": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "deferred_targets": [],
+    "current": [
+      0,
+      0
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "previous": null,
+    "predator": [
+      -1,
+      0
+    ],
+    "initial_targets": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "old_route": [
+      [
+        0,
+        0
+      ]
+    ],
+    "distance_budget": 1000000
+  },
+  "method": "ONE",
+  "result": {
+    "raw": {
+      "version": "PPCPP_LAST_RESERVE_v0.1",
+      "mode": "ONE",
+      "status": "core_complete",
+      "route": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "trace": [
+        {
+          "index": 0,
+          "current": [
+            0,
+            0
+          ],
+          "previous": null,
+          "pending_count": 1,
+          "kind": "recovery",
+          "goal": [
+            2,
+            1
+          ]
+        },
+        {
+          "kind": "return",
+          "index": 3,
+          "current": [
+            2,
+            1
+          ],
+          "goal": [
+            0,
+            0
+          ],
+          "pending_count": 0
+        }
+      ],
+      "selected": "P0",
+      "e": null,
+      "branches": {
+        "P0": {
+          "version": "PPCPP_CORE4_FIXED_HISTORY_v0.2_20261019",
+          "method": "PPCPP_INDEPENDENT",
+          "route": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "status": "core_complete",
+          "reason": null,
+          "seconds": 6.649998249486089e-05,
+          "budget": 19.999956799962092,
+          "seed": 0,
+          "seed_used": false,
+          "predator": [
+            -1,
+            0
+          ],
+          "initial_previous": null,
+          "weights": [
+            2.0,
+            0.5
+          ],
+          "trace": [
+            {
+              "index": 0,
+              "current": [
+                0,
+                0
+              ],
+              "previous": null,
+              "pending_count": 1,
+              "kind": "recovery",
+              "goal": [
+                2,
+                1
+              ]
+            },
+            {
+              "kind": "return",
+              "index": 3,
+              "current": [
+                2,
+                1
+              ],
+              "goal": [
+                0,
+                0
+              ],
+              "pending_count": 0
+            }
+          ],
+          "accepted_seconds": 6.619998021051288e-05,
+          "fallback_selected": false,
+          "overrun_gt_10ms": false
+        }
+      },
+      "reason": null
+    },
+    "entry_seconds": 0.00016990001313388348,
+    "phase_seconds": {
+      "p0": 7.219996768981218e-05,
+      "final_audit": 3.1999661587178707e-06,
+      "encoding": 2.2599997464567423e-05
+    },
+    "eligible": true,
+    "budget": 20,
+    "method": "ONE",
+    "seed": 0,
+    "injection_events": []
+  },
+  "audit": {
+    "extra_work_connection_steps": 0,
+    "work_segments": []
+  }
+}

@@ -1,0 +1,21 @@
+--- frozen_p2
++++ existing_local_engine
+@@ -1,15 +1,16 @@
++# Experimental range adapter: only adds an optional complete-route acceptance callback.
+ """Instrumented P2: unchanged search order for base; explicit enhanced variants."""
+ import time,random
+ from unified_geometry import UnifiedGeometry,single_cell_audit
+ from model import DeadlineExceeded
+ from planners import candidates,nearest
+ 
+-def solve(s,budget,variant,seed):
++def solve(s,budget,variant,seed,accept=None):
+     begin=time.perf_counter();g=None;best=None;source=None;events=[];improvements=[];current='geometry'
+     def elapsed():return time.perf_counter()-begin
+     def offer(route,label):
+         nonlocal best,source
+-        g.check_time();valid=route and single_cell_audit(s,route)['valid'];g.check_time()
++        g.check_time();valid=route and (accept(route,label) if accept is not None else single_cell_audit(s,route)['valid']);g.check_time()
+         if valid and (best is None or len(route)<len(best)):
+             best=tuple(route);source=label;improvements.append(dict(seconds=elapsed(),steps=len(route)-1,source=label))
+     def stage(label,fn):

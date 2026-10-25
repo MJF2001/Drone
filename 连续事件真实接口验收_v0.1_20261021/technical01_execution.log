@@ -1,0 +1,38 @@
+TECH 1 B1_PPCPP PASS
+TECH 1 B1_P2 PASS
+TECH 1 references PASS
+TECH 1 units PASS
+TECH 1 chain FAIL
+Traceback (most recent call last):
+
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\technical.py", line 162, in <module>
+
+    elif a[0]=='--chain':chain(a[1],Path(a[2]))
+
+                         ^^^^^^^^^^^^^^^^^^^^^^
+
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\technical.py", line 122, in chain
+
+    f=fixture(f);real_run=subprocess.run;worker_launch=intercept_worker(real_run,f)
+
+      ^^^^^^^^^^
+
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\technical.py", line 86, in fixture
+
+    put(f/'synthetic_api.py',b'# Handwritten fake API only. No algorithm module imported.\n')
+
+  File "E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\technical.py", line 11, in put
+
+    with Path(p).open('xb') as f:f.write(b)
+
+         ^^^^^^^^^^^^^^^^^^
+
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\pathlib.py", line 1013, in open
+
+    return io.open(self, mode, buffering, encoding, errors, newline)
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+FileExistsError: [Errno 17] File exists: 'E:\\无人机研究项目_接续包_20261014\\连续事件真实接口验收_v0.1_20261021\\technical_rounds\\round_01\\chain\\SYNTHETIC_TECHNICAL_NOT_REAL\\synthetic_api.py'
+
+

@@ -1,0 +1,99 @@
+--- round_1/independent.py
++++ round_2/independent.py
+@@ -140,8 +140,10 @@
+ 
+ def legal(F, a, b, c):
+     c['independent_geometry'] += 1
+-    xmin, xmax = min(x for x, y in F), max(x for x, y in F)
+-    ymin, ymax = min(y for x, y in F), max(y for x, y in F)
++    # F was validated as integer centers; convert only its denominator-1 extrema.
++    # S/a/b remain exact rational and are never rounded.
++    xmin, xmax = int(min(x for x, y in F)), int(max(x for x, y in F))
++    ymin, ymax = int(min(y for x, y in F)), int(max(y for x, y in F))
+     half = R(1, 2)
+     if any(not (xmin-half < p[0] < xmax+half and ymin-half < p[1] < ymax+half) for p in (a, b)):
+         return False
+--- round_1/io_utils.py
++++ round_2/io_utils.py
+@@ -21,9 +21,12 @@
+     return datetime.now(timezone.utc).isoformat()
+ 
+ def tuple_coords(x):
+-    # Every coordinate/cell sequence becomes tuple; dictionaries preserve field names.
++    # Change coordinate containers only; expression term arrays retain their schema.
+     if isinstance(x, list):
+-        return tuple(tuple_coords(y) for y in x)
++        values = [tuple_coords(y) for y in x]
++        coordinate = len(x) == 2 and all(type(y) is int or
++                        isinstance(y, dict) and set(y) == {'n', 'd'} for y in x)
++        return tuple(values) if coordinate else values
+     if isinstance(x, dict):
+         return {k: tuple_coords(v) for k, v in x.items()}
+     return x
+--- round_1/run_gate.py
++++ round_2/run_gate.py
+@@ -65,7 +65,20 @@
+     shutil.copyfile(HERE/'门槛事前登记.json', target/'expectations.json')
+     shutil.copyfile(freeze_path, target/'freeze.json')
+     c, ic, rows = Counter(), Counter(), []
++    prior_rows = {}
++    if rnd > 1:
++        prior = read_json(HERE/'repair_rounds'/f'round_{rnd-1}'/'result.json')
++        prior_rows = {r['id']: r for r in prior['rows']}
+     for case in reg['cases']:
++        old = prior_rows.get(case['id'])
++        if old and old['gate_status'] == 'passed':
++            oldpath = old.get('evidence_path', str(Path('repair_rounds')/f'round_{rnd-1}'/'outputs'/f'{case["id"]}.json'))
++            rows.append({'id': case['id'], 'group': case['group'], 'gate_status': 'passed',
++                         'status': old['status'], 'reason': old.get('reason'), 'reused': True,
++                         'evidence_path': oldpath, 'evidence_sha256': sha(HERE/oldpath),
++                         'primary_counts': {}, 'independent_counts': {}})
++            print(case['id'], 'reused_prior_pass_no_execution', flush=True)
++            continue
+         before, before_i = c.copy(), ic.copy()
+         result = {'case_id': case['id'], 'group': case['group'], 'started_utc': now()}
+         try:
+@@ -123,7 +136,9 @@
+         rows.append({'id': case['id'], 'group': case['group'], 'gate_status': result['gate_status'],
+                      'status': result.get('session', {}).get('status', 'implementation_error'),
+                      'reason': result.get('session', {}).get('reason'), 'primary_counts': result['primary_counts'],
+-                     'independent_counts': result['independent_counts']})
++                     'independent_counts': result['independent_counts'], 'reused': False,
++                     'evidence_path': str((target/'outputs'/f'{case["id"]}.json').relative_to(HERE)),
++                     'evidence_sha256': sha(target/'outputs'/f'{case["id"]}.json')})
+         print(case['id'], result['gate_status'], rows[-1]['status'], flush=True)
+     total = c+ic
+     first = read_json(target/'outputs'/'01_1.json')
+@@ -134,6 +149,7 @@
+     violations = {k: v for k, v in total.items() if k not in upper or v > upper[k]}
+     zero = {k: 0 for k in reg['zero_required']}
+     summary = {'round': rnd, 'utc': now(), 'slots': len(reg['cases']),
++               'new_sessions': c['sessions'], 'reused_prior_pass': sum(r.get('reused', False) for r in rows),
+                'passed': sum(r['gate_status'] == 'passed' for r in rows),
+                'failed': sum(r['gate_status'] == 'failed' for r in rows), 'not_run': 0,
+                'primary_counts': dict(c), 'independent_counts': dict(ic),
+--- round_1/verify.py
++++ round_2/verify.py
+@@ -70,13 +70,19 @@
+     assert result['failed'] == result['not_run'] == 0 and not result['upper_bound_violations']
+     assert result['saved_list_tuple_pair_equal'] is True
+     c, rows, primary_sum, independent_sum = Counter(), [], Counter(), Counter()
++    mapping = {r['id']: r for r in result['rows']}
+     for case in reg['cases']:
+-        data = read_json(HERE/'repair_rounds'/f'round_{rnd}'/'outputs'/f'{case["id"]}.json')
++        source = mapping[case['id']]
++        path = HERE/source.get('evidence_path', str(Path('repair_rounds')/f'round_{rnd}'/'outputs'/f'{case["id"]}.json'))
++        if 'evidence_sha256' in source:
++            assert sha(path) == source['evidence_sha256']
++        data = read_json(path)
+         expect(case, data)
+         if case.get('runtime_tuple'):
+             assert set(data['runtime_container_evidence'].values()) == {'tuple'}
+-        primary_sum.update(data['primary_counts'])
+-        independent_sum.update(data['independent_counts'])
++        if not source.get('reused'):
++            primary_sum.update(data['primary_counts'])
++            independent_sum.update(data['independent_counts'])
+         checked = ind.audit_session(data['session'], c)
+         if data.get('actions'):
+             ind.audit_actions(data['session']['raw_input'], data['actions'], c)

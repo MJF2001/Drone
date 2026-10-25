@@ -1,0 +1,2046 @@
+=== PDF PAGE 1 ===
+1
+FALCON: Fast Autonomous Aerial Exploration
+using Coverage Path Guidance
+Yichen Zhang∗, Xinyi Chen ∗, Chen Feng, Boyu Zhou †, and Shaojie Shen
+Fig. 1. A quadrotor with limited sensor field of view (FoV) autonomously explored a challenging cluttered indoor environment of dimension 24 × 6 × 2 m3.
+The online constructed volumetric map and the flight trajectory with the yaw direction as a purple arrow are shown in the top-left image. Two detailed close-ups
+of the bridges from the volumetric map result are displayed in the right images. Video of the experiments is available at https://youtu.be/BGH5T2kPbWw.
+Abstract—This paper introduces FALCON, a novel Fast
+Autonomous expLoration framework using COverage path
+guidaNce, which aims at setting a new performance benchmark
+in the field of autonomous aerial exploration. Despite recent
+advancements in the domain, existing exploration planners of-
+ten suffer from inefficiencies such as frequent revisitations of
+previously explored regions. FALCON effectively harnesses the
+full potential of online generated coverage paths in enhancing
+exploration efficiency. The framework begins with an incremental
+connectivity-aware space decomposition and connectivity graph
+construction, which facilitate efficient coverage path planning.
+Subsequently, a hierarchical planner generates a coverage path
+spanning the entire unexplored space, serving as a global guid-
+ance. Then, a local planner optimizes the frontier visitation order,
+minimizing traversal time while consciously incorporating the
+intention of the global guidance. Finally, minimum-time smooth
+and safe trajectories are produced to visit the frontier viewpoints.
+For fair and comprehensive benchmark experiments, we intro-
+duce a lightweight exploration planner evaluation environment
+that allows for comparing exploration planners across a variety
+of testing scenarios using an identical quadrotor simulator.
+Additionally, an in-depth analysis and evaluation is conducted to
+highlight the significant performance advantages of FALCON in
+comparison with the state-of-the-art exploration planners based
+on objective criteria. Extensive ablation studies demonstrate the
+effectiveness of each component in the proposed framework.
+Real-world experiments conducted fully onboard further vali-
+∗ Yichen Zhang and Xinyi Chen are co-first authors.
+† Corresponding author: Boyu Zhou.
+This work was supported by HKUST Postgraduate Studentship and
+HKUST-DJI Joint Innovation Laboratory.
+Yichen Zhang, Xinyi Chen, Chen Feng and Shaojie Shen are with the
+Department of Electronic and Computer Engineering, Hong Kong University
+of Science and Technology, Hong Kong, China.
+Boyu Zhou is with the Southern University of Science and Technology,
+Shenzhen, China, and the Sun Yat-Sen University, Zhuhai, China.
+{yzhangec,xchencq,cfengag,eeshaojie}@ust.hk
+uv.boyuzhou@gmail.com
+date FALCON’s practical capability in complex and challenging
+environments. The source code of both the exploration planner
+FALCON and the exploration planner evaluation environment
+has been released to benefit the community 1.
+Index Terms —Aerial Systems: Perception and Autonomy,
+Aerial Systems: Applications, Motion and Path Planning, Au-
+tonomous Exploration.
+I. I NTRODUCTION
+A
+UTONOMOUS exploration is the task of mapping un-
+known environments with mobile robots. It is a funda-
+mental component of various robotics applications, such as
+structural inspection [1]–[3], 3D reconstruction [4]–[6], sub-
+terranean navigation [7]–[9], and search and rescue operations
+[10]–[12]. Thanks to their agility and flexibility, aerial robots
+are well-suited for these applications in environments that are
+hazardous or inaccessible to human operators. For example,
+during underground cave mining or fire rescue operations,
+an autonomous aerial robot can efficiently construct detailed
+maps of the unknown spaces and gather valuable information
+for object searching and survivor rescue. Due to the limited
+battery life of aerial robot platforms, it is crucial to develop
+efficient exploration planners that cover accessible space as
+fast as possible.
+Various existing methodologies have been proposed to en-
+hance exploration efficiency [13, 14]. Early techniques, such as
+frontier-based [15] and next-best-view-based [16] approaches,
+typically employ a greedy strategy that selects the next target
+according to immediate rewards. This shortsighted strategy
+1https://github.com/HKUST-Aerial-Robotics/FALCON
+arXiv:2407.00577v2  [cs.RO]  16 May 2025
+
+=== PDF PAGE 2 ===
+2
+neglects global information, resulting in unnecessary revisi-
+tations of already explored areas. To address this issue, global
+guidance considering all viewpoints awaiting visitation has
+been introduced [17, 18]. However, a gap persists between
+these solutions and the objective of the exploration task. While
+the ultimate goal of the exploration task is to map entire
+unknown environments, most global guidance provided by
+existing methods focuses on visiting all frontier regions or
+subspaces, overlooking unknown areas beyond. Due to the
+dynamically changing frontiers during exploration, this type of
+global guidance often provides highly inconsistent intention,
+leading to back-and-forth movements and failing to reflect the
+exploration task goal. Consequently, this discrepancy leads
+to inefficient exploration routes that frequently overlap with
+explored areas, reducing exploration efficiency.
+Recently, researchers have attempted to bridge this gap by
+introducing coverage path (CP) of the entire unexplored space
+into exploration planning [19, 20]. The coverage path serves
+as a more reasonable global guidance which better models
+the complete exploration process. However, the potential of
+coverage paths in improving exploration efficiency remains
+underexploited due to several limitations. Firstly, the coverage
+paths produced by these approaches often rely on simple space
+decompositions that inadequately capture the environment’s
+connectivity and topology, potentially resulting in unreason-
+able coverage paths. Secondly, many coverage path planning
+modules suffer from high online computational overhead due
+to the high complexity of problem resolution. This impedes the
+subsequent planner from promptly responding and replanning
+when the latest environment information is received. Further-
+more, even when the coverage path offers reasonable guidance,
+the local trajectory may deviate significantly from the global
+guidance. This inconsistency reflects the underutilization of the
+global coverage path’s intention during local planning, thereby
+reducing the significance of the coverage paths.
+To address these limitations, we present FALCON, a Fast
+Autonomous aerial robot expLoration planner using COverage
+path guidaNce, which further realizes the potential of coverage
+paths in improving exploration efficiency. Whenever the map
+is updated using the latest sensor measurements, the entire
+exploration space is partitioned online into distinct zones
+using the Connected Component Labeling algorithm, which
+separates disconnected regions based on the latest occupancy
+information. From these zones, a connectivity graph is incre-
+mentally built to capture the underlying environment topology
+and boost coverage path planning efficiency. The hierarchical
+planner then utilizes the connectivity graph to promptly solve
+for a reasonable coverage path over zones, serving as global
+guidance. Guided by this coverage path, the local planner
+optimizes the frontier visitation order using a Sequential Or-
+dering Problem formulation, ensuring coherent motion aligned
+with the coverage path’s intention and minimizing exploration
+duration. Finally, minimum-time trajectories are generated to
+visit the frontier viewpoints while adhering to safety, smooth-
+ness and quadrotor dynamics constraints. This framework
+reasonably plans coverage paths that consider environmental
+topology and consciously incorporates the intention of global
+guidance into local planning, demonstrating significantly en-
+hanced exploration efficiency.
+We would like to compare the performance of the proposed
+planner FALCON with other approaches. However, to the best
+of our knowledge, there is a notable lack of an evaluation
+platform and standards that enable fair and comprehensive
+comparisons among aerial exploration planners. Most existing
+works often restrict the simulation validation of exploration
+planners to a narrow selection of specific maps, typically
+inherited from previous studies. This may result in algorithms
+overfitting to those particular maps, without adequately assess-
+ing their capabilities in scenarios with diverse characteristics.
+Moreover, the evaluation criteria are often limited to explo-
+ration efficiency, which only measures the exploration duration
+without considering other important aspects. To bridge this
+gap, we introduce a unified environment and a set of objective
+criteria to evaluate the efficacy of aerial exploration planners
+in a fair and comprehensive manner. On the one hand, we
+develop a lightweight software-in-the-loop exploration planner
+evaluation environment. This environment allows for fair and
+extensive benchmark comparisons with a bundle of state-
+of-the-art exploration planners [21]–[25] using an identical
+quadrotor simulator and diverse testing environments. On the
+other hand, we propose the VECO criteria that an ideal and
+robust exploration planner should satisfy. The VECO criteria
+are namely Versatility, Exploration Efficiency, Completeness,
+and RespOnsiveness.
+Under the exploration planner evaluation environment, we
+conduct extensive experiments comparing FALCON with
+state-of-the-art exploration planners [21]–[25], exhibiting its
+extraordinary performance. The results reveal that FALCON
+not only achieves 13.81% ∼ 29.67% faster explorations in var-
+ious testing scenarios, but also satisfies all the VECO criteria.
+We also present an in-depth analysis of the characteristics of
+the proposed and benchmarked exploration planners accord-
+ing to the VECO criteria. Additionally, ablation experiments
+demonstrate the effectiveness of each individual component
+of FALCON. Furthermore, real-world experiments conducted
+fully onboard using a customized quadrotor in challenging
+environments confirm the practical operation of FALCON.
+The source code has been released to benefit the community.
+In summary, the contributions are:
+1) An incremental connectivity-aware space decomposition
+and connectivity graph construction method, which cap-
+tures the environmental topology and facilitates efficient
+exploration coverage path planning.
+2) A hierarchical exploration planning approach which
+generates reasonable coverage paths serving as global
+guidance and optimizes local frontier visitation order
+preserving the intention of coverage paths.
+3) An exploration planner evaluation environment and
+evaluation criteria that support fair and comprehensive
+experiments in comparison with state-of-the-art explo-
+ration planners across diverse testing scenarios.
+4) Extensive validation of the proposed exploration planner
+through benchmark comparisons, ablation studies and
+real-world experiments. The source code of both FAL-
+CON and the evaluation environment has been released.
+
+=== PDF PAGE 3 ===
+3
+TABLE I
+A SUMMARY OF EXISTING EXPLORATION STUDIES
+Planning
+Approach
+Global
+Consideration Prioritization Planning
+Dimension References Sensor Type
+Information
+gain-based N/A
+Rapid exploration
+2D [26] Laser scanner
+[27] LiDAR
+3D [28] Laser scanner
+[29] Camera
+Reconstruction accuracy 3D [30], [31] Camera
+Localization uncertainty 2D [32], [33], [34] Laser scanner
+Sampling-
+based N/A
+Rapid exploration 3D [21], [35], [36], [37] Camera
+[14] LiDAR
+Reconstruction accuracy 3D [38] Camera
+Localization uncertainty 3D [16], [39], [40] Camera
+[41] Multibeam sonar
+Object-centric exploration 3D [42], [43] Camera
+Frontier-
+based N/A
+Rapid exploration
+2D
+[15], [44] Laser scanner, Multibeam sonar
+[45] Ultrasonic rangefinder
+[46] LiDAR
+3D
+[47], [48] Camera, Laser scanner
+[13], [49], [50] Camera
+[51] LiDAR
+Reconstruction accuracy 3D [3] LiDAR, Camera
+Localization uncertainty 2D [52] Laser scanner
+Object-centric exploration 3D [53] Camera, Laser scanner
+Hybrid
+N/A Rapid exploration 3D [17], [24] Camera
+Object-centric exploration 3D [54] Camera
+Graph Rapid exploration 3D [8], [9] LiDAR
+Frontiers
+Rapid exploration 3D [55], [56], [57] LiDAR
+[18], [22], [25] Camera
+Localization uncertainty 3D [58] Camera
+Multi-robots exploration 3D [59], [60] LiDAR
+Coverage
+Path
+Rapid exploration 2D [61] LiDAR
+[20] LiDAR, Camera
+3D Proposed Camera
+Reconstruction accuracy 3D [19], [62] Camera
+Multi-robots exploration 3D [23] Camera
+II. R ELATED WORK
+Autonomous exploration approaches have varying prioriti-
+zations depending on application context, including rapid ex-
+ploration completion [13, 14], reconstruction accuracy [3, 38],
+localization uncertainty [33, 58], object-centric exploration
+[42, 54], and multi-robots collaboration exploration [23, 59].
+Regardless of prioritization, the following literature review
+is presented according to the methodology of exploration
+planning. A summary of the reviewed literature is provided
+in Table I.
+A. Classical Methods
+Information gain-based exploration has been widely studied
+in the past decades [28, 33], where candidate viewpoints
+are chosen based on the expected information gain provided
+by the observations. Bai et al. [26] use Bayesian optimiza-
+tion to select near-optimal sensing actions that reduce map
+entropy. Tabib et al. [29] consider the mutual information
+between sensor measurements and an environment model
+using Cauchy-Schwarz quadratic mutual information (CSQMI)
+[63] for exploration of pits and caves. Kaufman et al. [27] per-
+form 3D Bayesian probabilistic occupancy grid mapping and
+project the stochastic properties of the occupancy grid to 2D
+spaces for numerically efficient exploration planning. Besides
+considering map entropy, Carrillo et al. [34] propose a utility
+function combining the Shannon and the Renyi entropy which
+balances between the robot localization and map uncertainty.
+Alternatively, Stachniss et al. [32] considers vehicle pose and
+map uncertainty simultaneously by evaluating the expected
+entropy change of the Rao-Blackwellized particle filter as
+information gain. Palazzolo et al. [30, 31] select the next
+best viewpoints that provide the most expected entropy change
+of the belief about the world state for precise reconstruction.
+Bissmarck et al. [64] compare various approaches to compute
+the information gain for candidate viewpoints selection.
+
+=== PDF PAGE 4 ===
+4
+Sampling-based exploration is one of the classic methods,
+where candidate viewpoints are randomly generated using
+Rapidly-exploring Random Trees (RRT) [65] and the next
+best view (NBV) [66] is selected based on information gain.
+Bircher et al. [21] first introduces the concept of NBV to
+autonomous exploration using a receding horizon scheme and
+later applies it to surface inspection [35]. Based on NBV ,
+several subsequent works employ various information gain
+metrics for different applications. For instance, Papachristos
+et al. [16] minimize the localization and mapping uncer-
+tainty during exploration, which is later deployed to visually-
+degraded underground mine environments [39] as well as
+dark environments such as an old city tunnel [40]. Dang et
+al. [43] further incorporate the saliency-annotated volumetric
+mapping to drive the robot towards visually salient objects
+in the environment. Witting et al. [36] incorporate navigation
+history into the sampling scheme to facilitate the quick finding
+of informative regions and avoid being stuck at local minima.
+Dharmadhikari et al. [14] exploit aerial robot dynamics to
+generate dynamically feasible motion primitives for faster
+exploration. Suresh et al. [41] develop an active SLAM
+exploration framework to reduce vehicle pose uncertainty in
+underwater environments by balancing volumetric exploration
+and revisitation utilizing RRT nodes. To ensure scalability,
+Duberg et al. [37] maintain a graph structure for efficient path
+planning and use a simple exploration heuristic driving the
+robot to the closest unknown space.
+Frontier-based exploration is another popular approach,
+where frontiers, defined as the boundary between known and
+unknown space, are identified as targets during exploration.
+The technique was initially introduced in [15, 44], where the
+next target is simply chosen as the closest frontier. Gao et al.
+[46] modify [15] by adding the robot heading direction and
+rotation cost into account to maintain robot’s orientation for
+more efficient exploration. Freda et al. [45] use a frontier-
+based modification of the Sensor-based Random Tree (SRT)
+method to bias exploration motion towards frontier regions
+to improve efficiency. Stachniss et al. [52] extend frontier-
+based exploration to allow actions that actively revisit explored
+regions and close loops to reduce uncertainty in SLAM. Al-
+though the aforementioned frontier-based exploration methods
+operate in 2D space, researchers have made efforts to extend
+the concept of frontiers into 3D exploration. Shen et al.
+[47, 48] adopts a stochastic differential equation to identify
+the most significant particle expansion region as the next target
+frontier. This method avoids poor 3D frontiers generated by
+traditional 2D frontier-based methods due to incomplete sensor
+information. Dornhege et al. [53] extend 2D frontier-based
+method to 3D by introducing void cells to efficiently determine
+high-visibility locations for autonomous robot exploration and
+victims searching. Zhu et al. [49] extend frontiers to 3D
+space using OctoMap representation [67] and the closest
+frontier is selected as the goal frontier. Senarathne et al. [50]
+also utilize OctoMap but opt for computationally efficient
+surface frontiers rather than free-space frontiers to actively
+map the object surfaces. To facilitate high-speed exploration,
+Cieslewski et al. [13] selects the frontier that minimizes the
+change in velocity to maintain high flight speed and enhance
+exploration efficiency. Fariaet al. [51] combines frontier-based
+exploration with Lazy Theta* path planning to reduce the
+number of resolution iterations for efficient inspection of large
+3D structures.
+While these methods are capable of completing exploration
+tasks, their efficiency remains limited and unsatisfactory. In-
+formation gain-based and sampling-based methods enable the
+explicit quantification of information gain for each candidate’s
+viewpoint, but they come with a high computational burden.
+More importantly, these methods commonly utilize a greedy
+strategy that selects the next target according to immediate
+rewards without a holistic perspective on the entire exploration
+space. The lack of global consideration can lead to inefficient
+exploration tours containing back-and-forth movements unnec-
+essarily revisiting explored regions.
+B. Hybrid Methods With Global Consideration
+In the recent decade, researchers attempt to address this
+problem by capturing and exploiting global information to
+guide the exploration process. These hierarchical exploration
+planning approaches are often hybrid, combining several clas-
+sical methods mentioned above. For example, Dai et al. [17]
+propose a hybrid frontier-based and sampling-based strategy
+that samples candidate next-views at the frontier regions and
+evaluates them according to a utility function expressing
+expected information gain over time. Selin et al. [18] uti-
+lizes a receding horizon next-best-view planning approach
+for local exploration while employing frontier exploration
+for global planning. Zhou et al. [22] first generates efficient
+global paths for detected frontiers and then sample viewpoints
+around the frontiers as local refinements. Tang et al. [55]
+and Yu et al. [24] further improve the viewpoints generation
+and determination strategies of [22], demonstrating higher
+exploration efficiency. Zhao et al. [25] refines the planning
+strategy of [22] by considering the frontiers location with
+respect to the exploration boundary. Yang et al. [9] adopt a
+bifurcated planning strategy to explore local distinctive frontier
+regions, guided by a sparse topological graph globally. Cao
+et al. [56, 57] first plans a global path through subspaces
+that requires detailed exploration and then samples a set of
+viewpoints to cover the current local subspace. This method
+is later extended to multi-robot exploration [60]. Although the
+aforementioned hierarchical approaches are computationally
+efficient since sampling efforts are focused on frontier regions,
+they still suffer from unsatisfactory exploration efficiency. This
+inefficiency arises from the fundamental disparity between
+their concentration solely on frontier regions and the objective
+of exploration tasks in mapping unknown regions.
+Coverage paths (CPs) have been utilized as global paths
+in some recent exploration works. Coverage path planning,
+a well-studied problem over past decades, involves finding a
+route that traverses every point of a specific area or volume
+of interest while avoiding obstacles [68]. Conventional 2D
+approaches employ predefined patterns to cover subspaces sep-
+arated by boustrophedon [69], trapezoidal [70], morse-based
+[71] or grid-based [72] decomposition to handle obstacles.
+
+=== PDF PAGE 5 ===
+5
+Fig. 2. Overview of the proposed planner FALCON for fast autonomous exploration. The framework comprises two main components: exploration planning
+preprocessing and CP-guided hierarchical exploration planning. The former part provides fundamental information, including space decomposition and the
+connectivity graph for coverage path planning, as well as extraction of frontiers and viewpoints for local planning. The latter part performs hierarchical
+exploration planning, which generates a global coverage path (CP) spanning the entire unexplored space and optimizes frontier visitation order consciously
+incorporating CP’s intention. These modules are consistently updated and replanned until exploration concludes.
+For 3D environments with higher structural complexity, recent
+works solve the problem using a Traveling Salesman Problem
+(TSP) formulation [73]–[75]. However, these methods are not
+well-suited for the exploration task due to the high compu-
+tational complexity. These single-time computation methods
+operate on a predetermined map, while the exploration task
+necessitates real-time and incremental coverage path planning
+when the map is updated.
+Recently, several CP-guided hierarchical exploration ap-
+proaches have been proposed, introducing the coverage path
+of the entire unexplored space as a more reasonable global
+guidance. Zhao et al. [61] propose a LiDAR exploration
+system that arranges the visitation order of the uniformly and
+dynamically divided subregions serving as global guidance.
+Kan et al. [20] alternatively employs a hex decomposition
+for coverage path planning as well as generating circular and
+straight-line paths to explore the current subregion. However,
+these two methods work only for 2D spaces and are not
+applicable to aerial robot exploration in 3D environments.
+Song et al. [19, 62] propose a global coverage planning
+algorithm that partitions the entire map into sectors, and a
+local inspection planning algorithm that samples informative
+viewpoints of low-confidence surfaces. However, the algorithm
+is tailored for accurate 3D modeling tasks, performing rather
+slow flight speed and long exploration duration. Zhou et al.
+[23] extends [22] by integrating a global coverage path of
+hgrids [76], which guides the swarm agents to explore different
+unknown regions with balanced workloads. However, hgrids
+divide the space uniformly without considering environmental
+obstacles, which can potentially lead to unreasonable coverage
+paths. Moreover, these approaches utilizing coverage path fail
+to effectively integrate the global guidance intention into local
+planning, causing exploration movements to deviate from the
+intended direction occasionally.
+III. S YSTEM OVERVIEW
+A. Problem Definition
+The problem considered in this paper is exploring an
+unknown and bounded 3D space V ⊂ R3 using a fully au-
+tonomous aerial robot and constructing a complete volumetric
+map of the accessible space Vacc ⊂ V . The volumetric map
+consists of a 3D grid of voxels, where each voxel corresponds
+to one of three states: free, occupied, or unknown. The sensor
+used for localization and exploration is a forward-looking
+stereo camera with limited FoV, which is modeled as a
+viewing frustum defined by its horizontal FoV , vertical FoV ,
+and sensing depth. The exploration planner should be able to
+provide safe and feasible trajectories, followed by which, the
+aerial robot perceives information covering Vacc with minimal
+exploration duration.
+B. Proposed Framework Overview
+An overview of the proposed exploration framework is
+depicted in Fig. 2, consisting of two components: exploration
+planning preprocessing (Sec. IV) and CP-guided hierarchical
+exploration planning (Sec. V). Upon updating the voxel map
+with the latest received sensor measurements, exploration plan-
+ning preprocessing is performed promptly within the bounding
+box of the updated map. The preprocessing phase involves an
+incremental space decomposition (Sec. IV-A), which enables
+the construction of a connectivity graph (Sec. IV-B) to boost
+the efficiency of coverage path planning. Additionally, the
+frontier is identified with a careful selection of viewpoint
+representatives (Sec. IV-C). Subsequently, the hierarchical
+exploration planner first conducts coverage path planning
+(Sec. V-A), providing global guidance for the local planner.
+Then, the local path planning optimizes the frontier visitation
+order while maintaining consistency with the intention of the
+
+=== PDF PAGE 6 ===
+6
+coverage path (Sec. V-B) and generates executable trajectories
+(Sec. V-C). The preprocessing and exploration motion are
+consistently updated and replanned based on the latest sensor
+measurements. The exploration concludes when no frontier
+remains in the map.
+C. Notation
+For clarity and ease of reference, key notation definitions
+are presented below, which are represented in the world frame.
+NOMENCLATURE
+V The 3D space in the exploration task bounding box.
+Vacc The accessible space within V .
+Γ The list of cells.
+γi An instance of a cell.
+Z The list of zones.
+zi An instance of a zone.
+Bt The bounding box of the updated map at time t.
+G The connectivity graph.
+Gf The free subgraph of the connectivity graph.
+Gu The unknown subgraph of the connectivity graph.
+Ep The portal edges of the connectivity graph.
+pc The current position.
+Ccp The cost matrix used when solving the coverage path
+planning problem.
+¯Λ The coverage path produced from the coverage path
+planning process.
+Λ The reduced coverage path used in the local path
+planning.
+Csop The cost matrix used when solving the local path
+planning problem.
+IV. E XPLORATION PLANNING PREPROCESSING
+At the beginning of each exploration planning iteration,
+several preprocessing steps are performed online to facilitate
+efficient coverage path planning. Whenever the map is up-
+dated, the entire predefined exploration space is partitioned by
+a coarse-to-fine space decomposition. Additionally, a connec-
+tivity graph capturing the underlying environment topology is
+incrementally constructed. Frontiers are also identified within
+the map update regions with frontier viewpoint representatives
+carefully chosen.
+A. Connectivity-Aware Space Decomposition
+The entire exploration space is constantly decomposed
+based on the voxel connectivity given the latest occupancy
+information, serving as elementary task units for coverage
+path planning. Before the exploration begins, an initial coarse
+decomposition partitions the entire exploration space into
+uniform cells Γ with size proportional to the onboard camera’s
+FoV . In our case, the cell size scell is set equal to the
+maximum sensing depth. Whenever the map is updated during
+the exploration, the cells intersected with the bounding box of
+the updated map Bt are further decomposed into disjoint zones
+Z as shown in Fig. 3. Unlike naive approaches that adopt
+uniform decomposition, our method meticulously separates
+Fig. 3. A snapshot illustrating the results of space decomposition and
+connectivity graph construction during the exploration. The surrounding
+transparent cells are not intersected with the bounding box of the updated
+map and kept unchanged. The two zones highlighted in yellow are connected
+by an inaccessible narrow corridor and consequently grouped into seperate
+zones. The middle-right rectangle is an inaccessible hollow and excluded from
+exploration planning utilizing the connectivity graph.
+disconnected regions based on the latest occupancy informa-
+tion. This fine decomposition is formulated as a 3D extension
+of the Connected Components Labeling (CCL) problem [77],
+a 2D image processing technique described below.
+Lemma 1 (Connected Components Labeling). The con-
+nected components labeling algorithm identifies individual
+components in an image based on pixel connectivity and
+assigns unique labels to connected pixels as separate objects.
+The CCL algorithm operates on individual cells, treating
+the voxels in the cell as elements to be labeled, analogous to
+pixels in a 2D image. Apart from the standard voxel states
+of occupied and unknown, free voxels are further classified
+as either safe-free or unsafe-free, depending on whether they
+violate the minimum safety clearance distance dmin. During
+the labeling process, unknown and safe-free voxels are labeled
+while occupied and unsafe-free voxels are omitted. Neighbor-
+ing voxels are considered connected and assigned the same
+label if and only if they are both safe-free or both unknown.
+V oxels with the same label are grouped together into a free
+zone or an unknown zone based on their occupancy status. By
+omitting unsafe-free voxels, regions connected by inaccessible
+narrow corridors are grouped into separate zones, such as the
+two highlighted zones in Fig. 3. Then the initial center of each
+zone is computed as the average position of all its voxels.
+However, since convexity is not guaranteed by connectivity,
+the initial center may fall into obstacles or other zones. In such
+cases, the center is rectified into the position of the nearest
+voxel within its zone, as demonstrated in Fig. 3.
+B. Incremental Connectivity Graph Construction
+Based on the identified zones, a connectivity graph G is
+incrementally constructed, where the zone centers serve as
+vertices and the connectivity between zones serves as edges.
+Note that the zone-level connectivity here is different from the
+inter-voxel connectivity mentioned in Sec. IV-A. As illustrated
+in Fig. 3, the connectivity graph consists of two subgraphs:
+Gf = ( Vf , Ef) and Gu = ( Vu, Eu) capturing free and
+unknown regions respectively, along with portal edges Ep
+connecting them, i.e., G = (Vf ∪ Vu, Ef ∪ Eu ∪ Ep)
+
+=== PDF PAGE 7 ===
+7
+Algorithm 1: Incremental Connectivity Graph Update
+Input: cell list Γ, zone list Z, map update bounding
+box Bt, connectivity graph G
+Output: updated connectivity graph G
+1 G.getSubgraph(Gf , Gu, Ep)
+2 foreach γi ∈ Γ with γi ∩ Bt ̸= ∅ do
+3 G.clearVerticesAndEdges(γi)
+4 foreach z ∈ γi.Z do
+5 G.addVertex(z.c)
+6 foreach neighborhood γj of γi do
+7 foreach zm ∈ γi.Z, zn ∈ γj.Z do
+8 if zm and zn both free then
+9 p ← restrictedA*(zm.c, zn.c, γi ∪ γj)
+10 if p exists then
+11 Gf .addEdge(zm.c, zn.c, p)
+12 else if zm and zn both unknown then
+13 p ← restrictedA*(zm.c, zn.c, γi ∪ γj)
+14 if p exists then
+15 Gu.addEdge(zm.c, zn.c, p)
+16 foreach free zf ∈ γi.Z and unknown zu ∈ γi.Z do
+17 p ← restrictedA*(zf .c, zu.c, γi)
+18 if p exists then
+19 Ep.addEdge(zf .c, zu.c, p)
+The connectivity graph construction process is detailed in
+Alg. 1. For each cell γi involved with the bounding box Bt, the
+centers of free and unknown zones contribute to vertices Vf
+and Vu respectively. The edges are constructed based on three
+types of restricted A* searches, as indicated in lines 9, 13, 17
+of Alg. 1 and exemplified in Fig. 4. For edges Ef in the free
+subgraph Gf , connectivity is evaluated pairwise between each
+free vertex zm in γi and zn in each six-neighboring cell γj.
+This evaluation involves a restricted A* search between zone
+centers zm.c and zn.c in the free space which is constrained
+within the region enclosing the two cells (Fig. 4(a)). If a path
+is found, an edge connecting zm and zn is added to Ef , with
+edge weight defined as path length. Similarly, the edges Eu
+in the unknown subgraph Gu are updated through restricted
+A* searches between unknown vertices in unknown space
+(Fig. 4(b)). Regarding the portal edges Ep, which typically
+emerge in partially explored cells, the restricted A* searches
+constrained in only cell γi are performed for each pair of free
+and unknown vertices within it (Fig. 4(c)). During the above
+A* searches, the lengths of path segments passing through
+unknown space are multiplied by a constant penalty factor
+apenal to account for the uncertainty of unknown space.
+After the incremental construction, if the connectivity graph
+G contains multiple disjoint components, this indicates the
+presence of inaccessible hollows in the environment, such as
+the middle-right rectangle shown in Fig. 3. The existence of
+disjoint components can be identified by applying the CCL
+algorithm (Lemma 1) to the connectivity graph. In such cases,
+any isolated subgraphs composed solely of unknown zones are
+removed and excluded from exploration planning.
+Fig. 4. Examples for the three types of restricted A* performed when
+constructing (a) the free subgraph Gf , (b) the unknown subgraph Gu and
+(c) the portal edges Ep respectively.
+The primary expense of connectivity graph construction
+arises from the A* searches conducted when creating the
+edges. Fortunately, since these searches are confined within
+small local regions, the incremental connectivity graph re-
+quires negligible construction time while bringing significant
+benefits for subsequent coverage path planning and trajectory
+generation. Compared to a time-consuming direct search on
+voxels, the connectivity graph offers an efficient protocol to
+approximate traversal distances between positions, especially
+in large-scale environments.
+C. Frontier Extraction and Viewpoints Sampling
+Frontiers are defined as the boundary regions between
+known-free and unknown space [15]. Information regarding
+frontiers and viewpoints is required to establish targets for
+later exploration planning. To begin with, frontier clusters of
+appropriate size are extracted and viewpoints are uniformly
+sampled around following [22]. Additionally, a qualification
+assessment is applied to each viewpoint candidate, as depicted
+in Fig. 5. This is accomplished by counting the number of
+unknown voxels intersected by the truncated rays extending
+from the viewpoint to a maximum sensor depth at several
+sampling directions within the sensor’s FoV . Viewpoints hold-
+ing a number of unknown voxels lower than the cutoff line
+µ − zσ are disqualified. Here µ and σ represent the mean and
+standard deviation of the number of unknown voxels at all
+viewpoints, and the standard score z is a preset constant. These
+disqualified viewpoints offer a limited observation of unknown
+space, providing little benefit for efficient exploration. The
+viewpoint covering most frontier voxels among the qualified
+viewpoints is selected as the viewpoint representative . The
+viewpoint representative, along with its corresponding frontier,
+is assigned to the zone in which it is located. This approach
+ensures that the viewpoint representative not only covers a
+significant number of frontier voxels but also an acceptable
+number of unknown voxels, highlighting its capability to
+efficiently discover unexplored regions beyond the frontier.
+V. CP-G UIDED HIERARCHICAL EXPLORATION PLANNING
+The hierarchical exploration planning begins with construct-
+ing a global coverage path over zones utilizing the connectivity
+graph. Instead of greedily selecting the next viewpoint target,
+our local planner incorporates the intention of the coverage
+path guidance more consistently and explores surrounding
+frontiers in a flexible and globally optimized order minimizing
+navigation time.
+
+=== PDF PAGE 8 ===
+8
+Fig. 5. The top image illustrates the viewpoint qualification assessment,
+where the assessed viewpoint is disqualified due to its observation of an
+insufficient number of unknown voxels. The blue lines represent raycast
+samplings within camera FoV used for counting unknown voxels. The bottom
+image shows an example of the histogram and the distribution of the numbers
+of unknown voxels at all viewpoints, where the qualification cutoff line µ−zσ
+is highlighted in a dotted blue line.
+A. Coverage Path Planning
+We aim for a coverage path that includes all zones awaiting
+agent inspection with minimal traversal time, as depicted in
+Fig. 6(a). Unlike previous methods considering only unknown
+space [23, 62], we also account for active free zones, which are
+defined as free zones containing at least one frontier viewpoint
+representative. This better models the exploration process
+where the agent first reaches frontier viewpoints in active
+free zones before pushing frontiers into unknown regions.
+For active free zones, viewpoint centers are computed as the
+average positions of all viewpoint representatives within the
+zone and rectified as in Sec. IV-A if necessary. Distinguished
+from the zone center, which is related to zone geometry, the
+viewpoint center considers frontiers distribution and represents
+a more accurate position that the agent needs to arrive when
+visiting the zone.
+Coverage path planning is formulated as an Asymmetric
+Traveling Salesman Problem (ATSP) inspired by [22]. We
+solve for an open-loop tour of target positions, starting from
+the current position pc and passing through viewpoint centers
+of all active free zones as well as zone centers of all unknown
+zones. To ensure the solution minimizes the actual exploration
+duration, we dedicate effort to constructing a cost matrix that
+evaluates the traversal time between target positions more
+accurately. This is achieved by employing a more precise
+traversal time model, without resorting to empirical heuristic
+cost designs.
+To compute the cost matrix Ccp for the ATSP, a path P
+is first searched for each pair of target positions (p0, pn)
+using a hybrid method. For a short-distance search when
+||p0 − pn||2 < d thr, the path is computed with a voxel-
+based A* search that treats unknown voxels as free but applies
+a multiplicative penalty apenal to account for their uncertain
+status. For a long-distance search otherwise, the A* search is
+performed on the connectivity graph between the two graph
+vertices nearest to p0 and pn. While this only provides a
+rough path, achieving high accuracy is unnecessary over a
+long distance. Together, this hybrid approach efficiently solves
+both short and long-distance path searching, enabling rapid
+cost matrix computation.
+Given the searched path P = {p0, p1, · · · , pn} for target
+positions p0 and pn, the traversal time for P is estimated in a
+segment-wise manner. For segment pipi+1 with length li, the
+approximate traversal time ti can be computed using a linear
+uniformly accelerated motion model:
+ti = li
+vm
++ (vm − |ˆvi|)2
+2vmam
++ 2|ˆvi|
+am
+H(−ˆvi), (1)
+where vm and am are maximum velocity and acceleration.
+H(·) is the Heaviside step function, which takes a value of zero
+for negative arguments and one otherwise. ˆvi is the projection
+scalar of the velocity vi at pi along the segment pipi+1,
+ˆvi = vi · (pi+1 − pi)
+||pi+1 − pi|| (2)
+where the velocity vi at pi is defined as v0 = v1,
+vi = vm · pi − pi−1
+||pi − pi−1|| , i ≥ 1. (3)
+Using (1)-(3), the traversal time between p0 and pn is
+computed as Σn−1
+i=0 ti. The entries of the cost matrix Ccp, which
+includes traversal times between all pairs of target positions,
+are computed in this fashion. The exceptions are the entries
+corresponding to the cost from zone centers or viewpoint
+centers to the current position pc, which are assigned zero.
+This means returning to pc incurs no cost. Consequently, every
+closed-loop tour always includes an open-loop solution that
+shares the same cost value and starts from pc, which satisfies
+our objectives. This cost evaluation approach accounts for
+quadrotor kinematics, resulting in higher costs being assigned
+to longer and more tortuous paths. As a result, the obtained
+cost matrix provides more accurate estimations of traversal
+time that better reflect the actual executions in comparison
+with previous empirical heuristic cost designs.
+B. CP-Guided Local Path Planning
+The coverage path ¯Λ = {pc, ¯z1, ¯z2, · · · , ¯zn} produced
+above offers a promising order of zone visitation, where ¯zi
+are unknown and active free zones considered during coverage
+path planning. Nonetheless, the agent still requires an effec-
+tive order for visiting frontiers during exploration. A simple
+planner might extract frontiers within the first zone along
+the coverage path and compute a shortest path visiting these
+frontiers locally, as shown in Fig. 6(c) and (g). However, this
+locally optimized strategy may result in circuitous routes with
+sharp turns, reducing exploration efficiency (Fig. 6(d)). More
+importantly, it can lead to suboptimal detours that deviate from
+the intention of global guidance, making the global guidance
+less meaningful (Fig. 6(h)). In contrast, our planner produces
+local paths that consistently follow the guidance of the global
+coverage path, while allowing the possibility of intentionally
+leaving certain frontier viewpoints to be dropped by later, as
+illustrated in Fig. 6(b)(f).
+
+=== PDF PAGE 9 ===
+9
+Fig. 6. Two cases are shown in the top and bottom rows respectively. The left two columns illustrate the proposed hierarchical exploration planner. In (a)(e),
+a coverage path is first generated, shown as a blue polyline. During local path planning in (b)(f), the viewpoint representatives belonging to the highlighted
+zone are collected and inserted into the coverage path, shown as pink segments. The proposed planner generates efficient local paths consistently following
+the intention of global guidance. The right two columns depict problems produced by a simple local planner. In (c)(d), it produces a circuitous route reducing
+exploration efficiency. In (g)(h), it takes a detour deviating from intended global guidance.
+Specifically, the frontier viewpoint representatives held by
+zone ¯z1 and zone ¯zc are collected into a set V, where ¯zc
+denotes the zone pc belongs to. Note that ¯zc and ¯z1 may
+refer to the same zone, which happens when pc is located
+in zone ¯z1. As illustrated in Fig. 6(b)(f), these viewpoint
+representatives in V are then inserted into the reduced coverage
+path ordered sequence Λ = ¯Λ\{¯z1, ¯zc} = {pc, z1, · · · , zn′}
+with the objective of minimizing traversal time. This can be
+formulated as a Sequential Ordering Problem (SOP) [78],
+which is a variation of ATSP with precedence constraints.
+Lemma 2 (Sequential Ordering Problem). Given a directed
+graph G = ( V, E), edge weight w : E → R and a set of
+precedence constraints P ⊆ V × V , the Sequential Ordering
+Problem searches for a minimum cost permutation of vertices
+from s ∈ V to t ∈ V that satisfies the precedence constraints.
+In our case, we define the graph vertices as Vsop = Λ ∪ V
+and the precedence constraints set as
+Psop = {(pc, xi)|xi ∈ Vsop\{pc}}∪{(zi, zj)|zi, zj ∈ Λ, i < j },
+(4)
+where precedence constraint (a, b) indicates vertex a must be
+visited before vertex b. The cost matrix defining the problem,
+which again we wish to calculate accurately, can be expressed
+as
+Csop =
+
+Cz,z Cz,v
+Cv,z Cv,v
+
+. (5)
+Cz,z is an asymmetric matrix which represents costs be-
+tween reduced coverage path elements in Λ. Its entry values
+can be filled by reusing the information from cost matrix Ccp
+described in Sec. V-A without extra computational overhead:
+Cz,z(i, j) =
+
+
+
+Ccp(i′, j′) if i < j,
+−1 if i > j,
+0 otherwise,
+(6)
+where Ccp(i′, j′) is the corresponding entry for elements i, j,
+and the −1 represents the precedence constraints in Psop.
+Cv,v is a symmetric matrix that records the cost values
+between frontier viewpoint representatives in V. The entry for
+viewpoint vi, vj with yaw angles yi, yj are calculated as
+Cv,v(i, j) = Cv,v(j, i) = max{tpos, tyaw}, (7)
+where the positional time cost tpos =P ti is computed using
+(1) and the time tyaw required for yaw rotation between two
+viewpoints is similarly estimated using a linear uniformly
+accelerated motion model.
+Similarly, the entries of Cv,z and Cz,v, which store costs
+between viewpoint representatives and reduced coverage path
+elements, can be calculated by (7). Note that to compute tyaw,
+the heading directions of reduced coverage path elements zi
+are artificially defined as y(zi) = zi.c − zi−1.c with z0.c :=
+pc. To ensure the current positionpc is always at the beginning
+of the path, the values in the first column of matrix Cv,z are
+set to −1 as precedence constraints.
+Fig. 6(b)(f) exemplify local planning results for frontier
+visitation order in two scenarios. In Fig. 6(b), viewpoint
+representative A is intentionally postponed for later visitation,
+and viewpoint representative C is planned to be visited after
+the agent exits the bottom-left zone. In Fig. 6(f), viewpoint
+representatives E and F are arranged to be visited in the
+last. These decisions produce an exploration motion that is
+better aligned with the global coverage path. This flexibility
+enables efficient exploration of the surrounding frontiers in a
+globally optimized manner while maintaining consistency with
+the intention of the coverage path.
+C. Local Refinement and Trajectory Generation
+Once the frontier visitation order is determined, a local
+viewpoint refinement is performed to obtain the optimal com-
+
+=== PDF PAGE 10 ===
+10
+bination among all viewpoints similar to [22], since only view-
+point representatives were considered in the previous stage.
+Given an ordered list of viewpoint targets, navigation paths are
+searched within free space using a hybrid method. V oxel-based
+A* search is employed for nearby targets, whereas graph A*
+search is applied on the free subgraph Gf of the connectivity
+graph for distant targets. Based on the path segments, a
+minimum-time B-spline trajectory is then generated using [79],
+ensuring constraints on the smoothness, safety and quadrotor
+dynamics.
+VI. E XPLORATION PLANNER EVALUATION ENVIRONMENT
+In this section, we introduce the exploration planner eval-
+uation environment that facilitates fair and comprehensive
+simulation experiments in the subsequent benchmark exper-
+iments (Sec. VII) and ablation studies (Sec. VIII). Most
+existing works often validate the exploration planners on a
+narrow selection of specific maps, typically inherited from
+previous studies. However, this can result in algorithms overly
+specialized for those particular maps. Therefore, we develop
+a lightweight software-in-the-loop exploration planner eval-
+uation environment for fair and comprehensive simulation
+evaluation of fast autonomous exploration planners using an
+aerial robot. This environment allows for the comparison and
+assessment of exploration planners across a variety of test-
+ing scenarios with different characteristics using an identical
+quadrotor simulator.
+A. Exploration Planner Evaluation Environment
+The simulation environment was developed based on the
+ROS Noetic2 framework and the depth information is directly
+rendered by simulation using Open3D3 without artificial noise.
+The system setup of the exploration planner evaluation envi-
+ronment for the task of autonomous exploration with aerial
+robot is depicted in Fig. 7. It consists of the following key
+components:
+1) A map loader that supports map inputs generated from
+various sources, such as 3D modeling software, game
+engines, open-source models, and real-world datasets;
+2) An aerial robot simulator that models quadrotor dynam-
+ics and visual sensor measurements.
+3) Several elementary modules for high-level exploration
+algorithms, which include volumetric mapping [58],
+collision-free trajectory generation [80], and visualiza-
+tion tools;
+4) A plug-and-play bundle of state-of-the-art exploration
+planner representatives [21]–[25] for testing and evalu-
+ation.
+Different from a recent autonomous exploration develop-
+ment environment [81] for LiDAR-based exploration with
+a ground vehicle, our environment is designed for aerial
+robot exploration with visual sensors. More importantly, our
+environment not only provides a diverse testing map dataset
+but also supports customization of testing scenarios generated
+2https://wiki.ros.org/noetic
+3https://www.open3d.org/
+Fig. 7. The system setup of the exploration planner evaluation environment
+developed for autonomous exploration with aerial robot.
+Fig. 8. The first column displays snapshots of the original scenarios and the
+second column shows the real-time depth images rendered by the simulator.
+The third column showcases a quadrotor conducting an exploration task in
+the simulator, along with the volumetric maps constructed on the fly.
+from various sources. This includes 3D modeling software
+(e.g., SolidWorks4, OpenSCAD5), 3D computer graphics game
+engines (e.g., Unreal Engine 6, Unity7), as well as open-source
+models and real-world datasets (e.g., Gazebo models 8, Fusion-
+Portable [82]). Given the map input and planning command,
+the simulator is able to simulate quadrotor dynamics and
+render real-time depth images as sensor measurements. This
+simulator builds upon the one utilized in several previous
+works [22, 23, 58, 80], which was limited to accepting
+only point cloud inputs. In our improved version, we have
+introduced the capability of importing a map in either mesh
+or point cloud representation. As demonstrated in Fig. 8,
+the top row shows a mesh map Edith Finch 9 provided by
+the Unreal Engine and the bottom row shows a point cloud
+map complex parking garage released by MARSIM [83].
+This evaluation environment facilitates comprehensive com-
+parisons of existing exploration planners across diverse testing
+maps. As an example, we incorporate several state-of-the-
+art exploration planners [21]–[25] and the proposed planner
+into this environment, offering a plug-and-play benchmark
+bundle for further research. It also serves as a mature platform
+that benefits the research community in developing high-level
+autonomous exploration algorithms for aerial robots.
+B. Evaluation Scenarios
+We provide diverse testing scenarios for comprehensive sim-
+ulation experiments, where the scenario diversity is measured
+4https://www.solidworks.com/
+5https://openscad.org/
+6https://www.unrealengine.com/
+7https://unity.com/
+8https://app.gazebosim.org/
+9https://www.unrealengine.com/marketplace/en-US/product/ef-house
+
+=== PDF PAGE 11 ===
+11
+TABLE II
+CHARACTERISTICS OF TESTING SCENARIOS
+Scene Access-
+ibility
+Complex
+-ity
+Dimen-
+sion
+Size (m) Source
+Classical
+Office
+High
+99.55%
+Low
+0.078 2.5D† 30x15x2 Pointcloud
+Generator [22]
+Complex
+Office
+High
+92.42%
+High
+0.656 2.5D† 30x30x2 SolidWorks
+Octa
+Maze
+Mid
+86.61%
+Low
+0.061 2.5D† 35x35x2 OpenSCAD
+DARPA
+Tunnel
+Low
+28.19%
+Low
+0.024
+2.5D 42x20x2 Real-World
+Dataset10
+Duplex
+Office
+Mid
+89.30%
+High
+0.791
+3D 20x20x4 SolidWorks
+Power
+Plant
+Mid
+72.60%
+Low
+0.006
+3D 30x15x15 Gazebo
+Models
+† 2.5D maps are an upgrade of 2D maps by incorporating height information.
+We consider a map as 2.5D if it can be visually displayed on a 2D plane
+while accurately expressing the environment.
+(a) Classical Office
+ (b) Complex Office
+ (c) Octa Maze
+(d) DARPA Tunnel
+ (e) Duplex Office
+ (f) Power Plant
+Fig. 9. An overview of the testing scenarios used for simulation experiments.
+by accessibility and complexity. Accessibility is defined as
+the volumetric percentage of accessible regions of the entire
+exploration space within the bounding box.
+Accessibility = Vacc
+V . (8)
+Complexity computation begins by sampling n pairs of points,
+where the Euclidean distances between the pairs are uniformly
+distributed. For each pair of points, the ratio of the shortest free
+path length to the Euclidean distance is computed. Complexity
+is quantified by the variance-to-mean ratio (VMR) of these n
+ratios, which reflects the dispersion of their distribution. A
+more dispersed distribution indicates a more unstructured ar-
+rangement of obstacles in the scenario and higher complexity.
+Complexity = σ2
+µ =
+Pn
+i=1(ri − 1
+n
+Pn
+i=1 ri)2
+Pn
+i=1 ri
+ri = L(pi, qi)
+||pi − qi||2
+, i = 1, 2, · · · , n
+(9)
+For subsequent simulation experiments, we provide six
+scenarios with different levels of accessibility and complexity.
+These scenarios include the Classical Office, Complex Office,
+10https://github.com/subtchallenge/systems tunnel ground truth
+TABLE III
+PARAMETERS SETTING FOR EXPLORATION PLANNERS
+Type Parameter Section Notation Value
+FALCON
+Params
+Safety clearance IV-A dmin 0.7 m
+Uniform cell size IV-A scell 5.0 m
+Unknown penalty IV-B,V-A apenal 1.5
+Standard score IV-C z 0.1
+Distance threshold V-A,V-C dthr 10.0 m
+Benchmark
+Common
+Params
+Max linear velocity vm 2.0 m/s
+Max linear acceleration am 3.0 m/s2
+Max angular velocity ˙ξm 1.57 rad/s
+Max angular acceleration ¨ξm 1.57 rad/s2
+Sensor FoV - [80 × 60] deg
+Sensing depth - 5.0 m
+Octa Maze, DARPA Tunnel, Duplex Office, Power Plant. The
+characteristics of these scenarios are summarized in Table II
+and overviews are depicted in Fig. 9.
+VII. B ENCHMARK AND ANALYSIS
+In this section, we conduct extensive benchmark exper-
+iments in simulation to evaluate the proposed exploration
+planner FALCON comparing with state-of-the-art methods
+[21]–[25]. By analyzing the experimental results, we provide
+an in-depth evaluation of the relative strengths and limitations
+exhibited by these exploration planners according to the VECO
+criteria. All simulation experiments are conducted on a com-
+puter with an Intel Core i7-13700F, GeForce RTX 4090 24G,
+and 32GB memory.
+A. Implementation Details
+1) F ALCONConfigurations: For the algorithms, the ATSP
+mentioned in Sec. V-A is solved using the LKH solver
+[84]. The solver of the CCL problem in Lemma 1 is self-
+implemented according to [85]. An open-source solver 11 is
+employed for the SOP problem in Lemma 2. The voxel map
+update module follows [58]. The parameter configuration of
+the proposed planner is listed in Table III, which is used in
+all the experiments in Sec. VII - IX. Exploration replanning
+is triggered by multiple events, including update to frontiers,
+detection of unsafe trajectories, and expiration of a predefined
+time interval set to 3s. The exploration planner operates
+on a single core for fair benchmark comparisons. However,
+various planner modules can be easily parallelized, such as
+the calculation of the coverage path cost matrix Ccp.
+2) Benchmark Candidates: The benchmark comparison
+evaluates FALCON against a series of state-of-the-art visual-
+based exploration planners that prioritize rapid exploration
+completion. The planner bundle includes NBVP [21], FUEL
+[22], RACER [23], ECHO [24] and FAEP [25], listed in
+ascending order of publication dates. NBVP is a sampling-
+based exploration planner that employs a receding horizon
+strategy to determine the next-best view based on the amount
+of unmapped space that can be explored. FUEL is a more
+sophisticated hybrid planner that generates a global path of
+11https://github.com/rod409/SOP
+
+=== PDF PAGE 12 ===
+12
+TABLE IV
+EXPLORATION STATISTICS
+Scene Method Exploration Time (s) Flight Distance (m) Coverage (m 3) Avg Velocity (m/s 2)
+Avg Std Max Min Avg Std Max Min Avg Std Max Min Avg Std Max Min
+Classical
+Office
+NBVP [21] 741.6 83.12 839.4 609.7 338.9 31.40 373.6 295.8 757.2 28.55 795.6 719.1 0.46 0.02 0.49 0.44
+FUEL [22] 128.2 4.03 133.6 122.1 207.4 6.80 216.9 195.6 863.0 1.13 864.6 860.6 1.62 0.05 1.68 1.51
+RACER [23] 114.0 5.80 120.3 101.9 176.4 10.95 192.5 149.3 880.9 1.44 882.7 878.1 1.55 0.04 1.62 1.46
+ECHO [24] 126.2 6.01 139.3 119.5 195.3 10.07 210.6 178.4 879.6 1.20 881.6 877.8 1.55 0.05 1.61 1.46
+FAEP [25] 115.1 4.96 126.4 108.0 167.4 14.34 193.9 152.6 881.0 1.89 884.0 878.6 1.40 0.08 1.52 1.28
+Proposed 98.0 4.66 104.0 91.1 159.9 9.06 176.1 149.1 883.8 0.99 884.8 881.9 1.63 0.05 1.70 1.55
+Complex
+Office
+NBVP [21] 900.0 0.0 900.0 900.0 391.2 6.69 400.4 382.9 1029.2 119.47 1156.1 778.7 0.43 0.01 0.44 0.43
+FUEL [22] 216.9 10.04 229.0 205.1 373.8 17.49 407.3 358.9 1617.5 1.18 1619.2 1616.1 1.72 0.06 1.78 1.63
+RACER [23] 235.7 30.37 290.4 204.6 404.7 60.15 516.6 351.8 1649.0 1.96 1651.9 1646.4 1.71 0.04 1.78 1.64
+ECHO [24] 240.0 7.50 251.6 229.8 395.5 13.65 407.7 369.9 1636.4 1.87 1639.0 1634.4 1.65 0.03 1.68 1.61
+FAEP [25] 191.8 7.72 203.7 182.4 317.8 16.64 346.0 295.2 1637.3 2.51 1641.6 1634.1 1.55 0.13 1.69 1.31
+Proposed 153.4 6.22 164.7 146.6 274.8 12.80 297.5 259.1 1662.6 0.60 1663.6 1661.8 1.79 0.03 1.83 1.73
+Octa
+Maze
+NBVP [21] 900.0 0.0 900.0 900.0 394.1 12.28 406.1 372.1 1187.9 35.28 1248.0 1140.2 0.44 0.01 0.45 0.41
+FUEL [22] 302.6 9.69 321.1 293.8 502.7 21.82 537.9 470.1 1933.8 2.14 1937.4 1931.0 1.66 0.03 1.71 1.60
+RACER [23] 312.0 27.67 342.9 281.6 499.1 47.82 563.4 440.0 1977.1 3.87 1982.3 1972.2 1.60 0.04 1.64 1.56
+ECHO [24] 299.1 7.89 311.0 289.4 472.3 10.63 483.3 452.2 1966.9 2.19 1969.2 1964.1 1.58 0.04 1.63 1.52
+FAEP [25] 281.0 6.69 288.6 270.3 421.4 19.41 456.3 398.9 1969.4 4.15 1975.3 1965.4 1.43 0.11 1.58 1.25
+Proposed 216.7 3.97 221.5 211.8 377.9 7.69 384.4 365.5 2019.8 0.75 2020.4 2018.5 1.74 0.02 1.76 1.72
+DARPA
+Tunnel
+NBVP [21] 650.8 87.83 734.0 500.3 212.8 25.48 235.0 172.6 462.5 3.03 466.0 458.6 0.33 0.01 0.35 0.32
+FUEL [22] 67.4 6.09 75.4 58.2 110.7 6.84 119.5 101.6 433.0 3.58 437.2 427.8 1.64 0.08 1.81 1.58
+RACER [23] 62.0 5.14 67.5 52.4 104.6 7.02 113.0 92.1 427.7 2.15 429.7 423.5 1.69 0.04 1.76 1.65
+ECHO [24] 58.2 2.83 62.6 54.2 102.3 4.34 108.3 95.4 442.3 1.32 443.9 440.1 1.76 0.02 1.79 1.73
+FAEP [25] 59.9 3.49 65.0 54.5 96.0 4.32 99.6 88.5 424.1 4.48 430.4 416.6 1.53 0.11 1.62 1.31
+Proposed 49.7 2.75 52.8 44.9 92.2 4.84 98.5 84.5 444.8 1.97 447.1 441.2 1.84 0.02 1.87 1.81
+Duplex
+Office
+NBVP [21] 900.0 0.00 900.0 900.0 407.9 70.92 503.5 316.6 1266.2 148.88 1395.0 984.6 0.45 0.08 0.56 0.35
+FUEL [22] 216.7 6.95 229.2 209.0 353.7 16.38 371.1 333.0 1356.6 3.33 1360.5 1351.8 1.63 0.05 1.69 1.57
+RACER [23] 250.4 4.32 254.2 242.2 389.0 6.36 398.0 378.5 1380.5 2.22 1383.0 1377.8 1.55 0.02 1.59 1.53
+ECHO [24] 232.5 11.94 244.2 211.7 371.9 20.43 395.0 334.4 1372.9 14.35 1384.8 1344.7 1.60 0.02 1.62 1.57
+FAEP [25] 202.7 3.66 208.9 198.8 306.7 15.52 328.0 288.7 1371.5 2.69 1374.4 1367.7 1.44 0.07 1.55 1.36
+Proposed 178.1 8.19 186.6 163.4 298.5 17.37 321.5 272.0 1399.2 2.23 1402.6 1396.4 1.67 0.04 1.72 1.63
+Power
+Plant
+NBVP [21] 900.0 0.00 900.0 900.0 384.8 11.89 403.2 369.5 2583.5 215.94 2863.3 2294.9 0.43 0.01 0.45 0.41
+FUEL [22] 378.4 18.08 402.6 356.6 631.2 32.49 678.0 586.4 4156.5 3.12 4160.8 4151.2 1.68 0.02 1.72 1.65
+RACER [23] 424.1 30.57 473.8 388.7 660.6 27.80 702.2 624.9 4141.4 6.01 4149.3 4135.2 1.56 0.06 1.63 1.48
+ECHO [24] 441.2 19.57 456.9 403.1 677.3 35.61 716.3 613.7 4154.8 8.68 4164.2 4140.9 1.53 0.02 1.57 1.50
+FAEP [25] 333.2 12.52 344.4 313.6 541.9 16.13 561.6 520.5 4195.5 8.76 4209.5 4185.2 1.34 0.14 1.52 1.19
+Proposed 291.9 6.56 298.4 280.1 495.7 16.64 511.4 464.0 4212.8 4.08 4220.4 4209.6 1.70 0.02 1.73 1.66
+(a) NBVP
+ (b) FUEL
+ (c) RACER
+ (d) ECHO
+ (e) FAEP
+ (f) Proposed
+Fig. 10. The final executed trajectories from all the six exploration planners in Octa Maze and Power Plant.
+frontier visitation order and then refines a local set of view-
+point samples around the frontiers. Instead of a frontier visi-
+tation order, RACER opts for a coverage path of unexplored
+regions as the global guidance. As RACER is a multi-robot
+exploration planner, we adapt it for a single-robot version in
+this benchmark comparison. ECHO utilizes a delicate heuristic
+evaluation function to determine the next frontier target, with-
+out a global tour. Since there is no open-source code available
+for ECHO, we use our implementation. FAEP improves upon
+FUEL by adding frontier-level factors to cost formulation and
+introducing an adaptive yaw planning module. For all these
+methods, the mapping modules inherited from their source
+code are utilized. Note that the impact of their differences on
+the exploration should be limited, as they typically relate to the
+reconstruction near obstacle surfaces whereas the exploration
+planners focus on the boundary regions between known and
+
+=== PDF PAGE 13 ===
+13
+(a) Classical Office
+ (b) Complex Office
+ (c) Octa Maze
+(d) DARPA Tunnel
+ (e) Duplex Office
+ (f) Power Plant
+Fig. 11. The exploration progress of all the five state-of-the-art benchmarks and the proposed exploration planner FALCON in all the six testing scenarios.
+Fig. 12. The box plot with logarithmic scale of computation time for a single planning iteration across all six exploration planners in the six testing scenarios.
+unknown spaces. In the benchmark experiments, the linear
+and angular dynamics limitations as well as the sensor model
+are set identical for all methods, as shown in Table III. All
+benchmark experiments are subject to a time limit of 900
+seconds, beyond which they are terminated prematurely and
+left incomplete.
+B. Simulation Benchmark Results And Analysis
+All the five state-of-the-art benchmarks and the proposed
+exploration planner are comprehensively evaluated across all
+six scenarios. For each planner in each scenario, the statistics
+from 10 runs are summarized in Table IV and the final
+exploration trajectories in Octa Maze and Power Plant are
+visualized in Fig. 10. The exploration progresses are plotted
+in Fig. 11 and the box plots of the computation time of a
+single planning iteration are shown in Fig. 12. The complete
+exploration experiments are presented in the supplementary
+video due to limited space.
+The analysis of the benchmark comparison results is con-
+ducted according to the VECO criteria that an ideal exploration
+planner should satisfy, as mentioned in Sec. I. In the subse-
+quent discussion, we further elaborate on the VECO criteria
+and analyze the benchmark comparison results accordingly.
+1) Versatility: An exploration planner should exhibit effec-
+tive performance across diverse environments, regardless of
+the level of accessibility of the entire space or the complexity
+of obstacles present.
+For the versatility criterion, we analyze the performance
+of each planner based on the accessibility and complexity
+characteristics of the testing scenarios as shown in Table II.
+NBVP only accomplishes exploration in small and simple
+scenarios like Classical Office and DARPA Tunnel, exhibit-
+ing limited versatility. ECHO has satisfactory performance
+in some of the 2.5D scenarios but shows relatively slow
+performance in scenarios like Complex Office and Power
+Plant, primarily due to its carefully designed cost function
+which does not generalize well. FUEL performs stably across
+scenarios with different levels of accessibility and complexity
+but its exploration efficiency ranks low in all testing scenarios.
+FAEP demonstrates good versatility and ranks within the
+top three in all six testing scenarios. RACER is the runner-
+up in Classical Office , but its performance deteriorates in
+high-complexity environments like Complex Office and low-
+accessibility environments like DARPA Tunnel. This is be-
+cause of high computational complexity in a high-complexity
+environment and constant misleading by inaccessible regions
+in a low-accessibility environment. The proposed planner
+FALCON consistently outperforms all the benchmarks in all
+the scenarios, exhibiting excellent versatility across different
+environments.
+2) Exploration Efficiency: An exploration planner should
+generate motions that minimize the exploration duration, cov-
+ering accessible space as quickly as possible.
+For the exploration efficiency criteria, each planner is as-
+sessed based on the average exploration time in Table IV.
+NBVP needs rather long exploration time and even fails
+to complete tasks in large and complex scenarios. This is
+due to the heavy computation required for the next-best-
+view selection, which results in slow flight speed and even
+pauses during exploration, as shown in Fig. 10(a). ECHO
+
+=== PDF PAGE 14 ===
+14
+TABLE V
+GENERAL ABLATION STUDIES STATISTICS IN COMPLEX OFFICE
+Method Exploration Time (s) Flight Distance (m) Coverage (m 3) Avg Velocity (m/s 2)
+Avg Std Max Min Avg Std Max Min Avg Std Max Min Avg Std Max Min
+UniDec 164.4 6.86 172.1 152.6 297.2 15.78 316.5 270.7 1651.2 0.83 1651.9 1649.6 1.80 0.04 1.89 1.77
+NoCG 189.9 5.91 197.2 180.6 320.4 12.45 332.4 302.6 1653.1 1.54 1655.0 1651.2 1.68 0.04 1.73 1.62
+CPAF 169.8 8.30 181.1 160.8 288.3 16.98 308.8 266.7 1663.1 0.32 1663.5 1662.6 1.69 0.02 1.72 1.66
+CPUN 171.4 5.57 178.6 163.7 298.6 9.93 311.8 285.3 1662.2 1.63 1664.5 1659.9 1.74 0.02 1.77 1.71
+NoSOP 171.7 9.39 185.7 162.8 300.4 16.95 321.9 283.1 1650.8 0.88 1651.6 1649.2 1.75 0.02 1.77 1.71
+Proposed 153.4 6.22 164.7 146.6 274.8 12.80 297.5 259.1 1662.6 0.60 1663.6 1661.8 1.79 0.03 1.83 1.73
+neglects global optimality, leading to back-and-forth explo-
+ration motions, as shown in Fig. 10(d). Both FUEL and FAEP
+demonstrate good performance by utilizing global guidance of
+frontier visitation order, and FAEP refines FUEL by adaptive
+yaw planning, yielding quite good results in all scenarios.
+Instead of planning only in free space as the previous four
+methods do, RACER and the proposed planner FALCON
+generate global paths considering unknown regions. However,
+RACER frequently produces back-and-forth motions reducing
+exploration efficiency, as shown in Fig.10(c). This is because
+its global guidance is not well followed, especially in high-
+complexity environments. Fig.11 reveals that all the bench-
+marking planners have a long-tail issue to different degrees. It
+indicates that some corners are not thoroughly explored during
+the exploration, requiring the agent to return to them at the end
+to complete the exploration. The proposed exploration planner
+FALCON mitigates this long-tail problem and outperforms
+all the benchmarks in all scenarios, achieving the shortest
+exploration time. In Duplex Office, FALCON is 13.81% faster
+than the runner-up, and in the more challenging scenario Octa
+Maze, it is 29.67% faster. FALCON’s superior performance is
+achieved by a reasonable global coverage path guidance and a
+flexible and globally optimized local planner that consistently
+incorporates the global guidance’s intention.
+3) Completeness: When an exploration planner reports
+completion, the entire space should have been thoroughly
+explored and reconstructed, with accessible space covered as
+much as possible.
+For the completeness criteria, the planners are compared
+based on the average coverage in Table IV and the reconstruc-
+tion quality shown in Fig. 10. In general, the coverage statistic
+for all methods is satisfactory, except for NBVP, which per-
+forms well only in small and simple scenarios such as DARPA
+Tunnel. However, as shown in Fig. 10 (b-e), the reconstructed
+volumetric maps generated by the benchmarks commonly have
+some small corners or walls missing, among which FAEP
+has the worst reconstruction quality. The completeness perfor-
+mance is influenced by multiple factors, including volumetric
+mapping methods, frontier discard policy, and exploration
+motion continuity. The proposed planner FALCON achieves
+a good overall performance in terms of both coverage volume
+and reconstruction quality, as demonstrated in Fig. 10 (f).
+4) Resp Onsiveness: An exploration planner should be com-
+putationally efficient, capable of promptly responding and
+generating exploration motions in real-time when new sensor
+data arrives.
+For the responsiveness criteria, the planners are evaluated
+according to the computation time of a single planning itera-
+tion shown in Fig. 12. NBVP is the most computationally ex-
+pensive planner due to its sampling-based nature. RACER has
+high computation time in high-complexity environments like
+Duplex Office where the number of fine decomposition cells
+increases exponentially, and in low-accessibility environments
+like DARPA Tunnel where the planner needs to constantly
+consider inaccessible regions. FUEL and FAEP have similar
+responsiveness performance as their computational complexity
+is related to the number of frontiers. Hence, their computation
+time shows a relatively large standard deviation, as they
+compute quickly at the start and end of exploration and slower
+during the middle when the number of frontiers is large.
+ECHO demonstrates relatively good computational efficiency
+by omitting global planning and solely evaluating the scalar
+heuristic function for each frontier. Thanks to the connectivity
+graph boosted cost evaluation, the proposed planner FALCON
+exhibits good responsiveness, with an acceptable median and
+low standard deviation in one-iteration computation time,
+while capable of generating motions with high exploration
+efficiency.
+VIII. A BLATION STUDIES
+The proposed method is further validated through a series
+of ablation studies in simulation. To justify the effectiveness of
+each proposed module, the ablation experiments quantitatively
+evaluate the complete exploration planner proposed comparing
+against baseline variants.
+A. Ablation Settings and General Experiments
+According to the proposed modules, we design the follow-
+ing baseline variants for comparison:
+• UniDec: This variant of the space decomposition module
+(Sec. IV-A) uniformly decomposes the exploration space
+into cells with a fixed size, rather than employing the
+proposed connectivity-aware approach.
+• NoCG: This variant for the connectivity graph (CG)
+module (Sec. IV-B) omits the connectivity graph and
+directly uses voxel-based A* for path search between any
+two positions.
+• CPAF and CPUN: These are two variants of the coverage
+path (CP) planning module (Sec. V-A) that incorporate
+only active free (AF) zones and only unknown (UN)
+zones respectively as coverage path elements.
+• NoSOP: This variant for the CP-guided local path plan-
+ning module (Sec. V-B) adopts a simple local planning
+
+=== PDF PAGE 15 ===
+15
+Fig. 13. A comparison of space decomposition results and the connectivity
+graph built upon between the proposed method and the UniDec in the
+Complex Office.
+strategy with local horizon, which considers only the next
+cell in the CP.
+We compare these baseline variants with the proposed
+method in terms of general exploration efficiency in the Com-
+plex Office. The configurations are the same as in Table III and
+the statistics for 5 runs are presented in Table V. The results
+demonstrate that the full proposed method, with all modules
+functioning, achieves the best performance with shortest ex-
+ploration duration and flight distance. This highlights the effec-
+tiveness and contribution of each proposed module towards the
+overall exploration efficiency. In the following Sec. VIII-B -
+VIII-E, the efficacy of each module will be further discussed
+and analyzed in detail.
+B. Ablation Study of Space Decomposition
+The UniDec variant replaces the proposed connectivity-
+aware space decomposition with a simple uniform decom-
+position approach. Specifically, voxels within a uniform cell
+are clustered based on their occupancy status. Then one
+free centroid and one unknown centroid are computed as
+the average positions of the voxels within each cluster, as
+shown in Fig. 13(a). These centroids are later used as the
+elements during connectivity graph construction and coverage
+path planning.
+We compare the space decomposition results and the con-
+nectivity graph produced by the proposed method versus
+UniDec during an exploration. As shown in Fig. 13(a), it
+can be observed that UniDec generates unreasonable cen-
+troids and connectivity graph in some areas, which cannot
+represent the environmental structure. For example, in the
+right highlighted region, the unknown centroids are placed
+within free space, and in the left highlighted rectangle, the
+segregated free spaces are treated as one entity and assigned
+a single centroid. This may result in problematic coverage
+paths, consistently misleading the exploration planner towards
+TABLE VI
+ABLATION STUDY OF CONNECTIVITY GRAPH
+ON COMPUTATIONAL EFFICIENCY
+Scene Study
+Average Computation Time (ms)
+Space
+Decom.
+IV-A
+Conn.
+Graph
+IV-B
+Coverage
+Path†
+V-A
+Local
+Planning†
+V-B
+Total⋄
+Complex
+Office
+NoCG 0.83 6.96 114.15+5.07 32.01+0.60 171.14
+Full 0.73 6.33 10.88+4.68 2.09+0.51 37.18
+Power
+Plant
+NoCG 3.72 11.96 563.99+42.74 128.92+8.71 760.28
+Full 3.74 9.17 16.47+38.2 10.38+5.97 86.21
+† The computation time is seperately counted for cost matrix construction
+time + solver resolution time .
+⋄ The total computation time for each planning iteration, including time for
+other modules such as frontiers identification and trajectory generation.
+(a) Connectivity graph
+ (b) Ours
+ (c) NoCG
+Fig. 14. (a) shows the connectivity graph constructed by the proposed method
+during an exploration. (b) and (c) display the path search results for cost
+evaluations from a graph-based A* search on the connectivity graph and a
+voxel-based A* search respectively.
+unreachable regions. In contrast, as depicted in Fig. 13(b),
+the proposed connectivity-aware decomposition yields a more
+reasonable space decomposition and connectivity graph that
+better captures the actual topology of the environment. The
+overall exploration duration of UniDec is 7.2% longer than
+the proposed method, as shown in Table V.
+C. Ablation Study of Connectivity Graph
+The NoCG variant excludes the module of connectivity
+graph construction. Consequently, distances between any two
+positions are computed through voxel-based A* searches when
+calculating the cost matrices Ccp and Csop mentioned in
+Sec. V-A and V-B respectively. In contrast, the proposed
+hybrid method leverages voxel-based A* search for short-
+distance targets below threshold dthr and graph-based A*
+search on connectivity graph otherwise. Note that the path
+searches discussed in this section are only for the purpose of
+cost evaluation when constructing the matrices Ccp and Csop,
+which are not used in the actual path planning for execution.
+Table VI shows the average computation time of each
+module in a planning iteration for both NoCG and the full
+proposed method in Complex Office and Power Plant scenar-
+ios. The statistics reveal that the cost matrix construction time
+of NoCG is over 10 times higher compared to the proposed
+method, significantly increasing the total computation time.
+As an example, Fig. 14 showcases path searches between
+two long-distance targets performed by our hybrid method
+and NoCG. With a real-time constructed connectivity graph
+(Fig. 14(a)), a 47.24 m path (Fig. 14(b)) is searched on the
+graph in a negligible 0.04 ms. Without a connectivity graph,
+
+=== PDF PAGE 16 ===
+16
+Fig. 15. This figure plots the path search time of both voxel-based and graph-
+based searches for target pairs with different Euclidean distances sampled in
+Octa Maze. It also plots the error rate of the graph-based search path length
+with respect to a voxel-based search. The threshold dthr utilized in our hybrid
+method is illustrated as green dashed line.
+the voxel-based search conducted by NoCG takes 9.4 ms to
+find a path with 37.58 m length (Fig. 14(c)). Although a
+voxel-based search provides a shorter path, it comes with a
+significantly higher computation cost. This is further validated
+in Fig. 15, which plots the error rate of searched path lengths,
+calculated by pgraph/pvoxel−1, with both of the graph-based and
+voxel-based path searching time. The plot reveals that graph-
+based search for short-distance targets may introduce highly
+inaccurate shortest path lengths while voxel-based search for
+long-distance targets may take much longer time up to two
+magnitudes. Our hybrid method provides a balance between
+computational efficiency and pathfinding accuracy by utilizing
+voxel-based search for short-distance targets below threshold
+dthr and graph-based search for long-distance targets above
+threshold dthr. Considering the fact that this cost evaluation is
+performed repeatedly for each entry in the cost matrices Ccp
+and Csop, our proposed hybrid cost evaluation method offers
+substantial computational savings.
+The overall exploration efficiency in Table V indicates that
+NoCG diminishes the performance, resulting in 23.8% longer
+exploration time compared to the full proposed method. The
+long planning time is the primary reason for NoCG’s perfor-
+mance degradation, as it prevents the exploration planner from
+promptly responding to the latest environment information.
+In worst-case scenarios, the agent must stop and wait for
+planning completion. By boosting the exploration planning
+responsiveness, the connectivity graph is validated to result
+in more efficient exploration motions with shorter durations.
+D. Ablation Study of Global Guidance
+We validate the effectiveness of our coverage path global
+guidance by comparing it to two variants, CPAF and CPUN.
+During global path planning, CPAF only considers active free
+zones, while CPUN only considers unknown zones. The global
+paths produced by these two variants are similar to those
+generated by FUEL [22] and RACER [23] respectively. In
+contrast, the proposed method takes into account both active
+free and unknown zones as coverage path elements.
+The global paths produced by CPAF, CPUN and the pro-
+posed approach are illustrated in Fig. 16. As the global
+path from CPAF focuses solely on frontier regions, it fails
+Fig. 16. Comparison of the global guidances generated by variants CPAF,
+CPUN and the proposed method in the Classical Office.
+(a) NoSOP
+ (b) Ours
+Fig. 17. The exploration trajectories executed by NoSOP and the proposed
+planner in Complex Office are illustrated in (a) and (b) respectively.
+to provide a coverage of the entire unexplored space, as
+shown in Fig. 16(a). However, exploration involves not only
+visiting current frontiers but also covering the entire space.
+This mismatch between the optimization objective and the
+exploration mission leads to inefficient exploration with a
+longer duration. On the other hand, the global path from CPUN
+overlooks active free regions. Although it covers the entire
+unexplored space, it sometimes generates suboptimal global
+guidances that lead to unnecessarily long trajectories, as shown
+in Fig. 16(b). This occurs because considering only unknown
+regions cannot model the full exploration process, where the
+agent first reaches frontiers before pushing them into unknown
+space. In contrast, the proposed method better models this
+exploration process by planning coverage paths incorporating
+both active free and unknown zones, as shown in Fig. 16(c). As
+shown in the statistics in Table V, CPAF and CPUN have similar
+performance that completes exploration using at least 10.7%
+longer exploration time compared to the proposed method. The
+proposed coverage path including both unknown and active
+free zones consistently provides reasonable global guidance
+on the visitation order of the entire space, achieving the best
+performance among the three approaches.
+
+=== PDF PAGE 17 ===
+17
+(a)
+(b)
+(c)
+Fig. 18. Real-world experiment in an office-like environment. (a) A
+snapshot of the exploration trajectory and coverage path planning result. (b)
+Reconstructed volumetric map and the final executed trajectory. (c) Composite
+image of the exploration experiment.
+E. Ablation Study of Local Path Planning
+Instead of the proposed local planner that utilizes SOP to
+insert viewpoints into the coverage path, the variant NoSOP
+adopts a simple local planning strategy with a local horizon.
+It formulates the local planning as an ATSP problem for the
+current position, all frontier viewpoints in the current cell, and
+the center position of the next cell in global guidance. The
+costs between positions are similarly calculated.
+As demonstrated in Fig. 17, the exploration trajectory
+generated by NoSOP is more circuitous and contains more
+revisitations compared with the proposed planner. Statistics
+in Table V show that the variant NoSOP degrades the per-
+formance with 11.9% longer exploration time compared with
+the proposed method. Given the same global planning of the
+coverage path, the performance decrease of NoSOP is mainly
+due to the inconsistency of local planning with the intention of
+global guidance. NoSOP produces local paths only with local
+horizons, dropping all the information on the global guidance
+except for the next cell to go. This validates that the proposed
+local planning module is able to consciously incorporate the
+intention of the CP guidance and produces efficient local paths
+for fast exploration.
+IX. R EAL -WORLD EXPERIMENTS
+We further conduct field experiments to validate the practi-
+cal feasibility of the proposed framework for fully autonomous
+(a)
+(b)
+(c)
+Fig. 19. A real-worl experiment in a parking lot. (a) Exploration trajectory
+and coverage path planning result during the exploration. (b) Final volumetric
+map and executed trajectory results. (c) Photo of the site.
+exploration in three challenging real-world environments.
+In all the real-world experiments, we utilize a customized
+lightweight quadrotor platform with a take-off weight of
+850 g. The quadrotor is equipped with an NVIDIA Jetson
+Orin NX 12 16 GB, a NxtPx4 autopilot [86] and a forward-
+looking global-shutter stereo camera RealSense D435i 13. The
+dynamics limitations of the quadrotor are set to vm = 1 .0
+m/s, am = 1 .0 m/s2, ˙ξm = 1 .05 rad/s, ¨ξm = 1 .05 rad/s2.
+The localization of the quadrotor is provided by a visual-
+inertial state estimator VINS-Fusion [87]. Both of the planning
+and localization modules were operated onboard without other
+external infrastructure.
+We deploy our approach fully onboard for autonomous
+exploration experiments in three scenes. The first scene is an
+office-like environment with dimensions 15 × 9 × 1.2 m3, as
+shown in Fig. 18(c). The scene is partitioned into different
+rooms connected by windows and corridors. The exploration
+task is completed in 46.3 seconds, with a trajectory length of
+37.7 m, as demonstrated in Fig. 18(b). A snapshot during the
+exploration is depicted in Fig. 18(a), showing the executed
+trajectory, online constructed volumetric map, and the global
+12https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/
+jetson-orin
+13https://www.intelrealsense.com/depth-camera-d435i
+
+=== PDF PAGE 18 ===
+18
+coverage path (blue segments). The second scene is a large-
+scale parking lot of 25 × 20 × 2 m3, featuring pillars, walls,
+and gates, as shown in Fig. 19(c). The exploration is finished
+in 95.9 seconds, with a quadrotor movement distance of 88.3
+m. A snapshot during the exploration and the results when
+the exploration finished is shown in Fig. 19(a) and Fig. 19(b)
+respectively. The challenging third scene is a more cluttered
+indoor environment with dimensions of 24 × 6 × 2 m3, as
+shown in Fig. 1. The obstacles are randomly placed in the
+scene, including boxes, tables, fans, bridges, etc. The quadrotor
+accomplished exploring the space in 61.4 seconds with a 53.9
+m trajectory.
+In all three scenes, the proposed planner successfully
+achieves fast autonomous exploration with a limited sensor
+FoV quadrotor. Notably, the executed trajectories involve very
+little back-and-forth movement or revisiting of previously
+explored regions, yielding remarkably efficient exploration
+motions with short durations and flight distances. This superior
+performance is attributed to the capability of our explo-
+ration planner to generate reasonable coverage paths as global
+guidance and consistently adhere to this guidance during
+local planning. Overall, the results of real-world experiments
+provide strong validation for the effectiveness and robust-
+ness of the proposed exploration planner in accomplishing
+fast autonomous exploration fully onboard in complex 3D
+environments. For more details, readers are referred to the
+supplementary video 14, which provides complete exploration
+processes of three exploration trials in each of the three real-
+world environments.
+X. C ONCLUSIONS
+This paper presents FALCON, a fast autonomous explo-
+ration framework using coverage path guidance for aerial
+robots equipped with limited FoV sensors. Whenever receiving
+the latest occupancy information, an incremental space decom-
+position and connectivity graph construction are performed
+to continually capture the underlying environment topology,
+facilitating efficient coverage path planning. A hierarchical
+planner then generates a reasonable global coverage path
+spanning the entire unexplored space. Then a local path is opti-
+mized to minimize traversal time and consciously incorporate
+the intention of the coverage path guidance. A lightweight
+exploration planner evaluation environment is developed to
+provide fair and comprehensive validation of autonomous
+exploration algorithms. Through extensive benchmark experi-
+ments comparing with state-of-the-art methods, the proposed
+framework exhibits superior exploration efficiency, achieving
+13.81% ∼ 29.67% faster explorations. Ablation studies and
+real-world experiments further validate the effectiveness of
+each proposed module and the capability to accomplish fast
+autonomous exploration fully onboard in complex 3D environ-
+ments. The implementation has been made available for the
+benefit of the community. In the future, we aim to take our
+exploration planning capabilities to the next level by expanding
+to multi-robot systems, which allows explorations on more
+complex environments with greater efficiency and flexibility.
+14https://youtu.be/BGH5T2kPbWw
+REFERENCES
+[1] G. A. Hollinger, B. Englot, F. S. Hover, U. Mitra, and G. S. Sukhatme,
+“Active planning for underwater inspection and the benefit of adaptivity,”
+The International Journal of Robotics Research, vol. 32, no. 1, pp. 3–18,
+2013.
+[2] A. Bircher, K. Alexis, M. Burri, P. Oettershagen, S. Omari, T. Mantel,
+and R. Siegwart, “Structural inspection path planning via iterative
+viewpoint resampling with application to aerial robotics,” in 2015 IEEE
+International Conference on Robotics and Automation (ICRA), 2015, pp.
+6423–6430.
+[3] L. Yoder and S. Scherer, “Autonomous exploration for infrastructure
+modeling with a micro aerial vehicle,” in Field and Service Robotics:
+Results of the 10th International Conference . Springer, 2016, pp. 427–
+440.
+[4] S. Song, D. Kim, and S. Choi, “View path planning via online multiview
+stereo for 3-d modeling of large-scale structures,” IEEE Transactions on
+Robotics, vol. 38, no. 1, pp. 372–390, 2021.
+[5] C. Feng, H. Li, F. Gao, B. Zhou, and S. Shen, “Predrecon: A prediction-
+boosted planning framework for fast and high-quality autonomous aerial
+reconstruction,” in 2023 IEEE International Conference on Robotics and
+Automation (ICRA), 2023, pp. 1207–1213.
+[6] C. Feng, H. Li, M. Zhang, X. Chen, B. Zhou, and S. Shen, “Fc-
+planner: A skeleton-guided planning framework for fast aerial coverage
+of complex 3d scenes,” in 2024 IEEE International Conference on
+Robotics and Automation (ICRA) , 2024, pp. 8686–8692.
+[7] F. Mascarich, S. Khattak, C. Papachristos, and K. Alexis, “A multi-modal
+mapping unit for autonomous exploration and mapping of underground
+tunnels,” in 2018 IEEE aerospace conference , 2018, pp. 1–7.
+[8] T. Dang, F. Mascarich, S. Khattak, C. Papachristos, and K. Alexis,
+“Graph-based path planning for autonomous robotic exploration in
+subterranean environments,” in2019 IEEE/RSJ International Conference
+on Intelligent Robots and Systems (IROS) , 2019, pp. 3105–3112.
+[9] F. Yang, D.-H. Lee, J. Keller, and S. Scherer, “Graph-based topological
+exploration planning in large-scale 3d environments,” in 2021 IEEE
+International Conference on Robotics and Automation (ICRA) , 2021,
+pp. 12 730–12 736.
+[10] M. Erdelj, E. Natalizio, K. R. Chowdhury, and I. F. Akyildiz, “Help
+from the sky: Leveraging uavs for disaster management,”IEEE Pervasive
+Computing, vol. 16, no. 1, pp. 24–32, 2017.
+[11] L. Marconi, C. Melchiorri, M. Beetz, D. Pangercic, R. Siegwart,
+S. Leutenegger, R. Carloni, S. Stramigioli, H. Bruyninckx, P. Doherty
+et al. , “The sherpa project: Smart collaboration between humans and
+ground-aerial robots for improving rescuing activities in alpine environ-
+ments,” in 2012 IEEE international symposium on safety, security, and
+rescue robotics (SSRR), 2012, pp. 1–4.
+[12] H. Li, H. Wang, C. Feng, F. Gao, B. Zhou, and S. Shen, “Autotrans: A
+complete planning and control framework for autonomous uav payload
+transportation,” IEEE Robotics and Automation Letters , vol. 8, no. 10,
+pp. 6859–6866, 2023.
+[13] T. Cieslewski, E. Kaufmann, and D. Scaramuzza, “Rapid exploration
+with multi-rotors: A frontier selection method for high speed flight,”
+in 2017 IEEE/RSJ International Conference on Intelligent Robots and
+Systems (IROS), 2017, pp. 2135–2142.
+[14] M. Dharmadhikari, T. Dang, L. Solanka, J. Loje, H. Nguyen,
+N. Khedekar, and K. Alexis, “Motion primitives-based path planning
+for fast and agile exploration using aerial robots,” in 2020 IEEE
+International Conference on Robotics and Automation (ICRA) , 2020,
+pp. 179–185.
+[15] B. Yamauchi, “A frontier-based approach for autonomous exploration,”
+in Proceedings 1997 IEEE International Symposium on Computational
+Intelligence in Robotics and Automation CIRA’97. ’Towards New Com-
+putational Principles for Robotics and Automation’ . IEEE, 1997, pp.
+146–151.
+[16] C. Papachristos, S. Khattak, and K. Alexis, “Uncertainty-aware receding
+horizon exploration and mapping using aerial robots,” in 2017 IEEE
+International Conference on Robotics and Automation (ICRA) , 2017,
+pp. 4568–4575.
+[17] A. Dai, S. Papatheodorou, N. Funk, D. Tzoumanikas, and S. Leuteneg-
+ger, “Fast frontier-based information-driven autonomous exploration
+with an mav,” in 2020 IEEE International Conference on Robotics and
+Automation (ICRA), 2020, pp. 9570–9576.
+[18] M. Selin, M. Tiger, D. Duberg, F. Heintz, and P. Jensfelt, “Efficient
+autonomous exploration planning of large-scale 3-d environments,”
+IEEE Robotics and Automation Letters , vol. 4, no. 2, pp. 1699–1706,
+2019.
+
+=== PDF PAGE 19 ===
+19
+[19] S. Song and S. Jo, “Surface-based exploration for autonomous 3d
+modeling,” in 2018 IEEE International Conference on Robotics and
+Automation (ICRA), 2018, pp. 4319–4326.
+[20] X. Kan, H. Teng, and K. Karydis, “Online exploration and coverage
+planning in unknown obstacle-cluttered environments,” IEEE Robotics
+and Automation Letters , vol. 5, no. 4, pp. 5969–5976, 2020.
+[21] A. Bircher, M. Kamel, K. Alexis, H. Oleynikova, and R. Siegwart,
+“Receding horizon” next-best-view” planner for 3d exploration,” in2016
+IEEE International Conference on Robotics and Automation (ICRA) ,
+2016, pp. 1462–1468.
+[22] B. Zhou, Y . Zhang, X. Chen, and S. Shen, “Fuel: Fast uav exploration
+using incremental frontier structure and hierarchical planning,” IEEE
+Robotics and Automation Letters , vol. 6, no. 2, pp. 779–786, 2021.
+[23] B. Zhou, H. Xu, and S. Shen, “Racer: Rapid collaborative exploration
+with a decentralized multi-uav system,” IEEE Transactions on Robotics,
+vol. 39, no. 3, pp. 1816–1835, 2023.
+[24] J. Yu, H. Shen, J. Xu, and T. Zhang, “Echo: An efficient heuristic view-
+point determination method on frontier-based autonomous exploration
+for quadrotors,” IEEE Robotics and Automation Letters , vol. 8, no. 8,
+pp. 5047–5054, 2023.
+[25] Y . Zhao, L. Yan, H. Xie, J. Dai, and P. Wei, “Autonomous exploration
+method for fast unknown environment mapping by using uav equipped
+with limited fov sensor,” IEEE Transactions on Industrial Electronics ,
+vol. 71, no. 5, pp. 4933–4943, 2023.
+[26] S. Bai, J. Wang, F. Chen, and B. Englot, “Information-theoretic ex-
+ploration with bayesian optimization,” in 2016 IEEE/RSJ International
+Conference on Intelligent Robots and Systems (IROS) , 2016, pp. 1816–
+1822.
+[27] E. Kaufman, K. Takami, Z. Ai, and T. Lee, “Autonomous quadrotor 3d
+mapping and exploration using exact occupancy probabilities,” in 2018
+Second IEEE International Conference on Robotic Computing (IRC) ,
+2018, pp. 49–55.
+[28] P. Whaite and F. P. Ferrie, “Autonomous exploration: Driven by un-
+certainty,” IEEE Transactions on Pattern Analysis and Machine Intelli-
+gence, vol. 19, no. 3, pp. 193–205, 1997.
+[29] W. Tabib, M. Corah, N. Michael, and R. Whittaker, “Computationally
+efficient information-theoretic exploration of pits and caves,” in 2016
+IEEE/RSJ International Conference on Intelligent Robots and Systems
+(IROS), 2016, pp. 3722–3727.
+[30] E. Palazzolo and C. Stachniss, “Information-driven autonomous explo-
+ration for a vision-based mav,” ISPRS annals of the photogrammetry,
+remote sensing and spatial information sciences, vol. 4, pp. 59–66, 2017.
+[31] E. Palazzolo and C. Stachniss, “Effective exploration for mavs based on
+the expected information gain,” Drones, vol. 2, no. 1, p. 9, 2018.
+[32] C. Stachniss, G. Grisetti, and W. Burgard, “Information gain-based
+exploration using rao-blackwellized particle filters.” inRobotics: Science
+and systems, vol. 2, 2005, pp. 65–72.
+[33] F. Bourgault, A. A. Makarenko, S. B. Williams, B. Grocholsky, and
+H. F. Durrant-Whyte, “Information based adaptive robotic exploration,”
+in IEEE/RSJ International Conference on Intelligent Robots and Systems
+(IROS), vol. 1, 2002, pp. 540–545.
+[34] H. Carrillo, P. Dames, V . Kumar, and J. A. Castellanos, “Autonomous
+robotic exploration using a utility function based on r ´enyi’s general
+theory of entropy,” Autonomous Robots , vol. 42, no. 2, pp. 235–256,
+2018.
+[35] A. Bircher, M. Kamel, K. Alexis, H. Oleynikova, and R. Siegwart, “Re-
+ceding horizon path planning for 3d exploration and surface inspection,”
+Autonomous Robots, vol. 42, pp. 291–306, 2018.
+[36] C. Witting, M. Fehr, R. B ¨ahnemann, H. Oleynikova, and R. Siegwart,
+“History-aware autonomous exploration in confined environments using
+mavs,” in2018 IEEE/RSJ International Conference on Intelligent Robots
+and Systems (IROS) , 2018, pp. 1–9.
+[37] D. Duberg and P. Jensfelt, “Ufoexplorer: Fast and scalable sampling-
+based exploration with a graph-based planning structure,”IEEE Robotics
+and Automation Letters , vol. 7, no. 2, pp. 2487–2494, 2022.
+[38] L. Schmid, M. Pantic, R. Khanna, L. Ott, R. Siegwart, and J. Nieto, “An
+efficient sampling-based method for online informative path planning in
+unknown environments,” IEEE Robotics and Automation Letters , vol. 5,
+no. 2, pp. 1500–1507, 2020.
+[39] C. Papachristos, S. Khattak, F. Mascarich, and K. Alexis, “Autonomous
+navigation and mapping in underground mines using aerial robots,” in
+2019 IEEE Aerospace Conference , 2019, pp. 1–8.
+[40] C. Papachristos, S. Khattak, and K. Alexis, “Autonomous exploration
+of visually-degraded environments using aerial robots,” in 2017 Inter-
+national Conference on Unmanned Aircraft Systems (ICUAS) , 2017, pp.
+775–780.
+[41] S. Suresh, P. Sodhi, J. G. Mangelson, D. Wettergreen, and M. Kaess,
+“Active slam using 3d submap saliency for underwater volumetric
+exploration,” in 2020 IEEE International Conference on Robotics and
+Automation (ICRA), 2020, pp. 3132–3138.
+[42] T. Dang, C. Papachristos, and K. Alexis, “Autonomous exploration and
+simultaneous object search using aerial robots,” in 2018 IEEE Aerospace
+Conference, 2018, pp. 1–7.
+[43] T. Dang, C. Papachristos, and K. Alexis, “Visual saliency-aware receding
+horizon autonomous exploration with application to aerial robotics,”
+in 2018 IEEE International Conference on Robotics and Automation
+(ICRA), 2018, pp. 2526–2533.
+[44] B. Yamauchi, “Frontier-based exploration using multiple robots,” in
+Proceedings of the second international conference on Autonomous
+agents, 1998, pp. 47–53.
+[45] L. Freda and G. Oriolo, “Frontier-based probabilistic strategies for
+sensor-based exploration,” in Proceedings of the 2005 IEEE Interna-
+tional Conference on Robotics and Automation , 2005, pp. 3881–3887.
+[46] W. Gao, M. Booker, A. Adiwahono, M. Yuan, J. Wang, and Y . W. Yun,
+“An improved frontier-based approach for autonomous exploration,” in
+2018 15th International Conference on Control, Automation, Robotics
+and Vision (ICARCV) , 2018, pp. 292–297.
+[47] S. Shen, N. Michael, and V . Kumar, “Stochastic differential equation-
+based exploration algorithm for autonomous indoor 3d exploration with
+a micro-aerial vehicle,” The International Journal of Robotics Research,
+vol. 31, no. 12, pp. 1431–1444, 2012.
+[48] S. Shen, N. Michael, and V . Kumar, “Autonomous indoor 3d exploration
+with a micro-aerial vehicle,” in 2012 IEEE International Conference on
+Robotics and Automation (ICRA) , 2012, pp. 9–15.
+[49] C. Zhu, R. Ding, M. Lin, and Y . Wu, “A 3d frontier-based exploration
+tool for mavs,” in 2015 IEEE 27th International Conference on Tools
+with Artificial Intelligence (ICTAI) , 2015, pp. 348–352.
+[50] P. Senarathne and D. Wang, “Towards autonomous 3d exploration using
+surface frontiers,” in 2016 IEEE International Symposium on Safety,
+Security, and Rescue Robotics (SSRR) , 2016, pp. 34–41.
+[51] M. Faria, I. Maza, and A. Viguria, “Applying frontier cells based
+exploration and lazy theta* path planning over single grid-based world
+representation for autonomous inspection of large 3d structures with an
+uas,” Journal of Intelligent & Robotic Systems , vol. 93, pp. 113–133,
+2019.
+[52] C. Stachniss, D. Hahnel, and W. Burgard, “Exploration with active loop-
+closing for fastslam,” in 2004 IEEE/RSJ International Conference on
+Intelligent Robots and Systems (IROS) , vol. 2, 2004, pp. 1505–1510.
+[53] C. Dornhege and A. Kleiner, “A frontier-void-based approach for au-
+tonomous exploration in 3d,” Advanced Robotics , vol. 27, no. 6, pp.
+459–468, 2013.
+[54] S. Papatheodorou, N. Funk, D. Tzoumanikas, C. Choi, B. Xu, and
+S. Leutenegger, “Finding things in the unknown: Semantic object-centric
+exploration with an mav,” in 2023 IEEE International Conference on
+Robotics and Automation (ICRA) , 2023, pp. 3339–3345.
+[55] B. Tang, Y . Ren, F. Zhu, R. He, S. Liang, F. Kong, and F. Zhang,
+“Bubble explorer: Fast uav exploration in large-scale and cluttered 3d-
+environments using occlusion-free spheres,” in 2023 IEEE/RSJ Interna-
+tional Conference on Intelligent Robots and Systems (IROS) , 2023, pp.
+1118–1125.
+[56] C. Cao, H. Zhu, H. Choset, and J. Zhang, “Tare: A hierarchical frame-
+work for efficiently exploring complex 3d environments.” in Robotics:
+Science and Systems , vol. 5, 2021, p. 2.
+[57] C. Cao, H. Zhu, H. Choset, and J. Zhang, “Exploring large and
+complex environments fast and efficiently,” in 2021 IEEE International
+Conference on Robotics and Automation (ICRA) , 2021, pp. 7781–7787.
+[58] Y . Zhang, B. Zhou, L. Wang, and S. Shen, “Exploration with global
+consistency using real-time re-integration and active loop closure,”
+in 2022 IEEE International Conference on Robotics and Automation
+(ICRA), 2022, pp. 9682–9688.
+[59] J. Yan, X. Lin, Z. Ren, S. Zhao, J. Yu, C. Cao, P. Yin, J. Zhang,
+and S. Scherer, “Mui-tare: Cooperative multi-agent exploration with
+unknown initial position,”IEEE Robotics and Automation Letters, vol. 8,
+no. 7, pp. 4299–4306, 2023.
+[60] C. Cao, H. Zhu, Z. Ren, H. Choset, and J. Zhang, “Representation gran-
+ularity enables time-efficient autonomous exploration in large, complex
+worlds,” Science Robotics, vol. 8, no. 80, 2023.
+[61] X. Zhao, C. Yu, E. Xu, and Y . Liu, “Tdle: 2-d lidar exploration with
+hierarchical planning using regional division,” in 2023 IEEE 19th Inter-
+national Conference on Automation Science and Engineering (CASE) ,
+2023, pp. 1–6.
+[62] S. Song, D. Kim, and S. Jo, “Online coverage and inspection planning
+
+=== PDF PAGE 20 ===
+20
+for 3d modeling,” Autonomous Robots, vol. 44, no. 8, pp. 1431–1450,
+2020.
+[63] B. Charrow, S. Liu, V . Kumar, and N. Michael, “Information-theoretic
+mapping using cauchy-schwarz quadratic mutual information,” in 2015
+IEEE International Conference on Robotics and Automation (ICRA) ,
+2015, pp. 4791–4798.
+[64] F. Bissmarck, M. Svensson, and G. Tolt, “Efficient algorithms for next
+best view evaluation,” in 2015 IEEE/RSJ International Conference on
+Intelligent Robots and Systems (IROS) , 2015, pp. 5876–5883.
+[65] S. LaValle, “Rapidly-exploring random trees: A new tool for path
+planning,” Research Report 9811 , 1998.
+[66] C. Connolly, “The determination of next best views,” in 1985 IEEE
+International Conference on Robotics and Automation (ICRA) , vol. 2,
+1985, pp. 432–435.
+[67] K. M. Wurm, A. Hornung, M. Bennewitz, C. Stachniss, and W. Burgard,
+“Octomap: A probabilistic, flexible, and compact 3d map representation
+for robotic systems,” in Proc. of the ICRA 2010 workshop on best
+practice in 3D perception and modeling for mobile manipulation , vol. 2,
+2010, p. 3.
+[68] E. Galceran and M. Carreras, “A survey on coverage path planning for
+robotics,” Robotics and Autonomous systems , vol. 61, no. 12, pp. 1258–
+1276, 2013.
+[69] H. Choset and P. Pignon, “Coverage path planning: The boustrophedon
+cellular decomposition,” in Field and service robotics. Springer, 1998,
+pp. 203–209.
+[70] T. Oksanen and A. Visala, “Coverage path planning algorithms for
+agricultural field machines,” Journal of field robotics , vol. 26, no. 8,
+pp. 651–668, 2009.
+[71] H. Choset, E. Acar, A. A. Rizzi, and J. Luntz, “Exact cellular decom-
+positions in terms of critical points of morse functions,” in 2000 IEEE
+International Conference on Robotics and Automation (ICRA) , vol. 3,
+2000, pp. 2270–2277.
+[72] Y . Gabriely and E. Rimon, “Spiral-stc: An on-line coverage algorithm
+of grid environments by a mobile robot,” in 2002 IEEE International
+Conference on Robotics and Automation (ICRA) , vol. 1, 2002, pp. 954–
+960.
+[73] B. Englot and F. Hover, “Sampling-based coverage path planning
+for inspection of complex structures,” in International Conference on
+Automated Planning and Scheduling , vol. 22, 2012, pp. 29–37.
+[74] A. Bircher, M. Kamel, K. Alexis, M. Burri, P. Oettershagen, S. Omari,
+T. Mantel, and R. Siegwart, “Three-dimensional coverage path planning
+via viewpoint resampling and tour optimization for aerial robots,”
+Autonomous Robots, vol. 40, pp. 1059–1078, 2016.
+[75] C. Cao, J. Zhang, M. Travers, and H. Choset, “Hierarchical coverage
+path planning in complex 3d environments,” in 2020 IEEE International
+Conference on Robotics and Automation (ICRA) , 2020, pp. 3206–3212.
+[76] C. Ericson, Real-time collision detection . Crc Press, 2004.
+[77] R. C. Gonzalez and R. E. Woods, Digital image processing. New York:
+Pearson Education, 2018.
+[78] I. T. Hern ´adv¨olgyi, “Solving the sequential ordering problem with auto-
+matically generated lower bounds,” in Operations Research Proceedings
+2003. Heidelberg: Springer, 2004, pp. 355–362.
+[79] B. Zhou, F. Gao, L. Wang, C. Liu, and S. Shen, “Robust and effi-
+cient quadrotor trajectory generation for fast autonomous flight,” IEEE
+Robotics and Automation Letters , vol. 4, no. 4, pp. 3529–3536, 2019.
+[80] B. Zhou, J. Pan, F. Gao, and S. Shen, “Raptor: Robust and perception-
+aware trajectory replanning for quadrotor fast flight,” IEEE Transactions
+on Robotics, vol. 37, no. 6, pp. 1992–2009, 2021.
+[81] C. Cao, H. Zhu, F. Yang, Y . Xia, H. Choset, J. Oh, and J. Zhang,
+“Autonomous exploration development environment and the planning
+algorithms,” in 2022 IEEE International Conference on Robotics and
+Automation (ICRA), 2022, pp. 8921–8928.
+[82] J. Jiao, H. Wei, T. Hu, X. Hu, Y . Zhu, Z. He, J. Wu, J. Yu,
+X. Xie, H. Huang et al., “Fusionportable: A multi-sensor campus-scene
+dataset for evaluation of localization and mapping accuracy on diverse
+platforms,” in 2022 IEEE/RSJ International Conference on Intelligent
+Robots and Systems (IROS) , 2022, pp. 3851–3856.
+[83] F. Kong, X. Liu, B. Tang, J. Lin, Y . Ren, Y . Cai, F. Zhu, N. Chen, and
+F. Zhang, “Marsim: A light-weight point-realistic simulator for lidar-
+based uavs,” IEEE Robotics and Automation Letters , vol. 8, no. 5, pp.
+2954–2961, 2023.
+[84] K. Helsgaun, “An effective implementation of the lin–kernighan trav-
+eling salesman heuristic,” European Journal of Operational Research ,
+vol. 126, no. 1, pp. 106–130, 2000.
+[85] A. AbuBaker, R. Qahwaji, S. Ipson, and M. Saleh, “One scan connected
+component labeling technique,” in 2007 IEEE International Conference
+on Signal Processing and Communications , 2007, pp. 1283–1286.
+[86] P. Liu, C. Feng, Y . Xu, Y . Ning, H. Xu, and S. Shen, “Omninxt: A
+fully open-source and compact aerial robot with omnidirectional visual
+perception,” in 2024 IEEE/RSJ International Conference on Intelligent
+Robots and Systems (IROS) , 2024, pp. 10 605–10 612.
+[87] T. Qin, J. Pan, S. Cao, and S. Shen, “A general optimization-based
+framework for local odometry estimation with multiple sensors,” arXiv
+preprint arXiv:1901.03638, 2019.
+Yichen Zhang (Graduate Student Member, IEEE)
+received the B.Eng. degree in computer engineering
+in 2020 from the Hong Kong University of Science
+and Technology, Hong Kong, where he is currently
+working toward the Ph.D. degree in electronic and
+computer engineering under the supervision of Prof.
+Shaojie Shen. His research interests include au-
+tonomous exploration, aerial robot swarm, active
+SLAM, and motion planning.
+Xinyi Chen (Graduate Student Member, IEEE) re-
+ceived the B.Sc. degree in Mathematics, and in Com-
+puter Science from the Hong Kong University of
+Science and Technology, Hong Kong, in 2021. She is
+currently working towards the Ph.D. degree with the
+Hong Kong University of Science and Technology,
+Hong Kong, under the supervision of Prof. Shaojie
+Shen. Her research interests in robotics include mo-
+tion planning, autonomous exploration, perception-
+aware planning, localization and mapping.
+Chen Feng (Graduate Student Member, IEEE) re-
+ceived his B.Eng. degree in Mechatronics Engi-
+neering from the Harbin Institute of Technology,
+Harbin, China, in 2021. He is currently pursuing
+the Ph.D. degree in Electronic and Computer En-
+gineering with the Aerial Robotics Group at the
+Hong Kong University of Science and Technology,
+Hong Kong, China. His research interests include
+intelligent scene perception and motion planning for
+aerial and mobile robots.
+Boyu Zhou (Member, IEEE) received the Ph.D. de-
+gree in electronic and computer engineering from the
+Hong Kong University of Science and Technology,
+Hong Kong, China, in 2022. He is currently a tenure-
+track Assistant Professor (doctoral supervisor) at
+the Southern University of Science and Technol-
+ogy (SUSTech), where he serves as the Director
+of the Smart Autonomous Robotics (STAR) group.
+His research interests encompass aerial and mobile
+robots, motion planning, active perception, multi-
+robot systems, mobile manipulation, and vision-
+language navigation. He was the recipient of the IEEE TRO 2023 King-Sun
+Fu Best Paper Award, the IEEE RAL 2023 best paper award, and the IEEE
+ICRA 2024 Best UA V Paper Finalist. He is currently an Associate Editor for
+the IEEE International Conference on Robotics and Automation.
+Shaojie Shen (Member, IEEE) received the
+B.Eng. degree in electronic engineering from the
+Hong Kong University of Science and Technology
+(HKUST), Hong Kong, in 2009, the M.S. degree
+in robotics and Ph.D. in electrical and systems
+engineering from the University of Pennsylvania,
+Philadelphia, PA, USA, in 2011 and 2014, respec-
+tively. In 2014, he joined the Department of Elec-
+tronic and Computer Engineering, HKUST, as an
+Assistant Professor, and was promoted to Associate
+Professor in 2020. He is the founding Director of the
+HKUST-DJI Joint Innovation Laboratory (HDJI Lab). His research interests
+include robotics and unmanned aerial vehicles, with focus on state estimation,
+sensor fusion, localization and mapping, and autonomous navigation in
+complex environments.

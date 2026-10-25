@@ -1,0 +1,92 @@
+--- v0.1/region_audit.py
++++ v0.2/region_audit.py
+@@ -1,7 +1,80 @@
+ """Independent BFS/reward/phase reconstruction. Does not import rule or native."""
+ import math,time
+ from collections import deque,Counter
++
++def coordinate_form(v):
++ """Only sequence representation is erased; field/value/order/type retained."""
++ if isinstance(v,(list,tuple)):return ('sequence',tuple(coordinate_form(x) for x in v))
++ if isinstance(v,dict):return {k:coordinate_form(x) for k,x in v.items()}
++ assert v is None or type(v) in (str,bool,int,float),'unsupported schema object'
++ return (type(v).__name__,v)
++
++def validate_schema(c,raw,on):
++ def required(d,keys,allowed=None):
++  assert type(d) is dict and set(keys)<=set(d),'missing object fields'
++  if allowed is not None:assert set(d)<=set(allowed),'unexpected object fields'
++ def integer(x):assert type(x) is int and x>=0,'nonnegative integer required'
++ def number(x):assert type(x) in (int,float) and math.isfinite(x),'finite number required'
++ def point(p):assert type(p) in (list,tuple) and len(p)==2 and all(type(x) is int for x in p),'integer coordinate pair required'
++ def points(v,unique=True):
++  assert type(v) in (list,tuple),'coordinate sequence required'
++  for p in v:point(p)
++  if unique:assert len(v)==len(set(map(tuple,v))),'duplicate responsibility coordinates'
++ def options(rows):
++  assert type(rows) in (list,tuple)
++  for r in rows:
++   required(r,('cell','distance_reward','straight_reward','boundary_reward','score'));point(r['cell'])
++   for k in ('distance_reward','straight_reward','boundary_reward','score'):number(r[k])
++ required(c,('free','targets','covered','current','base','previous','predator','labels','distance_budget'))
++ for k in ('free','targets','covered'):points(c[k])
++ for k in ('current','base'):point(c[k])
++ if c['previous'] is not None:point(c['previous'])
++ assert type(c['predator']) in (list,tuple) and len(c['predator'])==2
++ for x in c['predator']:number(x)
++ number(c['distance_budget']);assert type(c['labels']) is dict
++ for k,v in c['labels'].items():assert type(k) is str and k;points(v)
++ required(raw,('status','route','trace'));assert type(raw['status']) is str;points(raw['route'],False)
++ assert type(raw['trace']) in (list,tuple)
++ phases=('DEFAULT','OTHER','TAIL','CANCELLED','DONE')
++ for e in raw['trace']:
++  required(e,('kind','index','current','goal','pending_count'));assert e['kind'] in ('local','recovery','return')
++  integer(e['index']);integer(e['pending_count']);point(e['current']);point(e['goal'])
++  if e['kind']!='return':
++   required(e,('previous',))
++   if e['previous'] is not None:point(e['previous'])
++   if on:
++    required(e,('phase','Q','allowed','original_options'));assert e['phase'] in phases;points(e['Q']);points(e['allowed']);options(e['original_options'])
++  if e['kind']=='local':required(e,('options',));options(e['options'])
++ if not on:return
++ required(raw,('rule',));r=raw['rule'];required(r,('enabled','checked','check','S','phase','transitions','release_pending','counts','preparation_seconds','detailed_profile'))
++ for k in ('enabled','checked','detailed_profile'):assert type(r[k]) is bool
++ assert r['enabled'] is True and r['detailed_profile'] is False
++ assert r['S'] is None or type(r['S']) is str
++ assert r['phase'] in phases;number(r['preparation_seconds']);assert r['preparation_seconds']>=0
++ assert type(r['counts']) is dict
++ for v in r['counts'].values():integer(v)
++ required(r['counts'],('rule_distance_rows','rule_BFS_popped','rule_distance_lookups','local_changes','recovery_changes'))
++ assert type(r['transitions']) in (list,tuple)
++ for t in r['transitions']:
++  keys=('index','phase','Q_S','Q_other');required(t,keys,keys);assert t['phase'] in phases
++  for k in ('index','Q_S','Q_other'):integer(t[k])
++ if r['release_pending'] is not None:points(r['release_pending'])
++ if not r['checked']:assert r['check'] is None,'unchecked must have null check';return
++ a=r['check'];keys=('index','Q','counts','q0','representatives','conditions','activated','reason');required(a,keys,keys+('S','S_pending_at_activation'))
++ integer(a['index']);points(a['Q']);point(a['q0']);assert type(a['activated']) is bool and type(a['reason']) is str
++ assert type(a['counts']) is dict and type(a['representatives']) is dict
++ for k,v in a['counts'].items():assert type(k) is str;integer(v)
++ for k,v in a['representatives'].items():assert type(k) is str;point(v)
++ if 'S' in a:assert type(a['S']) is str
++ if 'S_pending_at_activation' in a:points(a['S_pending_at_activation'])
++ assert type(a['conditions']) in (list,tuple)
++ for t in a['conditions']:
++  fields=('other','d_R_B','d_R_S','d_S_B','d_X_R','d_X_S','on_return','detour_strict');required(t,fields,fields);assert type(t['other']) is str
++  for k in fields[1:6]:integer(t[k])
++  for k in fields[6:]:assert type(t[k]) is bool
++
+ def audit(c,raw,on=False):
++ validate_schema(c,raw,on)
+  start=time.perf_counter();counts=Counter();F=set(map(tuple,c['free']));P=set(map(tuple,c['targets']));Q=P-set(map(tuple,c['covered']))-{tuple(c['current'])};path=list(map(tuple,raw['route']));trace=raw['trace'];L={k:set(map(tuple,v)) for k,v in c['labels'].items()};B=tuple(c['base']);phase='DEFAULT';checked=False;S=None;check=None;trans=[];receipts=[];cursor=0;release=None
+  def nbr(p):return ((p[0]-1,p[1]),(p[0],p[1]-1),(p[0]+1,p[1]),(p[0],p[1]+1))
+  def distances(p):
+@@ -77,6 +150,6 @@
+   cursor=end
+  assert not Q and cursor==len(path)-1
+  if on:
+-  r=raw['rule'];norm=lambda x:__import__('json').loads(__import__('json').dumps(x))
+-  assert r['checked']==checked and r['S']==S and r['phase']==phase and r['check']==norm(check) and r['transitions']==norm(trans) and r['release_pending']==norm(release) and r['counts']['rule_distance_rows']<=3
++  r=raw['rule']
++  assert r['checked']==checked and r['S']==S and r['phase']==phase and coordinate_form(r['check'])==coordinate_form(check) and coordinate_form(r['transitions'])==coordinate_form(trans) and coordinate_form(r['release_pending'])==coordinate_form(release) and r['counts']['rule_distance_rows']<=3
+  return dict(passed=True,check=check,S=S,phase=phase,transitions=trans,release_pending=release,decisions=receipts,counts=dict(counts),seconds=time.perf_counter()-start,connector_tie_scope='frozen deterministic path implementation bound; independent BFS shortestness')

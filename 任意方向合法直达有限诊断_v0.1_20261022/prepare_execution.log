@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\任意方向合法直达有限诊断_v0.1_20261022\prepare.py", line 37, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\任意方向合法直达有限诊断_v0.1_20261022\prepare.py", line 26, in main
+    root=p.parent.parent;mf=root/'completion_manifest.json';entries=read(mf)['files'];rel=str(p.relative_to(root));assert entries.get(rel,entries.get(p.relative_to(root).as_posix()))==sha(p),str(p);sources[str(p)]=sha(p);sources[str(mf)]=sha(mf)
+                                                                    ^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\任意方向合法直达有限诊断_v0.1_20261022\prepare.py", line 6, in read
+    def read(p):return json.loads(p.read_text(encoding='utf-8-sig'))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\无人机研究项目_接续包_20261014\\PPCPP四方向共同预算正式比较_v0.1_20261020\\completion_manifest.json'

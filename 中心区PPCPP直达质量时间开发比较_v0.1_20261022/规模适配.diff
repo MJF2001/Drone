@@ -1,0 +1,13 @@
+--- accepted_region_audit
++++ scaled_region_audit
+@@ -33,7 +33,9 @@
+         # (edge, rational parameter) per task, rather than primary's seen sweep.
+         for q in sorted(U):
+             counts['service_intersections']+=1
+-            evidence=Z.intersection(points[k],points[k+1],q,counts)
++            outside=any(5*max(points[k][j],points[k+1][j])<=5*q[j]-1 or 5*min(points[k][j],points[k+1][j])>=5*q[j]+1 for j in (0,1))
++            counts['independent_target_box_tests']+=1
++            evidence=None if outside else Z.intersection(points[k],points[k+1],q,counts)
+             if evidence is not None:
+                 rtime=evidence['witness']['t'];when=(k,Fraction(rtime['n'],rtime['d']),evidence)
+                 if q not in credit_candidates or when[:2]<credit_candidates[q][:2]:

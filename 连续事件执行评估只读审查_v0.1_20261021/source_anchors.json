@@ -1,0 +1,1719 @@
+[
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\continuous_history_inputs_20261016.py",
+    "sha256": "28e8ddaba12b581c284d5b14dfadb6fff69c063486663c36a65df8017763d806",
+    "lines": 51,
+    "anchors": [
+      {
+        "line": 5,
+        "text": "def initial_input(control):"
+      },
+      {
+        "line": 6,
+        "text": "    old=control['metadata']['prefix']+control['old_route'][1:]"
+      },
+      {
+        "line": 8,
+        "text": "        targets=copy.deepcopy(control['metadata']['initial_targets']),covered=[],current=list(control['base']),base=list(control['base']),"
+      },
+      {
+        "line": 9,
+        "text": "        old_route=copy.deepcopy(old),radius=0,distance_budget=8*len(control['free']),"
+      },
+      {
+        "line": 12,
+        "text": "def checkpoint(c,route,percent=50):"
+      },
+      {
+        "line": 19,
+        "text": "            return dict(index=i,executed_route=copy.deepcopy(route[:i+1]),current=list(p),covered=[list(z) for z in sorted(seen)],"
+      },
+      {
+        "line": 20,
+        "text": "                old_route=copy.deepcopy(route[i:]),executed_steps=i,remaining_budget=c['distance_budget']-i,actual_progress=len(seen)/len(targets))"
+      },
+      {
+        "line": 22,
+        "text": "def publish(initial,history,event):"
+      },
+      {
+        "line": 24,
+        "text": "    if current not in free:return dict(status='unsupported_current_blocked',case=None)"
+      },
+      {
+        "line": 25,
+        "text": "    if base not in free:return dict(status='unsupported_base_blocked',case=None)"
+      },
+      {
+        "line": 27,
+        "text": "    deferred=published-free-covered;active=published&free"
+      },
+      {
+        "line": 30,
+        "text": "        base=list(initial['base']),old_route=copy.deepcopy(history['old_route']),radius=0,distance_budget=history['remaining_budget'],"
+      },
+      {
+        "line": 31,
+        "text": "        metadata=dict(map_id=initial['metadata']['map_id'],split='development',initial_targets=copy.deepcopy(initial['targets']),"
+      },
+      {
+        "line": 32,
+        "text": "            event=event['metadata']['event'],deferred_targets=[list(z) for z in sorted(deferred)],"
+      },
+      {
+        "line": 34,
+        "text": "    # Historical collection remains true even when later obstructed; unfinished hidden cells deferred."
+      },
+      {
+        "line": 35,
+        "text": "    assert deferred.isdisjoint(covered) and active<=free"
+      },
+      {
+        "line": 37,
+        "text": "def main():"
+      },
+      {
+        "line": 44,
+        "text": "        h=checkpoint(c,c['old_route']);e=read(SOURCE/'cases'/(f['anchor']+'.json'));published=publish(c,h,e)"
+      },
+      {
+        "line": 45,
+        "text": "        assert h['covered']==sorted(control['covered']) and h['current']==control['current'] and h['old_route']==control['old_route']"
+      },
+      {
+        "line": 46,
+        "text": "        records.append(dict(map_id=f['map_id'],initial_case=str(p),initial_case_sha256=sha(p),control_sha256=sha(control_path),event_source=str(SOURCE/'cases'/(f['anchor']+'.json')),"
+      },
+      {
+        "line": 47,
+        "text": "            event_source_sha256=sha(SOURCE/'cases'/(f['anchor']+'.json')),paired_seed=f['seed'],raw_replay=h,raw_event_status=published['status']))"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\test_continuous_history_20261016.py",
+    "sha256": "67d53410d80e4ce9f6c8c580447f7488b246a590e667b7fd7e10fba60bfdc924",
+    "lines": 27,
+    "anchors": [
+      {
+        "line": 4,
+        "text": "    def setUp(self):"
+      },
+      {
+        "line": 5,
+        "text": "        self.c=dict(name='tiny',free=[[0,0],[1,0],[2,0],[3,0]],targets=[[1,0],[2,0]],covered=[],current=[0,0],base=[0,0],old_route=[[0,0],[1,0],[2,0],[1,0],[0,0]],radius=0,distance_budget=32,metadata=dict(map_id='tiny'))"
+      },
+      {
+        "line": 7,
+        "text": "    def test_first_threshold(self):"
+      },
+      {
+        "line": 8,
+        "text": "        h=checkpoint(self.c,self.c['old_route']);self.assertEqual(h['index'],1);self.assertEqual(h['covered'],[[1,0]]);self.assertEqual(h['remaining_budget'],31)"
+      },
+      {
+        "line": 9,
+        "text": "    def test_no_premature_future(self):self.assertNotIn([3,0],checkpoint(self.c,self.c['old_route'])['covered'])"
+      },
+      {
+        "line": 10,
+        "text": "    def test_suffix_continuity(self):"
+      },
+      {
+        "line": 11,
+        "text": "        h=checkpoint(self.c,self.c['old_route']);self.assertEqual(h['executed_route']+h['old_route'][1:],self.c['old_route'])"
+      },
+      {
+        "line": 12,
+        "text": "    def test_repeated_steps_not_progress(self):"
+      },
+      {
+        "line": 13,
+        "text": "        route=[[0,0],[1,0],[0,0],[1,0],[2,0],[1,0],[0,0]];self.assertEqual(checkpoint(self.c,route,75)['index'],4)"
+      },
+      {
+        "line": 14,
+        "text": "    def test_invalid_route(self):"
+      },
+      {
+        "line": 15,
+        "text": "        with self.assertRaises(ValueError):checkpoint(self.c,[[0,0],[2,0],[0,0]])"
+      },
+      {
+        "line": 16,
+        "text": "    def test_hidden_deferred(self):"
+      },
+      {
+        "line": 17,
+        "text": "        h=checkpoint(self.c,self.c['old_route']);self.e['free']=[[0,0],[1,0],[3,0]];p=publish(self.c,h,self.e)['case'];self.assertEqual(p['metadata']['deferred_targets'],[[2,0]]);self.assertNotIn([2,0],p['covered'])"
+      },
+      {
+        "line": 18,
+        "text": "    def test_current_collision(self):"
+      },
+      {
+        "line": 19,
+        "text": "        self.e['free']=[[0,0],[2,0],[3,0]];self.assertEqual(publish(self.c,checkpoint(self.c,self.c['old_route']),self.e)['status'],'unsupported_current_blocked')"
+      },
+      {
+        "line": 20,
+        "text": "    def test_base_collision(self):"
+      },
+      {
+        "line": 21,
+        "text": "        self.e['free']=[[1,0],[2,0],[3,0]];self.assertEqual(publish(self.c,checkpoint(self.c,self.c['old_route']),self.e)['status'],'unsupported_base_blocked')"
+      },
+      {
+        "line": 22,
+        "text": "    def test_no_mutation(self):"
+      },
+      {
+        "line": 23,
+        "text": "        saved=copy.deepcopy(self.c);h=checkpoint(self.c,self.c['old_route']);publish(self.c,h,self.e);self.assertEqual(saved,self.c)"
+      },
+      {
+        "line": 24,
+        "text": "    def test_bad_percent(self):"
+      },
+      {
+        "line": 26,
+        "text": "            with self.assertRaises(ValueError):checkpoint(self.c,self.c['old_route'],p)"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\prepare_continuous_history_runs_20261016.py",
+    "sha256": "191c30229d268f1b62fc247cb920c6cf409880333905580d0980d026a94b33ef",
+    "lines": 46,
+    "anchors": [
+      {
+        "line": 6,
+        "text": "def worker(case,seed,dest):"
+      },
+      {
+        "line": 12,
+        "text": "        start=time.perf_counter();raw=portable_frozen.solve(snapshot(c),set(map(tuple,c['targets'])),'P2_MULTI',20,seed,portable_frozen.PROFILE)"
+      },
+      {
+        "line": 13,
+        "text": "        write(dest,dict(worker_status='returned',seed=seed,case_sha256=sha(case),raw=raw,independent_route_check=route_check(c,raw['route']),solve_plus_audits_seconds=time.perf_counter()-start));return 0"
+      },
+      {
+        "line": 15,
+        "text": "def main():"
+      },
+      {
+        "line": 25,
+        "text": "        seed=int(hashlib.sha256((e['map_id']+':initial_only_v1').encode()).hexdigest()[:8],16)"
+      },
+      {
+        "line": 26,
+        "text": "        jobs.append(dict(run_id=f'initial_{i:02d}',case=e['initial_case'],map_id=e['map_id'],seed=seed,budget=20))"
+      },
+      {
+        "line": 27,
+        "text": "    write(PREP/'protocol.json',dict(jobs=jobs,protected_hashes=hashes,max_calls=10,comparison_calls=0,holdout_used=False,seed_policy='SHA256(map_id+:initial_only_v1) first8hex',interruption='Do not rerun completed results; incomplete attempts separately archived before explicit recovery.'))"
+      },
+      {
+        "line": 35,
+        "text": "                try:code=subprocess.run([sys.executable,'-X','utf8',str(Path(__file__)),'--worker',j['case'],str(j['seed']),str(dest)],cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=50).returncode"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\verify_continuous_preparation_20261016.py",
+    "sha256": "e449b2940594e85d3d18d8c9dee4aa5fcef3c6a9d97ec1eec5fa717cfe77e06c",
+    "lines": 55,
+    "anchors": [
+      {
+        "line": 6,
+        "text": "def main():"
+      },
+      {
+        "line": 21,
+        "text": "        p=read(dest);raw=p['raw'];route=raw['route'];assert p['case_sha256']==sha(Path(j['case'])) and p['seed']==raw['seed']==j['seed']"
+      },
+      {
+        "line": 27,
+        "text": "        h=checkpoint(c,route);assert h['index']==index and set(map(tuple,h['covered']))==seen"
+      },
+      {
+        "line": 28,
+        "text": "        assert h['old_route']==route[index:] and h['executed_route']==route[:index+1] and h['remaining_budget']==c['distance_budget']-index"
+      },
+      {
+        "line": 29,
+        "text": "        event=read(Path(e['event_source']));out=publish(c,h,event);entry=dict(map_id=j['map_id'],initial_run=j['run_id'],initial_steps=len(route)-1,"
+      },
+      {
+        "line": 30,
+        "text": "            preparation_seconds=raw['seconds'],history=h,status=out['status'],seed0=event['metadata']['repeat_seed_0'],seed1=event['metadata']['repeat_seed_1'])"
+      },
+      {
+        "line": 34,
+        "text": "            assert set(map(tuple,state['metadata']['deferred_targets']))==published-free-seen"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\run_continuous_comparison_20261016.py",
+    "sha256": "6cfea348b153f16a0fe534b4a2cfff05cf09f0eb589257ad1701e6338364c21e",
+    "lines": 50,
+    "anchors": [
+      {
+        "line": 4,
+        "text": "def worker(case,method,budget,seed,dest):"
+      },
+      {
+        "line": 9,
+        "text": "        c=read(case);s=snapshot(c);initial=set(map(tuple,c['metadata']['initial_targets']));start=time.perf_counter()"
+      },
+      {
+        "line": 10,
+        "text": "        raw=portable_frozen.solve(s,initial,method,budget,seed,portable_frozen.PROFILE) if method=='P2_MULTI' else solve(s,initial,method,budget,seed)"
+      },
+      {
+        "line": 11,
+        "text": "        write(dest,dict(worker_status='returned',case_sha256=sha(case),method=method,budget=budget,seed=seed,raw=raw,"
+      },
+      {
+        "line": 14,
+        "text": "def main():"
+      },
+      {
+        "line": 28,
+        "text": "                    jobs.append(dict(run_id=f'c{i:02d}_r{rep}_b{b}_{m}',case=str(CHECK/'cases'/(e['map_id']+'.json')),map_id=e['map_id'],repeat=rep,budget=b,seed=e[f'seed{rep}'],method=m))"
+      },
+      {
+        "line": 38,
+        "text": "                try:code=subprocess.run([sys.executable,'-X','utf8',str(Path(__file__)),'--worker',j['case'],j['method'],str(j['budget']),str(j['seed']),str(dest)],cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=j['budget']+30).returncode"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\verify_continuous_comparison_20261016.py",
+    "sha256": "6bf89f3e248323a09cbd8aa07ed9497d7ba45964997d9c1ab85b13f21d274856",
+    "lines": 58,
+    "anchors": [
+      {
+        "line": 5,
+        "text": "def main():"
+      },
+      {
+        "line": 18,
+        "text": "        assert payload['case_sha256']==sha(Path(j['case'])) and payload['seed']==raw['seed']==j['seed']"
+      },
+      {
+        "line": 27,
+        "text": "        d=raw['detail'];plan=independent_plan(c);cfg=plan['plans']['R_PLUS1'];old=c['old_route'];l,rr=cfg['left'],cfg['right']"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\report_continuous_comparison_20261016.py",
+    "sha256": "11be19d9b4651801f99dedf9154017914870f1893f926e757fa06483612eb227",
+    "lines": 95,
+    "anchors": [
+      {
+        "line": 3,
+        "text": "def check():"
+      },
+      {
+        "line": 11,
+        "text": "        payload=read(p);c=read(Path(j['case']));raw=payload['raw'];assert payload['case_sha256']==sha(Path(j['case']))"
+      },
+      {
+        "line": 16,
+        "text": "def main():"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\portable_frozen.py",
+    "sha256": "accfa294a6662ead06d68d0716c20fe18d8882bde481577ca529be259f91c7c8",
+    "lines": 9,
+    "anchors": []
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP侧向拓宽开发诊断_v0.4_20261021\\generate.py",
+    "sha256": "dd0d62cc6f23b2c27ff67995c93ad2e25c275672465246f52f16beb9e92aca1a",
+    "lines": 70,
+    "anchors": [
+      {
+        "line": 3,
+        "text": "def make_input(name,F,T,H0,current,previous,old,budget,initial):"
+      },
+      {
+        "line": 4,
+        "text": "    return dict(name=name,free=sorted(F),targets=sorted(T),covered=sorted(H0),published_targets=sorted(T),deferred_targets=[],initial_targets=sorted(initial),current=current,previous=previous,base=[1,1],predator=[-1,0],old_route=old,distance_budget=budget)"
+      },
+      {
+        "line": 5,
+        "text": "def setup():"
+      },
+      {
+        "line": 10,
+        "text": "        meta=dict(id=gid,L=L,w=w,development=True,input=inp);maps.append(meta);j=dict(id='prep_'+gid,phase='prep',case=gid,input=inp,method='PPCPP',seed=20261021,budget=20,seal='seal1.json');save(H/'jobs'/f'{j[\"id\"]}.json',j);prep.append(j)"
+      },
+      {
+        "line": 12,
+        "text": "def witness(F,current,base):"
+      },
+      {
+        "line": 28,
+        "text": "def build():"
+      },
+      {
+        "line": 32,
+        "text": "        for count in (L//2,2*L//3):"
+      },
+      {
+        "line": 44,
+        "text": "            gp=dict(id=gid,geometry=m['id'],L=L,w=w,boundary_count=count,ell=ell,prep_id='prep_'+m['id'],history_cut=cut,current=cur,previous=prev,H=sorted(hist),boundary_covered=len(hist&B),actual_history_fraction=len(hist)/len(T0),executed_steps=cut,old_remaining=len(T0-hist),budget_after_prefix=1000000-cut,candidates=candidates,selection=selection)"
+      },
+      {
+        "line": 53,
+        "text": "                states.append(dict(id=sid,index=len(states),group=gid,geometry=m['id'],L=L,w=w,boundary_count=count,condition=cond,input=inp,A=sorted(A),A_count=len(A),T0_count=len(T0),H_count=len(hist),old_remaining=len(T0-hist),history_fraction=len(hist)/len(T0),history_cut=cut,current=cur,previous=prev,k=record['k'] if record else None,a=record['a'] if record else None,distance=distance,development=True,retroactive_A_credit=0))"
+      },
+      {
+        "line": 60,
+        "text": "        for method in METHODS:gate.append(dict(id=f'gate_{s[\"id\"]}_{method}',phase='gate',case=s['id'],input=s['input'],method=method,seed=20261021,budget=20,seal='seal2.json'))"
+      },
+      {
+        "line": 62,
+        "text": "        for rep,seed in enumerate(SEEDS):"
+      },
+      {
+        "line": 64,
+        "text": "            for method in mm:formal.append(dict(id=f'formal_{s[\"id\"]}_{seed}_{method}',phase='formal',case=s['id'],input=s['input'],method=method,seed=seed,budget=20,seal='seal2.json'))"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\复杂障碍压力开发测试_v0.1_20261021\\stress.py",
+    "sha256": "4f594947cdebdf1317172507bdb4fed52165e9b1f147d2a086eb008e76b008d0",
+    "lines": 134,
+    "anchors": [
+      {
+        "line": 4,
+        "text": "def read(p):return json.loads(Path(p).read_text(encoding='utf8'))"
+      },
+      {
+        "line": 5,
+        "text": "def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()"
+      },
+      {
+        "line": 6,
+        "text": "def save(p,x):"
+      },
+      {
+        "line": 8,
+        "text": "def load(n,p):"
+      },
+      {
+        "line": 14,
+        "text": "def adj(p):"
+      },
+      {
+        "line": 16,
+        "text": "def graph(f,base):"
+      },
+      {
+        "line": 25,
+        "text": " def visit(v,parent=None):"
+      },
+      {
+        "line": 35,
+        "text": "def imports():return {str(Path(m.__file__).resolve()) for m in list(sys.modules.values()) if getattr(m,'__file__',None) and Path(m.__file__).is_file()}"
+      },
+      {
+        "line": 36,
+        "text": "def seal(name,parent):"
+      },
+      {
+        "line": 42,
+        "text": "def worker(jp,out):"
+      },
+      {
+        "line": 47,
+        "text": " x=runtime.run_payload(payload,'PPCPP',20,j['seed']) if j['method']=='PPCPP' else p2_adapter.run_payload(payload,20,j['seed'])"
+      },
+      {
+        "line": 49,
+        "text": "def execute(order,folder):"
+      },
+      {
+        "line": 60,
+        "text": "def setup():"
+      },
+      {
+        "line": 65,
+        "text": "  c=dict(name=name,free=sorted(f),targets=sorted(f),covered=[],published_targets=sorted(f),deferred_targets=[],initial_targets=sorted(f),current=[0,0],base=[0,0],previous=None,predator=[-1,0],old_route=[],distance_budget=10*w*h)"
+      },
+      {
+        "line": 66,
+        "text": "  save(H/'inputs'/(name+'.json'),c);j=dict(id=name,input='inputs/'+name+'.json',method='PPCPP',seed=20261021,seal='prep_seal.json');save(H/'jobs'/(name+'.json'),j);order.append(j)"
+      },
+      {
+        "line": 68,
+        "text": "def layouts(w,h):"
+      },
+      {
+        "line": 79,
+        "text": "def build():"
+      },
+      {
+        "line": 84,
+        "text": "  for progress in (10,30):"
+      },
+      {
+        "line": 92,
+        "text": "    if cur not in f:"
+      },
+      {
+        "line": 98,
+        "text": "    cc=dict(c,name=name,free=sorted(f),targets=sorted(f),covered=sorted(hist),deferred_targets=sorted(full-f-hist),current=list(cur),previous=list(route[idx-1]) if idx else None,old_route=route[idx:])"
+      },
+      {
+        "line": 100,
+        "text": "    states.append(dict(name=name,w=w,h=h,kind=kind,progress=progress,history_index=idx,prep=j['id'],connection_opened=added,obstacles=len(full-f),obstacle_fraction=len(full-f)/len(full),pending=len(f-hist-{cur}),deferred=len(full-f-hist),structure=g))"
+      },
+      {
+        "line": 107,
+        "text": "    j=dict(id=f'{s[\"name\"]}__{rep}__{m}',case=s['name'],rep=rep,method=m,seed=20261020+rep,input='inputs/'+s['name']+'.json',seal='formal_seal.json');save(H/'jobs'/(j['id']+'.json'),j);order.append(j)"
+      },
+      {
+        "line": 109,
+        "text": "def analysis():"
+      },
+      {
+        "line": 116,
+        "text": "def analyze():"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\复杂障碍压力开发测试_v0.1_20261021\\预登记.md",
+    "sha256": "5f9c7909b2da29b56f85a338382173954d7df96de23663be051898d502c74b70",
+    "lines": 15,
+    "anchors": [
+      {
+        "line": 5,
+        "text": "固定两个矩形带状基础图21×15、31×21，所有原格为待检目标，基地(0,0)，捕食者(-1,0)。各用原PPCPP、seed20261021、20秒生成一次真实历史；取10%和30%首次覆盖的最早前缀（含起点），保留previous和旧后缀。准备失败则停止，不替换历史。"
+      },
+      {
+        "line": 7,
+        "text": "三种预定障碍：交替开口条墙（x=2,4,...,W−3整列墙，只在交替y=1/H−2留口）、房间墙网（x和y的4倍数隔墙，每段留一个固定门）、固定seed20261021+W的DFS迷宫（奇数坐标房间和连接格）。均仅基于几何生成，不试跑筛图。迷宫基点(1,1)，基地由(0,0)→(0,1)→(1,1)接入；如当前位置不在可飞域，沿到最近可飞格的曼哈顿路径先x后y开出一条接入通路。记录因此移除的障碍；不据路线效果调整。"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\runtime.py",
+    "sha256": "1e69a2933db6f43372945709172edb4054981f39ddcc590c7155e56e548dc553",
+    "lines": 28,
+    "anchors": [
+      {
+        "line": 6,
+        "text": "def module(name,path):"
+      },
+      {
+        "line": 11,
+        "text": "def snapshot(c):return Snapshot(c['name'],frozenset(map(tuple,c['free'])),frozenset(map(tuple,c['targets'])),frozenset(map(tuple,c['covered'])),tuple(c['current']),tuple(c['base']),tuple(map(tuple,c['old_route'])),0,c['distance_budget'])"
+      },
+      {
+        "line": 12,
+        "text": "def run_payload(payload,mode,budget=20,seed=0,*,hook=None,clock=time.perf_counter,geometry=native.UnifiedGeometry):"
+      },
+      {
+        "line": 14,
+        "text": " begin=clock();deadline=begin+budget;raw=None;phases={};events=[]"
+      },
+      {
+        "line": 15,
+        "text": " def mark(stage):"
+      },
+      {
+        "line": 18,
+        "text": "  if clock()>=deadline:raise DeadlineExceeded()"
+      },
+      {
+        "line": 21,
+        "text": "  raw=solve(s,set(map(tuple,c['initial_targets'])),mode,seed,tuple(c['predator']),tuple(c['previous']) if c['previous'] else None,begin,deadline,phases,mark,clock,geometry)"
+      },
+      {
+        "line": 25,
+        "text": "  raw.update(status='deadline',route=(),selected=None,reason='shared_entry_deadline')"
+      },
+      {
+        "line": 27,
+        "text": " if elapsed>=budget:raw.update(status='deadline',route=(),selected=None,reason='shared_entry_deadline')"
+      },
+      {
+        "line": 28,
+        "text": " return dict(raw=raw,entry_seconds=elapsed,phase_seconds=phases,eligible=raw['status']=='core_complete' and elapsed<budget,budget=budget,method=mode,seed=seed,injection_events=events)"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\candidate.py",
+    "sha256": "885ca9439d4b6a78490ec4dfaa4b69594cc8536628ad06bd872db3fdfa3a3a4b",
+    "lines": 57,
+    "anchors": [
+      {
+        "line": 6,
+        "text": "def append_segment(route,pending,segment,mark):"
+      },
+      {
+        "line": 9,
+        "text": "def solve(s,initial,mode,seed,predator,previous,begin,deadline,phases,mark,clock,geometry):"
+      },
+      {
+        "line": 13,
+        "text": "  mark('p0_before');a=clock();p0=native.solve(s,initial,deadline-clock(),seed,predator,previous,_clock=clock,_geometry=geometry);phases['p0']=clock()-a;out['branches']['P0']=p0"
+      },
+      {
+        "line": 19,
+        "text": "   a=clock();mark('candidate_before');full=geometry(s,deadline)"
+      },
+      {
+        "line": 20,
+        "text": "   def dist(q):mark('candidate_distance');return full.distance(s.base,q)"
+      },
+      {
+        "line": 24,
+        "text": "   def move(segment):"
+      },
+      {
+        "line": 29,
+        "text": "     work=geometry(work_snapshot,deadline)"
+      },
+      {
+        "line": 36,
+        "text": "       mark('phase1');cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+      },
+      {
+        "line": 38,
+        "text": "       event=dict(phase='work',index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))"
+      },
+      {
+        "line": 56,
+        "text": "  out.update(status='deadline',route=(),selected=None,reason='shared_entry_deadline')"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\p2_adapter.py",
+    "sha256": "f1b08632759cd42a4b904ab061722b714dcda0b6bed42a2929873e528584bd23",
+    "lines": 25,
+    "anchors": [
+      {
+        "line": 6,
+        "text": "def solve(s,initial,budget,seed):"
+      },
+      {
+        "line": 9,
+        "text": " if remaining<=0:r=dict(route=(),source=None,status='deadline',seconds=time.perf_counter()-begin)"
+      },
+      {
+        "line": 11,
+        "text": "  try:r=p2_solve(s,remaining,'multi',seed)"
+      },
+      {
+        "line": 15,
+        "text": " r['seconds']=time.perf_counter()-begin;r['method']='P2_MULTI';r['budget']=budget;r['seed']=seed"
+      },
+      {
+        "line": 19,
+        "text": "def run_payload(payload,budget,seed):"
+      },
+      {
+        "line": 23,
+        "text": " raw=solve(s,set(map(tuple,c['initial_targets'])),budget-(time.perf_counter()-begin),seed)"
+      },
+      {
+        "line": 25,
+        "text": " return dict(raw=raw,entry_seconds=time.perf_counter()-begin,budget=budget,method='P2_MULTI',seed=seed,phase_seconds=dict(encoding=encoding))"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\预登记.md",
+    "sha256": "a15662c8c2f80fc6b5fe1e8713d82148b39774c68501b8c5015d9723ead3e5e1",
+    "lines": 11,
+    "anchors": [
+      {
+        "line": 5,
+        "text": "先完整环境事前封存且等待写入成功，再49次门槛（最多120）验证P2薄包装、保底/无接受截止、LAST原9注入、输出口径和缓存隔离。P2不改offer/搜索/中止频率/保底，仅外部独立audit移出暖入口。完整raw编码仍计时；原生deadline可有路线，按实际entry<budget另判及时。"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP结构候选新开发验证_v0.1_20261020\\validation.py",
+    "sha256": "e857de9f8514b96f39ad7891a03979d21208149a997c6774fdde15dea44a5f2e",
+    "lines": 27,
+    "anchors": [
+      {
+        "line": 3,
+        "text": "def validate(c):"
+      },
+      {
+        "line": 5,
+        "text": "    def point(p):"
+      },
+      {
+        "line": 10,
+        "text": "    for field in ('published_targets','deferred_targets'):"
+      },
+      {
+        "line": 15,
+        "text": "    if 'distance_budget' in c:"
+      },
+      {
+        "line": 16,
+        "text": "        v=c['distance_budget']"
+      },
+      {
+        "line": 26,
+        "text": "    if 'deferred_targets' in c and set(map(tuple,c['deferred_targets']))!=published-f-h:raise ValueError('deferred ledger')"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\基线复现准备_20261019\\独立版_v0.2\\ppcpp.py",
+    "sha256": "0e1ab657bf76d3ddb682a54e451252d19ecdf5bbc77edf42ca98c3c95dfb8f51",
+    "lines": 46,
+    "anchors": [
+      {
+        "line": 8,
+        "text": "def solve(s,initial,budget,seed,predator,previous,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit):"
+      },
+      {
+        "line": 9,
+        "text": "    begin=_clock();deadline=begin+budget;route=[];trace=[];status='not_started';reason=None;accepted=None"
+      },
+      {
+        "line": 10,
+        "text": "    def tick():"
+      },
+      {
+        "line": 11,
+        "text": "        if _clock()>=deadline:raise DeadlineExceeded()"
+      },
+      {
+        "line": 12,
+        "text": "    def move(segment,pending):"
+      },
+      {
+        "line": 20,
+        "text": "        if previous is not None and sum(abs(a-b) for a,b in zip(previous,s.current))!=1:raise ValueError('historical heading must be adjacent')"
+      },
+      {
+        "line": 21,
+        "text": "        tick();g=_geometry(s,deadline);reason=g.precheck();tick()"
+      },
+      {
+        "line": 26,
+        "text": "                tick();cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+      },
+      {
+        "line": 28,
+        "text": "                event=dict(index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))"
+      },
+      {
+        "line": 40,
+        "text": "    except DeadlineExceeded:status='deadline'"
+      },
+      {
+        "line": 44,
+        "text": "        seconds=seconds,budget=budget,seed=seed,seed_used=False,predator=predator,initial_previous=previous,weights=(2.,.5),"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\基线复现准备_20261019\\ppcpp_independent.py",
+    "sha256": "e66ee0933a2c0b328ae802fd2902e0864808a81a9d1331ce294cbaa21b6ae85c",
+    "lines": 34,
+    "anchors": [
+      {
+        "line": 14,
+        "text": "def solve(s,initial_targets,budget,seed=0,weights=(2.,.5)):"
+      },
+      {
+        "line": 15,
+        "text": "    begin=time.perf_counter();deadline=begin+budget;route=();detail={};status='not_started';reason=None"
+      },
+      {
+        "line": 17,
+        "text": "        check_contract(s,initial_targets,budget)"
+      },
+      {
+        "line": 20,
+        "text": "        g=UnifiedGeometry(s,deadline);reason=g.precheck()"
+      },
+      {
+        "line": 25,
+        "text": "            g.check_time() # Complete audit and acceptance must finish by the common deadline."
+      },
+      {
+        "line": 28,
+        "text": "    except DeadlineExceeded:status='deadline'"
+      },
+      {
+        "line": 32,
+        "text": "        source='PPCPP_core4' if route else None,seconds=seconds,budget=budget,seed=seed,weights=weights,"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\评价指标完整补算与数据审计_v0.1_20261020\\metrics.py",
+    "sha256": "146d5bead24006a3b3bde58468bfb9abafb3d658500f28ad5376fd90b073761e",
+    "lines": 35,
+    "anchors": [
+      {
+        "line": 2,
+        "text": "def points(x):return set(map(tuple,x))"
+      },
+      {
+        "line": 3,
+        "text": "def percentile(xs,p):"
+      },
+      {
+        "line": 7,
+        "text": "def metrics(c,path):"
+      },
+      {
+        "line": 11,
+        "text": "    assert points(c['deferred_targets'])==pub-f-h"
+      },
+      {
+        "line": 25,
+        "text": "    assert sum(counts.values())==n<=c['distance_budget']"
+      },
+      {
+        "line": 26,
+        "text": "    credited=h|(set(path)&t);missing=t-credited;deferred=pub-f-h"
+      },
+      {
+        "line": 34,
+        "text": "        deferred=len(deferred),uncompleted_published=len(pub-credited),returned=path[-1]==tuple(c['base']),"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\评价指标完整补算与数据审计_v0.1_20261020\\crosscheck.py",
+    "sha256": "89ee0b3c0bce2403e1d41060237492b12392128ac25d501d4cada851af300f04",
+    "lines": 27,
+    "anchors": [
+      {
+        "line": 5,
+        "text": "def calculate(c,route):"
+      },
+      {
+        "line": 27,
+        "text": "        deferred=len(p-f-h),uncompleted_published=len(p-credited),returned=r[-1]==tuple(c['base']),complete_legal=not missing and r[-1]==tuple(c['base']))"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\CAP目标状态契约与接续原型_v0.2_20261020\\runtime\\target_contract.py",
+    "sha256": "9af2967b992be5369b2623c57e427ba0b50a81bc8ec7511e9a685bd96e0c7ba1",
+    "lines": 84,
+    "anchors": [
+      {
+        "line": 13,
+        "text": "    def __init__(self,c,budget=5,*,clock=time.perf_counter,hook=None):"
+      },
+      {
+        "line": 15,
+        "text": "        self.clock=clock;self.deadline=clock()+budget;self.hook=hook"
+      },
+      {
+        "line": 18,
+        "text": "        self.distance_budget=c.get('distance_budget',float('inf'))"
+      },
+      {
+        "line": 19,
+        "text": "        if self.current not in self.free or self.base not in self.free or not self.targets<=self.free or not (self.covered|self.targets)<=self.published or math.isnan(self.distance_budget) or self.distance_budget<0:raise ValueError('snapshot')"
+      },
+      {
+        "line": 22,
+        "text": "    def check(self,stage):"
+      },
+      {
+        "line": 24,
+        "text": "        if self.clock()>=self.deadline:raise Deadline(stage)"
+      },
+      {
+        "line": 25,
+        "text": "    def bind_target(self,point,*,source,reference):"
+      },
+      {
+        "line": 33,
+        "text": "    def snapshot(self,status,**extra):"
+      },
+      {
+        "line": 34,
+        "text": "        return dict(status=status,current=self.current,path=list(self.path),covered=sorted(self.covered),pending=sorted(self.pending),deferred=sorted(self.published-self.free-self.covered),"
+      },
+      {
+        "line": 35,
+        "text": "            target_state=dict(self.state) if self.state else None,events=list(self.events),global_complete=False,benchmark_eligible=False,"
+      },
+      {
+        "line": 37,
+        "text": "    def _execute(self,waypoints,mode):"
+      },
+      {
+        "line": 42,
+        "text": "                if len(self.path)>self.distance_budget:raise ResourceLimit()"
+      },
+      {
+        "line": 49,
+        "text": "    def enter_region(self,explicit_path):"
+      },
+      {
+        "line": 58,
+        "text": "        except Deadline:return self.snapshot('deadline')"
+      },
+      {
+        "line": 62,
+        "text": "    def cover_region(self,selected_area):"
+      },
+      {
+        "line": 82,
+        "text": "        except Deadline:return self.snapshot('deadline',region_complete=False)"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\CAP目标状态契约与接续原型_v0.2_20261020\\replay_saved.py",
+    "sha256": "424105f0f41224895a1ed234bb467aaa3f6f057b8fcf21f94be8fa89a8abd5e2",
+    "lines": 42,
+    "anchors": [
+      {
+        "line": 5,
+        "text": "def read(p):return json.loads(p.read_text(encoding='utf-8'))"
+      },
+      {
+        "line": 6,
+        "text": "def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()"
+      },
+      {
+        "line": 7,
+        "text": "def points(x):return set(map(tuple,x))"
+      },
+      {
+        "line": 8,
+        "text": "def components(cells):"
+      },
+      {
+        "line": 18,
+        "text": "def main():"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\CAP目标状态契约与接续原型_v0.2_20261020\\CAP目标状态契约与接续原型报告_20261020.md",
+    "sha256": "d2aba157299ddb1f790c60d2db40ba19dd65f1a0697aa8fe388bb69646dabcd0",
+    "lines": 105,
+    "anchors": [
+      {
+        "line": 45,
+        "text": "所有原型输出均固定`global_complete=False`、`benchmark_eligible=False`，没有全局`route`字段；即使局部执行顺便覆盖了全部目标，也不冒充已经完成返航或完整任务。"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\TRACE_CAP适配复现_20261020\\runtime\\planners.py",
+    "sha256": "0f13fa773c45a49eed241689e430128c12525fb0ad61384ea85c377015df0eb4",
+    "lines": 80,
+    "anchors": [
+      {
+        "line": 7,
+        "text": "def solve(c,method,budget=20,seed=0,*,clock=time.perf_counter,checkpoint_hook=None):"
+      },
+      {
+        "line": 8,
+        "text": "    begin=clock();deadline=begin+budget"
+      },
+      {
+        "line": 12,
+        "text": "    published=set(map(tuple,c.get('published_targets',list(t|h))));deferred=published-f-h"
+      },
+      {
+        "line": 15,
+        "text": "    if 'deferred_targets' in c and set(map(tuple,c['deferred_targets']))!=deferred:raise ValueError('deferred ledger')"
+      },
+      {
+        "line": 16,
+        "text": "    if c['distance_budget']<0:raise ValueError('resource')"
+      },
+      {
+        "line": 19,
+        "text": "    def check(stage):"
+      },
+      {
+        "line": 21,
+        "text": "        if clock()>=deadline:raise Deadline(stage)"
+      },
+      {
+        "line": 22,
+        "text": "    def execute(waypoints,mode):"
+      },
+      {
+        "line": 65,
+        "text": "            if len(path)-1>c['distance_budget']:status='resource_exceeded'"
+      },
+      {
+        "line": 68,
+        "text": "    except Deadline as exc:status='deadline';error=str(exc)"
+      },
+      {
+        "line": 70,
+        "text": "    result=dict(method=method,status=status,route=list(path) if status=='complete' else [],diagnostic_route=path,pending=sorted(pending),deferred=sorted(deferred),moves=moves,plans=plans,"
+      },
+      {
+        "line": 72,
+        "text": "                metric_counts=dict(distance_rows=metric.rows,path_builds=metric.path_builds) if metric else {},seed=seed,seed_used_for_ties=False,global_completion=False,"
+      },
+      {
+        "line": 77,
+        "text": "        if status=='complete':result.update(status='deadline',route=[],error=str(exc))"
+      },
+      {
+        "line": 79,
+        "text": "    if end_time>=deadline and result['status']=='complete':result.update(status='deadline',route=[],error='result_ready')"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\Cstar连接器等价提速_v0.7_20261020\\runtime\\history_core\\public_map.py",
+    "sha256": "0e83e1ab1f6107e28a738c90a5aa352a1a5e2acadc26554a9d292b04ac01ff3b",
+    "lines": 219,
+    "anchors": [
+      {
+        "line": 44,
+        "text": "def add(a, b):"
+      },
+      {
+        "line": 48,
+        "text": "def dist(a, b):"
+      },
+      {
+        "line": 52,
+        "text": "def point_segment_distance(p, a, b):"
+      },
+      {
+        "line": 58,
+        "text": "def box_hit(a, b, cell, pad=0.0):"
+      },
+      {
+        "line": 78,
+        "text": "def supercover(a, b):"
+      },
+      {
+        "line": 94,
+        "text": "def segment_free(a, b, free):"
+      },
+      {
+        "line": 98,
+        "text": "def lap_points(a, b):"
+      },
+      {
+        "line": 112,
+        "text": "    def __init__(self):"
+      },
+      {
+        "line": 118,
+        "text": "    def update(self, observation):"
+      },
+      {
+        "line": 130,
+        "text": "    def frontier(self, p):"
+      },
+      {
+        "line": 134,
+        "text": "    def unknown_adjacent(self, p):"
+      },
+      {
+        "line": 137,
+        "text": "    def endpoint(self, p):"
+      },
+      {
+        "line": 140,
+        "text": "    def feasible(self, a, b):"
+      },
+      {
+        "line": 143,
+        "text": "    def clearance_score(self, a, b):"
+      },
+      {
+        "line": 163,
+        "text": "def published_observation(free, published_targets):"
+      },
+      {
+        "line": 167,
+        "text": "    observed blocked (they are the deferred targets, published *and* known to be"
+      },
+      {
+        "line": 187,
+        "text": "    def __init__(self, free, published_targets=(), radius=2.0):"
+      },
+      {
+        "line": 195,
+        "text": "    def observe(self, pose):"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP单步新开发验证负责人审核_20261021\\审核与关闭结论.md",
+    "sha256": "b68b54f3eb5354c233aa15c481dc72c51e5546e60cd4d639c6e38639030b144c",
+    "lines": 28,
+    "anchors": []
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\连续事件执行评估第一步只读审查执行稿_给sol_20261021.md",
+    "sha256": "6625242b923b74e40cc8157d5588c3ce2ca178871b939080f2bb2705aa9bcdda",
+    "lines": 115,
+    "anchors": [
+      {
+        "line": 21,
+        "text": "- 当前冻结原PPCPP、P2真实入口的输入合同、预算/失败返回、old_route及previous处理；"
+      },
+      {
+        "line": 37,
+        "text": "要证实第4类，至少需要按时间串起两次发布记录、两次规划输入、前一输出的实际已执行段、更新后的current/previous/H/资源及第二次输入来源。只有名称、说明或两个事件参数不足。"
+      },
+      {
+        "line": 44,
+        "text": "- 执行账：当前格、previous、已执行真实路段、累计步数、剩余距离资源；不能把未执行计划长度扣掉。"
+      },
+      {
+        "line": 59,
+        "text": "比较整段任务时，各方法从同一起点、初始任务和同一外生事件序列开始，随后独立积累自己的H/current/previous/资源。不能每次重置成PPCPP历史或强制同位置，否则又回到快照比较。"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\baseline_suite.py",
+    "sha256": "87e333952e0c8212bf22da25786d4fd65de65554d4c92ee66f699af3e4b6c951",
+    "lines": 87,
+    "anchors": [
+      {
+        "line": 15,
+        "text": "def check_contract(s,initial_targets,budget):"
+      },
+      {
+        "line": 18,
+        "text": "    if not s.targets<=s.free:raise ValueError('blocked targets must be deferred before planning')"
+      },
+      {
+        "line": 20,
+        "text": "    if not s.covered<=set(initial_targets):raise ValueError('covered history must belong to initial published targets')"
+      },
+      {
+        "line": 22,
+        "text": "def oarp_solve(s,initial_targets,seconds,profile,seed):"
+      },
+      {
+        "line": 23,
+        "text": "    begin=time.perf_counter();deadline=begin+seconds;best=None;source=None;detail={};g=None"
+      },
+      {
+        "line": 24,
+        "text": "    def offer(route,label):"
+      },
+      {
+        "line": 31,
+        "text": "        g=UnifiedGeometry(s,deadline)"
+      },
+      {
+        "line": 34,
+        "text": "        offer(s.old_route,'old_suffix')"
+      },
+      {
+        "line": 36,
+        "text": "        for p in s.old_route:"
+      },
+      {
+        "line": 44,
+        "text": "        service=old_services(s.old_route,set(initial_targets)-set(s.covered)-g.views[s.current])"
+      },
+      {
+        "line": 46,
+        "text": "        cap=cap_for_time(profile,max(0,deadline-time.perf_counter()-.01))"
+      },
+      {
+        "line": 49,
+        "text": "        ranked=rank_replan(pending,old,cap,2,deadline)"
+      },
+      {
+        "line": 52,
+        "text": "            blocks=path_sets(ranked['ranks'],service,s.old_route,s.free)"
+      },
+      {
+        "line": 54,
+        "text": "            result=tour_replan(g,blocks,seconds=max(.001,deadline-time.perf_counter()-.01),seed=seed)"
+      },
+      {
+        "line": 62,
+        "text": "        status='deadline';detail['interruption']=str(exc)"
+      },
+      {
+        "line": 67,
+        "text": "def solve(s,initial_targets,method,budget,seed,profile):"
+      },
+      {
+        "line": 69,
+        "text": "    check_contract(s,initial_targets,budget)"
+      },
+      {
+        "line": 72,
+        "text": "    if remaining<=0:r=dict(route=(),source=None,status='deadline',seconds=time.perf_counter()-begin)"
+      },
+      {
+        "line": 74,
+        "text": "        try:r=p2_solve(s,remaining,'multi',seed)"
+      },
+      {
+        "line": 78,
+        "text": "    elif method=='TREE_MST':r=solve_candidate(s,'TREE_MST',remaining,seed,final_audit=False)"
+      },
+      {
+        "line": 79,
+        "text": "    else:r=oarp_solve(s,initial_targets,remaining,profile,seed)"
+      },
+      {
+        "line": 81,
+        "text": "    r['method']=method;r['budget']=budget;r['seed']=seed"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\p2_search_audit.py",
+    "sha256": "d1b93bd741b80af02c8f398b495441da570ae75f27008d512e9d873844a0385a",
+    "lines": 82,
+    "anchors": [
+      {
+        "line": 7,
+        "text": "def solve(s,budget,variant,seed):"
+      },
+      {
+        "line": 9,
+        "text": "    def elapsed():return time.perf_counter()-begin"
+      },
+      {
+        "line": 10,
+        "text": "    def offer(route,label):"
+      },
+      {
+        "line": 15,
+        "text": "    def stage(label,fn):"
+      },
+      {
+        "line": 21,
+        "text": "            events.append(dict(stage=label,start=t,end=elapsed(),status='deadline'));raise"
+      },
+      {
+        "line": 22,
+        "text": "    def opt(points,limit,label):"
+      },
+      {
+        "line": 36,
+        "text": "        except DeadlineExceeded:reason='deadline';raise"
+      },
+      {
+        "line": 41,
+        "text": "        def fallback():"
+      },
+      {
+        "line": 42,
+        "text": "            offer(s.old_route,'old_suffix');left=set(s.targets-s.covered);visits=[]"
+      },
+      {
+        "line": 43,
+        "text": "            for p in s.old_route:"
+      },
+      {
+        "line": 65,
+        "text": "            rng=random.Random(seed)"
+      },
+      {
+        "line": 80,
+        "text": "    except DeadlineExceeded:status='deadline'"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py",
+    "sha256": "2eee969dc3a1c46fe1ff055080d57f56cf0144551098de4fd25280d5fc074b14",
+    "lines": 128,
+    "anchors": [
+      {
+        "line": 10,
+        "text": "def adjacent(p):"
+      },
+      {
+        "line": 15,
+        "text": "def footprint(p, targets, radius=1):"
+      },
+      {
+        "line": 29,
+        "text": "    old_route: tuple[Point, ...]"
+      },
+      {
+        "line": 31,
+        "text": "    distance_budget: int = 100000"
+      },
+      {
+        "line": 43,
+        "text": "    def __init__(self, snapshot, deadline=float('inf')):"
+      },
+      {
+        "line": 45,
+        "text": "        self.deadline = deadline"
+      },
+      {
+        "line": 64,
+        "text": "    def check_time(self):"
+      },
+      {
+        "line": 65,
+        "text": "        if time.perf_counter() > self.deadline:"
+      },
+      {
+        "line": 68,
+        "text": "    def precheck(self):"
+      },
+      {
+        "line": 76,
+        "text": "    def path(self, start, goal):"
+      },
+      {
+        "line": 105,
+        "text": "    def distance(self, a, b):"
+      },
+      {
+        "line": 108,
+        "text": "    def expand(self, visits):"
+      },
+      {
+        "line": 124,
+        "text": "def capture_route(route, targets, radius=1):"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\unified_geometry.py",
+    "sha256": "b0d70871ab4b2a3d3a4ccf3edcdadf4b3db9eb2415134d5740270a76293aff53",
+    "lines": 31,
+    "anchors": [
+      {
+        "line": 7,
+        "text": "    def path(self, a, b):"
+      },
+      {
+        "line": 17,
+        "text": "def single_cell_audit(s, route):"
+      },
+      {
+        "line": 30,
+        "text": "    if len(route)-1>s.distance_budget:errors.append('distance_budget_exceeded')"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+    "sha256": "6d5b95890a1ca666970c72cb306ec40ffc48495c9458d69cfc2bd702fa74d20f",
+    "lines": 54,
+    "anchors": [
+      {
+        "line": 4,
+        "text": "def audit(snapshot, route):"
+      },
+      {
+        "line": 29,
+        "text": "    if length > snapshot.distance_budget:"
+      },
+      {
+        "line": 30,
+        "text": "        errors.append('distance_budget_exceeded')"
+      },
+      {
+        "line": 38,
+        "text": "def environment_check(snapshot):"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\scale_scene_generator_20261014.py",
+    "sha256": "9c49c958f8dceb911269a61c1701eef43dd8b3833866506793f18ddfbd567d1c",
+    "lines": 331,
+    "anchors": [
+      {
+        "line": 17,
+        "text": "def rect(x, y, length, width):"
+      },
+      {
+        "line": 21,
+        "text": "def adjacent(p):"
+      },
+      {
+        "line": 26,
+        "text": "def digest(obj):"
+      },
+      {
+        "line": 31,
+        "text": "def reflect(p, params):"
+      },
+      {
+        "line": 35,
+        "text": "def initial_targets(params):"
+      },
+      {
+        "line": 47,
+        "text": "def extension(params, percent, kind, turn=None):"
+      },
+      {
+        "line": 49,
+        "text": "    old = initial_targets(params)"
+      },
+      {
+        "line": 56,
+        "text": "    def cell(i, j):"
+      },
+      {
+        "line": 74,
+        "text": "def layout(params):"
+      },
+      {
+        "line": 75,
+        "text": "    targets = initial_targets(params)"
+      },
+      {
+        "line": 96,
+        "text": "def distances(free, start):"
+      },
+      {
+        "line": 108,
+        "text": "def path(free, a, b):"
+      },
+      {
+        "line": 132,
+        "text": "def expand(free, targets, covered, current, base, visits):"
+      },
+      {
+        "line": 143,
+        "text": "def route_audit(free, targets, covered, current, base, route, budget=None):"
+      },
+      {
+        "line": 159,
+        "text": "def scan_route(free, targets, base, axis):"
+      },
+      {
+        "line": 171,
+        "text": "def checkpoint(targets, route, percent):"
+      },
+      {
+        "line": 176,
+        "text": "            return dict(current=p, covered=frozenset(seen), prefix=route[:i+1],"
+      },
+      {
+        "line": 177,
+        "text": "                        old_route=route[i:], index=i, actual_progress=len(seen)/len(targets))"
+      },
+      {
+        "line": 181,
+        "text": "def obstacle_patch(params, anchor, shape):"
+      },
+      {
+        "line": 194,
+        "text": "def choose_obstacle(params, free, targets, base, state, schedule):"
+      },
+      {
+        "line": 196,
+        "text": "    old_points = set(state['old_route']); ds = distances(free, current)"
+      },
+      {
+        "line": 211,
+        "text": "    def key(z):"
+      },
+      {
+        "line": 229,
+        "text": "def make_case(params, free0, old_targets, base, state, schedule, obstacle_result):"
+      },
+      {
+        "line": 241,
+        "text": "    deferred = (published-covered) & blocked"
+      },
+      {
+        "line": 252,
+        "text": "    assert state['prefix'][-1] == current == state['old_route'][0]"
+      },
+      {
+        "line": 253,
+        "text": "    assert targets <= free and covered <= old_targets and not deferred & covered"
+      },
+      {
+        "line": 254,
+        "text": "    metadata = dict(schedule, initial_targets=sorted(old_targets),"
+      },
+      {
+        "line": 255,
+        "text": "        published_targets=sorted(published), deferred_targets=sorted(deferred),"
+      },
+      {
+        "line": 262,
+        "text": "                    pending=len(targets-covered),deferred=len(deferred),new_targets=len(extra)),"
+      },
+      {
+        "line": 263,
+        "text": "        all_published_work_completed=False if deferred else None)"
+      },
+      {
+        "line": 265,
+        "text": "        covered=sorted(covered),current=current,base=base,old_route=state['old_route'],"
+      },
+      {
+        "line": 266,
+        "text": "        radius=0,distance_budget=limit,metadata=metadata)"
+      },
+      {
+        "line": 271,
+        "text": "def write_json(path_, obj):"
+      },
+      {
+        "line": 276,
+        "text": "def generate(out, scale=None):"
+      },
+      {
+        "line": 294,
+        "text": "                    domain=sorted(free),initial_targets=sorted(old),base=base,routes=routes))"
+      },
+      {
+        "line": 296,
+        "text": "                    for progress in (25,50,75):"
+      },
+      {
+        "line": 299,
+        "text": "                        state = checkpoint(old,routes[history],progress)"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\scenarios.py",
+    "sha256": "9ec1b7a3ce4a660d6abc678ddd5269d092b22d18c05a3ba3c7c8e32f288eff6a",
+    "lines": 111,
+    "anchors": [
+      {
+        "line": 7,
+        "text": "def rectangle(x0, y0, width, height):"
+      },
+      {
+        "line": 11,
+        "text": "def flight_domain(targets, margin=2):"
+      },
+      {
+        "line": 16,
+        "text": "def initial_checkpoint(length, width, fraction, initial_policy='snake'):"
+      },
+      {
+        "line": 20,
+        "text": "                       base, base, (), distance_budget=4*len(domain))"
+      },
+      {
+        "line": 37,
+        "text": "                       old_route=route[index:])"
+      },
+      {
+        "line": 38,
+        "text": "    return snapshot, route[:index+1], targets, domain"
+      },
+      {
+        "line": 41,
+        "text": "def build_case(length, width, progress, family, initial_policy='snake'):"
+      },
+      {
+        "line": 42,
+        "text": "    old, prefix, old_targets, domain = initial_checkpoint(length, width, progress, initial_policy)"
+      },
+      {
+        "line": 81,
+        "text": "                       targets=frozenset(targets), distance_budget=4*len(domain))"
+      },
+      {
+        "line": 84,
+        "text": "            'initial_targets': sorted(old_targets), 'domain': sorted(domain),"
+      },
+      {
+        "line": 89,
+        "text": "def all_cases(config):"
+      },
+      {
+        "line": 91,
+        "text": "        for progress in config['progress_fractions']:"
+      },
+      {
+        "line": 98,
+        "text": "def serialize(snapshot, meta):"
+      },
+      {
+        "line": 102,
+        "text": "            'old_route': snapshot.old_route, 'radius': snapshot.radius,"
+      },
+      {
+        "line": 103,
+        "text": "            'distance_budget': snapshot.distance_budget, 'metadata': meta}"
+      },
+      {
+        "line": 106,
+        "text": "def deserialize(data):"
+      },
+      {
+        "line": 110,
+        "text": "                    tuple(data['base']), tuple(map(tuple, data['old_route'])),"
+      },
+      {
+        "line": 111,
+        "text": "                    data['radius'], data['distance_budget'])"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\scenarios_v3.py",
+    "sha256": "9939eb993ac28c09a70e979437f9cc5411cf560671a20d0aba8c72398c506ee4",
+    "lines": 53,
+    "anchors": [
+      {
+        "line": 1,
+        "text": "\"\"\"Single-cell downward capture; blocked targets retained in a deferred ledger.\"\"\""
+      },
+      {
+        "line": 9,
+        "text": "def initial(length, width, kind):"
+      },
+      {
+        "line": 11,
+        "text": "    seed = Snapshot('initial_v3', frozenset(domain), frozenset(old), frozenset(),"
+      },
+      {
+        "line": 12,
+        "text": "                    (1, 3), (1, 3), (), radius=0, distance_budget=4*len(domain))"
+      },
+      {
+        "line": 13,
+        "text": "    result = solve(seed, 'P2', 5)"
+      },
+      {
+        "line": 14,
+        "text": "    if result.status not in ('planned', 'planned_at_timeout') or not audit(seed, result.route)['valid']:"
+      },
+      {
+        "line": 16,
+        "text": "    return seed, result.route, straight, corner"
+      },
+      {
+        "line": 19,
+        "text": "def case_from_checkpoint(old, prefix, straight, corner, length, width, kind, progress, family):"
+      },
+      {
+        "line": 26,
+        "text": "    deferred = (published-set(old.covered)) & blocked"
+      },
+      {
+        "line": 28,
+        "text": "    active_ledger = published-deferred"
+      },
+      {
+        "line": 33,
+        "text": "        'initial_targets': sorted(old.targets), 'published_targets': sorted(published),"
+      },
+      {
+        "line": 34,
+        "text": "        'deferred_targets': sorted(deferred), 'deferred_count': len(deferred),"
+      },
+      {
+        "line": 38,
+        "text": "        'old_route_collision': bool(set(s.old_route)-s.free),"
+      },
+      {
+        "line": 45,
+        "text": "def all_cases_v3():"
+      },
+      {
+        "line": 48,
+        "text": "            seed, route, straight, corner = initial(length, width, kind)"
+      },
+      {
+        "line": 49,
+        "text": "            for progress in (.25, .75):"
+      },
+      {
+        "line": 50,
+        "text": "                old, prefix = checkpoint(seed, route, progress)"
+      },
+      {
+        "line": 52,
+        "text": "                    yield case_from_checkpoint(old, prefix, straight, corner, length, width,"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\论文资料汇总_三篇文献与论文主题_20261009\\02_论文主题与具体研究问题.md",
+    "sha256": "e8a6ea51a01db6390296a3222b5c68fae3fad8b2cbcd42985308f5689a52b01b",
+    "lines": 153,
+    "anchors": []
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\论文资料汇总_三篇文献与论文主题_20261009\\42_三种基线适配审查与冻结说明_20261012.md",
+    "sha256": "5f9ceb4ea2ec21661722db6998f55e324647127c1fb7244f3c0d64c57aa466d8",
+    "lines": 84,
+    "anchors": [
+      {
+        "line": 78,
+        "text": "接口：solve(snapshot, initial_targets, method, budget, seed, profile)。profile使用冻结runtime_profile.json。初始目标集合来自事件前已发布路段，用于恢复OARP旧条带，不包含未来扩展。"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\论文资料汇总_三篇文献与论文主题_20261009\\00_阅读入口.md",
+    "sha256": "9e3170f3039591f286f96b623bae01b44741bb68d9ee03c8e12a9aaf7c9b862a",
+    "lines": 177,
+    "anchors": []
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\论文资料汇总_三篇文献与论文主题_20261009\\67_连续执行历史开发验证协议与输入预检_20261016.md",
+    "sha256": "b9d14b8615b2a125bc74050b3ea3efa2fea70281f15dc3f31f9e58a693c18704",
+    "lines": 42,
+    "anchors": [
+      {
+        "line": 11,
+        "text": "沿用第58份固定10个事件地图，不挑图或改事件。事件前输入只包含无变化控制的完整已知飞行域、initial_targets、基地、空覆盖历史与原完整H扫描见证。自由飞行域原本公开且固定，可包含尚未发布为待检目标的格；这不是允许提前采集未来新增目标。"
+      },
+      {
+        "line": 17,
+        "text": "沿保存完整路线逐格执行，覆盖数首次达到ceil(0.5×初始目标数)时触发事件。当前位置为该实际格，历史仅由已走前缀对当时公开目标的覆盖构成，old_route严格是从该索引起的原路线尾段。重复经过不重复增加覆盖进度。旧尾段不能另行优化后免费替换。"
+      },
+      {
+        "line": 21,
+        "text": "已采集后被遮挡的历史仍真实保留；未完成且当前被障碍遮挡的公开目标记deferred，不能标为完成。当前可检目标=published∩free，算法只收到当前状态。剩余资源上限=初始固定额度−已执行步数，双方相同；它是离散移动约束，不是实测电池模型。独立可行性见证不用于扩大额度或作为免费在线候选。"
+      },
+      {
+        "line": 27,
+        "text": "拟定最多10次初始准备＋10事件×2方法×1/20秒×2固定种子=90次完整求解。初始路线共享且只准备一次。事件后两个种子取既有事件metadata.repeat_seed_0/1，提前存入任务清单，循环反向方法顺序、交替预算，串行独立进程；请求线程数1，看门狗budget+30秒。事件不支持时不得凑满90，用固定排除清单降低实际任务数。单独列中断/失败，绝不并入完整有效汇总。"
+      }
+    ]
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\论文资料汇总_三篇文献与论文主题_20261009\\68_连续执行初始计划准备与事件状态核验_20261016.md",
+    "sha256": "75983510e79ece67f4254942cf2f19e3ad06c615efb15bd82f80e9189df7e1ba",
+    "lines": 44,
+    "anchors": []
+  },
+  {
+    "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\论文资料汇总_三篇文献与论文主题_20261009\\69_连续执行历史共同预算比较结果_20261016.md",
+    "sha256": "8a98d9498cda1dc584de0cc4929a27a6613bd7d5f2f6ef07cb8c3e93e37f91f2",
+    "lines": 84,
+    "anchors": []
+  }
+]

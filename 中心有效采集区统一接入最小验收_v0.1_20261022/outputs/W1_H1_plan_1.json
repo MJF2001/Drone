@@ -1,0 +1,5466 @@
+{
+  "id": "W1_H1_plan_1",
+  "passed": false,
+  "native_counts": {
+    "core_started": 1,
+    "heading_parse_calls": 1,
+    "context_calls": 1,
+    "context_BFS_started": 1,
+    "context_BFS_completed": 1,
+    "geometry_precheck_calls": 1,
+    "reward_calls": 9,
+    "scored_neighbor_rows": 13,
+    "selection_calls": 9,
+    "heading_update_calls": 10,
+    "geometry_path_calls": 1,
+    "astar_calls": 1,
+    "Astar_started": 1,
+    "Astar_completed": 1,
+    "main_audit_calls": 2,
+    "main_audit_returns": 2,
+    "main_audit_valid": 2,
+    "core_returned": 1,
+    "core_complete": 1,
+    "post_entry_calls": 1,
+    "post_source_geometry": 10,
+    "post_candidate_geometry": 10,
+    "post_output_geometry": 10,
+    "post_service_intersections": 135,
+    "post_interval_calls": 11
+  },
+  "method": "H1",
+  "seed": 20261022,
+  "wrapper_counts": {
+    "parse": 1,
+    "input_geometry": 1,
+    "primary_domain_points": 153,
+    "initial_zero_entry": 1,
+    "candidate_checks": 1,
+    "prediction_collect_here": 1,
+    "prediction_inside_tests": 9,
+    "prediction_service_intersections": 9,
+    "native_adapter_calls": 1,
+    "native_route_audits": 1,
+    "native_collect_here": 1,
+    "native_inside_tests": 9,
+    "native_geometry": 10,
+    "native_distance": 10,
+    "native_service_intersections": 45,
+    "native_resource_checks": 1,
+    "post_route_audits": 1,
+    "post_collect_here": 1,
+    "post_inside_tests": 9,
+    "post_geometry": 10,
+    "post_distance": 10,
+    "post_service_intersections": 45,
+    "post_resource_checks": 1,
+    "full_route_audits": 1,
+    "full_collect_here": 1,
+    "full_inside_tests": 9,
+    "full_geometry": 10,
+    "full_distance": 10,
+    "full_service_intersections": 45,
+    "full_resource_checks": 1
+  },
+  "stage": "main_complete",
+  "timing": {
+    "connector_and_contract_seconds": 0.0031316999811679125,
+    "core_adapter_seconds": 0.060475500009488314,
+    "post_adapter_seconds": 0.01498199999332428,
+    "main_encoding_seconds": 0.0005382000235840678,
+    "pipeline_seconds": 0.10459499998250976,
+    "pipeline_late": false
+  },
+  "snapshot": {
+    "id": "W1_H1_plan_1",
+    "input": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": null,
+      "heading_status": "NO_PRIOR_MOTION",
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ]
+      ],
+      "D": [],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "M": {
+        "terms": []
+      }
+    },
+    "metadata": {
+      "initial_targets": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "predator": [
+        -3,
+        -3
+      ],
+      "old_route": [],
+      "heading_source": {
+        "kind": "initialization_no_motion"
+      },
+      "execution_log_tail": "7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35",
+      "known_obstacles": [],
+      "scope": "public_execution_state_only"
+    }
+  },
+  "actual_before": {
+    "S": [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": null,
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ]
+    ],
+    "D": [],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 100,
+        "d": 1
+      },
+      "high": {
+        "n": 100,
+        "d": 1
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": []
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 0,
+        "d": 1
+      },
+      "high": {
+        "n": 0,
+        "d": 1
+      }
+    }
+  },
+  "actual_after": {
+    "S": [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": null,
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ]
+    ],
+    "D": [],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 100,
+        "d": 1
+      },
+      "high": {
+        "n": 100,
+        "d": 1
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": []
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 0,
+        "d": 1
+      },
+      "high": {
+        "n": 0,
+        "d": 1
+      }
+    }
+  },
+  "candidates": [
+    {
+      "q": [
+        0,
+        0
+      ],
+      "squared": {
+        "n": 0,
+        "d": 1
+      },
+      "dot": null,
+      "legal": true,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": []
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 0,
+          "d": 1
+        },
+        "high": {
+          "n": 0,
+          "d": 1
+        }
+      },
+      "squared_source": {
+        "n": 0,
+        "d": 1
+      },
+      "initial_zero_entry": true
+    }
+  ],
+  "q": [
+    0,
+    0
+  ],
+  "gamma": [
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ]
+  ],
+  "gamma_length": {
+    "exact": {
+      "terms": []
+    },
+    "interval_bits": 64,
+    "low": {
+      "n": 0,
+      "d": 1
+    },
+    "high": {
+      "n": 0,
+      "d": 1
+    }
+  },
+  "gamma_events": [],
+  "h_entry": null,
+  "heading": {
+    "status": "NO_PRIOR_MOTION",
+    "vector": null,
+    "source": {
+      "kind": "initialization_no_motion",
+      "execution_log_tail": "7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35"
+    }
+  },
+  "predicted_entry": {
+    "S": [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": null,
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ]
+    ],
+    "D": [],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 100,
+        "d": 1
+      },
+      "high": {
+        "n": 100,
+        "d": 1
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": []
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 0,
+        "d": 1
+      },
+      "high": {
+        "n": 0,
+        "d": 1
+      }
+    }
+  },
+  "core_request": {
+    "name": "synthetic_stop_W1_H1_plan_1",
+    "free": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "published_targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "covered": [
+      [
+        0,
+        0
+      ]
+    ],
+    "deferred_targets": [],
+    "current": [
+      0,
+      0
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "old_route": [],
+    "initial_targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "distance_budget": 100,
+    "predator": [
+      -3,
+      -3
+    ],
+    "previous": null,
+    "incoming_heading": {
+      "status": "NO_PRIOR_MOTION",
+      "vector": null,
+      "source": {
+        "kind": "initialization_no_motion",
+        "execution_log_tail": "7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35"
+      }
+    }
+  },
+  "core_request_utf8": "{\"name\":\"synthetic_stop_W1_H1_plan_1\",\"free\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"published_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"covered\":[[0,0]],\"deferred_targets\":[],\"current\":[0,0],\"base\":[0,0],\"old_route\":[],\"initial_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"distance_budget\":100,\"predator\":[-3,-3],\"previous\":null,\"incoming_heading\":{\"status\":\"NO_PRIOR_MOTION\",\"vector\":null,\"source\":{\"kind\":\"initialization_no_motion\",\"execution_log_tail\":\"7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35\"}}}",
+  "core_request_sha256": "502824bbc66be0595a798b6e5ed1ac109b68430fe770c934f8f460d2a2a38459",
+  "core_budget_passed": 20.0,
+  "native_entry": {
+    "raw": {
+      "version": "PPCPP_H1_ENTRY_v0.1",
+      "mode": "PPCPP",
+      "status": "core_complete",
+      "route": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "trace": [
+        {
+          "index": 0,
+          "current": [
+            0,
+            0
+          ],
+          "incoming_heading": {
+            "status": "NO_PRIOR_MOTION",
+            "raw": null,
+            "primitive": null,
+            "source": {
+              "kind": "initialization_no_motion",
+              "execution_log_tail": "7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35"
+            }
+          },
+          "pending_count": 9,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                0,
+                1
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 0.0,
+              "boundary_reward": 0.75,
+              "score": 0.375
+            },
+            {
+              "cell": [
+                1,
+                0
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 0.0,
+              "boundary_reward": 0.5,
+              "score": 0.25
+            }
+          ],
+          "goal": [
+            0,
+            1
+          ]
+        },
+        {
+          "index": 1,
+          "current": [
+            0,
+            1
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              0,
+              1
+            ],
+            "primitive": [
+              0,
+              1
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                0,
+                0
+              ],
+              "end": [
+                0,
+                1
+              ],
+              "end_index": 1
+            }
+          },
+          "pending_count": 8,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                1,
+                1
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 0.5,
+              "boundary_reward": 0.5,
+              "score": 1.25
+            }
+          ],
+          "goal": [
+            1,
+            1
+          ]
+        },
+        {
+          "index": 2,
+          "current": [
+            1,
+            1
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              1,
+              0
+            ],
+            "primitive": [
+              1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                0,
+                1
+              ],
+              "end": [
+                1,
+                1
+              ],
+              "end_index": 2
+            }
+          },
+          "pending_count": 7,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                1,
+                0
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 0.5,
+              "boundary_reward": 0.75,
+              "score": 1.375
+            },
+            {
+              "cell": [
+                2,
+                1
+              ],
+              "distance_reward": 1.0,
+              "straight_reward": 1.0,
+              "boundary_reward": 0.5,
+              "score": 3.25
+            }
+          ],
+          "goal": [
+            2,
+            1
+          ]
+        },
+        {
+          "index": 3,
+          "current": [
+            2,
+            1
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              1,
+              0
+            ],
+            "primitive": [
+              1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                1,
+                1
+              ],
+              "end": [
+                2,
+                1
+              ],
+              "end_index": 3
+            }
+          },
+          "pending_count": 6,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                2,
+                0
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 0.5,
+              "boundary_reward": 0.5,
+              "score": 1.25
+            },
+            {
+              "cell": [
+                3,
+                1
+              ],
+              "distance_reward": 1.0,
+              "straight_reward": 1.0,
+              "boundary_reward": 0.5,
+              "score": 3.25
+            }
+          ],
+          "goal": [
+            3,
+            1
+          ]
+        },
+        {
+          "index": 4,
+          "current": [
+            3,
+            1
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              1,
+              0
+            ],
+            "primitive": [
+              1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                2,
+                1
+              ],
+              "end": [
+                3,
+                1
+              ],
+              "end_index": 4
+            }
+          },
+          "pending_count": 5,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                3,
+                0
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 0.5,
+              "boundary_reward": 0.5,
+              "score": 1.25
+            },
+            {
+              "cell": [
+                4,
+                1
+              ],
+              "distance_reward": 1.0,
+              "straight_reward": 1.0,
+              "boundary_reward": 0.75,
+              "score": 3.375
+            }
+          ],
+          "goal": [
+            4,
+            1
+          ]
+        },
+        {
+          "index": 5,
+          "current": [
+            4,
+            1
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              1,
+              0
+            ],
+            "primitive": [
+              1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                3,
+                1
+              ],
+              "end": [
+                4,
+                1
+              ],
+              "end_index": 5
+            }
+          },
+          "pending_count": 4,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                4,
+                0
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 0.5,
+              "boundary_reward": 0.75,
+              "score": 1.375
+            }
+          ],
+          "goal": [
+            4,
+            0
+          ]
+        },
+        {
+          "index": 6,
+          "current": [
+            4,
+            0
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              0,
+              -1
+            ],
+            "primitive": [
+              0,
+              -1
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                4,
+                1
+              ],
+              "end": [
+                4,
+                0
+              ],
+              "end_index": 6
+            }
+          },
+          "pending_count": 3,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                3,
+                0
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 0.5,
+              "boundary_reward": 0.75,
+              "score": 1.375
+            }
+          ],
+          "goal": [
+            3,
+            0
+          ]
+        },
+        {
+          "index": 7,
+          "current": [
+            3,
+            0
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              -1,
+              0
+            ],
+            "primitive": [
+              -1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                4,
+                0
+              ],
+              "end": [
+                3,
+                0
+              ],
+              "end_index": 7
+            }
+          },
+          "pending_count": 2,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                2,
+                0
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 1.0,
+              "boundary_reward": 0.75,
+              "score": 2.375
+            }
+          ],
+          "goal": [
+            2,
+            0
+          ]
+        },
+        {
+          "index": 8,
+          "current": [
+            2,
+            0
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              -1,
+              0
+            ],
+            "primitive": [
+              -1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                3,
+                0
+              ],
+              "end": [
+                2,
+                0
+              ],
+              "end_index": 8
+            }
+          },
+          "pending_count": 1,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                1,
+                0
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 1.0,
+              "boundary_reward": 1.0,
+              "score": 2.5
+            }
+          ],
+          "goal": [
+            1,
+            0
+          ]
+        },
+        {
+          "kind": "return",
+          "index": 9,
+          "current": [
+            1,
+            0
+          ],
+          "goal": [
+            0,
+            0
+          ],
+          "pending_count": 0,
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              -1,
+              0
+            ],
+            "primitive": [
+              -1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                2,
+                0
+              ],
+              "end": [
+                1,
+                0
+              ],
+              "end_index": 9
+            }
+          }
+        }
+      ],
+      "selected": "P0",
+      "e": null,
+      "branches": {
+        "P0": {
+          "version": "PPCPP_REAL_HEADING_H1_v0.1_20261022",
+          "method": "PPCPP_INDEPENDENT",
+          "route": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              3,
+              1
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "status": "core_complete",
+          "reason": null,
+          "seconds": 0.022444400005042553,
+          "budget": 19.999823899997864,
+          "seed": 20261022,
+          "seed_used": false,
+          "predator": [
+            -3,
+            -3
+          ],
+          "initial_heading": {
+            "status": "NO_PRIOR_MOTION",
+            "vector": null,
+            "source": {
+              "kind": "initialization_no_motion",
+              "execution_log_tail": "7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35"
+            }
+          },
+          "weights": [
+            2.0,
+            0.5
+          ],
+          "trace": [
+            {
+              "index": 0,
+              "current": [
+                0,
+                0
+              ],
+              "incoming_heading": {
+                "status": "NO_PRIOR_MOTION",
+                "raw": null,
+                "primitive": null,
+                "source": {
+                  "kind": "initialization_no_motion",
+                  "execution_log_tail": "7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35"
+                }
+              },
+              "pending_count": 9,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    0,
+                    1
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.0,
+                  "boundary_reward": 0.75,
+                  "score": 0.375
+                },
+                {
+                  "cell": [
+                    1,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.0,
+                  "boundary_reward": 0.5,
+                  "score": 0.25
+                }
+              ],
+              "goal": [
+                0,
+                1
+              ]
+            },
+            {
+              "index": 1,
+              "current": [
+                0,
+                1
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  0,
+                  1
+                ],
+                "primitive": [
+                  0,
+                  1
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    0,
+                    0
+                  ],
+                  "end": [
+                    0,
+                    1
+                  ],
+                  "end_index": 1
+                }
+              },
+              "pending_count": 8,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    1,
+                    1
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.5,
+                  "boundary_reward": 0.5,
+                  "score": 1.25
+                }
+              ],
+              "goal": [
+                1,
+                1
+              ]
+            },
+            {
+              "index": 2,
+              "current": [
+                1,
+                1
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  1,
+                  0
+                ],
+                "primitive": [
+                  1,
+                  0
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    0,
+                    1
+                  ],
+                  "end": [
+                    1,
+                    1
+                  ],
+                  "end_index": 2
+                }
+              },
+              "pending_count": 7,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    1,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.5,
+                  "boundary_reward": 0.75,
+                  "score": 1.375
+                },
+                {
+                  "cell": [
+                    2,
+                    1
+                  ],
+                  "distance_reward": 1.0,
+                  "straight_reward": 1.0,
+                  "boundary_reward": 0.5,
+                  "score": 3.25
+                }
+              ],
+              "goal": [
+                2,
+                1
+              ]
+            },
+            {
+              "index": 3,
+              "current": [
+                2,
+                1
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  1,
+                  0
+                ],
+                "primitive": [
+                  1,
+                  0
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    1,
+                    1
+                  ],
+                  "end": [
+                    2,
+                    1
+                  ],
+                  "end_index": 3
+                }
+              },
+              "pending_count": 6,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    2,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.5,
+                  "boundary_reward": 0.5,
+                  "score": 1.25
+                },
+                {
+                  "cell": [
+                    3,
+                    1
+                  ],
+                  "distance_reward": 1.0,
+                  "straight_reward": 1.0,
+                  "boundary_reward": 0.5,
+                  "score": 3.25
+                }
+              ],
+              "goal": [
+                3,
+                1
+              ]
+            },
+            {
+              "index": 4,
+              "current": [
+                3,
+                1
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  1,
+                  0
+                ],
+                "primitive": [
+                  1,
+                  0
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    2,
+                    1
+                  ],
+                  "end": [
+                    3,
+                    1
+                  ],
+                  "end_index": 4
+                }
+              },
+              "pending_count": 5,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    3,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.5,
+                  "boundary_reward": 0.5,
+                  "score": 1.25
+                },
+                {
+                  "cell": [
+                    4,
+                    1
+                  ],
+                  "distance_reward": 1.0,
+                  "straight_reward": 1.0,
+                  "boundary_reward": 0.75,
+                  "score": 3.375
+                }
+              ],
+              "goal": [
+                4,
+                1
+              ]
+            },
+            {
+              "index": 5,
+              "current": [
+                4,
+                1
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  1,
+                  0
+                ],
+                "primitive": [
+                  1,
+                  0
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    3,
+                    1
+                  ],
+                  "end": [
+                    4,
+                    1
+                  ],
+                  "end_index": 5
+                }
+              },
+              "pending_count": 4,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    4,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.5,
+                  "boundary_reward": 0.75,
+                  "score": 1.375
+                }
+              ],
+              "goal": [
+                4,
+                0
+              ]
+            },
+            {
+              "index": 6,
+              "current": [
+                4,
+                0
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  0,
+                  -1
+                ],
+                "primitive": [
+                  0,
+                  -1
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    4,
+                    1
+                  ],
+                  "end": [
+                    4,
+                    0
+                  ],
+                  "end_index": 6
+                }
+              },
+              "pending_count": 3,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    3,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.5,
+                  "boundary_reward": 0.75,
+                  "score": 1.375
+                }
+              ],
+              "goal": [
+                3,
+                0
+              ]
+            },
+            {
+              "index": 7,
+              "current": [
+                3,
+                0
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  -1,
+                  0
+                ],
+                "primitive": [
+                  -1,
+                  0
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    4,
+                    0
+                  ],
+                  "end": [
+                    3,
+                    0
+                  ],
+                  "end_index": 7
+                }
+              },
+              "pending_count": 2,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    2,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 1.0,
+                  "boundary_reward": 0.75,
+                  "score": 2.375
+                }
+              ],
+              "goal": [
+                2,
+                0
+              ]
+            },
+            {
+              "index": 8,
+              "current": [
+                2,
+                0
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  -1,
+                  0
+                ],
+                "primitive": [
+                  -1,
+                  0
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    3,
+                    0
+                  ],
+                  "end": [
+                    2,
+                    0
+                  ],
+                  "end_index": 8
+                }
+              },
+              "pending_count": 1,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    1,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 1.0,
+                  "boundary_reward": 1.0,
+                  "score": 2.5
+                }
+              ],
+              "goal": [
+                1,
+                0
+              ]
+            },
+            {
+              "kind": "return",
+              "index": 9,
+              "current": [
+                1,
+                0
+              ],
+              "goal": [
+                0,
+                0
+              ],
+              "pending_count": 0,
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  -1,
+                  0
+                ],
+                "primitive": [
+                  -1,
+                  0
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    2,
+                    0
+                  ],
+                  "end": [
+                    1,
+                    0
+                  ],
+                  "end_index": 9
+                }
+              }
+            }
+          ],
+          "final_heading": {
+            "status": "KNOWN",
+            "raw": [
+              -1,
+              0
+            ],
+            "primitive": [
+              -1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                1,
+                0
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "end_index": 10
+            }
+          },
+          "accepted_seconds": 0.02244329999666661,
+          "fallback_selected": false,
+          "overrun_gt_10ms": false
+        }
+      },
+      "reason": null
+    },
+    "entry_seconds": 0.023272299964446574,
+    "phase_seconds": {
+      "p0": 0.02279319998342544,
+      "final_audit": 3.5100034438073635e-05,
+      "encoding": 0.0001246000174432993
+    },
+    "eligible": true,
+    "budget": 20.0,
+    "method": "PPCPP",
+    "seed": 20261022,
+    "injection_events": []
+  },
+  "native_main_audit": {
+    "points": [
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 10,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 10,
+        "d": 1
+      },
+      "high": {
+        "n": 10,
+        "d": 1
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "region_traverse",
+        "cell": [
+          0,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 0,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          1,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 9,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          2,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 19,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 29,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 39,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 4,
+                "d": 1
+              },
+              {
+                "n": 1,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 31,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          2,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 21,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          1,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 11,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": -1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "D": [],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 90,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 90,
+          "d": 1
+        },
+        "high": {
+          "n": 90,
+          "d": 1
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 10,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 10,
+          "d": 1
+        },
+        "high": {
+          "n": 10,
+          "d": 1
+        }
+      }
+    },
+    "valid": true
+  },
+  "core_output_used": true,
+  "native_source": "PPCPP_H1_ENTRY_v0.1",
+  "native_fallback_selected": false,
+  "native_raw_edges": 10,
+  "post_request_utf8": "{\"id\":\"W1_H1_plan_1_H1\",\"input\":{\"name\":\"synthetic_stop_W1_H1_plan_1\",\"free\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"published_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"covered\":[[0,0]],\"deferred_targets\":[],\"current\":[0,0],\"base\":[0,0],\"old_route\":[],\"initial_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"distance_budget\":100,\"predator\":[-3,-3],\"previous\":null,\"incoming_heading\":{\"status\":\"NO_PRIOR_MOTION\",\"vector\":null,\"source\":{\"kind\":\"initialization_no_motion\",\"execution_log_tail\":\"7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35\"}}},\"raw\":{\"version\":\"PPCPP_H1_ENTRY_v0.1\",\"mode\":\"PPCPP\",\"status\":\"core_complete\",\"route\":[[0,0],[0,1],[1,1],[2,1],[3,1],[4,1],[4,0],[3,0],[2,0],[1,0],[0,0]],\"trace\":[{\"index\":0,\"current\":[0,0],\"incoming_heading\":{\"status\":\"NO_PRIOR_MOTION\",\"raw\":null,\"primitive\":null,\"source\":{\"kind\":\"initialization_no_motion\",\"execution_log_tail\":\"7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35\"}},\"pending_count\":9,\"kind\":\"local\",\"options\":[{\"cell\":[0,1],\"distance_reward\":0.0,\"straight_reward\":0.0,\"boundary_reward\":0.75,\"score\":0.375},{\"cell\":[1,0],\"distance_reward\":0.0,\"straight_reward\":0.0,\"boundary_reward\":0.5,\"score\":0.25}],\"goal\":[0,1]},{\"index\":1,\"current\":[0,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[0,1],\"primitive\":[0,1],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[0,0],\"end\":[0,1],\"end_index\":1}},\"pending_count\":8,\"kind\":\"local\",\"options\":[{\"cell\":[1,1],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.5,\"score\":1.25}],\"goal\":[1,1]},{\"index\":2,\"current\":[1,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[0,1],\"end\":[1,1],\"end_index\":2}},\"pending_count\":7,\"kind\":\"local\",\"options\":[{\"cell\":[1,0],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.75,\"score\":1.375},{\"cell\":[2,1],\"distance_reward\":1.0,\"straight_reward\":1.0,\"boundary_reward\":0.5,\"score\":3.25}],\"goal\":[2,1]},{\"index\":3,\"current\":[2,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[1,1],\"end\":[2,1],\"end_index\":3}},\"pending_count\":6,\"kind\":\"local\",\"options\":[{\"cell\":[2,0],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.5,\"score\":1.25},{\"cell\":[3,1],\"distance_reward\":1.0,\"straight_reward\":1.0,\"boundary_reward\":0.5,\"score\":3.25}],\"goal\":[3,1]},{\"index\":4,\"current\":[3,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[2,1],\"end\":[3,1],\"end_index\":4}},\"pending_count\":5,\"kind\":\"local\",\"options\":[{\"cell\":[3,0],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.5,\"score\":1.25},{\"cell\":[4,1],\"distance_reward\":1.0,\"straight_reward\":1.0,\"boundary_reward\":0.75,\"score\":3.375}],\"goal\":[4,1]},{\"index\":5,\"current\":[4,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[3,1],\"end\":[4,1],\"end_index\":5}},\"pending_count\":4,\"kind\":\"local\",\"options\":[{\"cell\":[4,0],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.75,\"score\":1.375}],\"goal\":[4,0]},{\"index\":6,\"current\":[4,0],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[0,-1],\"primitive\":[0,-1],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[4,1],\"end\":[4,0],\"end_index\":6}},\"pending_count\":3,\"kind\":\"local\",\"options\":[{\"cell\":[3,0],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.75,\"score\":1.375}],\"goal\":[3,0]},{\"index\":7,\"current\":[3,0],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[-1,0],\"primitive\":[-1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[4,0],\"end\":[3,0],\"end_index\":7}},\"pending_count\":2,\"kind\":\"local\",\"options\":[{\"cell\":[2,0],\"distance_reward\":0.0,\"straight_reward\":1.0,\"boundary_reward\":0.75,\"score\":2.375}],\"goal\":[2,0]},{\"index\":8,\"current\":[2,0],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[-1,0],\"primitive\":[-1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[3,0],\"end\":[2,0],\"end_index\":8}},\"pending_count\":1,\"kind\":\"local\",\"options\":[{\"cell\":[1,0],\"distance_reward\":0.0,\"straight_reward\":1.0,\"boundary_reward\":1.0,\"score\":2.5}],\"goal\":[1,0]},{\"kind\":\"return\",\"index\":9,\"current\":[1,0],\"goal\":[0,0],\"pending_count\":0,\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[-1,0],\"primitive\":[-1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[2,0],\"end\":[1,0],\"end_index\":9}}}],\"selected\":\"P0\",\"e\":null,\"branches\":{\"P0\":{\"version\":\"PPCPP_REAL_HEADING_H1_v0.1_20261022\",\"method\":\"PPCPP_INDEPENDENT\",\"route\":[[0,0],[0,1],[1,1],[2,1],[3,1],[4,1],[4,0],[3,0],[2,0],[1,0],[0,0]],\"status\":\"core_complete\",\"reason\":null,\"seconds\":0.022444400005042553,\"budget\":19.999823899997864,\"seed\":20261022,\"seed_used\":false,\"predator\":[-3,-3],\"initial_heading\":{\"status\":\"NO_PRIOR_MOTION\",\"vector\":null,\"source\":{\"kind\":\"initialization_no_motion\",\"execution_log_tail\":\"7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35\"}},\"weights\":[2.0,0.5],\"trace\":[{\"index\":0,\"current\":[0,0],\"incoming_heading\":{\"status\":\"NO_PRIOR_MOTION\",\"raw\":null,\"primitive\":null,\"source\":{\"kind\":\"initialization_no_motion\",\"execution_log_tail\":\"7770398828d33577936242f9d1c0187d928e68a7756514003f2592a12a2d5b35\"}},\"pending_count\":9,\"kind\":\"local\",\"options\":[{\"cell\":[0,1],\"distance_reward\":0.0,\"straight_reward\":0.0,\"boundary_reward\":0.75,\"score\":0.375},{\"cell\":[1,0],\"distance_reward\":0.0,\"straight_reward\":0.0,\"boundary_reward\":0.5,\"score\":0.25}],\"goal\":[0,1]},{\"index\":1,\"current\":[0,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[0,1],\"primitive\":[0,1],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[0,0],\"end\":[0,1],\"end_index\":1}},\"pending_count\":8,\"kind\":\"local\",\"options\":[{\"cell\":[1,1],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.5,\"score\":1.25}],\"goal\":[1,1]},{\"index\":2,\"current\":[1,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[0,1],\"end\":[1,1],\"end_index\":2}},\"pending_count\":7,\"kind\":\"local\",\"options\":[{\"cell\":[1,0],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.75,\"score\":1.375},{\"cell\":[2,1],\"distance_reward\":1.0,\"straight_reward\":1.0,\"boundary_reward\":0.5,\"score\":3.25}],\"goal\":[2,1]},{\"index\":3,\"current\":[2,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[1,1],\"end\":[2,1],\"end_index\":3}},\"pending_count\":6,\"kind\":\"local\",\"options\":[{\"cell\":[2,0],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.5,\"score\":1.25},{\"cell\":[3,1],\"distance_reward\":1.0,\"straight_reward\":1.0,\"boundary_reward\":0.5,\"score\":3.25}],\"goal\":[3,1]},{\"index\":4,\"current\":[3,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[2,1],\"end\":[3,1],\"end_index\":4}},\"pending_count\":5,\"kind\":\"local\",\"options\":[{\"cell\":[3,0],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.5,\"score\":1.25},{\"cell\":[4,1],\"distance_reward\":1.0,\"straight_reward\":1.0,\"boundary_reward\":0.75,\"score\":3.375}],\"goal\":[4,1]},{\"index\":5,\"current\":[4,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[3,1],\"end\":[4,1],\"end_index\":5}},\"pending_count\":4,\"kind\":\"local\",\"options\":[{\"cell\":[4,0],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.75,\"score\":1.375}],\"goal\":[4,0]},{\"index\":6,\"current\":[4,0],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[0,-1],\"primitive\":[0,-1],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[4,1],\"end\":[4,0],\"end_index\":6}},\"pending_count\":3,\"kind\":\"local\",\"options\":[{\"cell\":[3,0],\"distance_reward\":0.0,\"straight_reward\":0.5,\"boundary_reward\":0.75,\"score\":1.375}],\"goal\":[3,0]},{\"index\":7,\"current\":[3,0],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[-1,0],\"primitive\":[-1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[4,0],\"end\":[3,0],\"end_index\":7}},\"pending_count\":2,\"kind\":\"local\",\"options\":[{\"cell\":[2,0],\"distance_reward\":0.0,\"straight_reward\":1.0,\"boundary_reward\":0.75,\"score\":2.375}],\"goal\":[2,0]},{\"index\":8,\"current\":[2,0],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[-1,0],\"primitive\":[-1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[3,0],\"end\":[2,0],\"end_index\":8}},\"pending_count\":1,\"kind\":\"local\",\"options\":[{\"cell\":[1,0],\"distance_reward\":0.0,\"straight_reward\":1.0,\"boundary_reward\":1.0,\"score\":2.5}],\"goal\":[1,0]},{\"kind\":\"return\",\"index\":9,\"current\":[1,0],\"goal\":[0,0],\"pending_count\":0,\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[-1,0],\"primitive\":[-1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[2,0],\"end\":[1,0],\"end_index\":9}}}],\"final_heading\":{\"status\":\"KNOWN\",\"raw\":[-1,0],\"primitive\":[-1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[1,0],\"end\":[0,0],\"end_index\":10}},\"accepted_seconds\":0.02244329999666661,\"fallback_selected\":false,\"overrun_gt_10ms\":false}},\"reason\":null}}",
+  "post_candidate_time_remaining": 27.927846500009764,
+  "post_total_time_remaining": 29.927846500009764,
+  "post_response_utf8": "{\"id\":\"W1_H1_plan_1_H1\",\"L4\":10,\"Lshortcut_interval\":[\"10\",\"10\"],\"Lshortcut_display\":10.0,\"saving_display\":0.0,\"saving_ratio_display\":0.0,\"distance_budget\":100,\"resource_proof\":\"source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E\",\"vertices\":[[0,0],[0,1],[1,1],[2,1],[3,1],[4,1],[4,0],[3,0],[2,0],[1,0],[0,0]],\"edges\":[{\"left\":0,\"right\":1,\"a\":[0,0],\"b\":[0,1],\"part\":0,\"kind\":\"start_to_first\"},{\"left\":1,\"right\":2,\"a\":[0,1],\"b\":[1,1],\"part\":1,\"kind\":\"between_first_services\"},{\"left\":2,\"right\":3,\"a\":[1,1],\"b\":[2,1],\"part\":2,\"kind\":\"between_first_services\"},{\"left\":3,\"right\":4,\"a\":[2,1],\"b\":[3,1],\"part\":3,\"kind\":\"between_first_services\"},{\"left\":4,\"right\":5,\"a\":[3,1],\"b\":[4,1],\"part\":4,\"kind\":\"between_first_services\"},{\"left\":5,\"right\":6,\"a\":[4,1],\"b\":[4,0],\"part\":5,\"kind\":\"between_first_services\"},{\"left\":6,\"right\":7,\"a\":[4,0],\"b\":[3,0],\"part\":6,\"kind\":\"between_first_services\"},{\"left\":7,\"right\":8,\"a\":[3,0],\"b\":[2,0],\"part\":7,\"kind\":\"between_first_services\"},{\"left\":8,\"right\":9,\"a\":[2,0],\"b\":[1,0],\"part\":8,\"kind\":\"between_first_services\"},{\"left\":9,\"right\":10,\"a\":[1,0],\"b\":[0,0],\"part\":9,\"kind\":\"last_to_base\"}],\"parts\":[{\"left\":0,\"right\":1,\"kind\":\"start_to_first\",\"edge_start\":0,\"edge_end\":1,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":1,\"right\":2,\"kind\":\"between_first_services\",\"edge_start\":1,\"edge_end\":2,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":2,\"right\":3,\"kind\":\"between_first_services\",\"edge_start\":2,\"edge_end\":3,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":3,\"right\":4,\"kind\":\"between_first_services\",\"edge_start\":3,\"edge_end\":4,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":4,\"right\":5,\"kind\":\"between_first_services\",\"edge_start\":4,\"edge_end\":5,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":5,\"right\":6,\"kind\":\"between_first_services\",\"edge_start\":5,\"edge_end\":6,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":6,\"right\":7,\"kind\":\"between_first_services\",\"edge_start\":6,\"edge_end\":7,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":7,\"right\":8,\"kind\":\"between_first_services\",\"edge_start\":7,\"edge_end\":8,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":8,\"right\":9,\"kind\":\"between_first_services\",\"edge_start\":8,\"edge_end\":9,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":9,\"right\":10,\"kind\":\"last_to_base\",\"edge_start\":9,\"edge_end\":10,\"L4\":1,\"new_interval\":[\"1\",\"1\"]}],\"locked_nominal_anchors\":[{\"point\":[0,1],\"index\":1},{\"point\":[1,1],\"index\":2},{\"point\":[2,1],\"index\":3},{\"point\":[3,1],\"index\":4},{\"point\":[4,1],\"index\":5},{\"point\":[4,0],\"index\":6},{\"point\":[3,0],\"index\":7},{\"point\":[2,0],\"index\":8},{\"point\":[1,0],\"index\":9}],\"credit_witnesses\":[{\"point\":[0,1],\"edge\":0,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":0,\"d\":1},{\"n\":9,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[1,1],\"edge\":1,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":9,\"d\":10},{\"n\":1,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[2,1],\"edge\":2,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":19,\"d\":10},{\"n\":1,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[3,1],\"edge\":3,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":29,\"d\":10},{\"n\":1,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[4,1],\"edge\":4,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":39,\"d\":10},{\"n\":1,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[4,0],\"edge\":5,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":4,\"d\":1},{\"n\":1,\"d\":10}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[3,0],\"edge\":6,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":31,\"d\":10},{\"n\":0,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[2,0],\"edge\":7,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":21,\"d\":10},{\"n\":0,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}},{\"point\":[1,0],\"edge\":8,\"evidence\":{\"interval\":{\"lower\":{\"n\":4,\"d\":5},\"upper\":{\"n\":1,\"d\":1},\"lower_closed\":false,\"upper_closed\":true},\"witness\":{\"t\":{\"n\":9,\"d\":10},\"point\":[{\"n\":11,\"d\":10},{\"n\":0,\"d\":1}]},\"parameterization\":\"committed_or_predicted_prefix\",\"meaning\":\"interior_existence_witness_not_first_internal_time\"}}],\"witness_order_differs_from_locked_anchors\":false,\"trace_cross_original_moves\":{\"start_to_first x local\":1,\"between_first_services x local\":8,\"last_to_base x return\":1},\"counts\":{\"candidate\":10,\"source_validation\":10,\"output_validation\":10,\"service_intersections\":90,\"post_inside_tests\":9,\"post_service_intersections\":90},\"query_log\":[{\"i\":0,\"j\":1,\"legal\":true,\"part\":0},{\"i\":1,\"j\":2,\"legal\":true,\"part\":1},{\"i\":2,\"j\":3,\"legal\":true,\"part\":2},{\"i\":3,\"j\":4,\"legal\":true,\"part\":3},{\"i\":4,\"j\":5,\"legal\":true,\"part\":4},{\"i\":5,\"j\":6,\"legal\":true,\"part\":5},{\"i\":6,\"j\":7,\"legal\":true,\"part\":6},{\"i\":7,\"j\":8,\"legal\":true,\"part\":7},{\"i\":8,\"j\":9,\"legal\":true,\"part\":8},{\"i\":9,\"j\":10,\"legal\":true,\"part\":9}],\"fallback\":null,\"turns_original\":{\"nonzero_direction_changes\":3,\"total_turn_radians\":4.71238898038469},\"turns_new\":{\"nonzero_direction_changes\":3,\"total_turn_radians\":4.71238898038469},\"timing\":{\"parse_preprocess_source_validation\":0.002854099962860346,\"candidate\":0.0025301999994553626,\"main_validation_metrics\":0.008075200021266937}}",
+  "post_envelope": {
+    "entry_seconds": 0.013561600004322827,
+    "late": false,
+    "counts": {
+      "candidate": 10,
+      "source_validation": 10,
+      "output_validation": 10,
+      "service_intersections": 90,
+      "post_inside_tests": 9,
+      "post_service_intersections": 90
+    },
+    "fallback": null
+  },
+  "post": {
+    "id": "W1_H1_plan_1_H1",
+    "L4": 10,
+    "Lshortcut_interval": [
+      "10",
+      "10"
+    ],
+    "Lshortcut_display": 10.0,
+    "saving_display": 0.0,
+    "saving_ratio_display": 0.0,
+    "distance_budget": 100,
+    "resource_proof": "source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E",
+    "vertices": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "edges": [
+      {
+        "left": 0,
+        "right": 1,
+        "a": [
+          0,
+          0
+        ],
+        "b": [
+          0,
+          1
+        ],
+        "part": 0,
+        "kind": "start_to_first"
+      },
+      {
+        "left": 1,
+        "right": 2,
+        "a": [
+          0,
+          1
+        ],
+        "b": [
+          1,
+          1
+        ],
+        "part": 1,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 2,
+        "right": 3,
+        "a": [
+          1,
+          1
+        ],
+        "b": [
+          2,
+          1
+        ],
+        "part": 2,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 3,
+        "right": 4,
+        "a": [
+          2,
+          1
+        ],
+        "b": [
+          3,
+          1
+        ],
+        "part": 3,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 4,
+        "right": 5,
+        "a": [
+          3,
+          1
+        ],
+        "b": [
+          4,
+          1
+        ],
+        "part": 4,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 5,
+        "right": 6,
+        "a": [
+          4,
+          1
+        ],
+        "b": [
+          4,
+          0
+        ],
+        "part": 5,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 6,
+        "right": 7,
+        "a": [
+          4,
+          0
+        ],
+        "b": [
+          3,
+          0
+        ],
+        "part": 6,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 7,
+        "right": 8,
+        "a": [
+          3,
+          0
+        ],
+        "b": [
+          2,
+          0
+        ],
+        "part": 7,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 8,
+        "right": 9,
+        "a": [
+          2,
+          0
+        ],
+        "b": [
+          1,
+          0
+        ],
+        "part": 8,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 9,
+        "right": 10,
+        "a": [
+          1,
+          0
+        ],
+        "b": [
+          0,
+          0
+        ],
+        "part": 9,
+        "kind": "last_to_base"
+      }
+    ],
+    "parts": [
+      {
+        "left": 0,
+        "right": 1,
+        "kind": "start_to_first",
+        "edge_start": 0,
+        "edge_end": 1,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 1,
+        "right": 2,
+        "kind": "between_first_services",
+        "edge_start": 1,
+        "edge_end": 2,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 2,
+        "right": 3,
+        "kind": "between_first_services",
+        "edge_start": 2,
+        "edge_end": 3,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 3,
+        "right": 4,
+        "kind": "between_first_services",
+        "edge_start": 3,
+        "edge_end": 4,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 4,
+        "right": 5,
+        "kind": "between_first_services",
+        "edge_start": 4,
+        "edge_end": 5,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 5,
+        "right": 6,
+        "kind": "between_first_services",
+        "edge_start": 5,
+        "edge_end": 6,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 6,
+        "right": 7,
+        "kind": "between_first_services",
+        "edge_start": 6,
+        "edge_end": 7,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 7,
+        "right": 8,
+        "kind": "between_first_services",
+        "edge_start": 7,
+        "edge_end": 8,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 8,
+        "right": 9,
+        "kind": "between_first_services",
+        "edge_start": 8,
+        "edge_end": 9,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 9,
+        "right": 10,
+        "kind": "last_to_base",
+        "edge_start": 9,
+        "edge_end": 10,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      }
+    ],
+    "locked_nominal_anchors": [
+      {
+        "point": [
+          0,
+          1
+        ],
+        "index": 1
+      },
+      {
+        "point": [
+          1,
+          1
+        ],
+        "index": 2
+      },
+      {
+        "point": [
+          2,
+          1
+        ],
+        "index": 3
+      },
+      {
+        "point": [
+          3,
+          1
+        ],
+        "index": 4
+      },
+      {
+        "point": [
+          4,
+          1
+        ],
+        "index": 5
+      },
+      {
+        "point": [
+          4,
+          0
+        ],
+        "index": 6
+      },
+      {
+        "point": [
+          3,
+          0
+        ],
+        "index": 7
+      },
+      {
+        "point": [
+          2,
+          0
+        ],
+        "index": 8
+      },
+      {
+        "point": [
+          1,
+          0
+        ],
+        "index": 9
+      }
+    ],
+    "credit_witnesses": [
+      {
+        "point": [
+          0,
+          1
+        ],
+        "edge": 0,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 0,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          1,
+          1
+        ],
+        "edge": 1,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 9,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          2,
+          1
+        ],
+        "edge": 2,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 19,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          3,
+          1
+        ],
+        "edge": 3,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 29,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          4,
+          1
+        ],
+        "edge": 4,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 39,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          4,
+          0
+        ],
+        "edge": 5,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 4,
+                "d": 1
+              },
+              {
+                "n": 1,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          3,
+          0
+        ],
+        "edge": 6,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 31,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          2,
+          0
+        ],
+        "edge": 7,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 21,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "point": [
+          1,
+          0
+        ],
+        "edge": 8,
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 11,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      }
+    ],
+    "witness_order_differs_from_locked_anchors": false,
+    "trace_cross_original_moves": {
+      "start_to_first x local": 1,
+      "between_first_services x local": 8,
+      "last_to_base x return": 1
+    },
+    "counts": {
+      "candidate": 10,
+      "source_validation": 10,
+      "output_validation": 10,
+      "service_intersections": 90,
+      "post_inside_tests": 9,
+      "post_service_intersections": 90
+    },
+    "query_log": [
+      {
+        "i": 0,
+        "j": 1,
+        "legal": true,
+        "part": 0
+      },
+      {
+        "i": 1,
+        "j": 2,
+        "legal": true,
+        "part": 1
+      },
+      {
+        "i": 2,
+        "j": 3,
+        "legal": true,
+        "part": 2
+      },
+      {
+        "i": 3,
+        "j": 4,
+        "legal": true,
+        "part": 3
+      },
+      {
+        "i": 4,
+        "j": 5,
+        "legal": true,
+        "part": 4
+      },
+      {
+        "i": 5,
+        "j": 6,
+        "legal": true,
+        "part": 5
+      },
+      {
+        "i": 6,
+        "j": 7,
+        "legal": true,
+        "part": 6
+      },
+      {
+        "i": 7,
+        "j": 8,
+        "legal": true,
+        "part": 7
+      },
+      {
+        "i": 8,
+        "j": 9,
+        "legal": true,
+        "part": 8
+      },
+      {
+        "i": 9,
+        "j": 10,
+        "legal": true,
+        "part": 9
+      }
+    ],
+    "fallback": null,
+    "turns_original": {
+      "nonzero_direction_changes": 3,
+      "total_turn_radians": 4.71238898038469
+    },
+    "turns_new": {
+      "nonzero_direction_changes": 3,
+      "total_turn_radians": 4.71238898038469
+    },
+    "timing": {
+      "parse_preprocess_source_validation": 0.002854099962860346,
+      "candidate": 0.0025301999994553626,
+      "main_validation_metrics": 0.008075200021266937
+    }
+  },
+  "post_main_audit": {
+    "points": [
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 10,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 10,
+        "d": 1
+      },
+      "high": {
+        "n": 10,
+        "d": 1
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "region_traverse",
+        "cell": [
+          0,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 0,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          1,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 9,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          2,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 19,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 29,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 39,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 4,
+                "d": 1
+              },
+              {
+                "n": 1,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 31,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          2,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 21,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          1,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 11,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": -1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "D": [],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 90,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 90,
+          "d": 1
+        },
+        "high": {
+          "n": 90,
+          "d": 1
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 10,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 10,
+          "d": 1
+        },
+        "high": {
+          "n": 10,
+          "d": 1
+        }
+      }
+    },
+    "valid": true
+  },
+  "full_route": [
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 2,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 3,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 3,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 2,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ]
+  ],
+  "q_locked_index": 0,
+  "full_main_audit": {
+    "points": [
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 10,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 10,
+        "d": 1
+      },
+      "high": {
+        "n": 10,
+        "d": 1
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "region_traverse",
+        "cell": [
+          0,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 0,
+                "d": 1
+              },
+              {
+                "n": 9,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          1,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 9,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          2,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 19,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 29,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          1
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 39,
+                "d": 10
+              },
+              {
+                "n": 1,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          4,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 4,
+                "d": 1
+              },
+              {
+                "n": 1,
+                "d": 10
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          3,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 31,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          2,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 21,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      },
+      {
+        "kind": "region_traverse",
+        "cell": [
+          1,
+          0
+        ],
+        "evidence": {
+          "interval": {
+            "lower": {
+              "n": 4,
+              "d": 5
+            },
+            "upper": {
+              "n": 1,
+              "d": 1
+            },
+            "lower_closed": false,
+            "upper_closed": true
+          },
+          "witness": {
+            "t": {
+              "n": 9,
+              "d": 10
+            },
+            "point": [
+              {
+                "n": 11,
+                "d": 10
+              },
+              {
+                "n": 0,
+                "d": 1
+              }
+            ]
+          },
+          "parameterization": "committed_or_predicted_prefix",
+          "meaning": "interior_existence_witness_not_first_internal_time"
+        }
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": -1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "D": [],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 90,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 90,
+          "d": 1
+        },
+        "high": {
+          "n": 90,
+          "d": 1
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 10,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 10,
+          "d": 1
+        },
+        "high": {
+          "n": 10,
+          "d": 1
+        }
+      }
+    },
+    "valid": true
+  },
+  "main_passed": true,
+  "auditor_identity_after_main": {
+    "namespace": {
+      "modules": {
+        "center_credit_v01_20261022": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\__init__.py",
+          "sha256": "d9746b3f9603cd00ad94212a3476f8734dbd589931617b74105ac4cb2190a39c",
+          "object_id": 2957286686240,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\__init__.py"
+        },
+        "center_credit_v01_20261022.utils": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\utils.py",
+          "sha256": "6c4c8b7bed422fa2378597fbcaa01ad4a5dfc9b3ee88bb9cfe051e8dfadf0228",
+          "object_id": 2957289807984,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\utils.py"
+        },
+        "center_credit_v01_20261022.exact": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\exact.py",
+          "sha256": "edaaad61912db8d14805cd1111b04af3a1dc4a1178eac85554ebbcf6cc7acb45",
+          "object_id": 2957315642352,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\exact.py"
+        },
+        "center_credit_v01_20261022.geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\geometry.py",
+          "sha256": "6d5b1ee4ff284a76e0ea1a748ad5ecf05f2e6099fbcae26bdc88bd91c1dc22cb",
+          "object_id": 2957315647392,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\geometry.py"
+        },
+        "center_credit_v01_20261022.service": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\service.py",
+          "sha256": "a1261f6a1b46d232824836822599681cd5370595a8eae4c7aa26f06126a1e29b",
+          "object_id": 2957315647872,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\service.py"
+        },
+        "center_credit_v01_20261022.connector": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\connector.py",
+          "sha256": "ca59d5c87300a44478c803e39c2170d25160f9b00da945d8b8cfcc5888b4ed3b",
+          "object_id": 2957315644832,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\connector.py"
+        },
+        "center_credit_v01_20261022.public_contract": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\public_contract.py",
+          "sha256": "11fbfa52092a522282aa3bfe89013ab88d29dd0e433c1dce645c890b1742fc6f",
+          "object_id": 2957315648272,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\public_contract.py"
+        },
+        "center_credit_v01_20261022.pipeline": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\pipeline.py",
+          "sha256": "fdb413ec2e924ff6fb8b7bf414e59bac90e695ab78d547395285718670e71b7e",
+          "object_id": 2957289808224,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\pipeline.py"
+        },
+        "center_credit_v01_20261022.detector": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\detector.py",
+          "sha256": "6084071c2f673fd825552bba8096218c5fc001a3ef12a6302920943f64b7c236",
+          "object_id": 2957315653552,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\detector.py"
+        },
+        "center_credit_v01_20261022.executor": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\executor.py",
+          "sha256": "09fde1770bedc96f9ffc66746d783d28f7d158ee5b20dfde9bce5b4d6a956c5a",
+          "object_id": 2957315648352,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\executor.py"
+        },
+        "center_credit_v01_20261022.observe": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\observe.py",
+          "sha256": "2bc592ccebfa2ca44b96723aac52364eed5ce896118b856aaf3eb374fd60c955",
+          "object_id": 2957315962368,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\observe.py"
+        },
+        "center_credit_v01_20261022.audit._common": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_common.py",
+          "sha256": "8d20ac6ab1cec2a631046c1c600f93b530f1de661ff79f66e10e9a681c9e7be3",
+          "object_id": 2957316376512,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_common.py"
+        },
+        "center_credit_v01_20261022.audit._geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_geometry.py",
+          "sha256": "5480fe9a3e613849dd5e948be5dcbd931db207b2a6c77966b58dd89dee025956",
+          "object_id": 2957316376992,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_geometry.py"
+        },
+        "center_credit_v01_20261022.audit._h1": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_h1.py",
+          "sha256": "10ada2cb9632fe1d5302b685ad0b7cfe7dac6a5efdc46e36877806ca62119c30",
+          "object_id": 2957316377952,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_h1.py"
+        },
+        "center_credit_v01_20261022.audit._detect": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_detect.py",
+          "sha256": "92ddf0d4a87c85df6329ea08e25fb85c9abb8e3b7c01d18588b32f844b5bf160",
+          "object_id": 2957316381712,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_detect.py"
+        },
+        "center_credit_v01_20261022.audit.region": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\region.py",
+          "sha256": "029cb0298bf8834f57adc25503b5662fbb5b02cea8f92189b7ecd4600a6368a5",
+          "object_id": 2957316381152,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\region.py"
+        },
+        "center_credit_v01_20261022.audit._audit": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_audit.py",
+          "sha256": "4e1cbb3af05efe0e81ae1b6f61ec4b758ec5936852d036b57ef128d6e16b3254",
+          "object_id": 2957316375872,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_audit.py"
+        },
+        "center_credit_v01_20261022.audit": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\__init__.py",
+          "sha256": "1b290ec1aeec1ac22f2cfa0a82a514d3d3561088958197bdac7847b9cb926ae7",
+          "object_id": 2957316177840,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\__init__.py"
+        },
+        "center_credit_v01_20261022.audit._post_geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_post_geometry.py",
+          "sha256": "1a07e8659d6504e97c68691b5acca48d6f6a13c7e1e25cb53eba6e2585dfa329",
+          "object_id": 2957316386832,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_post_geometry.py"
+        },
+        "center_credit_v01_20261022.audit._post_saved": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_post_saved.py",
+          "sha256": "52769e706866edfc1ebd556d11e9fb7ce49427ac9264cf95e53bd45c93d84d18",
+          "object_id": 2957316378032,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_post_saved.py"
+        },
+        "center_credit_v01_20261022.audit.pure": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\pure.py",
+          "sha256": "c42af0ea14a81bf6bcded196bb1140006bf495f389eacb9c313ddd675a5eb6d2",
+          "object_id": 2957316388352,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\pure.py"
+        },
+        "center_credit_v01_20261022.post": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\post\\__init__.py",
+          "sha256": "6d57c09d0b9d9dfa5fca7d5d30f0c147c9c1cca7b85583aa26b4069591dcf0f3",
+          "object_id": 2957316389312,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\post\\__init__.py"
+        },
+        "center_credit_v01_20261022.post.geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\post\\geometry.py",
+          "sha256": "3ddf572046673912970396a2356de1c37f096d42be5dfe553c00e550a00c6137",
+          "object_id": 2957316390432,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\post\\geometry.py"
+        },
+        "center_credit_v01_20261022.post.engine": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\post\\engine.py",
+          "sha256": "62c0f474cd3b4ee6532c27221fad4cf4eb151373617aa35e9893310bd9aa23fa",
+          "object_id": 2957316388112,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\post\\engine.py"
+        },
+        "center_credit_v01_20261022.context": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\context.py",
+          "sha256": "a619c3ab17dccb230129649c24af72a4c934fec745225c893ed086dec5f9a490",
+          "object_id": 2957315653232,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\context.py"
+        },
+        "center_credit_v01_20261022.worker": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\worker.py",
+          "sha256": "5aea646fb456d1f5f2add0e51f635bd8bf68f9350a45c4683b80eaef0dea24dc",
+          "object_id": 2957286685600,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\worker.py"
+        }
+      },
+      "primary_service_function": {
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\service.py",
+        "id": 2957315584736
+      },
+      "independent_service_function": {
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\region.py",
+        "id": 2957316459712
+      }
+    },
+    "baseline": {
+      "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "sha256": "6d5b95890a1ca666970c72cb306ec40ffc48495c9458d69cfc2bd702fa74d20f",
+      "id": 2957321357648
+    }
+  },
+  "failure": {
+    "reason": "AssertionError()",
+    "traceback": "Traceback (most recent call last):\n  File \"E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\worker.py\", line 68, in main\n    plan['independent']=binding.audit_one(plan,binding.post_auditor,counts)\n                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.1_20261022\\center_credit_v01_20261022\\audit\\_audit.py\", line 172, in audit_one\n    assert nc.get('post_service_intersections',0)==post['counts']['service_intersections']\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+  }
+}

@@ -1,0 +1,226 @@
+{
+  "usage": [
+    {
+      "field": "initial_targets",
+      "PPCPP": "Passed to shared contract: covered must be subset; P0 remaining-task order uses targets-covered. No OARP reconstruction.",
+      "P2_MULTI": "Same shared validity check; not an ordering argument of p2_search_audit.solve."
+    },
+    {
+      "field": "old_route",
+      "PPCPP": "Snapshot carries it but native P0 does not read it to select route.",
+      "P2_MULTI": "Used by old_suffix offer and common_fallback task ordering; selected output label saved, not proof this field caused outcome."
+    },
+    {
+      "field": "predator",
+      "PPCPP": "Fixed outside-domain predator, used by reward options.",
+      "P2_MULTI": "Not passed from JSON to P2 solver; runtime.snapshot omits it."
+    },
+    {
+      "field": "previous",
+      "PPCPP": "Validated adjacency, used as incoming heading for first decision, then route[-2].",
+      "P2_MULTI": "Not passed to P2 search; runtime.snapshot omits it."
+    },
+    {
+      "field": "seed",
+      "PPCPP": "Saved seed_used=False; deterministic P0 selection for these inputs.",
+      "P2_MULTI": "random.Random(seed) used in extra candidate generation."
+    },
+    {
+      "field": "budget",
+      "PPCPP": "Shared20s wrapper, remaining forwarded to native and checked.",
+      "P2_MULTI": "Shared20s wrapper, remaining forwarded; original internal fallback/search retained."
+    },
+    {
+      "field": "physical state F/P/H/U/D/current/base/E",
+      "PPCPP": "Active targets/free/history/current/base/resource define requested current residual task.",
+      "P2_MULTI": "Same physical task fields; D/P bookkeeping is validated and active targets passed through Snapshot."
+    }
+  ],
+  "anchors": [
+    {
+      "path": "E:\\无人机研究项目_接续包_20261014\\基线复现准备_20261019\\独立版_v0.2\\ppcpp.py",
+      "sha256": "0e1ab657bf76d3ddb682a54e451252d19ecdf5bbc77edf42ca98c3c95dfb8f51",
+      "lines": [
+        {
+          "line": 8,
+          "text": "def solve(s,initial,budget,seed,predator,previous,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit):"
+        },
+        {
+          "line": 16,
+          "text": "        check_contract(s,initial,budget)"
+        },
+        {
+          "line": 18,
+          "text": "        if len(predator)!=2 or not all(math.isfinite(v) for v in predator):raise ValueError('finite predator')"
+        },
+        {
+          "line": 19,
+          "text": "        if s.free and not (predator[0]<min(x for x,y in s.free) or predator[0]>max(x for x,y in s.free)):raise ValueError('predator outside fixed flight-domain x bounds required')"
+        },
+        {
+          "line": 20,
+          "text": "        if previous is not None and sum(abs(a-b) for a,b in zip(previous,s.current))!=1:raise ValueError('historical heading must be adjacent')"
+        },
+        {
+          "line": 26,
+          "text": "                tick();cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+        },
+        {
+          "line": 27,
+          "text": "                options=core.reward_options(cur,prev,pending,s.free,predator,(2.,.5));tick()"
+        },
+        {
+          "line": 28,
+          "text": "                event=dict(index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))"
+        },
+        {
+          "line": 44,
+          "text": "        seconds=seconds,budget=budget,seed=seed,seed_used=False,predator=predator,initial_previous=previous,weights=(2.,.5),"
+        }
+      ]
+    },
+    {
+      "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\runtime.py",
+      "sha256": "1e69a2933db6f43372945709172edb4054981f39ddcc590c7155e56e548dc553",
+      "lines": [
+        {
+          "line": 21,
+          "text": "  raw=solve(s,set(map(tuple,c['initial_targets'])),mode,seed,tuple(c['predator']),tuple(c['previous']) if c['previous'] else None,begin,deadline,phases,mark,clock,geometry)"
+        }
+      ]
+    },
+    {
+      "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\candidate.py",
+      "sha256": "885ca9439d4b6a78490ec4dfaa4b69594cc8536628ad06bd872db3fdfa3a3a4b",
+      "lines": [
+        {
+          "line": 9,
+          "text": "def solve(s,initial,mode,seed,predator,previous,begin,deadline,phases,mark,clock,geometry):"
+        },
+        {
+          "line": 13,
+          "text": "  mark('p0_before');a=clock();p0=native.solve(s,initial,deadline-clock(),seed,predator,previous,_clock=clock,_geometry=geometry);phases['p0']=clock()-a;out['branches']['P0']=p0"
+        },
+        {
+          "line": 36,
+          "text": "       mark('phase1');cur=route[-1];prev=route[-2] if len(route)>1 else previous"
+        },
+        {
+          "line": 37,
+          "text": "       opts=native.core.reward_options(cur,prev,pending,work_snapshot.free,predator,(2.,.5))"
+        },
+        {
+          "line": 38,
+          "text": "       event=dict(phase='work',index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))"
+        }
+      ]
+    },
+    {
+      "path": "E:\\无人机研究项目_接续包_20261014\\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\\p2_adapter.py",
+      "sha256": "f1b08632759cd42a4b904ab061722b714dcda0b6bed42a2929873e528584bd23",
+      "lines": [
+        {
+          "line": 7,
+          "text": " begin=time.perf_counter();check_contract(s,initial,budget)"
+        },
+        {
+          "line": 23,
+          "text": " raw=solve(s,set(map(tuple,c['initial_targets'])),budget-(time.perf_counter()-begin),seed)"
+        }
+      ]
+    },
+    {
+      "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\p2_search_audit.py",
+      "sha256": "d1b93bd741b80af02c8f398b495441da570ae75f27008d512e9d873844a0385a",
+      "lines": [
+        {
+          "line": 42,
+          "text": "            offer(s.old_route,'old_suffix');left=set(s.targets-s.covered);visits=[]"
+        },
+        {
+          "line": 43,
+          "text": "            for p in s.old_route:"
+        },
+        {
+          "line": 65,
+          "text": "            rng=random.Random(seed)"
+        }
+      ]
+    },
+    {
+      "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\baseline_suite.py",
+      "sha256": "87e333952e0c8212bf22da25786d4fd65de65554d4c92ee66f699af3e4b6c951",
+      "lines": [
+        {
+          "line": 15,
+          "text": "def check_contract(s,initial_targets,budget):"
+        },
+        {
+          "line": 34,
+          "text": "        offer(s.old_route,'old_suffix')"
+        },
+        {
+          "line": 36,
+          "text": "        for p in s.old_route:"
+        },
+        {
+          "line": 44,
+          "text": "        service=old_services(s.old_route,set(initial_targets)-set(s.covered)-g.views[s.current])"
+        },
+        {
+          "line": 52,
+          "text": "            blocks=path_sets(ranked['ranks'],service,s.old_route,s.free)"
+        },
+        {
+          "line": 69,
+          "text": "    check_contract(s,initial_targets,budget)"
+        }
+      ]
+    },
+    {
+      "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\planners.py",
+      "sha256": "e820cd3674d8105e214eddf385d1ba73397b1699bacb1289c4094055b7b7a5cb",
+      "lines": [
+        {
+          "line": 119,
+          "text": "    for p in g.s.old_route:"
+        },
+        {
+          "line": 222,
+          "text": "        for i, p in enumerate(g.s.old_route):"
+        },
+        {
+          "line": 226,
+          "text": "        return len(g.s.old_route)"
+        },
+        {
+          "line": 233,
+          "text": "            (touched if first_touch(group) < len(g.s.old_route) else added).append(block)"
+        },
+        {
+          "line": 244,
+          "text": "    for p in g.s.old_route:"
+        },
+        {
+          "line": 304,
+          "text": "        previous = None"
+        },
+        {
+          "line": 309,
+          "text": "            if previous is not None and abs(previous[0]-p[0])+abs(previous[1]-p[1]) != 1:"
+        },
+        {
+          "line": 312,
+          "text": "            previous = p"
+        }
+      ]
+    },
+    {
+      "path": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py",
+      "sha256": "2eee969dc3a1c46fe1ff055080d57f56cf0144551098de4fd25280d5fc074b14",
+      "lines": []
+    }
+  ],
+  "only_source_reading": true,
+  "no_single_field_causal_conclusion": true
+}

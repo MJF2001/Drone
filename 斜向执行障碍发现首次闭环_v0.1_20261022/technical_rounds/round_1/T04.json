@@ -1,0 +1,916 @@
+{
+  "id": "T04",
+  "passed": true,
+  "case": {
+    "id": "T04",
+    "label": "安全但起点已在带内立即停止",
+    "public": {
+      "F_nominal": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "P": [
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "E": 100,
+      "seed": 20261022
+    },
+    "private": {
+      "O_truth": [
+        [
+          2,
+          1
+        ]
+      ]
+    },
+    "initial": {
+      "S": [
+        {
+          "n": 7,
+          "d": 5
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "H": [],
+      "E": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "M": {
+        "terms": []
+      },
+      "known": []
+    },
+    "actions": [
+      {
+        "kind": "move",
+        "to": [
+          {
+            "n": 1,
+            "d": 1
+          },
+          {
+            "n": 1,
+            "d": 1
+          }
+        ]
+      }
+    ],
+    "expect": {
+      "statuses": [
+        "detected"
+      ],
+      "S": [
+        {
+          "n": 7,
+          "d": 5
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      "H": [],
+      "E": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "M": {
+        "terms": []
+      },
+      "h": [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "detected_t": {
+        "n": 0,
+        "d": 1
+      }
+    }
+  },
+  "initial": {
+    "S": [
+      {
+        "n": 7,
+        "d": 5
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "h": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "P": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "H": [],
+    "D": [],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 100,
+        "d": 1
+      },
+      "high": {
+        "n": 100,
+        "d": 1
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": []
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 0,
+        "d": 1
+      },
+      "high": {
+        "n": 0,
+        "d": 1
+      }
+    },
+    "known": [],
+    "last_motion": null,
+    "event_count": 0,
+    "nonzero_segments": 0
+  },
+  "independent": {
+    "passed": true,
+    "counts": {
+      "independent_execution_audits": 1,
+      "independent_action_log_checks": 1,
+      "independent_execution_commits_checked": 1,
+      "independent_safety_box_queries": 1,
+      "independent_detector_box_queries": 1,
+      "independent_distance": 1,
+      "independent_geometry": 1,
+      "independent_service_intersections": 2
+    },
+    "completed": false,
+    "detections": [
+      {
+        "action_index": 0,
+        "t": {
+          "n": 0,
+          "d": 1
+        },
+        "S": [
+          {
+            "n": 7,
+            "d": 5
+          },
+          {
+            "n": 1,
+            "d": 1
+          }
+        ],
+        "interior_diagonal": false,
+        "cell": [
+          2,
+          1
+        ]
+      }
+    ],
+    "interior_diagonal_detections": 0,
+    "covered": 0,
+    "deferred_known": 1,
+    "deferred_truth": 1,
+    "pending_known": 1,
+    "nonzero_segments": 0,
+    "actual_length_exact": {
+      "terms": []
+    },
+    "planning_waits": [],
+    "final_hash_chain": "e937e5a4de4548cb66621a625e5e5fae91a99041e701a3c65db6c43b7fa1ef92"
+  },
+  "records": [
+    {
+      "index": 0,
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "kind": "move",
+      "before": {
+        "S": [
+          {
+            "n": 7,
+            "d": 5
+          },
+          {
+            "n": 1,
+            "d": 1
+          }
+        ],
+        "h": [
+          {
+            "n": 1,
+            "d": 1
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ]
+        ],
+        "P": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "H": [],
+        "D": [],
+        "base": [
+          0,
+          0
+        ],
+        "E": {
+          "exact": {
+            "terms": [
+              {
+                "r": 1,
+                "c": {
+                  "n": 100,
+                  "d": 1
+                }
+              }
+            ]
+          },
+          "interval_bits": 64,
+          "low": {
+            "n": 100,
+            "d": 1
+          },
+          "high": {
+            "n": 100,
+            "d": 1
+          }
+        },
+        "M": {
+          "exact": {
+            "terms": []
+          },
+          "interval_bits": 64,
+          "low": {
+            "n": 0,
+            "d": 1
+          },
+          "high": {
+            "n": 0,
+            "d": 1
+          }
+        },
+        "known": [],
+        "last_motion": null,
+        "event_count": 0,
+        "nonzero_segments": 0
+      },
+      "proposed": [
+        [
+          {
+            "n": 7,
+            "d": 5
+          },
+          {
+            "n": 1,
+            "d": 1
+          }
+        ],
+        [
+          {
+            "n": 1,
+            "d": 1
+          },
+          {
+            "n": 1,
+            "d": 1
+          }
+        ]
+      ],
+      "sensor": {
+        "kind": "detected",
+        "t": {
+          "n": 0,
+          "d": 1
+        },
+        "cell": [
+          2,
+          1
+        ]
+      },
+      "credits": [],
+      "status": "detected",
+      "actual": [
+        [
+          {
+            "n": 7,
+            "d": 5
+          },
+          {
+            "n": 1,
+            "d": 1
+          }
+        ],
+        [
+          {
+            "n": 7,
+            "d": 5
+          },
+          {
+            "n": 1,
+            "d": 1
+          }
+        ]
+      ],
+      "stop_parameter": {
+        "n": 0,
+        "d": 1
+      },
+      "distance": {
+        "exact": {
+          "terms": []
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 0,
+          "d": 1
+        },
+        "high": {
+          "n": 0,
+          "d": 1
+        }
+      },
+      "squared_source": {
+        "n": 0,
+        "d": 1
+      },
+      "after": {
+        "S": [
+          {
+            "n": 7,
+            "d": 5
+          },
+          {
+            "n": 1,
+            "d": 1
+          }
+        ],
+        "h": [
+          {
+            "n": 1,
+            "d": 1
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            4,
+            0
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            2
+          ]
+        ],
+        "P": [
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "H": [],
+        "D": [
+          [
+            2,
+            1
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "E": {
+          "exact": {
+            "terms": [
+              {
+                "r": 1,
+                "c": {
+                  "n": 100,
+                  "d": 1
+                }
+              }
+            ]
+          },
+          "interval_bits": 64,
+          "low": {
+            "n": 100,
+            "d": 1
+          },
+          "high": {
+            "n": 100,
+            "d": 1
+          }
+        },
+        "M": {
+          "exact": {
+            "terms": []
+          },
+          "interval_bits": 64,
+          "low": {
+            "n": 0,
+            "d": 1
+          },
+          "high": {
+            "n": 0,
+            "d": 1
+          }
+        },
+        "known": [
+          [
+            2,
+            1
+          ]
+        ],
+        "last_motion": null,
+        "event_count": 1,
+        "nonzero_segments": 0
+      },
+      "record_hash": "e937e5a4de4548cb66621a625e5e5fae91a99041e701a3c65db6c43b7fa1ef92"
+    }
+  ],
+  "final": {
+    "S": [
+      {
+        "n": 7,
+        "d": 5
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "h": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "P": [
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ]
+    ],
+    "H": [],
+    "D": [
+      [
+        2,
+        1
+      ]
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 100,
+        "d": 1
+      },
+      "high": {
+        "n": 100,
+        "d": 1
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": []
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 0,
+        "d": 1
+      },
+      "high": {
+        "n": 0,
+        "d": 1
+      }
+    },
+    "known": [
+      [
+        2,
+        1
+      ]
+    ],
+    "last_motion": null,
+    "event_count": 1,
+    "nonzero_segments": 0
+  },
+  "main_counts": {
+    "execution_action_calls": 1,
+    "detector_probes": 1,
+    "safety_box_queries": 1,
+    "detector_box_queries": 1,
+    "execution_distance": 1,
+    "execution_truth_geometry": 1,
+    "primary_domain_points": 3,
+    "execution_service_intersections": 2,
+    "first_discoveries": 1
+  }
+}

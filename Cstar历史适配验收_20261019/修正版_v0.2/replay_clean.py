@@ -1,0 +1,27 @@
+"""New-process replay from saved inputs; preserves all original evidence."""
+import sys,json,hashlib
+from pathlib import Path
+ROOT=Path(__file__).resolve().parent
+sys.path.insert(0,str(ROOT/'runtime'))
+from history_adapter import solve
+from audit_micro import audit
+def main():
+    rows=[]
+    for directory in ('micro_evidence','regression_evidence'):
+        folder=ROOT/directory
+        cs=json.loads((folder/'inputs.json').read_text(encoding='utf8'))
+        saved=json.loads((folder/'results.json').read_text(encoding='utf8'))
+        for c in cs:
+            prior=next(z['result'] for z in saved if z['name']==c['name'] and z.get('seed',7)==7)
+            result=json.loads(json.dumps(solve(c,2,7)))
+            assert {k:v for k,v in result.items() if k!='seconds'}=={k:v for k,v in prior.items() if k!='seconds'},c['name']
+            checked=audit(c,result)
+            rows.append(dict(name=c['name'],status=result['status'],identical_except_time=True))
+    old=ROOT.parent
+    old_inputs=json.loads((old/'micro_evidence/inputs.json').read_text(encoding='utf8'))
+    new_inputs=json.loads((ROOT/'micro_evidence/inputs.json').read_text(encoding='utf8'))
+    assert old_inputs==new_inputs
+    manifest=json.loads((old/'delivery_manifest.json').read_text(encoding='utf8'))
+    for path,sha in manifest['files'].items():assert hashlib.sha256((old/path).read_bytes()).hexdigest()==sha,path
+    print(json.dumps(dict(clean_replay_solves=len(rows),records=rows,original_16_inputs_unchanged=True,old_delivery_hashes_unchanged=len(manifest['files'])),ensure_ascii=False,indent=2))
+if __name__=='__main__':main()

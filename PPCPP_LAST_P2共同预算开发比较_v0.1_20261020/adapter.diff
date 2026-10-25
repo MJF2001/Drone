@@ -1,0 +1,37 @@
+--- frozen/baseline_suite.solve (all-method wrapper)
++++ p2_adapter.solve (P2 branch only, external audit omitted)
+@@ -1,21 +1,13 @@
+-def solve(s,initial_targets,method,budget,seed,profile):
+-    begin=time.perf_counter()
+-    check_contract(s,initial_targets,budget)
+-    if method not in METHODS:raise ValueError(method)
+-    remaining=budget-(time.perf_counter()-begin)
+-    if remaining<=0:r=dict(route=(),source=None,status='deadline',seconds=time.perf_counter()-begin)
+-    elif method=='P2_MULTI':
+-        try:r=p2_solve(s,remaining,'multi',seed)
+-        except ValueError as exc:
+-            if str(exc)!='infeasible input':raise
+-            r=dict(route=(),source=None,status='environment_infeasible',reason=str(exc),seconds=None)
+-    elif method=='TREE_MST':r=solve_candidate(s,'TREE_MST',remaining,seed,final_audit=False)
+-    else:r=oarp_solve(s,initial_targets,remaining,profile,seed)
+-    r['seconds']=time.perf_counter()-begin
+-    r['method']=method;r['budget']=budget;r['seed']=seed
+-    r['independent_audit']=audit(s,tuple(map(tuple,r['route']))) if r['route'] else None
+-    if r['route'] and not r['independent_audit']['valid']:raise AssertionError((method,r['independent_audit']))
+-    r['fallback_selected']=r.get('source') in ('old_suffix','common_fallback','common_old_suffix','common_GD_adapter')
+-    r['overrun_gt_10ms']=r.get('seconds') is not None and r['seconds']>budget+.01
+-    # External audit is excluded from reported solver seconds for all methods.
+-    return r
++def solve(s,initial,budget,seed):
++ begin=time.perf_counter();check_contract(s,initial,budget)
++ remaining=budget-(time.perf_counter()-begin)
++ if remaining<=0:r=dict(route=(),source=None,status='deadline',seconds=time.perf_counter()-begin)
++ else:
++  try:r=p2_solve(s,remaining,'multi',seed)
++  except ValueError as exc:
++   if str(exc)!='infeasible input':raise
++   r=dict(route=(),source=None,status='environment_infeasible',reason=str(exc),seconds=None)
++ r['seconds']=time.perf_counter()-begin;r['method']='P2_MULTI';r['budget']=budget;r['seed']=seed
++ r['fallback_selected']=r.get('source') in ('old_suffix','common_fallback','common_old_suffix','common_GD_adapter')
++ r['overrun_gt_10ms']=r['seconds']>budget+.01
++ return r

@@ -1,0 +1,33 @@
+{
+  "required_nonnegative_integer_fields": [
+    "shared_region_queries_total",
+    "scope_engine_region_queries",
+    "scope_wrapper_prediction_region_queries",
+    "scope_wrapper_native_region_queries",
+    "scope_wrapper_post_region_queries",
+    "scope_wrapper_full_region_queries",
+    "post_service_intersections",
+    "post_service_queries_total_protected",
+    "observer_started",
+    "observer_finished",
+    "observer_aborted"
+  ],
+  "allowed_scopes": [
+    "scope_engine_region_queries",
+    "scope_wrapper_prediction_region_queries",
+    "scope_wrapper_native_region_queries",
+    "scope_wrapper_post_region_queries",
+    "scope_wrapper_full_region_queries"
+  ],
+  "producer": "observe.Recorder.__init__/start/finish/add/trace",
+  "serialization": "worker native_counts=dict(observer.counts), finally; plan independent Counter finally",
+  "consumer": "schema.validate and audit._audit.audit_one exact equalities",
+  "other_ledgers": {
+    "wrapper": "pipeline GuardedCounter",
+    "execution": "executor Counter",
+    "independent": "audit local Counter persisted even on exception"
+  },
+  "legacy_compat": "only derived after complete stage evidence and empty responsibility proof for omitted query zeros",
+  "not_started_or_aborted": "never accepted as normal zero",
+  "budget": "original post overall 1200 retained"
+}

@@ -1,0 +1,42 @@
+{
+  "purpose": "Locate potential external publication / executed-prefix controllers, not prove repository-wide absence",
+  "command": [
+    "rg",
+    "-n",
+    "--glob",
+    "*.py",
+    "--glob",
+    "!运行环境/**",
+    "--glob",
+    "!**/source_snapshot/**",
+    "--glob",
+    "!**/technical_rounds/**",
+    "--glob",
+    "!**/results/**",
+    "--glob",
+    "!**/frozen_baselines/**",
+    "--glob",
+    "!连续事件执行评估只读审查_v0.1_20261021/**",
+    "--glob",
+    "!*holdout*/**",
+    "--glob",
+    "!*留出*/**",
+    "def publish|publish\\(|event_tick|next_event|apply_event|executed_route",
+    "."
+  ],
+  "returncode": 0,
+  "matched_lines": 25,
+  "scope": "Project Python source excluding runtime/vendor snapshots/results/frozen copies/new review and holdout-named paths; targeted CAP/TRACE/Cstar/source inspection also listed in source_hashes",
+  "limitations": [
+    "Static text search can miss differently named implementations",
+    "Same-map per-region plans and within-solver tick calls are not external-world events",
+    "No old controller, verifier or graph code was executed"
+  ],
+  "failed_lookup": {
+    "path": "基线复现准备_20261019/model.py",
+    "reason": "File absent; rg emitted OS error2 during initial path inventory; no source/data modified",
+    "resolution": "Read portable_frozen.py then located frozen_baselines/v2_20261012/source/model.py; static source only"
+  },
+  "parse_failures": 0,
+  "new_algorithm_or_graph_calls": 0
+}

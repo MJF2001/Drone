@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\PPCPP侧向拓宽开发诊断_v0.4_20261021\tech_child.py", line 224, in <module>
+    elif mode=='integration':integration(Path(sys.argv[2]),Path(sys.argv[3]))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP侧向拓宽开发诊断_v0.4_20261021\tech_child.py", line 186, in integration
+    seal['run'](1);runner['run']('prep')
+    ^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP侧向拓宽开发诊断_v0.4_20261021\seal.py", line 16, in run
+    p=subprocess.run([sys.executable,'-B','-X','utf8',str(H/'worker.py'),'inventory'],env=env,capture_output=True,check=True);x=json.loads(p.stdout);save(H/'import_inventory.json',x)
+                                                                                                                                ^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\json\decoder.py", line 341, in decode
+    raise JSONDecodeError("Extra data", s, end)
+json.decoder.JSONDecodeError: Extra data: line 2 column 1 (char 6318)

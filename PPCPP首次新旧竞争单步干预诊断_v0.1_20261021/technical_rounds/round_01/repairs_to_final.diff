@@ -1,0 +1,41 @@
+--- round1/run.py
++++ final/run.py
+@@ -29,6 +29,6 @@
+             save(H/'STOP.json',dict(stage=mode,id=j['id'],reason=repr(ex),attempted_processes=len(past),no_retry=True));raise
+     save(H/f'{mode}_metrics.json',rows)
+     if mode=='OFF':assert len(rows)==cfg['counts']['OFF'];save(H/'OFF_equivalence.json',[dict(job=r['job'],equivalence=r['equivalence'],all_metrics_equal=True) for r in rows])
+-    receipt(mode,[H/f'{mode}_metrics.json',*[H/'logs'/f'{j["id"]}.receipt.json' for j in order],*[H/'outputs'/f'{j["id"]}.json' for j in order if (H/'outputs'/f'{j["id"]}.json').exists()],*([H/'OFF_equivalence.json'] if mode=='OFF' else []))
++    receipt(mode,[H/f'{mode}_metrics.json',*[H/'logs'/f'{j["id"]}.receipt.json' for j in order],*[H/'outputs'/f'{j["id"]}.json' for j in order if (H/'outputs'/f'{j["id"]}.json').exists()],*([H/'OFF_equivalence.json'] if mode=='OFF' else [])])
+     print('PASS',mode,'fixed phase complete',flush=True)
+ if __name__=='__main__':run(sys.argv[1])
+--- round1/seal.py
++++ final/seal.py
+@@ -12,7 +12,8 @@
+         files[n]=sha(n)
+     for p in H.rglob('*'):
+         if p.is_file() and '__pycache__' not in p.parts and p.name!='actual_order.jsonl' and not (p.parent==H and p.name.endswith('_execution.log')):files[str(p.resolve())]=sha(p)
+-    critical={str((H/n).resolve()):sha(H/n) for n in ('runtime.py','candidate.py','native_diag.py','intervention.py','common.py','decision_audit.py','worker.py','run.py')};critical[str(Path(runtime_native_source:=inventory['reward_tools']))]=sha(runtime_native_source)
++    critical={str((H/n).resolve()):sha(H/n) for n in ('runtime.py','candidate.py','native_diag.py','intervention.py','common.py','decision_audit.py','worker.py','run.py')}
++    runtime_native_source=inventory['reward_tools'];critical[str(Path(runtime_native_source))]=sha(runtime_native_source)
+     save(H/'preseal.json',dict(complete=True,binding=binding(),files=files,critical=critical,entry_identifier=LABEL,python_sha256=sha(sys.executable),utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),entry_cap=288,entry_budget=20,watchdog=90,threads=1))
+     receipt('preseal',[H/'preseal.json']);print('PASS fresh preseal',len(files),'files; no real entries yet',flush=True)
+ if __name__=='__main__':main()
+--- round1/technical.py
++++ final/technical.py
+@@ -1,6 +1,6 @@
+ """At most three isolated no-real-solve integration rounds; all failures retained."""
+ from pathlib import Path
+-import sys,json,os,ast,hashlib,subprocess,types,runpy,collections,copy,datetime
++import sys,json,os,ast,hashlib,subprocess,types,runpy,collections,copy,datetime,time
+ H=Path(__file__).resolve().parent
+ def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+ def read(p):return json.loads(Path(p).read_text(encoding='utf8'))
+@@ -89,7 +89,7 @@
+         return dict(version=common.LABEL,method='PPCPP_FIRST_NEW_STEP_DIAG',route=route,status='core_complete',reason=None,seconds=.0005,budget=budget,seed=seed,seed_used=False,predator=predator,initial_previous=previous,weights=[2.,.5],trace=trace,accepted_seconds=.0004,fallback_selected=False,overrun_gt_10ms=False,diagnostic=dict(mode=mode,intervention_used=on,trigger_count=len(log),log=log))
+     native.solve=core;runtime.native=native
+     def entry(payload,mode,budget,seed,*,diagnostic_mode,geometry,**kwargs):
+-        assert mode=='PPCPP' and budget==20;runtime.synthetic_mode=diagnostic_mode;c=json.loads(payload);p0=native.solve(None,set(map(tuple,c['initial_targets'])),19.99,seed,c['predator'],c['previous'],_geometry=geometry);raw=dict(version='PPCPP_LAST_RESERVE_v0.2',mode='PPCPP',status='core_complete',route=p0['route'],trace=p0['trace'],selected='P0',e=None,branches={'P0':p0},reason=None);return dict(diagnostic_entry=common.LABEL,diagnostic_mode=diagnostic_mode,raw=raw,entry_seconds=.001,phase_seconds={},eligible=True,budget=20,method='PPCPP',seed=seed,injection_events=[])
++        start=time.perf_counter();assert mode=='PPCPP' and budget==20;runtime.synthetic_mode=diagnostic_mode;c=json.loads(payload);p0=native.solve(None,set(map(tuple,c['initial_targets'])),19.99,seed,c['predator'],c['previous'],_geometry=geometry);raw=dict(version='PPCPP_LAST_RESERVE_v0.2',mode='PPCPP',status='core_complete',route=p0['route'],trace=p0['trace'],selected='P0',e=None,branches={'P0':p0},reason=None);return dict(diagnostic_entry=common.LABEL,diagnostic_mode=diagnostic_mode,raw=raw,entry_seconds=time.perf_counter()-start,phase_seconds={},eligible=True,budget=20,method='PPCPP',seed=seed,injection_events=[])
+     runtime.run_payload=entry;sys.modules.update(runtime=runtime,candidate=candidate);return common,runtime,candidate
+ def boot(f,args):
+     c,*_=stub_modules(f);sys.argv=[str(c.H/'worker.py')]+args;runpy.run_path(str(c.H/'worker.py'),run_name='__main__')

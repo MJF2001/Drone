@@ -1,0 +1,2795 @@
+[
+  {
+    "category": 1,
+    "subcase": "01_two_event_chain",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 6,
+        "M": 6,
+        "E": 14,
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          0,
+          1
+        ],
+        "waits": 0,
+        "response_calls": 3,
+        "reason": null,
+        "turns90": 3,
+        "turns180": 0,
+        "historical_now_blocked": [
+          [
+            1,
+            0
+          ]
+        ],
+        "move_classes": {
+          "fresh_target": 3,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 3
+        }
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 6,
+        "M": 6,
+        "E": 14,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          0,
+          1
+        ],
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [
+          [
+            1,
+            0
+          ]
+        ],
+        "returned": true,
+        "response_calls": 3,
+        "move_classes": {
+          "fresh_target": 3,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 3
+        },
+        "turns90": 3,
+        "turns180": 0,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          },
+          {
+            "point": [
+              2,
+              0
+            ],
+            "tick": 2,
+            "source": "arrival",
+            "event_id": "e1",
+            "target_first_published": "initial"
+          },
+          {
+            "point": [
+              2,
+              1
+            ],
+            "tick": 3,
+            "source": "arrival",
+            "event_id": "e1",
+            "target_first_published": "e1"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 3,
+    "main_BFS": 7
+  },
+  {
+    "category": 2,
+    "subcase": "02_independent_histories",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 6,
+        "M": 6,
+        "E": 14,
+        "H": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 3,
+        "reason": null
+      },
+      "B": {
+        "status": "success",
+        "finish_tick": 6,
+        "M": 6,
+        "E": 14,
+        "H": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 3,
+        "reason": null
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 6,
+        "M": 6,
+        "E": 14,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "P": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 3,
+        "move_classes": {
+          "fresh_target": 2,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 4
+        },
+        "turns90": 4,
+        "turns180": 0,
+        "first_credit": [
+          {
+            "point": [
+              2,
+              0
+            ],
+            "tick": 2,
+            "source": "arrival",
+            "event_id": "e1",
+            "target_first_published": "initial"
+          },
+          {
+            "point": [
+              2,
+              1
+            ],
+            "tick": 3,
+            "source": "arrival",
+            "event_id": "e2",
+            "target_first_published": "e1"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      },
+      "B": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 6,
+        "M": 6,
+        "E": 14,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "P": [
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 3,
+        "move_classes": {
+          "fresh_target": 2,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 4
+        },
+        "turns90": 3,
+        "turns180": 0,
+        "first_credit": [
+          {
+            "point": [
+              2,
+              1
+            ],
+            "tick": 3,
+            "source": "arrival",
+            "event_id": "e2",
+            "target_first_published": "e1"
+          },
+          {
+            "point": [
+              2,
+              0
+            ],
+            "tick": 4,
+            "source": "arrival",
+            "event_id": "e2",
+            "target_first_published": "initial"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 6,
+    "main_BFS": 14
+  },
+  {
+    "category": 3,
+    "subcase": "03_early_finish_wait",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 16,
+        "M": 12,
+        "E": 8,
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 4,
+        "response_calls": 3,
+        "reason": null,
+        "turns90": 0,
+        "turns180": 5
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 16,
+        "M": 12,
+        "E": 8,
+        "waits": 4,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 3,
+        "move_classes": {
+          "fresh_target": 3,
+          "initial_historical": 0,
+          "session_repeat": 6,
+          "non_target": 3
+        },
+        "turns90": 0,
+        "turns180": 5,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          },
+          {
+            "point": [
+              2,
+              0
+            ],
+            "tick": 6,
+            "source": "arrival",
+            "event_id": "e1",
+            "target_first_published": "e1"
+          },
+          {
+            "point": [
+              3,
+              0
+            ],
+            "tick": 13,
+            "source": "arrival",
+            "event_id": "e2",
+            "target_first_published": "e2"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 3,
+    "main_BFS": 17
+  },
+  {
+    "category": 4,
+    "subcase": "04_current_new_credit",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 2,
+        "M": 2,
+        "E": 8,
+        "H": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 2,
+        "reason": null,
+        "zero_move_credits": 1
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 2,
+        "M": 2,
+        "E": 8,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "P": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 2,
+        "move_classes": {
+          "fresh_target": 1,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 1
+        },
+        "turns90": 0,
+        "turns180": 1,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "publication",
+            "event_id": "e1",
+            "target_first_published": "e1"
+          },
+          {
+            "point": [
+              0,
+              0
+            ],
+            "tick": 2,
+            "source": "arrival",
+            "event_id": "e1",
+            "target_first_published": "e1"
+          }
+        ],
+        "zero_move_credits": 1,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 2,
+    "main_BFS": 3
+  },
+  {
+    "category": 5,
+    "subcase": "05_block_history_and_pending",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 4,
+        "M": 4,
+        "E": 6,
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          0,
+          1
+        ],
+        "waits": 0,
+        "response_calls": 2,
+        "reason": null,
+        "D": [
+          [
+            2,
+            0
+          ]
+        ],
+        "historical_now_blocked": [
+          [
+            1,
+            0
+          ]
+        ]
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 4,
+        "M": 4,
+        "E": 6,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          0,
+          1
+        ],
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "U": [],
+        "D": [
+          [
+            2,
+            0
+          ]
+        ],
+        "historical_now_blocked": [
+          [
+            1,
+            0
+          ]
+        ],
+        "returned": true,
+        "response_calls": 2,
+        "move_classes": {
+          "fresh_target": 1,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 3
+        },
+        "turns90": 3,
+        "turns180": 0,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 2,
+    "main_BFS": 5
+  },
+  {
+    "category": 6,
+    "subcase": "06_only_A_current_blocked",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "environment_termination",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 19,
+        "H": [],
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 1,
+        "reason": "current_blocked"
+      },
+      "B": {
+        "status": "success",
+        "finish_tick": 8,
+        "M": 8,
+        "E": 12,
+        "H": [
+          [
+            2,
+            0
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          0,
+          1
+        ],
+        "waits": 0,
+        "response_calls": 2,
+        "reason": null
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "environment_termination",
+        "reason": "current_blocked",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 19,
+        "waits": 0,
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "H": [],
+        "P": [
+          [
+            2,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "U": [
+          [
+            2,
+            0
+          ]
+        ],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": false,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 0,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 1
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      },
+      "B": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 8,
+        "M": 8,
+        "E": 12,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          0,
+          1
+        ],
+        "H": [
+          [
+            2,
+            0
+          ]
+        ],
+        "P": [
+          [
+            2,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 2,
+        "move_classes": {
+          "fresh_target": 1,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 7
+        },
+        "turns90": 4,
+        "turns180": 1,
+        "first_credit": [
+          {
+            "point": [
+              2,
+              0
+            ],
+            "tick": 4,
+            "source": "arrival",
+            "event_id": "e1",
+            "target_first_published": "initial"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 3,
+    "main_BFS": 10
+  },
+  {
+    "category": 7,
+    "subcase": "07a_base_blocked",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "environment_termination",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 9,
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 1,
+        "reason": "base_blocked"
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "environment_termination",
+        "reason": "base_blocked",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 9,
+        "waits": 0,
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ]
+        ],
+        "F": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": false,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 1,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 0
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 1,
+    "main_BFS": 1
+  },
+  {
+    "category": 7,
+    "subcase": "07b_pending_disconnected",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "environment_termination",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 9,
+        "H": [],
+        "current": [
+          0,
+          1
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 1,
+        "reason": "target_unreachable",
+        "U": [
+          [
+            2,
+            0
+          ]
+        ],
+        "D": []
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "environment_termination",
+        "reason": "target_unreachable",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 9,
+        "waits": 0,
+        "current": [
+          0,
+          1
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "H": [],
+        "P": [
+          [
+            2,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "U": [
+          [
+            2,
+            0
+          ]
+        ],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": false,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 0,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 1
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 1,
+    "main_BFS": 2
+  },
+  {
+    "category": 7,
+    "subcase": "07c_return_disconnected",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "environment_termination",
+        "finish_tick": 2,
+        "M": 2,
+        "E": 8,
+        "H": [
+          [
+            2,
+            0
+          ]
+        ],
+        "current": [
+          2,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 1,
+        "reason": "base_unreachable"
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "environment_termination",
+        "reason": "base_unreachable",
+        "finish_tick": 2,
+        "M": 2,
+        "E": 8,
+        "waits": 0,
+        "current": [
+          2,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            2,
+            0
+          ]
+        ],
+        "P": [
+          [
+            2,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": false,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 1,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 1
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [
+          {
+            "point": [
+              2,
+              0
+            ],
+            "tick": 2,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 1,
+    "main_BFS": 3
+  },
+  {
+    "category": 8,
+    "subcase": "08a_time_19_999",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 2,
+        "M": 2,
+        "E": 0,
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 1,
+        "reason": null
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 2,
+        "M": 2,
+        "E": 0,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 1,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 1
+        },
+        "turns90": 0,
+        "turns180": 1,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 1,
+    "main_BFS": 3
+  },
+  {
+    "category": 8,
+    "subcase": "08b_time_20_000",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "deadline",
+        "finish_tick": 0,
+        "M": 0,
+        "E": 2,
+        "H": [],
+        "current": [
+          0,
+          0
+        ],
+        "previous": null,
+        "waits": 0,
+        "response_calls": 1,
+        "reason": "entry_not_strictly_less_than_20"
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "deadline",
+        "reason": "entry_not_strictly_less_than_20",
+        "finish_tick": 0,
+        "M": 0,
+        "E": 2,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": null,
+        "H": [],
+        "P": [
+          [
+            1,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "U": [
+          [
+            1,
+            0
+          ]
+        ],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 0,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 0
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 1,
+    "main_BFS": 1
+  },
+  {
+    "category": 8,
+    "subcase": "08c_time_20_001",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "deadline",
+        "finish_tick": 0,
+        "M": 0,
+        "E": 2,
+        "H": [],
+        "current": [
+          0,
+          0
+        ],
+        "previous": null,
+        "waits": 0,
+        "response_calls": 1,
+        "reason": "entry_not_strictly_less_than_20"
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "deadline",
+        "reason": "entry_not_strictly_less_than_20",
+        "finish_tick": 0,
+        "M": 0,
+        "E": 2,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": null,
+        "H": [],
+        "P": [
+          [
+            1,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "U": [
+          [
+            1,
+            0
+          ]
+        ],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 0,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 0
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 1,
+    "main_BFS": 1
+  },
+  {
+    "category": 9,
+    "subcase": "09a_invalid_no_old_fallback",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "invalid_route",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 9,
+        "H": [],
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 2,
+        "reason": "endpoint_or_collision",
+        "D": [
+          [
+            2,
+            0
+          ]
+        ]
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "invalid_route",
+        "reason": "endpoint_or_collision",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 9,
+        "waits": 0,
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "H": [],
+        "P": [
+          [
+            2,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "U": [],
+        "D": [
+          [
+            2,
+            0
+          ]
+        ],
+        "historical_now_blocked": [],
+        "returned": false,
+        "response_calls": 2,
+        "move_classes": {
+          "fresh_target": 0,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 1
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 2,
+    "main_BFS": 2
+  },
+  {
+    "category": 9,
+    "subcase": "09b_missing_no_old_fallback",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "solver_no_solution",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 9,
+        "H": [],
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 2,
+        "reason": "missing_response",
+        "D": [
+          [
+            2,
+            0
+          ]
+        ]
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "solver_no_solution",
+        "reason": "missing_response",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 9,
+        "waits": 0,
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "H": [],
+        "P": [
+          [
+            2,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "U": [],
+        "D": [
+          [
+            2,
+            0
+          ]
+        ],
+        "historical_now_blocked": [],
+        "returned": false,
+        "response_calls": 2,
+        "move_classes": {
+          "fresh_target": 0,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 1
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 2,
+    "main_BFS": 2
+  },
+  {
+    "category": 10,
+    "subcase": "10a_exact_resource_success",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 2,
+        "M": 2,
+        "E": 0,
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 1,
+        "reason": null
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 2,
+        "M": 2,
+        "E": 0,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 1,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 1
+        },
+        "turns90": 0,
+        "turns180": 1,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 1,
+    "main_BFS": 3
+  },
+  {
+    "category": 10,
+    "subcase": "10b_resource_event_reject",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "resource_infeasible",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 1,
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 2,
+        "reason": "full_route_exceeds_remaining_resource"
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "resource_infeasible",
+        "reason": "full_route_exceeds_remaining_resource",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 1,
+        "waits": 0,
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "U": [
+          [
+            2,
+            0
+          ]
+        ],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": false,
+        "response_calls": 2,
+        "move_classes": {
+          "fresh_target": 1,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 0
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 2,
+    "main_BFS": 2
+  },
+  {
+    "category": 10,
+    "subcase": "10c_Tmax_arrival_success",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 2,
+        "M": 2,
+        "E": 8,
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 1,
+        "reason": null
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 2,
+        "M": 2,
+        "E": 8,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 1,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 1
+        },
+        "turns90": 0,
+        "turns180": 1,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 1,
+    "main_BFS": 3
+  },
+  {
+    "category": 10,
+    "subcase": "10d_Tmax_cannot_move",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "tick_limit",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 9,
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 1,
+        "reason": "maximum_tick_reached"
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "tick_limit",
+        "reason": "maximum_tick_reached",
+        "finish_tick": 1,
+        "M": 1,
+        "E": 9,
+        "waits": 0,
+        "current": [
+          1,
+          0
+        ],
+        "previous": [
+          0,
+          0
+        ],
+        "H": [
+          [
+            1,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": false,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 1,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 0
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 1,
+    "main_BFS": 2
+  },
+  {
+    "category": 11,
+    "subcase": "11a_wait_keeps_turn_repeat",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 7,
+        "M": 6,
+        "E": 4,
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 1,
+        "response_calls": 2,
+        "reason": null,
+        "turns90": 0,
+        "turns180": 3,
+        "move_classes": {
+          "fresh_target": 2,
+          "initial_historical": 0,
+          "session_repeat": 2,
+          "non_target": 2
+        }
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 7,
+        "M": 6,
+        "E": 4,
+        "waits": 1,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 2,
+        "move_classes": {
+          "fresh_target": 2,
+          "initial_historical": 0,
+          "session_repeat": 2,
+          "non_target": 2
+        },
+        "turns90": 0,
+        "turns180": 3,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          },
+          {
+            "point": [
+              2,
+              0
+            ],
+            "tick": 5,
+            "source": "arrival",
+            "event_id": "e1",
+            "target_first_published": "e1"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 2,
+    "main_BFS": 8
+  },
+  {
+    "category": 11,
+    "subcase": "11b_cross_plan_right_angle",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 4,
+        "M": 4,
+        "E": 6,
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          0,
+          1
+        ],
+        "waits": 0,
+        "response_calls": 2,
+        "reason": null,
+        "turns90": 3,
+        "turns180": 0,
+        "move_classes": {
+          "fresh_target": 2,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 2
+        }
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 4,
+        "M": 4,
+        "E": 6,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          0,
+          1
+        ],
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 2,
+        "move_classes": {
+          "fresh_target": 2,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 2
+        },
+        "turns90": 3,
+        "turns180": 0,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          },
+          {
+            "point": [
+              1,
+              1
+            ],
+            "tick": 2,
+            "source": "arrival",
+            "event_id": "e1",
+            "target_first_published": "e1"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 2,
+    "main_BFS": 5
+  },
+  {
+    "category": 12,
+    "subcase": "12a_merged_future_A",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 4,
+        "M": 4,
+        "E": 6,
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 2,
+        "reason": null
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 4,
+        "M": 4,
+        "E": 6,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 2,
+        "move_classes": {
+          "fresh_target": 2,
+          "initial_historical": 0,
+          "session_repeat": 1,
+          "non_target": 1
+        },
+        "turns90": 0,
+        "turns180": 1,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          },
+          {
+            "point": [
+              2,
+              0
+            ],
+            "tick": 2,
+            "source": "arrival",
+            "event_id": "a|b",
+            "target_first_published": "a"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 2,
+    "main_BFS": 5
+  },
+  {
+    "category": 12,
+    "subcase": "12b_merged_future_B",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "success",
+        "finish_tick": 6,
+        "M": 6,
+        "E": 4,
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "waits": 0,
+        "response_calls": 2,
+        "reason": null
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "success",
+        "reason": null,
+        "finish_tick": 6,
+        "M": 6,
+        "E": 4,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": [
+          1,
+          0
+        ],
+        "H": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "P": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "U": [],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 2,
+        "move_classes": {
+          "fresh_target": 2,
+          "initial_historical": 0,
+          "session_repeat": 1,
+          "non_target": 3
+        },
+        "turns90": 0,
+        "turns180": 1,
+        "first_credit": [
+          {
+            "point": [
+              1,
+              0
+            ],
+            "tick": 1,
+            "source": "arrival",
+            "event_id": "initial",
+            "target_first_published": "initial"
+          },
+          {
+            "point": [
+              3,
+              0
+            ],
+            "tick": 3,
+            "source": "arrival",
+            "event_id": "a|b",
+            "target_first_published": "a"
+          }
+        ],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 2,
+    "main_BFS": 7
+  },
+  {
+    "category": 8,
+    "subcase": "08d_NaN_expected_technical_stop_LAST",
+    "passed": true,
+    "expectation": {
+      "A": {
+        "status": "technical_error",
+        "finish_tick": 0,
+        "M": 0,
+        "E": 2,
+        "H": [],
+        "current": [
+          0,
+          0
+        ],
+        "previous": null,
+        "waits": 0,
+        "response_calls": 1,
+        "reason": "invalid_time_field"
+      }
+    },
+    "actual": {
+      "A": {
+        "status": "technical_error",
+        "reason": "invalid_time_field",
+        "finish_tick": 0,
+        "M": 0,
+        "E": 2,
+        "waits": 0,
+        "current": [
+          0,
+          0
+        ],
+        "previous": null,
+        "H": [],
+        "P": [
+          [
+            1,
+            0
+          ]
+        ],
+        "F": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "U": [
+          [
+            1,
+            0
+          ]
+        ],
+        "D": [],
+        "historical_now_blocked": [],
+        "returned": true,
+        "response_calls": 1,
+        "move_classes": {
+          "fresh_target": 0,
+          "initial_historical": 0,
+          "session_repeat": 0,
+          "non_target": 0
+        },
+        "turns90": 0,
+        "turns180": 0,
+        "first_credit": [],
+        "zero_move_credits": 0,
+        "benchmark_eligible": false
+      }
+    },
+    "stub_responses": 1,
+    "main_BFS": 1
+  }
+]

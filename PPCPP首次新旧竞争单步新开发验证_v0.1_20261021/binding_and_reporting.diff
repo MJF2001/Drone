@@ -1,0 +1,76 @@
+--- E:\无人机研究项目_接续包_20261014\PPCPP首次新旧竞争单步干预诊断_v0.1_20261021\common.py
++++ E:\无人机研究项目_接续包_20261014\PPCPP首次新旧竞争单步新开发验证_v0.1_20261021\common.py
+@@ -2,6 +2,7 @@
+ from pathlib import Path
+ import json,hashlib,csv,importlib.util,collections,statistics
+ H=Path(__file__).resolve().parent;R=H.parent;B=R/'PPCPP侧向拓宽开发诊断_v0.4_20261021';P=R/'PPCPP_LAST_P2共同预算开发比较_v0.1_20261020';M=R/'评价指标完整补算与数据审计_v0.1_20261020'
++D=R/'PPCPP首次新旧竞争单步干预诊断_v0.1_20261021'
+ LABEL='PPCPP_FIRST_NEW_STEP_DIAG_v0.1'
+ def read(p):return json.loads(Path(p).read_text(encoding='utf8'))
+ def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+@@ -23,13 +24,13 @@
+     x=read(H/'receipts'/f'{stage}.json');assert x['stage']==stage and x['status']=='PASS' and x['binding']==binding(),stage
+     for p,h in x['files'].items():assert sha(H/p)==h,p
+     return x
+-def preseal():
+-    require('preseal');s=read(H/'preseal.json');assert s['complete'] and s['binding']==binding()
++def check_seal(name):
++    require(name);s=read(H/(name+'.json'));assert s['complete'] and s['binding']==binding()
+     for p,h in s['critical'].items():assert sha(p)==h,p
+     return s
+ def plan():
+     p=read(H/'plan.json')
+-    if H.name!='SYNTHETIC_NOT_EXPERIMENT':assert p==dict(counts=dict(OFF=144,ON=144),entry_cap=288,entry_budget=20,watchdog=90,threads=1,expected_triggered_states=24,expected_protection_states=24)
++    if H.name!='SYNTHETIC_NOT_EXPERIMENT':assert p==dict(counts=dict(prep=6,gate=96,formal=288),entry_cap=390,entry_budget=20,watchdog=90,threads=1,expected_triggered_states=24,expected_protection_states=24)
+     else:assert read(H/'SYNTHETIC_NOT_EXPERIMENT.json')['synthetic_only']
+     return p
+ EQUIVALENCE_EXCLUSIONS={
+@@ -54,3 +55,22 @@
+         return v
+     assert trim(x,'result')==trim(y,'result'),'explicit-path-only OFF/untouched equivalence failed'
+     return dict(passed=True,route_equal=True,full_non_time_P0_trace_equal=True,all_other_result_fields_equal_after_explicit_exclusions=True,exclusions=EQUIVALENCE_EXCLUSIONS)
++
++def rect(x,y,w,h):return {(xx,yy) for xx in range(x,x+w) for yy in range(y,y+h)}
++def adj(p):
++    x,y=p;return ((x+1,y),(x,y+1),(x-1,y),(x,y-1))
++def bfs(f,s):
++    d={s:0};q=collections.deque([s])
++    while q:
++        p=q.popleft()
++        for n in adj(p):
++            if n in f and n not in d:d[n]=d[p]+1;q.append(n)
++    assert set(d)==f;return d
++def history(route,t0,cut):return set(map(tuple,route[:cut+1]))&t0
++def timely(seconds,legal):return bool(legal and seconds<20)
++def position_label(k,ell):return 'U_SIDE' if k==0 else 'H_SIDE' if k==ell else 'MIXED_SIDE'
++
++normal=norm
++dual=both
++CONDS=('CONTROL','H_SIDE','MIXED_SIDE','U_SIDE')
++SEEDS=(20261020,20261021,20261022)
+--- E:\无人机研究项目_接续包_20261014\PPCPP首次新旧竞争单步干预诊断_v0.1_20261021\analyze.py
++++ E:\无人机研究项目_接续包_20261014\PPCPP首次新旧竞争单步新开发验证_v0.1_20261021\analyze.py
+@@ -1,7 +1,12 @@
+ """OFF/ON full-route contrasts, state-equal signal and all missing/negative results."""
+ from common import *
+-from decision_audit import job_row,paired_audit
+-KEYS=('length','completion_step','return_tail_steps','fresh_target_steps','historical_target_steps','repeated_new_target_steps','non_target_steps','turns90','turns180','direction_changes')
++from evaluation import job_row
++from decision_audit import paired_audit
++def percentile(xs,p):
++    if not xs:return None
++    a=sorted(xs);v=(len(a)-1)*p;i=int(v);return a[i]+(a[min(i+1,len(a)-1)]-a[i])*(v-i)
++
++KEYS=('overlap_ratio','length','completion_step','return_tail_steps','fresh_target_steps','historical_target_steps','repeated_new_target_steps','non_target_steps','turns90','turns180','direction_changes')
+ def compute():
+     rows=[job_row(j) for j in read(H/'order.json')];lookup={(r['job']['mode'],r['job']['state'],r['job']['seed']):r for r in rows};states=read(H/'states_metadata.json');pairs=[];ss=[]
+     for st in states:
+@@ -22,7 +27,7 @@
+         ok=[s for s in values if s['three_seeds_complete_legal_timely']];strata[name]=dict(planned_states=len(values),complete_states=len(ok),states_shorter=sum(s['mean_delta']['length']<0 for s in ok),states_equal=sum(s['mean_delta']['length']==0 for s in ok),states_longer=sum(s['mean_delta']['length']>0 for s in ok),state_equal_weight_sum_delta_L=sum(s['mean_delta']['length'] for s in ok) if len(ok)==len(values) else None,mean_delta={k:statistics.mean(s['mean_delta'][k] for s in ok) for k in KEYS} if ok else None,worst_increase_steps=max((p['delta']['length'] for p in pairs if p['state'] in {s['id'] for s in values} and p['eligible']),default=None))
+     timing={}
+     for mode in ('OFF','ON'):
+-        rr=[r for r in rows if r['job']['mode']==mode];tt=[r['seconds'] for r in rr if r['seconds'] is not None];timing[mode]=dict(planned=len(rr),ran=sum(r['ran'] for r in rr),valid=sum(r['valid'] for r in rr),timely=sum(r['timely'] for r in rr),mean=statistics.mean(tt) if tt else None,median=statistics.median(tt) if tt else None,max=max(tt) if tt else None,note='OFF gate precedes ON phase; descriptive timing only, no fair speed ranking claim')
++        rr=[r for r in rows if r['job']['mode']==mode];tt=[r['seconds'] for r in rr if r['seconds'] is not None];timing[mode]=dict(planned=len(rr),ran=sum(r['ran'] for r in rr),valid=sum(r['valid'] for r in rr),timely=sum(r['timely'] for r in rr),mean=statistics.mean(tt) if tt else None,median=statistics.median(tt) if tt else None,P95=percentile(tt,.95),max=max(tt) if tt else None,note='Fixed interleaved formal OFF/ON; same-batch descriptive comparison')
+     return norm(dict(rows=rows,pairs=pairs,states=ss,strata=strata,signal=signal,timing=timing))
+ def export():
+     a=compute();save(H/'analysis.json',a);save(H/'signal.json',a['signal']);save(H/'protection_equivalence.json',[dict(state=p['state'],seed=p['seed'],proof=p['action_proof']) for p in a['pairs'] if not p['trigger_expected']]);save(H/'all_action_audits.json',[dict(job=r['job'],audit=r.get('audit')) for r in a['rows']]);csvsave(H/'288调用完整指标.csv',[dict(**r['job'],valid=r['valid'],timely=r['timely'],status=r['status'],seconds=r['seconds'],**(r['metrics'] or {})) for r in a['rows']]);csvsave(H/'144全部OFF_ON配对.csv',[{k:v for k,v in p.items() if k not in ('OFF','ON')} for p in a['pairs']]);csvsave(H/'48状态三seed原值均值范围.csv',a['states']);csvsave(H/'分层结果.csv',[dict(layer=k,**v) for k,v in a['strata'].items()]);print(json.dumps(dict(signal=a['signal'],strata=a['strata'],timing=a['timing']),ensure_ascii=False),flush=True)

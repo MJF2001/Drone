@@ -1,0 +1,82 @@
+{
+  "passed": false,
+  "cases": [
+    {
+      "id": "common_snapshot_alignment",
+      "passed": true
+    },
+    {
+      "id": "old_route_true_interior_certificate",
+      "passed": true
+    },
+    {
+      "id": "no_block_idempotence",
+      "passed": true
+    },
+    {
+      "id": "single_and_multiple_interval_repair",
+      "passed": false,
+      "error": "AssertionError()",
+      "traceback": "Traceback (most recent call last):\n  File \"E:\\无人机研究项目_接续包_20261014\\旧计划真实受阻PPCPP成对诊断_v0.1_20261023\\precheck.py\", line 42, in main\n    c=fixture(block);r=repair(c);assert len(r['repair_intervals'])==n and r['repair_counts']['BFS_started']==n\n                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+    }
+  ],
+  "pure_query_counts": {
+    "open_box_intersection_tests": 2
+  },
+  "pure_fixed_fixture_repair_calls": 3,
+  "pure_repair_counts": [
+    {
+      "entry_started": 1,
+      "entry_returned": 1,
+      "unit_edge_detection_tests": 14,
+      "invalid_edges": 0,
+      "intervals": 0,
+      "BFS_started": 0,
+      "BFS_returned": 0,
+      "BFS_popped": 0,
+      "neighbor_tests": 0,
+      "path_reconstruction_steps": 0,
+      "retained_old_edges": 14,
+      "repair_edges": 0,
+      "responsibility_vertex_tests": 15,
+      "deadline_checks": 45
+    },
+    {
+      "entry_started": 1,
+      "entry_returned": 1,
+      "unit_edge_detection_tests": 14,
+      "invalid_edges": 2,
+      "intervals": 1,
+      "BFS_started": 1,
+      "BFS_returned": 1,
+      "BFS_popped": 10,
+      "neighbor_tests": 40,
+      "path_reconstruction_steps": 4,
+      "retained_old_edges": 12,
+      "repair_edges": 4,
+      "responsibility_vertex_tests": 17,
+      "deadline_checks": 102
+    },
+    {
+      "entry_started": 1,
+      "entry_returned": 1,
+      "unit_edge_detection_tests": 14,
+      "invalid_edges": 4,
+      "intervals": 1,
+      "BFS_started": 1,
+      "BFS_returned": 1,
+      "BFS_popped": 18,
+      "neighbor_tests": 72,
+      "path_reconstruction_steps": 6,
+      "retained_old_edges": 10,
+      "repair_edges": 6,
+      "responsibility_vertex_tests": 17,
+      "deadline_checks": 144
+    }
+  ],
+  "real_processing_entries": 0,
+  "real_core_calls": 0,
+  "real_R_calls": 0,
+  "post_search_calls": 0,
+  "preparation_repairs": 0
+}

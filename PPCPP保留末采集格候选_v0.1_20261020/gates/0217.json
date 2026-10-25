@@ -1,0 +1,262 @@
+{
+  "kind": "original_failure",
+  "name": "zero_distance_budget",
+  "input": {
+    "name": "incidental_collection",
+    "free": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "targets": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "covered": [],
+    "published_targets": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "deferred_targets": [],
+    "current": [
+      0,
+      0
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "previous": null,
+    "predator": [
+      -1,
+      0
+    ],
+    "initial_targets": [
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ]
+    ],
+    "old_route": [
+      [
+        0,
+        0
+      ]
+    ],
+    "distance_budget": 0
+  },
+  "method": "LAST",
+  "result": {
+    "raw": {
+      "version": "PPCPP_LAST_RESERVE_v0.1",
+      "mode": "LAST",
+      "status": "core_invalid",
+      "route": [],
+      "trace": [],
+      "selected": null,
+      "e": null,
+      "branches": {
+        "P0": {
+          "version": "PPCPP_CORE4_FIXED_HISTORY_v0.2_20261019",
+          "method": "PPCPP_INDEPENDENT",
+          "route": [],
+          "status": "core_invalid",
+          "reason": [
+            "distance_budget_exceeded"
+          ],
+          "seconds": 0.00010080001084133983,
+          "budget": 19.999957599968184,
+          "seed": 0,
+          "seed_used": false,
+          "predator": [
+            -1,
+            0
+          ],
+          "initial_previous": null,
+          "weights": [
+            2.0,
+            0.5
+          ],
+          "trace": [
+            {
+              "index": 0,
+              "current": [
+                0,
+                0
+              ],
+              "previous": null,
+              "pending_count": 3,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    1,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.0,
+                  "boundary_reward": 1.0,
+                  "score": 0.5
+                }
+              ],
+              "goal": [
+                1,
+                0
+              ]
+            },
+            {
+              "index": 1,
+              "current": [
+                1,
+                0
+              ],
+              "previous": [
+                0,
+                0
+              ],
+              "pending_count": 2,
+              "kind": "recovery",
+              "goal": [
+                2,
+                1
+              ]
+            },
+            {
+              "index": 3,
+              "current": [
+                2,
+                1
+              ],
+              "previous": [
+                1,
+                1
+              ],
+              "pending_count": 1,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    3,
+                    1
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 1.0,
+                  "boundary_reward": 1.0,
+                  "score": 2.5
+                }
+              ],
+              "goal": [
+                3,
+                1
+              ]
+            },
+            {
+              "kind": "return",
+              "index": 4,
+              "current": [
+                3,
+                1
+              ],
+              "goal": [
+                0,
+                0
+              ],
+              "pending_count": 0
+            }
+          ],
+          "accepted_seconds": null,
+          "fallback_selected": false,
+          "overrun_gt_10ms": false
+        }
+      },
+      "reason": "original_branch_failed"
+    },
+    "entry_seconds": 0.00017660000594332814,
+    "phase_seconds": {
+      "p0": 0.0001066999975591898,
+      "encoding": 2.559996210038662e-05
+    },
+    "eligible": false,
+    "budget": 20,
+    "method": "LAST",
+    "seed": 0,
+    "injection_events": []
+  },
+  "audit": {
+    "extra_work_connection_steps": 0,
+    "work_segments": []
+  }
+}

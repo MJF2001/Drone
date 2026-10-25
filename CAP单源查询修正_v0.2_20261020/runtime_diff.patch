@@ -1,0 +1,32 @@
+--- v0.1/runtime/planners.py
++++ v0.2/runtime/planners.py
+@@ -46,7 +46,7 @@
+             else:
+                 end=cap_greedy(current,region);end_source='restart_direction_target'
+                 if end is None:
+-                    candidates=sorted(region);ds=metric.matrix([current]+candidates)[0]
++                    candidates=sorted(region);ds=[0]+metric.distances_from(current,candidates)
+                     end=candidates[min(range(len(candidates)),key=lambda k:(ds[k+1],candidates[k]))];end_source='restart_nearest_entry_target'
+             order,info=tour(sorted(region),current,lambda p:p,metric,end)
+             executed_order=order[:-1] if method=='TRACE' and end is not None else order
+--- v0.1/runtime/primitives.py
++++ v0.2/runtime/primitives.py
+@@ -41,6 +41,18 @@
+                     q.append(v);waiting.discard(v)
+         if waiting:raise Unreachable('current public free map disconnected for requested terminals')
+         return ds,pr
++    def distances_from(self,start,goals):
++        """One exact BFS row, same geometry/ties as matrix; no state cache."""
++        self.check('single_source');goals=list(goals)
++        for p in [start]+goals:
++            self.check('single_source')
++            if p not in self.ids:raise Unreachable('terminal not in public free map')
++        if not goals:return []
++        ds,_=self._bfs(start,goals);self.rows+=1
++        result=[]
++        for p in goals:
++            self.check('single_source');result.append(ds[self.ids[p]])
++        return result
+     def matrix(self,terminals):
+         self.check('matrix');n=len(terminals);out=[[0]*n for _ in range(n)]
+         for i,p in enumerate(terminals):

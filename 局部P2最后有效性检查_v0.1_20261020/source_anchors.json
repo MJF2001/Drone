@@ -1,0 +1,224 @@
+[
+  {
+    "file": "PPCPP局部P2混合开发诊断_v0.1_20261020\\hybrid.py",
+    "line": 8,
+    "text": "def window(c,path,marker,tick=lambda _:None):",
+    "sha256": "f2b813095537e5d980704c100f690bdf280a137e2c0a64ae46ba167d3af5a014"
+  },
+  {
+    "file": "PPCPP局部P2混合开发诊断_v0.1_20261020\\hybrid.py",
+    "line": 20,
+    "text": "def combine(cfg,patch):return tuple(map(tuple,cfg['prefix'][:-1]))+tuple(map(tuple,patch))+tuple(map(tuple,cfg['suffix'][1:]))",
+    "sha256": "f2b813095537e5d980704c100f690bdf280a137e2c0a64ae46ba167d3af5a014"
+  },
+  {
+    "file": "PPCPP局部P2混合开发诊断_v0.1_20261020\\hybrid.py",
+    "line": 21,
+    "text": "def run(payload,budget,seed,*,clock=time.perf_counter,hook=None,baseline=None,engine=None):",
+    "sha256": "f2b813095537e5d980704c100f690bdf280a137e2c0a64ae46ba167d3af5a014"
+  },
+  {
+    "file": "PPCPP局部P2混合开发诊断_v0.1_20261020\\hybrid.py",
+    "line": 34,
+    "text": "local=replace(s,name=s.name+'_fixed_local',targets=frozenset(pts(cfg['required'])),covered=frozenset(pts(cfg['local_H'])),current=tuple(cfg['entry']),base=tuple(cfg['exit']),old_route=tuple(map(tuple,cfg['original_patch'])),distance_budget=s.distance_budget-cfg['left']-(len(p0['route'])-1-cfg['right']))",
+    "sha256": "f2b813095537e5d980704c100f690bdf280a137e2c0a64ae46ba167d3af5a014"
+  },
+  {
+    "file": "PPCPP局部P2混合开发诊断_v0.1_20261020\\hybrid.py",
+    "line": 35,
+    "text": "def accept(patch,label):",
+    "sha256": "f2b813095537e5d980704c100f690bdf280a137e2c0a64ae46ba167d3af5a014"
+  },
+  {
+    "file": "PPCPP局部P2混合开发诊断_v0.1_20261020\\hybrid.py",
+    "line": 42,
+    "text": "er=(engine or local_engine)(local,deadline-clock(),'multi',seed,accept=accept);raw['local']=er;phases['local_P2']=clock()-a;tick('local_after')",
+    "sha256": "f2b813095537e5d980704c100f690bdf280a137e2c0a64ae46ba167d3af5a014"
+  },
+  {
+    "file": "PPCPP局部P2混合开发诊断_v0.1_20261020\\runtime.py",
+    "line": 8,
+    "text": "def snapshot(c):return Snapshot(c['name'],frozenset(pts(c['free'])),frozenset(pts(c['targets'])),frozenset(pts(c['covered'])),tuple(c['current']),tuple(c['base']),tuple(map(tuple,c['old_route'])),0,c['distance_budget'])",
+    "sha256": "b0886bd4bbd1918730cec0d38857d8aac9bc49519b65e380abc0c215b5781d57"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 11,
+    "text": "def offer(route,label):",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 14,
+    "text": "if valid and (best is None or len(route)<len(best)):",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 16,
+    "text": "def stage(label,fn):",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 23,
+    "text": "def opt(points,limit,label):",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 42,
+    "text": "def fallback():",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 43,
+    "text": "offer(s.old_route,'old_suffix');left=set(s.targets-s.covered);visits=[]",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 47,
+    "text": "offer(g.expand(visits),'common_fallback')",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 49,
+    "text": "demand=s.targets-s.covered-g.views[s.current];scans={};optimized=[]",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 52,
+    "text": "stage(axis+'_raw',lambda:offer(g.expand(points),axis+'_raw'))",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 54,
+    "text": "stage(axis+'_NN_raw',lambda:offer(g.expand(nn),axis+'_NN_raw'))",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 56,
+    "text": "order=stage(label+'_opt',lambda:opt(initial,8,label))",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 57,
+    "text": "stage(label+'_expand',lambda:offer(g.expand(order),label+'_opt'))",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 62,
+    "text": "order=stage(label+'_deep',lambda:opt(p,120,label+'_deep'))",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 63,
+    "text": "stage(label+'_deep_expand',lambda:offer(g.expand(order),label+'_deep'))",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 77,
+    "text": "stage(label+'_raw',lambda:offer(g.expand(p),label+'_raw'))",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 78,
+    "text": "order=stage(label+'_opt',lambda:opt(p,32,label))",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "range_p2_engine_20261015.py",
+    "line": 79,
+    "text": "stage(label+'_expand',lambda:offer(g.expand(order),label+'_opt'))",
+    "sha256": "25d8d64aa176f85b03c5fca89c50df8f9345a879c3d47c18664342993c332064"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\planners.py",
+    "line": 126,
+    "text": "offer(g.expand(insert_cheapest(g, kept, extra)))",
+    "sha256": "e820cd3674d8105e214eddf385d1ba73397b1699bacb1289c4094055b7b7a5cb"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\planners.py",
+    "line": 134,
+    "text": "offer(g.expand(points))",
+    "sha256": "e820cd3674d8105e214eddf385d1ba73397b1699bacb1289c4094055b7b7a5cb"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\planners.py",
+    "line": 136,
+    "text": "offer(g.expand(nn))",
+    "sha256": "e820cd3674d8105e214eddf385d1ba73397b1699bacb1289c4094055b7b7a5cb"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\planners.py",
+    "line": 138,
+    "text": "offer(g.expand(two_opt(g, seed)))",
+    "sha256": "e820cd3674d8105e214eddf385d1ba73397b1699bacb1289c4094055b7b7a5cb"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\planners.py",
+    "line": 185,
+    "text": "def expand_blocks(g, blocks, rigid=False):",
+    "sha256": "e820cd3674d8105e214eddf385d1ba73397b1699bacb1289c4094055b7b7a5cb"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\planners.py",
+    "line": 200,
+    "text": "def optimize_blocks(g, blocks, offer, rigid=False):",
+    "sha256": "e820cd3674d8105e214eddf385d1ba73397b1699bacb1289c4094055b7b7a5cb"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\planners.py",
+    "line": 297,
+    "text": "def offer(route):",
+    "sha256": "e820cd3674d8105e214eddf385d1ba73397b1699bacb1289c4094055b7b7a5cb"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\planners.py",
+    "line": 301,
+    "text": "if len(route)-1 > snapshot.distance_budget:",
+    "sha256": "e820cd3674d8105e214eddf385d1ba73397b1699bacb1289c4094055b7b7a5cb"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py",
+    "line": 31,
+    "text": "distance_budget: int = 100000",
+    "sha256": "2eee969dc3a1c46fe1ff055080d57f56cf0144551098de4fd25280d5fc074b14"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py",
+    "line": 68,
+    "text": "def precheck(self):",
+    "sha256": "2eee969dc3a1c46fe1ff055080d57f56cf0144551098de4fd25280d5fc074b14"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\model.py",
+    "line": 108,
+    "text": "def expand(self, visits):",
+    "sha256": "2eee969dc3a1c46fe1ff055080d57f56cf0144551098de4fd25280d5fc074b14"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\unified_geometry.py",
+    "line": 29,
+    "text": "if s.targets-s.covered-set(route):errors.append('coverage_omission')",
+    "sha256": "b0d70871ab4b2a3d3a4ccf3edcdadf4b3db9eb2415134d5740270a76293aff53"
+  },
+  {
+    "file": "研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\unified_geometry.py",
+    "line": 30,
+    "text": "if len(route)-1>s.distance_budget:errors.append('distance_budget_exceeded')",
+    "sha256": "b0d70871ab4b2a3d3a4ccf3edcdadf4b3db9eb2415134d5740270a76293aff53"
+  }
+]

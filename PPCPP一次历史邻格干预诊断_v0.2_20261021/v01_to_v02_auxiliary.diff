@@ -1,0 +1,256 @@
+--- v0.1/stub_gate.py
++++ v0.2/stub_gate.py
+@@ -2,6 +2,8 @@
+ import sys,types
+ from probe_common import *
+ from probe_hook import force_history_step
++from stage_control import require_preseal,receipt
++require_preseal()
+ def run():
+     rows=[];action=dict(current=[5,2],previous=[4,2],next=[5,1]);helpercalls=0
+     class Deadline(Exception):pass
+@@ -38,4 +40,5 @@
+     assert calls==['stub_only'] and not x['eligible'] and x['entry_seconds']==20 and x['raw']['status']=='deadline' and not x['raw']['route']
+     rows.append(dict(case=8,passed=True,actual_wrapper_stub_solve_calls=1,result=x))
+     return dict(tests=rows,passed=len(rows)==8,force_helper_stub_invocations=helpercalls,entry_wrapper_stub_invocations=1,real_core_calls=0,real_planner_entries=0)
+-if __name__=='__main__':save(H/'stub_results.json',run());print('PASS 8 fixed stub checks; helper calls=7, wrapper stub=1, real planner/core=0')
++if __name__=='__main__':
++    save(H/'stub_results.json',run());receipt('stubs',[H/'stub_results.json']);print('PASS 8 fixed stub checks; helper calls=7, wrapper stub=1, real planner/core=0')
+--- v0.1/worker.py
++++ v0.2/worker.py
+@@ -1,40 +1,35 @@
+-"""One warm full entry in an isolated process. No P2 reads/candidate selection."""
++"""One warm entry/core only; hash-bound stages; runtime reads input/actions only."""
+ import os,sys,json,time
+ from pathlib import Path
+-from probe_common import *
+-
+-def imported():
+-    return sorted({str(Path(m.__file__).resolve()) for m in list(sys.modules.values()) if getattr(m,'__file__',None) and Path(m.__file__).is_file()})
+-mode=sys.argv[2] if sys.argv[1]=='inventory' else read(sys.argv[1])['mode']
++from stage_control import *
++def imported():return sorted({str(Path(m.__file__).resolve()) for m in list(sys.modules.values()) if getattr(m,'__file__',None) and Path(m.__file__).is_file()})
++inventory=sys.argv[1]=='inventory';mode=sys.argv[2] if inventory else read(sys.argv[1])['mode']
+ sys.path.insert(0,str(P if mode=='FROZEN' else H))
+ import runtime,candidate
+-assert Path(runtime.__file__).resolve()==(P if mode=='FROZEN' else H)/'runtime.py'
+-assert Path(candidate.__file__).resolve()==(P if mode=='FROZEN' else H)/'candidate.py'
++assert Path(runtime.__file__).resolve()==(P if mode=='FROZEN' else H)/'runtime.py';assert Path(candidate.__file__).resolve()==(P if mode=='FROZEN' else H)/'candidate.py'
+ assert Path(runtime.native.__file__).resolve()==(R/'基线复现准备_20261019/独立版_v0.2/ppcpp.py' if mode=='FROZEN' else H/'native_probe.py')
+-if sys.argv[1]=='inventory':
++if inventory:
+     print(json.dumps(dict(paths=imported(),runtime=str(runtime.__file__),candidate=str(candidate.__file__),native=str(runtime.native.__file__),core=str(runtime.native.core.__file__)),ensure_ascii=False));sys.exit(0)
+-j=read(sys.argv[1]);seal=read(H/'preseal.json');assert seal['complete']
++j=read(sys.argv[1]);seal=require_preseal();require('stubs');require('gate') if j['phase']=='formal' else None
+ sources={}
+-for p in imported():assert p in seal['files'] and sha(p)==seal['files'][p],p;sources[p]=sha(p)
+-inp=H/j['input'];actions=H/'actions.json';assert sha(inp)==seal['files'][str(inp)];assert sha(actions)==seal['files'][str(actions)]
++for path in imported():assert path in seal['files'] and sha(path)==seal['files'][path],path;sources[path]=sha(path)
++inp=H/j['input'];actions=H/'actions.json';assert sha(inp)==seal['files'][str(inp)] and sha(actions)==seal['files'][str(actions)]
+ core_calls=[];original_native=runtime.native.solve
+ def counted(*args,**kwargs):
+-    core_calls.append(dict(index=len(core_calls)+1,begin=time.perf_counter(),native=str(runtime.native.__file__)))
++    core_calls.append(dict(index=len(core_calls)+1,begin=time.perf_counter(),native=str(runtime.native.__file__),native_budget=args[2]))
+     if len(core_calls)!=1:raise RuntimeError('one_core_limit')
+     result=original_native(*args,**kwargs);core_calls[-1]['end']=time.perf_counter();return result
+-runtime.native.solve=counted
+-reads=[]
++runtime.native.solve=counted;reads=[]
+ def audit(event,args):
+     if event=='open' and isinstance(args[0],(str,bytes,os.PathLike)):
+         access=args[1]
+         if not isinstance(access,str) or 'r' in access or '+' in access:
+-            p=Path(os.fsdecode(args[0])).resolve();reads.append(str(p));assert p in (inp,actions),('unapproved_runtime_read',p)
+-sys.addaudithook(audit)
+-payload=inp.read_bytes()
++            path=Path(os.fsdecode(args[0])).resolve();reads.append(str(path));assert path in (inp,actions),('unapproved_runtime_read',path)
++sys.addaudithook(audit);payload=inp.read_bytes()
+ def hook(stage):
+     if stage=='entry':
+         config=read(actions);assert set(config)==set(CASES);runtime.native.PROBE_ACTION=config[j['case']]
+ x=runtime.run_payload(payload,'PPCPP',20,j['seed'],hook=hook if mode=='ON' else None)
+ assert len(core_calls)==1 and set(x['raw']['branches'])=={'P0'}
+-save(Path(sys.argv[2]),dict(job=j,result=x,imports=sources,input_sha256=seal['files'][str(inp)],runtime_reads=reads,actual_core_calls=core_calls,diagnostic_label='PPCPP_HISTORY_STEP_PROBE_v0.1' if mode=='ON' else 'OFF_equivalence_only' if mode=='OFF' else 'PPCPP_FROZEN'))
++save(Path(sys.argv[2]),dict(job=j,result=x,imports=sources,input_sha256=seal['files'][str(inp)],runtime_reads=reads,actual_core_calls=core_calls,diagnostic_label='PPCPP_HISTORY_STEP_PROBE_v0.2' if mode=='ON' else 'OFF_equivalence_only' if mode=='OFF' else 'PPCPP_FROZEN'))
+ print(j['id'],x['raw']['status'],x['entry_seconds'],flush=True)
+--- v0.1/run_fixed.py
++++ v0.2/run_fixed.py
+@@ -1,25 +1,38 @@
+-"""Fixed sequential execution, 90s watchdog, no retry, max24 entries."""
+-from probe_common import *
++"""Hash-bound stages, fixed serial slots, one core/entry, fail closed, no retries."""
++from stage_control import *
++from analyze import compute
+ import os,sys,subprocess,time
+-env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
+-phase=sys.argv[1];assert phase in ('gate','formal');assert read(H/'stub_results.json')['passed']
+-if phase=='formal':assert len(read(H/'gate_analysis.json')['equivalence'])==6
+-actual=H/'actual_order.jsonl'
+-for j in [j for j in read(H/'fixed_order.json') if j['phase']==phase]:
+-    n=len(actual.read_text().splitlines()) if actual.exists() else 0;assert n<24
+-    out=H/'outputs'/f'{j["id"]}.json';assert not out.exists();log=H/'logs'/f'{j["id"]}.txt';assert not log.exists()
+-    event=dict(id=j['id'],phase=phase,sequence=n+1,started_utc=time.time(),core_calls_max=1)
+-    with actual.open('a',encoding='utf8') as f:f.write(json.dumps(event)+'\n')
++def execute(phase):
++    require_preseal();require('stubs');assert phase in ('gate','formal')
++    if phase=='formal':require('gate')
++    actual=H/'actual_order.jsonl';done=[json.loads(line) for line in actual.read_text(encoding='utf8').splitlines()] if actual.exists() else []
++    assert len(done)==(0 if phase=='gate' else 12),('no silent resume',phase,len(done));env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1');phase_outputs=[]
++    for j in [j for j in read(H/'fixed_order.json') if j['phase']==phase]:
++        require_preseal();require('stubs');require('gate') if phase=='formal' else None
++        n=len(done);assert n<24;out=H/'outputs'/f'{j["id"]}.json';log=H/'logs'/f'{j["id"]}.txt';assert not out.exists() and not log.exists()
++        event=dict(id=j['id'],phase=phase,sequence=n+1,started_utc=time.time(),core_calls_max=1)
++        with actual.open('a',encoding='utf8') as f:f.write(json.dumps(event)+'\n')
++        done.append(event)
++        try:
++            p=subprocess.run([sys.executable,'-B','-X','utf8',str(H/'worker.py'),str(H/'jobs'/f'{j["id"]}.json'),str(out)],env=env,timeout=90,capture_output=True)
++            with log.open('xb') as f:f.write(p.stdout+p.stderr)
++            if p.returncode:raise RuntimeError(('worker failure',j['id'],p.returncode))
++            x=read(out);assert len(x['actual_core_calls'])==1 and x['result']['eligible'] and x['result']['entry_seconds']<20;both(read(H/j['input']),x['result']['raw']['route'])
++            old=read(S/'outputs'/f'{j["case"]}__{SEEDS.index(j["seed"])}__PPCPP.json')['result']
++            if j['mode'] in ('FROZEN','OFF'):assert comparable(x['result'])==comparable(old),'equivalence drift'
++            else:assert x['result']['raw']['branches']['P0']['intervention']['trigger_count']==1
++            save(H/'logs'/f'{j["id"]}.receipt.json',dict(id=j['id'],exit_code=0,one_core=True,eligible=True,output_sha256=sha(out),completed_utc=time.time()));phase_outputs.append(out)
++        except BaseException as ex:
++            save(H/'STOP.json',dict(id=j['id'],reason=repr(ex),attempted_entries=n+1,remaining=[z['id'] for z in read(H/'fixed_order.json') if z['id'] not in {r['id'] for r in done}],no_retry=True));raise
++        print(phase,n+1,'/24',j['id'],flush=True)
+     try:
+-        p=subprocess.run([sys.executable,'-B','-X','utf8',str(H/'worker.py'),str(H/'jobs'/f'{j["id"]}.json'),str(out)],env=env,timeout=90,capture_output=True)
+-        with log.open('xb') as f:f.write(p.stdout+p.stderr)
+-        if p.returncode:raise RuntimeError(('worker failure',j['id'],p.returncode))
+-        x=read(out);assert len(x['actual_core_calls'])==1 and x['result']['eligible'] and x['result']['entry_seconds']<20
+-        both(read(H/j['input']),x['result']['raw']['route'])
+-        old=read(S/'outputs'/f'{j["case"]}__{SEEDS.index(j["seed"])}__PPCPP.json')['result']
+-        if j['mode'] in ('FROZEN','OFF'):assert comparable(x['result'])==comparable(old),'equivalence drift'
+-        else:assert x['result']['raw']['branches']['P0']['intervention']['trigger_count']==1
+-        save(H/'logs'/f'{j["id"]}.receipt.json',dict(id=j['id'],exit_code=0,one_core=True,eligible=True,output_sha256=sha(out),completed_utc=time.time()))
++        a=compute('gate' if phase=='gate' else None)
++        if phase=='gate':
++            assert len(a['rows'])==12 and len(a['equivalence'])==6;save(H/'gate_analysis.json',a);paths=[H/'gate_analysis.json']
++        else:
++            assert len(a['rows'])==24 and len(a['pairs'])==6;save(H/'analysis.json',a);csvsave(H/'24调用完整指标.csv',a['rows']);csvsave(H/'6正式配对.csv',a['pairs']);csvsave(H/'2状态三种子原值均值范围.csv',a['states']);save(H/'all_decision_audits.json',a['audits']);paths=[H/'analysis.json',H/'all_decision_audits.json',H/'24调用完整指标.csv',H/'6正式配对.csv',H/'2状态三种子原值均值范围.csv']
++        receipt(phase,paths+phase_outputs);print('PASS',phase,'audit; ordinary_BFS=',a['ordinary_BFS_total'],'verdict=',a['stop_verdict'],flush=True)
+     except BaseException as ex:
+-        save(H/'STOP.json',dict(id=j['id'],reason=repr(ex),attempted_entries=n+1,remaining=[z['id'] for z in read(H/'fixed_order.json') if not (H/'outputs'/f'{z["id"]}.json').exists()],no_retry=True));raise
+-    print(phase,n+1,'/24',j['id'],flush=True)
++        if not (H/'STOP.json').exists():save(H/'STOP.json',dict(phase=phase,reason=repr(ex),attempted_entries=len(done),no_retry=True))
++        raise
++if __name__=='__main__':execute(sys.argv[1])
+--- v0.1/preseal.py
++++ v0.2/preseal.py
+@@ -1,18 +1,26 @@
+-"""Inventory warm imports without entering any planner; then seal before stubs/entries."""
+-from probe_common import *
+-import sys,subprocess,os,datetime,ast
+-env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1');files=read(S/'formal_seal.json')
+-inventories=[]
++"""Only after static+two preparation gates; cold inventory, fixed pre-run seal."""
++from stage_control import *
++import sys,subprocess,os,datetime
++require('static');require('prepare_fixtures');assert not (H/'preseal.json').exists() and not (H/'actual_order.jsonl').exists() and not (H/'stub_results.json').exists()
++env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1');files=read(S/'formal_seal.json');inventories=[]
+ for mode in ('FROZEN','OFF'):
+     p=subprocess.run([sys.executable,'-B','-X','utf8',str(H/'worker.py'),'inventory',mode],env=env,capture_output=True,check=True);x=json.loads(p.stdout);inventories.append(dict(mode=mode,**x))
+-    for path in x['paths']:files[path]=sha(path)
++    for path in x['paths']:
++        h=sha(path)
++        if path in files:assert h==files[path],('inherited_hash_drift',path)
++        files[path]=h
+ save(H/'import_inventory.json',inventories)
+-for folder in (H,R/'复杂障碍覆盖顺序分歧只读诊断_v0.1_20261021',R/'复杂障碍覆盖顺序分歧负责人审核_20261021'):
++for folder in (H,R/'PPCPP一次历史邻格干预诊断_v0.1_20261021',R/'PPCPP一次历史邻格干预准备停止负责人审核_20261021'):
+     for p in folder.rglob('*'):
+-        if p.is_file() and '__pycache__' not in p.parts:files[str(p.resolve())]=sha(p)
+-for p in (R/'PPCPP一次历史邻格干预诊断执行稿_给sol_20261021.md',Path(sys.executable),M/'metrics.py',M/'crosscheck.py'):files[str(p.resolve())]=sha(p)
+-with (H/'运行前根进度快照.md').open('x',encoding='utf8') as f:f.write((R/'当前进度与下一步.md').read_text(encoding='utf8'))
++        if p.is_file() and '__pycache__' not in p.parts:
++            path=str(p.resolve());h=sha(p)
++            if path in files:assert h==files[path],path
++            files[path]=h
++for p in (R/'PPCPP一次历史邻格干预诊断执行稿_给sol_20261021.md',R/'PPCPP一次历史邻格干预v0.2修复接续执行稿_给sol_20261021.md',Path(sys.executable),M/'metrics.py',M/'crosscheck.py'):
++    path=str(p.resolve());h=sha(p)
++    if path in files:assert h==files[path],path
++    files[path]=h
++with (H/'运行前根进度快照.md').open('xb') as f:f.write((R/'当前进度与下一步.md').read_bytes())
+ files[str(H/'运行前根进度快照.md')]=sha(H/'运行前根进度快照.md')
+-assert not (H/'actual_order.jsonl').exists() and not (H/'stub_results.json').exists()
+-save(H/'preseal.json',dict(complete=True,utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),files=files,python_executable_sha256=sha(sys.executable),environment_threads={k:env[k] for k in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS')},true_entries_before_seal=0,real_core_calls_before_seal=0))
+-print('PRESEALED',len(files),'source/environment/input files; zero real entries/cores so far')
++save(H/'preseal.json',dict(complete=True,utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),files=files,binding=binding(),critical_source_hashes=read(H/'source_contract.json'),python_executable_sha256=sha(sys.executable),environment_threads={k:env[k] for k in ('OMP_NUM_THREADS','OPENBLAS_NUM_THREADS','MKL_NUM_THREADS')},true_entries_before_seal=0,real_core_calls_before_seal=0))
++receipt('preseal',[H/'preseal.json',H/'import_inventory.json']);print('PASS PRESEALED',len(files),'source/environment/input files after static+2 fixture PASS; real entries/cores=0')
+--- v0.1/verify.py
++++ v0.2/verify.py
+@@ -1,35 +1,41 @@
+-"""Read-only reconstruction of saved calls. No planner or diagnostic-native import."""
++"""Read-only completed-experiment verification; never import planner/native/runtime."""
+ from analyze import *
+-import sys,csv,ast,difflib
++from stage_control import require,require_preseal
++import sys,csv,ast
+ def checkcsv(name,rows):
+     with (H/name).open(encoding='utf-8-sig',newline='') as f:actual=list(csv.DictReader(f))
+     keys=list(dict.fromkeys(k for r in rows for k in r));expected=[{k:json.dumps(r.get(k),ensure_ascii=False) if isinstance(r.get(k),(dict,list,tuple)) else '' if r.get(k) is None else str(r.get(k)) for k in keys} for r in rows];assert actual==expected,name
+ def verify():
+-    seal=read(H/'preseal.json');assert seal['complete'] and sha(sys.executable)==seal['python_executable_sha256']
+-    for p,h in seal['files'].items():assert sha(p)==h,p
++    seal=require_preseal();assert sha(sys.executable)==seal['python_executable_sha256']
++    for path,h in seal['files'].items():assert sha(path)==h,path
++    for stage in ('static','prepare_fixtures','preseal','stubs','gate','formal'):require(stage)
+     if (H/'manifest.json').exists():
+-        for p,h in read(H/'manifest.json').items():assert sha(H/p)==h,p
+-    assert read(H/'stub_results.json')['passed'] and len(read(H/'stub_results.json')['tests'])==8 and read(H/'stub_results.json')['real_core_calls']==0
+-    # Structural audit: one pre-loop hook, original while loop and scoring untouched.
++        for path,h in read(H/'manifest.json').items():assert sha(H/path)==h,path
++    for copy in read(H/'copy_manifest.json'):
++        assert sha(copy['source'])==copy['source_sha256'] and sha(copy['target'])==copy['target_sha256']
++        if copy['kind']=='required_exact_binary':assert Path(copy['source']).read_bytes()==Path(copy['target']).read_bytes()
++    fixtures=read(H/'prep_fixture_results.json');assert fixtures['passed'] and len(fixtures['tests'])==2
++    mismatch,equal=fixtures['tests'];assert mismatch['exit_code']!=0 and not mismatch['preseal_exists'] and not mismatch['sentinel_executed'] and equal['exit_code']==0 and equal['preseal_exists'] and equal['sentinel_executed']
++    assert not (H/'fixtures/mismatch/preseal.json').exists() and not (H/'fixtures/mismatch/next_stage_sentinel.txt').exists()
++    stubs=read(H/'stub_results.json');assert stubs['passed'] and len(stubs['tests'])==8 and stubs['real_core_calls']==stubs['real_planner_entries']==0
+     old=(R/'基线复现准备_20261019/独立版_v0.2/ppcpp.py').read_text(encoding='utf8');new=(H/'native_probe.py').read_text(encoding='utf8')
+-    def loop(code):return next(n for n in ast.walk(ast.parse(code)) if isinstance(n,ast.While))
+-    assert ast.dump(loop(old),include_attributes=False)==ast.dump(loop(new),include_attributes=False)
++    loop=lambda s:next(n for n in ast.walk(ast.parse(s)) if isinstance(n,ast.While));assert ast.dump(loop(old),include_attributes=False)==ast.dump(loop(new),include_attributes=False)
+     calls=[n for n in ast.walk(ast.parse(new)) if isinstance(n,ast.Call) and isinstance(n.func,ast.Name) and n.func.id=='force_history_step'];assert len(calls)==1 and calls[0].lineno<loop(new).lineno
+-    assert (H/'candidate.py').read_bytes()==(P/'candidate.py').read_bytes()
+-    a=compute();assert a==read(H/'analysis.json') and a['audits']==read(H/'all_decision_audits.json');assert compute('gate')==read(H/'gate_analysis.json')
++    a=compute();assert a==read(H/'analysis.json') and a['audits']==read(H/'all_decision_audits.json');g=compute('gate');assert g==read(H/'gate_analysis.json')
+     order=read(H/'fixed_order.json');actual=[json.loads(line) for line in (H/'actual_order.jsonl').read_text(encoding='utf8').splitlines()];assert [j['id'] for j in order]==[j['id'] for j in actual] and len(actual)==24
+     assert len(a['equivalence'])==6 and len(a['pairs'])==6 and len(a['rows'])==24 and not (H/'STOP.json').exists()
+     for j in order:
+         x=read(H/'outputs'/f'{j["id"]}.json');rec=read(H/'logs'/f'{j["id"]}.receipt.json');assert rec['output_sha256']==sha(H/'outputs'/f'{j["id"]}.json') and rec['exit_code']==0
+-        assert len(x['actual_core_calls'])==1 and x['actual_core_calls'][0]['end']>=x['actual_core_calls'][0]['begin'];assert x['result']['budget']==20 and set(x['result']['raw']['branches'])=={'P0'}
+-        for p,h in x['imports'].items():assert seal['files'][p]==h==sha(p)
+-        allowed={str(H/j['input']),str(H/'actions.json')};assert set(x['runtime_reads'])<=allowed
+-    for case in CASES:
+-        assert sha(H/'inputs'/f'{case}.json')==sha(S/'inputs'/f'{case}.json');action=read(H/'actions.json')[case];assert action['current']==[5,2] and action['previous']==[4,2] and action['next']==[5,1] and action['max_trigger']==1
++        assert len(x['actual_core_calls'])==1 and x['actual_core_calls'][0]['end']>=x['actual_core_calls'][0]['begin'];assert 0<x['actual_core_calls'][0]['native_budget']<=20;assert x['result']['budget']==20 and set(x['result']['raw']['branches'])=={'P0'}
++        for path,h in x['imports'].items():assert seal['files'][path]==h==sha(path)
++        assert set(x['runtime_reads'])<={str(H/j['input']),str(H/'actions.json')}
++        if j['mode']=='ON':
++            native=x['result']['raw']['branches']['P0'];z=native['intervention'];assert z['trigger_count']==1 and z['deadline']>x['actual_core_calls'][0]['begin'] and z['deadline']<=x['actual_core_calls'][0]['begin']+20
++        else:assert 'intervention' not in x['result']['raw']['branches']['P0'] and all(e['kind']!='forced_history_step' for e in x['result']['raw']['trace'])
+     checkcsv('24调用完整指标.csv',a['rows']);checkcsv('6正式配对.csv',a['pairs']);checkcsv('2状态三种子原值均值范围.csv',a['states'])
+-    print('PASS pre-run source/input/action/environment hashes and untouched frozen sources; exactly24 ordered entries/24 cores, no retries',flush=True)
+-    print('PASS 8 saved stub checks, 12 OFF gate calls identical to frozen/history except seven explicit timing fields; 12 fresh formal calls and no control drift',flush=True)
+-    print('PASS all saved decisions independently: local rewards/tie, recovery closest graph-distance targets, literal recovery/return shortestness, one forced history step, pending/direction/resource, full-route dual metrics',flush=True)
+-    print('PASS all JSON/CSV, seed means/ranges, signed cost identity, state-rejoin facts and fixed stop criterion; no planner invoked by verify',flush=True)
+-    print(json.dumps(dict(status='ALL PASS',ordinary_BFS_full_analysis=a['ordinary_BFS_total'],ordinary_BFS_gate_recheck=read(H/'gate_analysis.json')['ordinary_BFS_total'],ordinary_BFS_this_verify=a['ordinary_BFS_total']+read(H/'gate_analysis.json')['ordinary_BFS_total'],new_planner_calls=0,new_coverage_exact=0,verdict=a['stop_verdict']),ensure_ascii=False),flush=True)
++    print('PASS frozen/v0.1/source/environment/preseal hashes, exact binary copies, intended minimal diff, hash-bound stage receipts',flush=True)
++    print('PASS 2 preparation fixtures (expected negative blocked mock seal/sentinel), 8 intervention stubs; no real calls in these tests',flush=True)
++    print('PASS exactly24 ordered entries/24 cores: 12 OFF equality gate +12 fresh formal calls; full route/trace/options/scores/non-time fields match frozen historical controls',flush=True)
++    print('PASS saved local rewards/tie, recovery nearest graph targets/literal shortest segments, one forced step, pending/previous/distance/deadline, full-route independent dual metrics, rejoin facts, CSV/means/ranges and stop verdict',flush=True)
++    print(json.dumps(dict(status='ALL PASS COMPLETED EXPERIMENT',ordinary_BFS_full_analysis=a['ordinary_BFS_total'],ordinary_BFS_gate_recheck=g['ordinary_BFS_total'],ordinary_BFS_this_verify=a['ordinary_BFS_total']+g['ordinary_BFS_total'],new_planner_calls=0,new_coverage_exact=0,verdict=a['stop_verdict']),ensure_ascii=False),flush=True)
+ if __name__=='__main__':verify()
+--- v0.1/runtime.py
++++ v0.2/runtime.py
+@@ -5,7 +5,7 @@
+ sys.path.insert(0,str(R));sys.path.insert(0,str(R/'基线复现准备_20261019'))
+ def module(name,path):
+  spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+-native=module('last_native',R/'PPCPP一次历史邻格干预诊断_v0.1_20261021/native_probe.py')
++native=module('last_native',R/'PPCPP一次历史邻格干预诊断_v0.2_20261021/native_probe.py')
+ validate=module('last_validation',R/'PPCPP结构候选新开发验证_v0.1_20261020/validation.py').validate
+ from model import Snapshot,DeadlineExceeded,NoPath
+ def snapshot(c):return Snapshot(c['name'],frozenset(map(tuple,c['free'])),frozenset(map(tuple,c['targets'])),frozenset(map(tuple,c['covered'])),tuple(c['current']),tuple(c['base']),tuple(map(tuple,c['old_route'])),0,c['distance_budget'])

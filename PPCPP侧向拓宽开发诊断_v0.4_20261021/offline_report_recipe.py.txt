@@ -1,0 +1,83 @@
+"""Post-run read-only supplemental export recipe; NOT production execution code.
+Does not import planner, common, analysis, verify or any frozen module.
+Only reads completed JSON, writes new report/diagram artifacts exclusively.
+"""
+from pathlib import Path
+import json,html,statistics,xml.etree.ElementTree as ET
+H=Path('PPCPP侧向拓宽开发诊断_v0.4_20261021').resolve()
+def read(p):return json.loads(Path(p).read_text(encoding='utf8'))
+def save(p,x):
+    with Path(p).open('x',encoding='utf8') as f:json.dump(x,f,ensure_ascii=False,indent=2)
+def put(p,s):
+    with Path(p).open('x',encoding='utf8') as f:f.write(s)
+a=read(H/'analysis.json');states=read(H/'states.json');rows=a['rows'];conds=('CONTROL','H_SIDE','MIXED_SIDE','U_SIDE');methods=('PPCPP','P2_MULTI');d=H/'detailed_cases';d.mkdir()
+lines=['# 三组预登记详细案例','', '只读后处理，真实执行链及结果不改。按平均D_H−D_U最大、最小、绝对值最小依次去重；全部四条件与三seed保留。三seed共享输入，不是独立地图。图中采集段与返航按保存的completion_step分界，颜色不表示可删除步数。','']
+def diagram(st):
+    c=read(H/st['input']);F=set(map(tuple,c['free']));T=set(map(tuple,c['targets']));past=set(map(tuple,c['covered']));A=set(map(tuple,st['A']));s=14;panel=(st['L']+8)*s+30;height=(st['w']+8)*s+145;parts=[f'<svg xmlns="http://www.w3.org/2000/svg" width="{3*panel}" height="{height}"><rect width="100%" height="100%" fill="white"/><style>text{{font-family:Microsoft YaHei,Arial,sans-serif;font-size:12px}}</style>']
+    for k,method in enumerate(('INPUT',)+methods):
+        x0=k*panel+12;y0=54;row=None;r=[]
+        if method!='INPUT':
+            row=next(x for x in rows if x['case']==st['id'] and x['method']==method and x['seed']==20261020);p=H/'outputs'/f'{row["id"]}.json'
+            if p.exists():r=read(p)['result']['raw'].get('route',[])
+        parts.append(f'<text x="{x0}" y="17">{html.escape(st["id"] if k==0 else method)}</text>')
+        if row:
+            m=row['metrics'];label=f'L={m["length"]}, C={m["completion_step"]}, R={m["return_tail_steps"]}' if m else str(row['status']);parts.append(f'<text x="{x0}" y="34">{label}; valid={row["valid"]}, timely={row["timely"]}</text>')
+        for x,y in sorted(F):
+            p=(x,y);color='#ffb64d' if p in A else '#8bb7ec' if p in past else '#ffeaaa' if p in T else '#f5f5f5';parts.append(f'<rect x="{x0+x*s}" y="{y0+y*s}" width="{s}" height="{s}" fill="{color}" stroke="#ccc" stroke-width=".4"/>')
+        def pt(p):return (x0+(p[0]+.5)*s,y0+(p[1]+.5)*s)
+        if r and row['metrics']:
+            C=row['metrics']['completion_step']
+            for rr,color,dash in [(r[:C+1],'#16672c',''),(r[C:],'#cc0033','stroke-dasharray="4 2"')]:
+                coords=' '.join(f'{pt(p)[0]},{pt(p)[1]}' for p in rr);parts.append(f'<polyline points="{coords}" fill="none" stroke="{color}" stroke-width="2" {dash}/>')
+            v=row['visits_A'];first=v['capture_order'][0]['index'] if v and v['capture_order'] else None
+            marks=[(first,'#00a6b2','first'),(v.get('first_A_capture') if v else None,'#1283e8','A1'),(v.get('A_completion') if v else None,'#923dd1','Ac'),(C,'#111','C')]
+            for index,color,label in marks:
+                if index is None:continue
+                x,y=pt(r[index]);parts.append(f'<circle cx="{x}" cy="{y}" r="5" fill="white" stroke="{color}" stroke-width="2.5"/><text x="{x+6}" y="{y-6}" fill="{color}">{label}@{index}</text>')
+        for p,color,label in [(c['base'],'black','b'),(c['current'],'#e50070','s')]:
+            x,y=pt(p);parts.append(f'<circle cx="{x}" cy="{y}" r="3" fill="{color}"/><text x="{x+4}" y="{y+13}" fill="{color}">{label}</text>')
+    parts.append(f'<text x="12" y="{height-38}">橙A／蓝H／黄旧待检；s当前／b基地；first首次剩余目标采集，A1首次A采集，Ac完成A，C全部采集完成。</text><text x="12" y="{height-18}">绿线：至C的采集阶段；红虚线：C后返航。固定seed20261020；重叠路径及标记保持实际位置。</text></svg>');name=st['id']+'_annotated.svg';put(d/name,''.join(parts));ET.parse(d/name);return name
+for g in a['detailed_examples']:
+    gid=g['group'];lines += [f'## {g["selection"]}：{gid}', '', f'平均D_H−D_U={g["mean_DH_minus_DU"]}，分类{g["classification"]}。','', '|条件|实际H比例|接触k|A至当前位置最小图距|A至基地最小图距|', '|---|---|---|---|---|']
+    sts=[s for s in states if s['group']==gid]
+    for st in sts:
+        ds=st['distance'] or {};lines.append(f'|{st["condition"]}|{st["H_count"]}/{st["T0_count"]}={st["history_fraction"]:.4f}|{st["k"]}|{ds.get("A_to_current_min","NA")}|{ds.get("A_to_base_min","NA")}|')
+    lines += ['', '|条件|seed|方法|L|C|R|首次新采|历史到达|本轮重复|非目标|90°|180°|入口秒|','|---|---|---|---|---|---|---|---|---|---|---|---|---|']
+    for cond in conds:
+        st=next(s for s in sts if s['condition']==cond)
+        for seed in (20261020,20261021,20261022):
+            for method in methods:
+                r=next(r for r in rows if r['case']==st['id'] and r['seed']==seed and r['method']==method);m=r['metrics'] or {}
+                vals=[m.get(k,'NA') for k in ('length','completion_step','return_tail_steps','fresh_target_steps','historical_target_steps','repeated_new_target_steps','non_target_steps','turns90','turns180')]
+                lines.append('|'+ '|'.join(map(str,[cond,seed,method]+vals+[round(r['seconds'],6) if r['seconds'] is not None else 'NA']))+'|')
+    lines += ['', '|seed|D_H|D_U|D_H−D_U|其中C差分|其中R差分|首次新采差分|历史差分|本轮重复差分|非目标差分|','|---|---|---|---|---|---|---|---|---|---|']
+    for q in [q for q in a['views']['timely']['contrasts'] if q['group']==gid]:
+        z=q['H_minus_U_decomposition'] or {};vals=[q['seed'],q['D']['H_SIDE'],q['D']['U_SIDE'],q['DH_minus_DU']]+[z.get(k,'NA') for k in ('completion_step','return_tail_steps','fresh_target_steps','historical_target_steps','repeated_new_target_steps','non_target_steps')];lines.append('|'+ '|'.join(map(str,vals))+'|')
+    for st in sts:
+        name=diagram(st);lines += ['',f'### {st["condition"]}', '',f'![输入与两方法，含采集及返航标记](detailed_cases/{name})','', '|方法（seed20261020）|首次A|完成A|A完成时旧剩余|完成前进入|未完成退出|再次进入|分类|', '|---|---|---|---|---|---|---|---|']
+        for method in methods:
+            r=next(r for r in rows if r['case']==st['id'] and r['seed']==20261020 and r['method']==method);v=r['visits_A'] or {};vals=[method,v.get('first_A_capture'),v.get('A_completion'),v.get('old_remaining_at_A_completion'),v.get('entries_before_A_completion'),len(v.get('unfinished_exits',[])) if v.get('applicable') else 'NA',v.get('reentries_before_A_completion'),v.get('classification')];lines.append('|'+ '|'.join('NA' if v is None else str(v) for v in vals)+'|');save(d/f'{st["id"]}_{method}_saved_capture_sequence.json',dict(row_id=r['id'],visits_A=v,pp_first_A_event=r['pp_first_A_event'],source='saved literal route/trace only, no alternative search'))
+        pp=next(r for r in rows if r['case']==st['id'] and r['seed']==20261020 and r['method']=='PPCPP');ev=pp['pp_first_A_event'] or {};e=ev.get('event')
+        if e:
+            lines += ['',f'原PPCPP首次涉及A：保存trace指针`{ev["pointer"]}`，类型`{e["kind"]}`，current={e["current"]}，goal={e["goal"]}，索引{e["index"]}。已存options/rewards为：', '', '```json',json.dumps(e.get('options'),ensure_ascii=False),'```', '',f'字面执行段：{ev.get("saved_literal_segment")}。未保存奖励不反推；P2只观察最终轨迹。']
+        else:lines += ['',f'原PPCPP首次涉及A记录：{json.dumps(ev,ensure_ascii=False)}。']
+    lines += ['', '该组只定位实际路线差和访问顺序，位置还改变距离与布局；反复进入或历史到达不自动等于浪费。','']
+put(H/'三组详细案例.md','\n'.join(lines))
+# Every formal/gate slot is explicitly represented, including successful ones.
+receipts={read(p)['job']['id']:read(p) for p in (H/'logs').glob('*.receipt.json')};slots=[]
+for phase,name in [('prep','prep_order.json'),('gate','gate_order.json'),('formal','order.json')]:
+    for j in read(H/name):
+        q=receipts.get(j['id']);slots.append(dict(job=j,execution='RAN' if q else 'NOT_RUN',status=q['status'] if q else None,valid=q.get('valid') if q else None,timely=q.get('timely') if q else None))
+assert len(slots)==306;save(H/'306槽位完整执行账.json',slots)
+overview=['# 按条件原PPCPP表现与实验成本','', '|条件|及时配对数|PPCPP平均L|P2平均L|PPCPP平均C|PPCPP平均R|PPCPP平均90°|PPCPP平均180°|平均D|', '|---|---|---|---|---|---|---|---|']
+for cond in conds:
+    ps=[p for p in a['pairs'] if p['condition']==cond and p['timely']];rr=[p['PPCPP'] for p in ps];qq=[p['P2_MULTI'] for p in ps]
+    mean=lambda rs,k:round(statistics.mean(r['metrics'][k] for r in rs),4) if rs else 'NA'
+    overview.append('|'+ '|'.join(map(str,[cond,len(ps),mean(rr,'length'),mean(qq,'length'),mean(rr,'completion_step'),mean(rr,'return_tail_steps'),mean(rr,'turns90'),mean(rr,'turns180'),round(statistics.mean(p['D'] for p in ps),4) if ps else 'NA']))+'|')
+overview += ['', '准备与门槛不混入正式耗时排名：','']
+for phase in ('prep','gate'):
+    rr=read(H/f'{phase}_metrics.json');overview.append(f'- {phase}：{len(rr)}入口，完整合法及时{sum(r["valid"] and r["timely"] for r in rr)}；暖入口总秒{sum(r["seconds"] for r in rr):.6f}，调用者墙钟总秒{sum(r["caller_wall_seconds"] for r in rr):.6f}。')
+overview += ['',f'原有限继续信号：{json.dumps(a["signal"],ensure_ascii=False)}。仅达到方向性开发重复门槛时可交负责人讨论受控机制诊断，不能确认因果、创新或主算法。未额外启动研究。','', '完整顺序、四类移动、CONTROL增量、实际历史比例和距离见完整CSV及三组详细案例。']
+put(H/'条件表现与成本补充.md','\n'.join(overview))
+assert not any(x['execution']=='NOT_RUN' for x in slots)
+print('PASS supplemental readonly exports: three registered groups/all four conditions, saved sequences/rewards, annotated completion/return diagrams,306-slot ledger and condition/cost summary; no planner import')

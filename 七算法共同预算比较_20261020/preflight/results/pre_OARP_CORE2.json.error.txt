@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\七算法共同预算比较_20261020\worker.py", line 35, in <module>
+    try:main(read(sys.argv[1]),sys.argv[2])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\七算法共同预算比较_20261020\worker.py", line 28, in main
+    else:r=call(s,initial,m,job['budget'],job['seed'],pf.PROFILE)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\研究方案_剩余覆盖重规划_20261009\算法小型验证_20261010\frozen_baselines\v2_20261012\source\baseline_suite.py", line 79, in solve
+    else:r=oarp_solve(s,initial_targets,remaining,profile,seed)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\研究方案_剩余覆盖重规划_20261009\算法小型验证_20261010\frozen_baselines\v2_20261012\source\baseline_suite.py", line 44, in oarp_solve
+    service=old_services(s.old_route,set(initial_targets)-set(s.covered)-g.views[s.current])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\研究方案_剩余覆盖重规划_20261009\算法小型验证_20261010\frozen_baselines\v2_20261012\source\oarp_replan\tour.py", line 51, in old_services
+    raise ValueError('old route omitted original pending targets')
+ValueError: old route omitted original pending targets

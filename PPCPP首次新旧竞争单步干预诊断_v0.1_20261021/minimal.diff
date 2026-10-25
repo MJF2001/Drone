@@ -1,0 +1,80 @@
+--- E:\无人机研究项目_接续包_20261014\PPCPP_LAST_P2共同预算开发比较_v0.1_20261020\runtime.py
++++ runtime.py
+@@ -5,11 +5,11 @@
+ sys.path.insert(0,str(R));sys.path.insert(0,str(R/'基线复现准备_20261019'))
+ def module(name,path):
+  spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+-native=module('last_native',R/'基线复现准备_20261019/独立版_v0.2/ppcpp.py')
++native=module('last_native',Path(__file__).resolve().parent/'native_diag.py')
+ validate=module('last_validation',R/'PPCPP结构候选新开发验证_v0.1_20261020/validation.py').validate
+ from model import Snapshot,DeadlineExceeded,NoPath
+ def snapshot(c):return Snapshot(c['name'],frozenset(map(tuple,c['free'])),frozenset(map(tuple,c['targets'])),frozenset(map(tuple,c['covered'])),tuple(c['current']),tuple(c['base']),tuple(map(tuple,c['old_route'])),0,c['distance_budget'])
+-def run_payload(payload,mode,budget=20,seed=0,*,hook=None,clock=time.perf_counter,geometry=native.UnifiedGeometry):
++def run_payload(payload,mode,budget=20,seed=0,*,diagnostic_mode='OFF',hook=None,clock=time.perf_counter,geometry=native.UnifiedGeometry):
+  from candidate import solve
+  begin=clock();deadline=begin+budget;raw=None;phases={};events=[]
+  def mark(stage):
+@@ -17,7 +17,7 @@
+   events.append(dict(stage=stage,seconds=clock()-begin)) if hook else None
+   if clock()>=deadline:raise DeadlineExceeded()
+  try:
+-  c=json.loads(payload);validate(c);s=snapshot(c);mark('entry')
++  c=json.loads(payload);validate(c);s=snapshot(c);native.configure(diagnostic_mode,set(map(tuple,c['published_targets']))-set(map(tuple,c['initial_targets'])));mark('entry')
+   raw=solve(s,set(map(tuple,c['initial_targets'])),mode,seed,tuple(c['predator']),tuple(c['previous']) if c['previous'] else None,begin,deadline,phases,mark,clock,geometry)
+   mark('encode_before');encode_begin=clock();wire=json.dumps(raw,ensure_ascii=False,allow_nan=False,separators=(',',':'));phases['encoding']=clock()-encode_begin;mark('encode_after')
+  except DeadlineExceeded:
+@@ -25,4 +25,4 @@
+   raw.update(status='deadline',route=(),selected=None,reason='shared_entry_deadline')
+  elapsed=clock()-begin
+  if elapsed>=budget:raw.update(status='deadline',route=(),selected=None,reason='shared_entry_deadline')
+- return dict(raw=raw,entry_seconds=elapsed,phase_seconds=phases,eligible=raw['status']=='core_complete' and elapsed<budget,budget=budget,method=mode,seed=seed,injection_events=events)
++ return dict(diagnostic_entry='PPCPP_FIRST_NEW_STEP_DIAG_v0.1',diagnostic_mode=diagnostic_mode,raw=raw,entry_seconds=elapsed,phase_seconds=phases,eligible=raw['status']=='core_complete' and elapsed<budget,budget=budget,method=mode,seed=seed,injection_events=events)
+--- E:\无人机研究项目_接续包_20261014\基线复现准备_20261019\独立版_v0.2\ppcpp.py
++++ native_diag.py
+@@ -1,12 +1,19 @@
+ """Frozen-input four-neighbor PPCPP adaptation; core only, no external candidates."""
+ import sys,time,math
+ from pathlib import Path
+-ROOT=Path(__file__).resolve().parents[2]
++ROOT=Path(__file__).resolve().parents[1]
+ sys.path.insert(0,str(ROOT/'基线复现准备_20261019'))
+ from ppcpp_independent import core,UnifiedGeometry,single_cell_audit,check_contract,DeadlineExceeded,NoPath
+-VERSION='PPCPP_CORE4_FIXED_HISTORY_v0.2_20261019'
++VERSION='PPCPP_FIRST_NEW_STEP_DIAG_v0.1'
++from intervention import first_new_step
++DIAG_MODE='OFF'
++NEW_TARGETS=frozenset()
++def configure(mode,new_targets):
++    global DIAG_MODE,NEW_TARGETS
++    assert mode in ('OFF','ON')
++    DIAG_MODE=mode;NEW_TARGETS=frozenset(new_targets)
+ def solve(s,initial,budget,seed,predator,previous,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit):
+-    begin=_clock();deadline=begin+budget;route=[];trace=[];status='not_started';reason=None;accepted=None
++    begin=_clock();deadline=begin+budget;route=[];trace=[];status='not_started';reason=None;accepted=None;intervention_used=False;intervention_log=[]
+     def tick():
+         if _clock()>=deadline:raise DeadlineExceeded()
+     def move(segment,pending):
+@@ -27,7 +34,12 @@
+                 options=core.reward_options(cur,prev,pending,s.free,predator,(2.,.5));tick()
+                 event=dict(index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))
+                 if options:
+-                    goal=core.choose_neighbor(options);event.update(kind='local',options=options,goal=goal);segment=(cur,goal)
++                    goal=core.choose_neighbor(options)
++                    forced=first_new_step(DIAG_MODE=='ON',intervention_used,options,set(initial),NEW_TARGETS,goal)
++                    if forced is not None:
++                        before_pending=sorted(pending);original_selected=goal;goal=forced['forced_selected'];intervention_used=True
++                        intervention_log.append(dict(index=len(route)-1,current=cur,previous=prev,pending_count=len(pending),old_pending_count=len(set(initial)&pending),new_pending_count=len(NEW_TARGETS&pending),original_selected=original_selected,forced_selected=goal,options=options,old_options=forced['old_options'],new_options=forced['new_options'],before_pending=before_pending,after_pending=sorted(pending-{goal}),after_current=goal,after_previous=cur,resource_before=s.distance_budget-(len(route)-1),resource_after=s.distance_budget-len(route),reason='first_local_both_classes_unique_new_one_step'))
++                    event.update(kind='local',options=options,goal=goal);segment=(cur,goal)
+                 else:
+                     goal=min(pending,key=lambda q:(g.distance(cur,q),q));tick();segment=g.path(cur,goal)
+                     event.update(kind='recovery',goal=goal)
+@@ -40,7 +52,7 @@
+     except DeadlineExceeded:status='deadline'
+     except NoPath as e:status='planning_failure';reason=str(e)
+     seconds=_clock()-begin
+-    return dict(version=VERSION,method='PPCPP_INDEPENDENT',route=tuple(route) if status=='core_complete' else (),status=status,reason=reason,
++    return dict(version=VERSION,method='PPCPP_FIRST_NEW_STEP_DIAG',route=tuple(route) if status=='core_complete' else (),status=status,reason=reason,
+         seconds=seconds,budget=budget,seed=seed,seed_used=False,predator=predator,initial_previous=previous,weights=(2.,.5),
+         trace=trace,accepted_seconds=accepted if status=='core_complete' else None,fallback_selected=False,
+-        overrun_gt_10ms=seconds>budget+.01)
++        overrun_gt_10ms=seconds>budget+.01,diagnostic=dict(mode=DIAG_MODE,intervention_used=intervention_used,trigger_count=len(intervention_log),log=intervention_log))

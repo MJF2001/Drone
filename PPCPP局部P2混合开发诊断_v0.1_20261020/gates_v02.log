@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\PPCPP局部P2混合开发诊断_v0.1_20261020\gates_v02.py", line 6, in <module>
+    if __name__=='__main__':gate.main()
+                            ^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP局部P2混合开发诊断_v0.1_20261020\gates.py", line 39, in main
+    verify();fixtures=read(H/'fixtures.json');index=[]
+    ^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP局部P2混合开发诊断_v0.1_20261020\environment.py", line 6, in verify
+    s=read(H/'environment_seal.json');assert s['complete']
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP局部P2混合开发诊断_v0.1_20261020\support.py", line 4, in read
+    def read(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\pathlib.py", line 1027, in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\pathlib.py", line 1013, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'E:\\无人机研究项目_接续包_20261014\\PPCPP局部P2混合开发诊断_v0.1_20261020\\environment_seal.json'

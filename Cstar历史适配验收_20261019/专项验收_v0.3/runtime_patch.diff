@@ -1,0 +1,326 @@
+--- v0.2/common_geometry.py
++++ v0.3/common_geometry.py
+@@ -36,12 +36,13 @@
+     "which endpoint was queried first" ambiguity.
+     """
+ 
+-    def __init__(self, free, deadline=None):
++    def __init__(self, free, deadline=None, checkpoint=None):
+         self.free = frozenset(free)
+         self.deadline = deadline
+         self._rows = {}
+         self._paths = {}
+         self.builds = 0
++        self.checkpoint=checkpoint or (lambda stage:None)
+ 
+     # -- helpers ---------------------------------------------------------
+     def _tick(self, clock):
+@@ -57,6 +58,7 @@
+         queue = deque([start])
+         free = self.free
+         while queue:
++            self.checkpoint('bfs_expand')
+             p = queue.popleft()
+             for q in neighbours(p):
+                 if q in free and q not in row:
+@@ -83,6 +85,7 @@
+         return row[b]
+ 
+     def path(self, a, b):
++        self.checkpoint('bfs_path')
+         if a not in self.free or b not in self.free:
+             raise NoPath(f"endpoint_not_free: {a if a not in self.free else b}")
+         if a == b:
+@@ -97,6 +100,7 @@
+                 raise NoPath(f"no_path: {lo} -> {hi}")
+             reverse = [hi]
+             while reverse[-1] != lo:
++                self.checkpoint('bfs_reconstruct')
+                 reverse.append(parent[reverse[-1]])
+             cached = tuple(reversed(reverse))
+             self._paths[key] = cached
+--- v0.2/history_adapter.py
++++ v0.3/history_adapter.py
+@@ -8,13 +8,22 @@
+     def __init__(self,known):super().__init__(known);self.task_protected=set()
+     def prune(self,current):
+         if hasattr(self,'before_prune'):self.before_prune()
+-        return super().prune(current)
++        owner=getattr(self,'audit_owner',None)
++        record=dict(current=current,pending=sorted(owner.pending),protected=sorted(self.task_protected),before=self.snapshot(),status='interrupted') if owner else None
++        if owner:owner.prune_audits.append(record)
++        try:
++            result=super().prune(current)
++            if record is not None:record['status']='completed'
++            return result
++        finally:
++            if record is not None:record['after']=self.snapshot()
+ class HistoryCStar(CStar):
+     def __init__(self,start,known,targets,covered,**kw):
+         self.targets=set(targets);self.covered=set(covered);self.pending=self.targets-self.covered-{tuple(start)}
+-        self.task_events=[];self.task_filters=[]
++        self.task_events=[];self.task_filters=[];self.prune_audits=[]
+         super().__init__(start,known,graph_factory=TaskGraph,**kw)
+         self.graph.before_prune=self.sync_task_protection
++        self.graph.audit_owner=self
+         self.sync_task_protection()
+     def needed(self,p):
+         if p in self.pending:return True
+@@ -26,6 +35,7 @@
+         transit=set()
+         component=set(next((s for s in self.graph.components() if self.current in s),[]))
+         for p in sorted(acquisition&component):
++            self._check_deadline('task_protection')
+             route,_=self.graph.path(self.current,p);transit.update(route)
+         self.acquisition_anchors=acquisition;self.transit_anchors=transit-acquisition
+         self.graph.task_protected=acquisition|transit
+@@ -33,10 +43,13 @@
+     def refresh_retreat(self,a=None,b=None):
+         super().refresh_retreat(a,b);self.retreat={p for p in self.retreat if self.needed(p)}
+     def navigate(self,route,mode):
+-        before=len(self.path);pending_before=set(self.pending);n=super().navigate(route,mode)
+-        traversed=self.path[before:];self.covered.update(set(traversed)&self.targets);self.pending-=set(traversed)
+-        self.task_events.append(dict(mode=mode,start_index=before-1,end_index=len(self.path)-1,credited=sorted(pending_before-self.pending),pending_after=sorted(self.pending)))
+-        self.task_events[-1]['rcg_route']=[list(p) for p in route]
++        before=len(self.path);pending_before=set(self.pending);completed=False
++        try:
++            n=super().navigate(route,mode);completed=True
++        finally:
++            # Even an interrupted diagnostic prefix must have an honest ledger.
++            traversed=self.path[before:];self.covered.update(set(traversed)&self.targets);self.pending-=set(traversed)
++            self.task_events.append(dict(mode=mode,start_index=before-1,end_index=len(self.path)-1,credited=sorted(pending_before-self.pending),pending_after=sorted(self.pending),rcg_route=[list(p) for p in route],interrupted=not completed))
+         self.sync_task_protection();self.refresh_retreat();return n
+     def select_goal(self):
+         self.sync_task_protection();p=self.current
+@@ -82,7 +95,7 @@
+         super().run(max_iterations)
+         if self.status=='graph_exhausted':self.status='task_complete' if not self.pending else 'task_incomplete'
+         return self
+-def solve(c,budget=2,seed=0,*,clock=time.perf_counter,max_iterations=400):
++def solve(c,budget=2,seed=0,*,clock=time.perf_counter,max_iterations=400,checkpoint_hook=None):
+     begin=clock();deadline=begin+budget
+     free=set(map(tuple,c['free']));targets=set(map(tuple,c['targets']));covered=set(map(tuple,c['covered']));start=tuple(c['current']);base=tuple(c['base'])
+     if not targets<=free or start not in free or base not in free:raise ValueError('invalid active map')
+@@ -96,13 +109,20 @@
+     # No made-up sensing history or outside obstacle ring. Explicit known blocked
+     # cells, when supplied, belong to the current public input for every method.
+     known.update({tuple(p):False for p in c.get('known_blocked',[])})
+-    planner=HistoryCStar(start,known,targets,covered,seed=seed,deadline=deadline,wall_clock=clock)
+-    planner.run(max_iterations);diagnostic=list(planner.path);route=[];status=planner.status
++    planner=HistoryCStar.__new__(HistoryCStar)
++    try:
++        planner.__init__(start,known,targets,covered,seed=seed,deadline=deadline,wall_clock=clock,checkpoint_hook=checkpoint_hook)
++        planner.run(max_iterations)
++    except WallClockCap as exc:
++        planner.status='wall_clock_cap';planner.error=str(exc)
++    diagnostic=list(planner.path);route=[];status=planner.status
+     if status=='task_complete':
+         if clock()>=deadline:status='deadline'
+         else:
+             try:
+-                diagnostic.extend(GridMetric(free).path(diagnostic[-1],base)[1:])
++                planner._check_deadline('return_before')
++                diagnostic.extend(GridMetric(free,checkpoint=planner._check_deadline).path(diagnostic[-1],base)[1:])
++                planner._check_deadline('final_audit')
+                 if clock()>=deadline:status='deadline'
+                 elif len(diagnostic)-1>c['distance_budget']:status='resource_exceeded'
+                 elif not targets<=covered|set(diagnostic):status='coverage_incomplete'
+@@ -110,7 +130,8 @@
+                 elif clock()>=deadline:status='deadline'
+                 else:route=diagnostic
+             except (ValueError,NoPath):status='return_unreachable'
+-    return dict(route=route,diagnostic_route=diagnostic,status=status,seconds=clock()-begin,pending=sorted(planner.pending),
++            except WallClockCap as exc:status='deadline';planner.error=str(exc)
++    result=dict(route=route,diagnostic_route=diagnostic,status=status,pending=sorted(planner.pending),
+         task_events=planner.task_events,task_filters=planner.task_filters,iterations=planner.iterations_trace,
+         rcg_nodes=sorted(planner.graph.nodes),rcg_edges=planner.graph.snapshot()['edges'],
+         events=planner.events,graph_status=planner.status,graph_error=planner.error,
+@@ -118,4 +139,11 @@
+         historical_nodes=[p for p in planner.graph.nodes if p in covered],completion_tsp=False,
+         open_graph_nodes=sum(planner.graph.is_open(p) for p in planner.graph.nodes),
+         termination_trigger=planner.iterations_trace[-1]['why']['group'] if planner.iterations_trace else None,
+-        adaptation='v0.2 acquisition plus existing-RCG transit obligations; not original C* completeness or global completion.')
++        prune_audits=planner.prune_audits,
++        adaptation='v0.3 deadline checkpoints and prune evidence; v0.2 acquisition/RCG transit rules unchanged.')
++    try:planner._check_deadline('result_ready')
++    except WallClockCap as exc:
++        if result['status'] not in ('wall_clock_cap','deadline'):result.update(route=[],status='deadline',graph_error=str(exc))
++    end=clock();result['seconds']=end-begin
++    if end>=deadline:result['route']=[];result['status']='wall_clock_cap' if result['status']=='wall_clock_cap' else 'deadline'
++    return result
+--- v0.2/history_core\planner.py
++++ v0.3/history_core\planner.py
+@@ -37,7 +37,7 @@
+     """The hard safety cap fired.  Never a natural termination."""
+ 
+ 
+-def optimize_tsp(points, start, end, cost):
++def optimize_tsp(points, start, end, cost, checkpoint=None):
+     """Fixed-start nearest neighbour then exhaustive improving 2-opt.
+ 
+     A free end (``end is None``) is optimized directly, not via the infeasible
+@@ -47,10 +47,12 @@
+     optional, non-default ``completion_tsp`` variant.
+     """
+     remaining = set(points) - {start}
++    check = checkpoint or (lambda stage: None)
+     if end is not None:
+         remaining.discard(end)
+     route = [start]
+     while remaining:
++        check('tsp_nn')
+         q = min(remaining, key=lambda p: (cost[route[-1], p], p))
+         route.append(q)
+         remaining.remove(q)
+@@ -67,6 +69,7 @@
+         stop = len(route) - 1 if end is not None else len(route)
+         for i in range(1, stop - 1):
+             for j in range(i + 1, stop):
++                check('tsp_2opt')
+                 old = cost[route[i - 1], route[i]]
+                 new = cost[route[i - 1], route[j]]
+                 if j + 1 < len(route):
+@@ -82,7 +85,7 @@
+     """RCG-based coverage planner (Algorithms 1--4), current-model adaptation."""
+ 
+     def __init__(self, start, known, sensor=None, seed=0, holes=True,
+-                 deadline=None, wall_clock=None, graph_factory=RCG):
++                 deadline=None, wall_clock=None, graph_factory=RCG, checkpoint_hook=None):
+         self.map = known
+         self.sensor = sensor
+         self.graph = graph_factory(self.map)
+@@ -107,6 +110,8 @@
+         self.status = "running"
+         self.error = ""
+         self.component_sizes = None
++        self.checkpoint_hook = checkpoint_hook
++        self.graph.checkpoint = self._check_deadline
+         if self.sensor is not None:
+             self.sense(self.current)
+         new = self.graph.sample_front(self.current)
+@@ -124,13 +129,14 @@
+     def metric(self):
+         """Four-neighbour connector over what the planner currently knows."""
+         if self._metric is None or self._metric_version != self.map.version:
+-            self._metric = GridMetric(frozenset(self.map.free))
++            self._metric = GridMetric(frozenset(self.map.free), checkpoint=self._check_deadline)
+             self._metric_version = self.map.version
+         return self._metric
+ 
+-    def _check_deadline(self):
+-        if self.deadline is not None and self._clock() > self.deadline:
+-            raise WallClockCap("wall clock cap")
++    def _check_deadline(self, stage='core'):
++        if self.checkpoint_hook is not None:self.checkpoint_hook(stage)
++        if self.deadline is not None and self._clock() >= self.deadline:
++            raise WallClockCap('deadline at '+stage)
+ 
+     def refresh_retreat(self, a=None, b=None):
+         self.retreat = {p for p in self.retreat if self.graph.is_open(p)}
+@@ -166,11 +172,12 @@
+             assert self.map.feasible(a, b), "Motion through unknown/obstacle"
+             cells = self.metric().path(a, b)
+             for u, v in zip(cells, cells[1:]):
+-                self._check_deadline()
++                self._check_deadline('move_before')
+                 self.refresh_retreat(u, v)
+                 self.path.append(v)
+                 self.modes.append(mode)
+                 moved += 1
++                self._check_deadline('move_after')
+                 if self.sensor is not None:
+                     self.sense(v)
+             self.current = b
+@@ -231,6 +238,7 @@
+         points = set(holes) | {self.current, goal}
+         additions = set()
+         for p in sorted(points):
++            self._check_deadline('densify')
+             for q in self.graph.edges[p]:
+                 if p[0] == q[0] and q in points:
+                     additions.update(lap_points(p, q))
+@@ -257,18 +265,20 @@
+         paths, costs = {}, {}
+         for a in sorted(points):
+             for b in sorted(points):
++                self._check_deadline('tsp_costs')
+                 if (a, b) in paths:
+                     continue
+                 path, cost = self.graph.path(a, b)
+                 paths[a, b] = path
+                 paths[b, a] = path[::-1]
+                 costs[a, b] = costs[b, a] = cost
+-        order, before, after = optimize_tsp(points, start, end, costs)
++        order, before, after = optimize_tsp(points, start, end, costs, self._check_deadline)
+         event = dict(type="tsp", step=len(self.path) - 1, case=case,
+                      targets=len(points), nn_length=before, opt_length=after,
+                      hole_nodes=[list(p) for p in sorted(holes)],
+                      dense_nodes=[list(p) for p in sorted(points)],
+                      order=[list(p) for p in order], end=(list(end) if end is not None else None))
++        event.update(start=list(start),goal=list(goal),graph_before_tour=self.graph.snapshot())
+         self.events.append(event)
+         moved = 0
+         for a, b in zip(order, order[1:]):
+--- v0.2/history_core\rcg.py
++++ v0.3/history_core\rcg.py
+@@ -36,6 +36,8 @@
+ 
+ 
+ class RCG:
++    def tick(self,stage):
++        getattr(self,'checkpoint',lambda stage:None)(stage)
+     def __init__(self, known):
+         self.map = known
+         self.nodes = {}
+@@ -78,6 +80,7 @@
+         columns = {p[0] for p in new}
+         by_col = defaultdict(list)
+         for p in self.nodes:
++            self.tick('rcg_expand')
+             if p[0] in columns:
+                 by_col[p[0]].append(p)
+         for column in sorted(by_col):
+@@ -106,7 +109,10 @@
+         start need not be a frontier cell, and the node is tagged ``start``
+         (adaptation A5, see the spec).
+         """
+-        new = {p for p in self.map.new_free if p not in self.sampled and self.map.frontier(p)}
++        new=set()
++        for p in sorted(self.map.new_free):
++            self.tick('rcg_sample')
++            if p not in self.sampled and self.map.frontier(p):new.add(p)
+         if start is not None:
+             if start in self.nodes:
+                 pass
+@@ -134,6 +140,7 @@
+                    for p in self.nodes if p in ends or self.map.unknown_adjacent(p)}
+         transitions = set()
+         for p in sorted(ends):
++            self.tick('rcg_essential')
+             groups = defaultdict(list)
+             for q in self.edges[p]:
+                 if p[0] != q[0]:
+@@ -168,6 +175,7 @@
+             if node.kind in ("link", "tsp") and node.state == "Op":
+                 reasons.setdefault(p, node.kind)
+         for p in sorted(set(self.nodes) - set(reasons)):
++            self.tick('rcg_prune_remove')
+             vertical = sorted(q for q in self.edges[p] if q[0] == p[0])
+             if len(vertical) == 2:
+                 self.connect(*vertical)
+@@ -179,6 +187,7 @@
+             self.nodes[p].reason = reasons[p]
+         for p in sorted(self.nodes):
+             for q in list(self.edges[p]):
++                self.tick('rcg_prune_edges')
+                 if p[0] != q[0] and tuple(sorted((p, q))) not in transitions:
+                     # Preserve execution-anchor edges during the current action.
+                     def protected(n):
+@@ -234,6 +243,7 @@
+         queue = [(dist(start, goal), 0.0, start)]
+         costs, parent = {start: 0.0}, {}
+         while queue:
++            self.tick('rcg_search')
+             _, g, p = heapq.heappop(queue)
+             if g > costs[p] + 1e-9:
+                 continue

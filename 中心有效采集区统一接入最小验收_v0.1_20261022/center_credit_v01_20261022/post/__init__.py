@@ -1,0 +1,1 @@
+"""Namespaced conservative shortcut wrapper."""

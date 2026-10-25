@@ -1,0 +1,1847 @@
+
+PAGE 1
+Active perception network for non-myopic online exploration and visual
+surface coverage
+David Vutetakis1 and Jing Xiao 2
+Abstract— This work addresses the problem of online explo-
+ration and visual sensor coverage of unknown environments.
+We introduce a novel perception roadmap we refer to as the
+Active Perception Network (APN) that serves as a hierarchical
+topological graph describing how to traverse and perceive
+an incrementally built spatial map of the environment. The
+APN state is incrementally updated to expand a connected
+configuration space that extends throughout as much of the
+known space as possible, using efficient difference-awareness
+techniques that track the discrete changes of the spatial map
+to inform the updates. A frontier-guided approach is presented
+for efficient evaluation of information gain and covisible infor-
+mation, which guides view sampling and refinement to ensure
+maximum coverage of the unmapped space is maintained within
+the APN. The updated roadmap is hierarchically decomposed
+into subgraph regions which we use to facilitate a non-myopic
+global view sequence planner. A comparative analysis to several
+state-of-the-art approaches was conducted, showing significant
+performance improvements in terms of total exploration time
+and surface coverage, and demonstrating high computational
+efficiency that is scalable to large and complex environments.
+I. I NTRODUCTION
+The general problem of online exploration and visual
+surface coverage of a priori unknown structure or environ-
+ment can be referred to as online sensor-based coverage
+planning (OSCP). For this, a robot such as a Micro Aerial
+Vehicle (MA V) must efficiently discover the spatial and
+geometric structure of an initially unknown environment
+using an onboard depth sensor. The robot must traverse the
+environment to perceive the unknown space from different
+perspectives, accumulating the acquired sensor knowledge in
+a spatial map. OSCP is a prerequisite problem for a wide
+range of applications involving operation in an unknown
+environment, such as structural modeling and inspection,
+surveying, search and rescue, and many others [1].
+The global coverage problem of OSCP is to achieve
+maximum coverage of the target surfaces as efficiently as
+possible. Naturally, this cannot be solved directly due to the
+lack of a priori knowledge, and can only be solved online in
+an incremental fashion. This leads to the incremental explo-
+ration problem which represents an iterative action selection
+problem: given the current incomplete knowledge, determine
+the optimal action to increase the current knowledge. As each
+action is executed, the incremental objective is recursively
+solved using feedback from the added environment knowl-
+edge until the global exploration objective has been achieved.
+1David Vutetakis is with the Department of Computer Science, University
+of North Carolina, Charlotte, NC 28223, USA. dvutetak@uncc.edu
+2Jing Xiao is with the Department of Robotics Engineering, Worcester
+Polytechnic Institute, Worcester, MA 01609, USA. jxiao2@wpi.edu
+II. R ELATED WORK
+The purpose of online exploration and coverage can vary
+between different applications and tasks. For example, some
+applications seek knowledge of the traversable space within
+an unknown environment for subsequent navigation tasks,
+while others may seek detailed coverage of the surfaces
+for 3D modelling or inspection purposes. It is important to
+recognize such differences in the intended application, as
+this can greatly influence how the problem is approached
+and how its performance is evaluated.
+Frontier-based exploration : Autonomous exploration was
+pioneered by [2] by introducing the now well-known concept
+of spatial frontiers. Frontiers represent boundaries within a
+partially built map between unknown space the robot seeks
+to observe, and the free space the robot can use to make
+the observations. The original frontier exploration algorithm,
+referred to as classical frontier exploration, was implemented
+for a mobile ground robot building a 2D occupancy grid
+map. The algorithm selects the closest frontier as the goal,
+and navigates towards the goal while using reactive collision-
+avoidance. Upon arrival, a new sensor scan is acquired of the
+region and added to the map, repeating the process until no
+unvisited and reachable frontiers remain.
+Many extensions have been proposed to the initial frontier-
+based approach, including more efficient frontier detection
+methods [3], [4] and extensions for 3D maps [5]. However,
+a significant drawback of classical frontier exploration is that
+frontiers indicate only the existence of adjacent unknown
+space, but not the quantity or quality. Using a frontier
+location directly as the navigation goal ignores sensor’s
+measurement range, thus causing inefficient and wasteful
+motions. Furthermore, a frontier location near surfaces gen-
+erally do not represent a feasible goal for a robot due to
+collision with the surface obstacle, making their direct use
+in this way ineffective for surface coverage tasks.
+Next-best-view (NBV) sampling : Exploration can be ef-
+fectively modeled as an extension of the Next-Best-View
+(NBV) problem introduced by [6], which can overcome
+several of the drawbacks associated with classical frontier-
+based approaches. Here, a view refers to a hypothetical pose
+of the sensor apparatus used to predict and analyze the spatial
+information expected to be visible if the real sensor were to
+be placed at this pose. The expected visible information is
+then said to be covered by the view.
+The classical NBV problem assumed full prior knowledge
+of the target object is given to facilitate the search and
+evaluation of NBVs, where the objective was to find a
+arXiv:2309.11695v1  [cs.RO]  21 Sep 2023
+
+PAGE 2
+minimum set of views that maximizes coverage of the known
+surfaces of the object model. This premise can be adapted
+for online exploration tasks by instead evaluating views
+according to currently unknown parts of the environment
+model, rather than the known parts.
+NBV-based exploration methods typically utilize a
+generate-and-test paradigm which apply sampling techniques
+necessary to discretize the continuous configuration space
+into a finite set of candidate views for analysis [7]. The
+quality of a view is evaluated according to some measure of
+its information gain (IG), which quantifies the new spatial
+information potentially observable from the view [8], [9],
+[10], [11]. A cost metric is additionally used to evaluate
+the expected effort for the robot to visit the view (e.g. time
+or energy). Most critical differences between existing NBV
+approaches occur within the sampling strategy for generating
+view candidates, and the formulation of metrics for analyzing
+and comparing candidates for goal selection.
+Information gain is commonly computed volumetrically
+by finding the expected amount of unknown space visible
+from a view [12], [13], [14]. This necessarily involves check-
+ing for occlusions within the known space using techniques
+like raycasting, which incurs high computational complexity
+that can rapidly increase with various factors like map
+resolution, sensor field of view, and sensing range. This limits
+the number of distinct views that can be practically evaluated
+within a given time period. The high complexity also make
+it difficult to analyze overlapping or mutual information
+between views, such that most approaches treat the gain as
+an independent value that prevents an understanding of the
+unique gain contributions of each view within a group.
+Tree-based planning: Tree-based methods organize sampled
+views as vertices in a geometric tree where directed edges
+between vertices represent feasible paths between views. The
+RH-NBVP approach of [15], [16] applies rapidly-exploring
+random tree (RRT) to grow a tree rooted at the robots current
+position. Each node in the tree is weighted according to their
+predicted information gain based on how much unknown
+space lies within the view. Cost weights are aggregated along
+each branch, and the leaf node with the highest value is used
+to identify the best branch to explore, iteratively repeating
+the process in a receding horizon fashion. This has become
+a well-known approach and is often used as a baseline for
+comparative analysis [17], [18], [19].
+A hybrid approach that combines both frontier-based and
+NBV-based techniques was introduced by [17], referred to as
+AEP. It combines the RH-NBVP strategy for local planning,
+while switching to frontier-based planning for global search
+when local planning fails to find informative views. FFI
+[18] is also a hybrid approach that uses an efficient frontier
+clustering strategy to guide view sampling.
+A significant drawback of tree-based planning is the diffi-
+culty in preserving the previously computed tree structure as
+the robot navigates to each goal. The RH-NBVP approach
+builds a new tree each iteration, discarding the previously
+built structure that may still contain useful knowledge. Other
+approaches attempt to transfer as much of the previous tree
+structure as possible by rewiring its edges to initialize the
+construction of a new tree. Since tree-based methods are
+rooted at the robots position, they tend to become increas-
+ingly inefficient over larger distances, making it difficult to
+handle dead-end or backtracking cases.
+Graph-based planning : Various approaches have utilized
+graph structures that can overcome some of the limitations
+and drawbacks of trees. The approach of [20] builds a history
+graph that stores previously visited positions and their edge
+connections. These are used as potential seed points for RRT,
+which allows a tree to be grown from different positions
+across the map, rather then just from the robot position. An
+approach using Rapidly-Exploring Random Graphs (RRG)
+was presented in [13] for exploration of subterranean en-
+vironments. A Probabilistic Roadmap (PRM) strategy was
+used by [21] to build a graph of feasible configurations and
+paths over the map as it is explored.
+Topological maps : Topological maps have been applied
+by recent works which aim to reduce the planning com-
+plexity through the compact representation provided by a
+topological map. Topological maps can be considered as an
+extension to graph-based methods, where vertices represent
+some volumetric sub-map, or place, and edges represent the
+adjacency or reachability between places. This coarse and
+abstracted representation is more efficient for handling large-
+scale environments, which can become intractable to explore
+online using alternative approaches. However, they usually
+lack sufficient metric knowledge for direct use in navigation.
+[22] used a topological map for exploration of under-
+ground mines using a ground robot. The regions of intersec-
+tion between passageways were represented as nodes, and
+exploration was planned along the edges between nodes.
+A more recent approach proposed by [23] also uses a
+topological map for subterranean exploration. Convex poly-
+hedrons are used to estimate distinctive exploration regions
+(DER-s) which are added as graph nodes to the map. Each
+DER represents an enclosed 3D volume of the map like
+an enclosed room or corridor, providing the planner with
+knowledge of high-level intent such as moving between
+distinctive rooms or regions. Other approaches have applied
+segmentation algorithms to identify the separation of distinct
+exploration regions like rooms of a building [24].
+Myopic greedy planning: The majority of existing methods
+compute navigation goals using myopic planning strategies
+that greedily optimize the cost of the next single planning
+decision [25], [18], or within a limited planning horizon [15],
+[17]. Some works allow planning over the full map, but
+still use greedy search for the decision making. These are
+sometimes referred to as global planning methods, but we
+clarify they are still considered myopic.
+Myopic strategies bias exploration toward regions with
+high information gain, while ignoring small gains even if
+they are closer. This bias can frequently create regions
+of incomplete coverage when a high gain goal leads the
+exploration away from the current region before it is fully
+mapped. This can also result in frequent back-and-forth
+
+PAGE 3
+oscillation between goals, or require re-visitation of these
+regions after the robot has traveled a significant distance,
+backtracking over potentially large distance. This greatly
+reduces efficiency, and can result in sparse coverage gaps
+or failure to fully explore an environment within an allowed
+time limit, especially over large-scales.
+A relatively small number of works have recently at-
+tempted to overcome the drawbacks of greedy planning using
+non-myopic planning strategies. This has been formulated
+using the Traveling Salesman Problem (TSP) [26], [27], but
+often relies on prior map knowledge [28], [29].
+A sector decomposition approach was presented by [27],
+which partitions the map into a set of convex sectors used to
+compute a TSP sequence. However, the sector decomposition
+method can be computationally expensive, especially for
+finer map resolutions, which can greatly decrease the update
+rate of the map and planning. Additionally, sectors form an
+exact partitioning of the space, which can make the geometric
+properties of the resulting sectors difficult to control, and may
+not effectively handle large-scale and complex environments.
+Environment and task-specific approaches: Simplifying or
+restrictive assumptions are sometimes made on the opera-
+tional environment. This can include indoor operation, or re-
+liance on certain regular geometric features, e.g. room struc-
+tures used for segmentation. Some applications are intended
+to operate in relatively obstacle-free environments, such as
+outdoors or underwater [30], which contain an abundance
+of free-space that greatly simplifies collision checking and
+other sub-tasks. Assumptions can significantly restrict the
+practicality of many approaches for general use, or require
+fine tuning of parameters between different environments to
+achieve their rated performance.
+Limitations of existing approaches: Limitations of existing
+approaches are summarized as follows:
+• greedy and myopic planning strategies that focus on the
+incremental exploration objective, but fail to consider
+the global one,
+• non-generalized approaches that are limited to small-
+scale environments, or specialized for specific environ-
+ments or conditions (e.g. subterranean or building-like
+structures),
+• most approaches succumb to high computational costs:
+– they do not scale well with respect to environment
+size or map resolution,
+– the ability to quickly replan on added knowledge
+diminishes, where a suboptimal plan is fully exe-
+cuted before replanning,
+– reduced velocities are often required to compensate
+for low planning rates,
+– frequent stop-and-go motions can occur.
+We observe that there is not sufficient attention to the
+underlying data management issues of the general OSCP
+problem in the robotics research community, which could be
+due to limited research funding and development cycle and
+that data infrastructure was not a focus. There is also a lack of
+open-source software to help reducing efforts that researchers
+have to put into developing a good data management system.
+The aforementioned limitations of existing approaches are
+the results of that. However, for many realistically large-
+scale OSCP tasks, it is critical to have smart and sophisti-
+cated data management system, requiring careful conceptual,
+algorithmic, and data structure design and efficient software
+engineering solutions.
+III. C ONTRIBUTIONS
+This work is motivated to alleviate some of the limitations
+of the existing approaches in handling the OSCP problem.
+We focus first on how to dynamically compute and maintain
+the accurate global knowledge necessary to a non-myopic
+planning algorithm, since this represents a significant bottle-
+neck in terms of computational complexity and exploration
+quality in the existing work. Our key contributions are as
+follows:
+• A novel dynamic multi-layer topological graph desig-
+nated as the Active Perception Network (APN). The
+APN serves as a global hierarchical roadmap over
+the spatial map that accumulates the incrementally
+computed knowledge of the exploration state space.
+is defined and organized around adaptive nodes to
+best represent the perceptual and actionable environ-
+ment knowledge discovered to minimize the complexity,
+which allows it to be efficiently accessed and searched
+for planning purposes.
+• A dynamic update procedure referred to as Differential
+Regulation (DFR) to incrementally build and refine
+the APN as environment knowledge is increased. This
+procedure addresses the complexity of updating the
+APN as its size and the map scale increase, while
+ensuring sufficient global knowledge is maintained for
+effective planning.
+• A non-myopic planning approach denoted as APN-
+Planner (APN-P) that demonstrates how the APN can
+be leveraged to compute and adaptively refine a globally
+informed exploration sequence.
+• A detailed performance analysis and comparison to
+existing approaches among the state-of-the-art.
+• An open-sourced release of the APN, DFR, and plan-
+ning implementations, and a programming framework
+for the development of generalized autonomous explo-
+ration approaches that was developed and used for all
+our implementations.
+IV. P ROBLEM FORMULATION
+We assume exploration is performed using an MA V
+equipped with an onboard depth sensor (e.g. stereo-visual,
+RGB-D, or LiDAR) to perceive 3D space, noting that other
+systems such as mobile ground robots could also be utilized
+without loss of generality. We define the following terms and
+symbols to facilitate the description of our approach:
+Environment and map model: Let W ⊂ R3 represent the
+bounded 3D space of the operational environment, referred
+to as the world. The solid structures and objects of the world
+
+PAGE 4
+represent occupied space Wocc ⊂ W , while the remaining
+volume is defined as free-space Wf ree ⊂ W , such that W ≡
+Wf ree ∪ Wocc.
+The intersection boundaries between occupied and free-
+space define the surface manifolds, S ⊂ R2. Surface mani-
+folds are assumed to be visually opaque, and a surface point
+is considered optically visible from a point x ∈ W f ree
+only if no occupied space lies between the surface and x.
+Otherwise, the surface is considered to be occluded from x.
+A spatial map M is used to store the environment
+state knowledge as it is discovered from sensing. We as-
+sume the use of a 3D grid-based occupancy map M =
+{m0, . . . ,mm}, though other map models could also be
+used without loss of generality (e.g. Signed Distance Field
+(SDF) [31]). M partitions W by a set of non-overlapping
+cubic volumes m ∈ R3, known as voxels. The minimum
+edge length of a voxel dictates the map resolution, rM.
+Each voxel stores the occupancy probability of its volume,
+which is updated from sensor measurements depending on
+whether occupied or free-space was observed. The prob-
+ability value is discretized by an occupancy state O ∈
+{Ounk, Oocc, Of ree}, where Ounk indicates the state is
+unknown. As sensor measurements are integrated, the state
+is classified as either Oocc or Of ree to indicate, respectively,
+whether the voxel belongs to the set of occupied voxels
+Mocc ⊆ M , or free-space voxels Mf ree ⊆ M . The set
+of occupied voxels are given as Mocc ⊆ M, the set of free
+voxels is given by Mf ree ⊆ M , and the set of unknown
+voxels is given by Munk ⊆ M , with the initial map state
+given as M
+init
+= Munk.
+Spatial frontiers, F, are detected from M by identifying
+unknown voxels with an adjacent free voxel. Frontiers that
+are also adjacent to an occupied surface voxel are further
+classified as surface frontiers, F S. Those that are adjacent
+only to free space are classified as void frontiers, F X , such
+that F ≡ F S ∪ F X . These distinctions are made according
+to the goal of achieving complete surface coverage, where
+surface frontiers help to identify where surface coverage is
+incomplete.
+Robot model: The robot agent is modeled by a rigid body
+with pose configuration qagent(t) = ( x, a), q ∈ SE(3)
+at time t, where x ∈ R3 is the position vector and a =
+{φ, ϑ, ψ} is the orientation vector represented by roll, pitch,
+and yaw Euler angles, respectively. Additional parameters
+vmax and ˙ψmax are used to specify the maximum allowable
+velocity and yaw rate, respectively. A spherical volume
+Bsaf e centered at x with radius dsaf e is defined, where dsaf e
+specifies the minimum obstacle separation distance for safe
+operation.
+Sensor model: The robot’s depth sensor is modeled by the
+parameter vector [Rs, αs, dsense
+max ]. αs = [αh, αv] ∈ (0, 2π] is
+the maximum angular field of view (FoV) on the horizontal
+and vertical dimensions of the sensor, andRs = [Rsx, Rsy] is
+the maximum spatial resolution. dsense
+max ∈ R is the maximum
+effective sensing range that surface points can be accurately
+detected by the sensor. This value corresponds to the physical
+limitations of the sensor, where distances greater than dsense
+max
+either cannot be measured, or are rejected due to loss of
+accuracy.
+The sensor parameters can be combined with a pose q to
+form a projection model λ ∈ Λ, referred to as a viewpose.
+The projected space from λ is described by the subset of
+rays that pass through the view’s originx, constrained by the
+intervals [ϑ ± αv/2] and [ψ ± αh/2] of the unit-sphere. The
+length of each ray is constrained by dsense
+max . The projected
+space defines the view volume of a viewpose, and a location
+within the view volume is considered visible if there are no
+occlusions between it and the origin. This provides the basis
+for making visibility queries and predictions on the expected
+information gain.
+Reachable configuration space: Given the robot’s initial
+position xagent
+0 , the reachable configuration space X ⊂ R3
+is a metric space defined by all admissible configurations
+path-connected to xagent
+0 . As a precondition, a configuration
+is considered admissible if it does not intersect any occupied
+space within distance dsaf e. It is then considered reachable
+if there exists a simply-connected path of admissible config-
+urations from xagent
+0 . The distance between two reachable
+points is quantified by a metric value L ∈ R.
+Goal space: The surfaces that can possibly be covered at any
+point during exploration is inherently restricted to a subset
+SX ⊆ S which are visible from some viewpose λ constrained
+by X . The goal space ΛG ⊂ Λ is then defined as the set
+of feasible configurations that contribute some amount of
+coverage of SX , quantified by a gain metric, γ ∈ R.
+Exploration state space: The exploration state space ,
+Ω, refers to the collectively available knowledge necessary
+to solve the incremental exploration problem. This mainly
+consists of the robot pose qagent, spatial map M, and
+F, which are considered as independent time-varying input
+variables. It additionally includes the reachable C-Space, X ,
+and goal space, ΛG, which are dependent variables computed
+from the input data.
+Myopicity: A planning strategy operates on the exploration
+state space to search for the optimal goal qg ∈ ΛG for
+navigation, where the myopicity corresponds to the length
+of its planning horizon. A myopic strategy typically uses
+greedy search techniques which treats each goal or action
+as independent of the others, greedily selecting the best one.
+They may also constrain the search to only some local sub-
+region of the map, rather than considering its full extent.
+Myopic strategies focus on the optimization related to the
+incremental exploration problem, which are not necessarily
+optimal with respect to the global coverage objective.
+In contrast, a non-myopic strategy searches over a long
+horizon that spans most or all of the available map. It
+additionally considers how the particular selection of a goal
+and its associated action may alter the future exploration
+state space. This involves search and evaluation over ordered
+sequences of actions, rather than each action individually.
+
+PAGE 5
+This results in solutions that are more optimal with respect
+to the long-term global coverage objective.
+V. A PPROACH OVERVIEW
+In this work, we address how to build a reusable explo-
+ration state space Ω that is adaptively maintained over the
+full spatial map as it is built concurrently. The iteratively
+built exploration space is then used to facilitate efficient
+non-myopic planning. We seek an approach that generalizes
+well to different environments with varying complexities and
+geometric characteristics, and efficiently scales to large-sized
+environments that cannot be effectively solved by myopic
+approaches.
+To achieve this goal, we introduce a novel graph-theoretic
+information structure named the Active Perception Network
+(APN) to model the exploration state space data, detailed
+in Section VI. A key feature of the APN is a hierarchical
+representation over its configurations that helps to reduce
+its size complexity and enables variable-resolution planning
+as the map increases in scale. Another focus of the APN
+is the storage and organization of the contained data, such
+that dynamic changes can be efficiently made to any of its
+contents as its size increases, while also maximizing the low-
+level efficiency for search and query operations. Some of
+these details are related to software, data structures, and other
+implementation challenges, which are beyond the scope of
+this work. Instead, the APN will primarily be discussed from
+a modeling perspective, with some additional implementation
+details provided in the appendix.
+We additionally introduce the process of Differential Reg-
+ulation (DFR) in Section VII, which operates on the APN
+to modulate its state with respect to the increasing map
+knowledge. DFR consists of sampling-based methods for
+increasing knowledge of the goal space and reachable space.
+A novel approach for information gain analysis is utilized
+that enables the individual and mutual information gain of
+the APN to be efficiently computed, which is leveraged to
+accelerate informative view sampling, pruning, and refine-
+ment.
+DFR exploits the incremental nature of map building
+where each sequential map update induces changes that
+occur only within a relatively small local region of bounded
+volume, independent of the total map size. With this insight,
+these incremental changes are tracked and cached using
+difference-awareness and memoization strategies to greatly
+reduce the computational overhead necessary to update the
+APN. This allows more discrete updates to be performed in a
+given time period, increasing the completeness and accuracy
+of each update. The ability to quickly perform each update
+is also critical to ensure the size of the map changes remain
+small, since the complexity of each update scales with the
+size of the changes.
+An anytime exploration planner is presented in Section
+VIII, which demonstrates the use of the APN to efficiently
+compute non-myopic global exploration sequences. The hier-
+archical representation of the APN is leveraged to first com-
+pute a global topological exploration plan over the full map.
+Fig. 1: Mapping, frontier detection, and Differential Regulation
+process pipelines used to update the APN.
+The beginning of the global plan is then locally optimized at
+a higher-resolution. Similar to the difference-aware approach
+used by DFR, sequential changes to the APN typically
+occur within locally bounded regions which are leveraged to
+initialize new planning instances from previous results. This
+allows optimizations to achieve faster convergence despite
+the increasing size of the map and APN.
+The iterative exploration pipeline is illustrated in Fig. 1,
+which consists primarily of two asynchronous processing
+loops. The first loop is dedicated for spatial mapping to allow
+continuous integration of the sensor measurement data, Zt,
+at high frequency. Frontier detection is performed after each
+map update, which operates only on the state-changed voxels
+that resulted from the update. This minimizes the complexity
+required to maintain the global frontier set, and provides a
+constant upper complexity bound that remains independent
+of the total map size. The second loop concurrently performs
+DFR to update the APN, which then serves as the input for
+replanning the current exploration solution. Further details
+of each DFR subroutine will be provided in Section VII.
+VI. A CTIVE PERCEPTION NETWORK (APN)
+The Active Perception Network (APN) serves as a topo-
+logical roadmap that stores the unified knowledge of the dy-
+namically exploration state space. Its fundamental structure
+is represented by a hypergraph
+G = (V, E, C), (1)
+where V = {vi}i=1,...,n is the set of graph nodes and
+E = {eu,v}u,v∈[1,n] is the set of traversal edges between
+nodes. The nodes have a bijective mapping to a codomain
+of viewposes, V ,→ Λ, where the terms node and viewpose
+may also be referred to interchangeably. V is decomposed
+by a set of hyperedges C = {H} ∈ P (V), where P is the
+
+PAGE 6
+power set. Each hyperedge H ⊆ V contains a disjoint subset
+of V as a multi-level hierarchy.
+Graph nodes, V: Each node vi ∈ V represents a viewpose
+information structure that consists of the tuple
+vi = {qi, γi, 1open
+i }, (2)
+where qi is its pose which has an associated viewpose qi 7→
+λi, and γi ∈ R is a reward metric that quantifies the expected
+information gain available from λi. The node’s visitation
+state is stored by a Boolean indicator 1open
+i : vi 7→ B,
+corresponding to whether the robot has visited the pose of
+vi. A true value indicates the node is unvisited, also referred
+to as open, and is otherwise referred to as closed if it has
+already been visited. This is used to discriminate between the
+open set of nodes V open which can represent goal candidates,
+and the closed set V closed of nodes which have already been
+visited.
+Several important classifications are defined over V based
+on their properties. These provide an increased understanding
+of how the network can serve different tasks. These are
+summarized as follows:
+• A unique node vagent ∈ V , referred to as the agent
+node, is used to represent the robot and is dynamically
+updated with the robot pose as it changes over time.
+The robot’s initial pose qagent
+0 is used to define the
+home state , represented by a unique node vhome that
+remains fixed over the lifetime of the APN.
+• The previously traversed path of the robot is represented
+by a path-connected set of keyframe nodes, qagent
+0:t 7→
+{vkf
+0:k} ∈ V kf , rooted at the home state, vkf
+0 = vhome.
+Keyframe nodes are added in intermediate intervals
+once the robot has traveled a minimum distance from
+the last keyframe.
+• Unvisited nodes with positive information gain are
+classified as NBV candidate nodes , represented by the
+set V nbv = {v ∈ V open : γ(v) > 0}. A Next Best
+View (NBV) node represents a subgoal candidate for
+for navigation and planning that is expected to increase
+map knowledge.
+• The remaining traversal nodes, V X = V \ Vnbv, mainly
+serve to preserve the accumulated knowledge of the
+reachability space and its connectivity, but not expected
+to increase map knowledge.
+Graph edges, E: Each edge eu,w ∈ E corresponds to the pair
+of nodes ⟨vu, vw⟩, and stores various analytical information
+of the traversal space between the pair as follows:
+eu,w = {dx, dψ, L, OBB, lO, pobs}, (3)
+where dx and dψ are the Euclidean distance and the orienta-
+tion angle distance, respectively, between (vu, vw). L is the
+evaluated cost metric value to traverse the edge given the
+maximum velocity vmax and yaw rate ˙ψmax, defined by:
+L(eu,w) = max
+ dx(eu,v)
+vmax
+, dψ(eu,v)
+˙ψmax
+
+. (4)
+Each edge also stores the Oriented Bounding Box (OBB)
+enclosing the endpoints, and the collision state of the
+space contained in the OBB is stored by lO : OBB →
+{f ree, unk, obs}. pobs is used as a memory cache that stores
+any uncertain voxels found from previous collision checks.
+This allows for lazy evaluation during future checks by first
+checking if these discrete voxels have changed, rather than
+the full OBB volume, to greatly reduce complexity.
+Hyperedge clusters: A set of hyperedges C ⊂ P (V) forms
+a topological decomposition of G, providing a representation
+with reduced size and complexity. A hyperedge H ∈ C
+represents a cluster of nodes {v} ⊆ V grouped according
+a similarity measure between the nodes, such that C is a
+partitioning of V into disjoint subsets {H}. Each hyperedge
+is modeled by the following:
+Hi = {V C
+i , Ai, Bi, xi}, (5)
+where V C
+i is the set of nodes belonging to Hi, with the
+centroid of the contained nodes given by xi and its bounding
+volume given as Bi. Ai = G[V C
+i ] is the vertex-induced
+subgraph formed by each cluster containing the clustered
+nodes v ∈ H and the induced edges (eu,w ∈ E : vu, vw ∈
+V C
+i ) with both endpoints belonging to Ai.
+The induced edges of a cluster subgraph A are referred to
+as its interior edges, while the remaining edges that connect
+nodes between different clusters are referred to as exterior
+edges. The efficiency of global search queries and traversal
+through G can greatly increased by traversing between sub-
+raphs using their exterior edges, using the interior edges of
+the subgraphs to perform local operations as needed.
+VII. D IFFERENTIAL REGULATION
+The APN is incrementally built by the process of Differ-
+ential Regulation (DFR), which manages how information is
+added, removed, or modified in the APN with respect to the
+concurrently built spatial map. DFR evaluates the APN ac-
+cording to a set of objectives and constraints conditioned on
+the current map, and executes a set of modifying procedures
+on the APN as needed to ensure they remain satisfied as the
+map evolves.
+The broad purpose of the DFR procedures is to a) re-
+evaluate map-dependent analytical measures to ensure their
+accuracy (e.g. information gain of existing nodes), b) add
+node and edge elements to increase the completeness of the
+network while pruning redundant or overcomplete elements,
+and c) recompute the topological clustering of the updated
+graph state. A diagram of these procedures is shown in Fig.
+1, and detailed in the following subsections.
+A. Reconditioning
+Each DFR cycle i begins at a time t with the latest spatial
+map Mt(i), frontiers Ft(i), and robot pose qagent
+t(i) . The first
+task is to determine the local differences of these variables to
+their states from the previous cycle t(i−1). Each incremental
+map update reports the set of state-changed voxels, which are
+accumulated in a local cache ∆M with its bounding volume
+
+PAGE 7
+(a) Visualization of the APN graph in terms of its node
+classifications (see figure legend) and traversal edges
+(blue lines).
+(b) APN hyperedge clusters, visualized by a bounding box
+enclosing the contained nodes. Each cluster forms an
+induced subgraph over the intra-cluster edges (orange
+lines).
+Fig. 2: Depictions of the APN composition.
+∆B. This is defined as the local difference neighborhood
+and is used to inform various APN update procedures about
+where state-changes have occurred, described further in the
+next subsections.
+Each regulation cycle then begins by updating the pose
+of the agent node vagent and its local edges. The length
+of the local path is then checked and compared against a
+keyframe threshold distance. If the threshold is exceeded, a
+new keyframe view vkf is created from vagent and added
+to the keyframe set V kf , with an edge connection to the
+previous keyframe to ensure a connected path to the home
+location is always maintained.
+B. View Analysis and Coverage Sampling
+V nbv represents the set of NBV subgoal candidates ex-
+pected to observe currently unknown voxels, such that map
+coverage will be increased if a subgoal is visited by the
+robot. To support the purposes of non-myopic planning,
+V nbv should be sufficiently distributed to provide maximum
+coverage of the unknown map space. Additionally, maximum
+coverage should be achieved using a minimal size of V nbv
+to reduce the eventual planning complexity that can increase
+exponentially with the number of views considered.
+A sampling-based approach is used to incrementally build
+V nbv to maintain maximum coverage as the map evolves. To
+efficiently and scalably achieve the aforementioned charac-
+teristics desired of V nbv, we introduce an approach using a
+frontier-based heuristic to evaluate information gain and also
+guide the sampling of additional views.
+Information gain analysis: A common approach in the
+literature to evaluate the expected information gain of a
+viewpose is by tracing the voxels along a dense set of
+raycasts within view’s FoV , projected from its origin. This
+has a high computational cost that can become prohibitive
+when evaluating many views and as the map resolution
+increases. Additionally, it is difficult to efficiently determine
+the visible information overlap between different views, such
+that information gain is usually treated as an independent
+measure between views. This prevents an understanding of
+the unique or redundant coverage within a set of views, or
+how efficiently they cover the given map.
+To mitigate these drawbacks, we directly use the frontier
+voxels within a view’s FoV to constrain the evaluation of in-
+formation gain. Given a voxel along a ray is only considered
+visible if no occupied voxels precede it, it can be inferred
+that the first unknown voxel traversed by a ray must be
+preceded by a free voxel to satisfy the visibility conditions.
+This transition from a free to an unknown voxel natural
+represents a frontier boundary, allowing a precondition to be
+defined that any raycast capable of containing information
+gain must at some point cross a frontier boundary. This
+allows the subset of raycasts that may contain some gain
+to be quickly identified based on the visible frontiers, which
+can greatly reduce the number of discrete raycast operations
+considered per view.
+A visibility map Γ : V → F is used to store the visible
+frontier features of each viewpose:
+Γ(λ) = {f ∈ F : V is(mf , λ)}, (6)
+where mf is the voxel associated to f, and V is is an
+indicator function returning true if mf is visible from λ. An
+inverse visibility map Υ : F → V represents the preimage of
+Γ storing the viewposes from which each frontier is visible
+as
+Υ(f) = {λ ∈ Λ : V is(mf , λ)}. (7)
+
+PAGE 8
+The individual gain, K, of a view λ refers to the indepen-
+dent amount of unknown space visible from the view. This
+measure can be lower bounded by the number of visible
+frontiers K : Λ 7→ |Γ(λ)|, since each frontier corresponds to
+an unknown voxel location. The joint gain, J , refers to the
+unique information collectively visible from a set of views.
+These can be respectively formulated as follows:
+K(λ) = |Γ(λ)|, (8)
+J (Λ) = |
+[
+λ∈Λ
+Γ(λ)|. (9)
+The exclusive gain, I, of a view λ refers to its unique con-
+tribution to the joint gain, or, in other words, the exclusively
+information visible by λ that is not visible by any other view
+in Λ. I can be determined according to the visible frontiers
+of Γ(λ) that are only observed by λ. This can be efficiently
+computed in linear time on the number of visible frontiers
+by:
+I(λ) = |{f ∈ Γ(λ) : |Υ(f)| = 1}|. (10)
+Coverage view sampling: An iterative objective of DFR is
+to ensure maximum coverage of the current unknown space is
+maintained. Υ supports evaluation of the coverage complete-
+ness of the unknown map space by the current views Λ. Let
+F cvr represent the set of covered frontiers, where a frontier
+is considered covered if it has at least one covering view able
+to observe it according to Υ. The residual set is represented
+as F cvr = F \F cvr, and the global coverage completeness is
+evaluated by the fraction of covered frontiers, F cvr/F. The
+iterative coverage maximization objective can be formulated
+as:
+max |F cvr|
+|F | = max|
+[
+f ∈F
+{f | ∃λ ∈ Λ, V is(mf , λ)}|. (11)
+A frontier-guided sampling strategy is presented to per-
+form the maximization of (11) by iteratively sampling view-
+poses to observe the non-covered frontiers. This effort is
+concentrated within ∆B which contains the most recent
+changes to the frontier distribution. Given the high com-
+plexity potentially involved in the sampling procedure, a
+performance tuning parameter pλ
+local ∈ (0, 1] is provided,
+representing a probability threshold used to select a random
+subset of the frontiers in ∆B to be considered for sampling
+in the current cycle.
+A second parameter pλ
+global ∈ (0, 1] is provided which
+serves a similar purpose as pλ
+local, but is applied to any non-
+covered frontiers that lie outside of ∆B. This is to account
+for possible frontiers that were not successfully covered in a
+finite number of attempts during previous DFR cycles, which
+can result when large amounts of occupied or unknown space
+exist near a frontier. The difficulty in finding a feasible
+viewpose can greatly increase for these cases, and in some
+cases one may not exist with the available map knowledge.
+Algorithm 1: Frontier-guided view sampling for in-
+formation gain maximization
+1 reconditionV isibility(G, ∆B)
+2 bF ← f rontierQueueInit(F cvr, ∆B, pλ
+local, pλ
+global)
+3 while bF ̸ = ∅ do
+4 fi ← extractN ext(bF)
+5 Bfi ← getSamplingV ol (fi, dsense
+max , αs)
+6 success ← f alse, n ← 0
+7 while n < N attempt
+nbv & ¬success do
+8 ¯q ← getCoverageSample (Bfi)
+9 if isV alidSample(¯q) then
+10 λj = addN ode(¯q, G)
+11 F vis
+λj ← computeV isible(λj, fi)
+12 updateV isibility(λj, F vis
+λj )
+13 bF = bF \ F vis
+λj
+14 success ← true
+15 end
+16 n = n + 1
+17 end
+18 end
+Given the increased difficulty, pλ
+global is given a lesser value
+than pλ
+local, allowing the search effort to persist between DFR
+cycles but with lower priority. In effect, this offers a degree
+of probabilistic completeness as the likelihood of finding a
+valid sample, if one exists, can continually increase over time
+while reducing the individual search effort per DFR cycle.
+The sampling procedure is given in Alg. 1, which begins
+by calling reconditionV isibility to update the visible in-
+formation of existing views withing the changed volume.
+Between cycles, the frontier boundaries are often pushed
+back by only a small amount, but remain visible within the
+many of the same view as the previous cycle. This step
+ensures these differences are updated, so sampling is only
+needed when frontiers are pushed beyond visibility of all
+existing views.
+Next, a frontier queue bF is initialized containing the
+selected subsets from F cvr. For each fi ∈ bF, a sampling
+subspace Bfi is computed from which fi can potentially be
+observed given the sensing parameters. For a maximum of
+N attempt
+nbv attempts, viewposes are randomly sampled using
+getCoverageSample and checked by isV alidSample to
+determine if a valid sample has been found. A sample is
+considered valid only if it is collision-free and successfully
+observes the current frontier target, fi.
+Upon finding a valid sample, it is used to add a new node
+to the network, and all of its visible frontiers are computed
+to update the visibility map. If any of these frontiers are
+contained in bF, they are removed since they have been
+already covered by the current sample. This can greatly
+reduce the number of samples, since in practice a single
+view will often be able to observe many nearby frontiers.
+
+PAGE 9
+C. Pruning and Refinement
+The growth rate of the network is reduced by pruning
+unnecessary views that no longer provide any individual gain
+contribution, and redundant views with little or no exclusive
+information gain. These conditions naturally occur as the
+robot progresses its exploration of the map and observes the
+previously unknown space within each view. They also occur
+as a result when new view samples are added to the network
+which overlap with the pre-existing views, decreasing their
+exclusive gain. The goal is to identify the views that can be
+removed from the network without loss of the overall joint
+gain.
+The joint gain and exclusive gain measures are used to
+formulate the pruning objective as a submodularity maxi-
+mization problem. Given an initial set of views Λ, pruning
+can be described as finding the minimum subset of views Λ∗
+that achieves the same total joint gain as Λ, as follows:
+argmin
+Λ∗⊆Λ
+(Λ∗),
+s.t.
+J (Λ) − J (Λ∗) ≈ 0.
+(12)
+To solve (12), a set of pruning candidates is found by
+searching for views that have negligible individual or ex-
+clusive information gain. Given the local difference neigh-
+borhood ∆B, the search is restricted to the views located
+within visible range dsense
+max of ∆B, corresponding to the
+views with visibility information that was potentially effected
+by the map changes. The candidates within this region are
+further evaluated for their edge connectivity. Any candidate
+found to have a cut-edge is preserved to maintain the graph
+connectivity, while the remainder are deleted.
+Once the pruning stage is complete, the coverage views
+of V nbv represent the supremal set that maximizes map
+coverage using a minimal number of views. Not only does
+this help to reduce the total size, but the minimization of
+redundant coverage helps to simplify the planning problem.
+Since each NBV has some positive amount of exclusive gain
+after pruning, they represent an exact set of targets that a
+planner must determine how to optimally visit, without the
+need to evaluate their redundancy during its search.
+D. Reachability Update
+The reachability knowledge represented by E is updated
+each iteration to account for new map knowledge and any
+state changes in V. Additional nodes are also sampled
+during this stage to increase the overall node density and
+uniformity in V X . This accounts for the non-uniformity of
+coverage view sampling, which is biased towards the frontier
+boundaries. Since the purpose of V X is primarily to increase
+the network connectivity, only the position of these samples
+is needed, while the visible information and pose orientation
+attributes can be ignored.
+The pseudocode for the reachability update procedure is
+shown in Alg. 2, which contains two primary stages. The
+first stage samples traversal nodes to increase the distribution
+Algorithm 2: Reachability expansion algorithm.
+1 bB ← getSearchV olume (∆B, dsample
+traversal)
+// Stage 1: increase node density
+2 i, n ← 0
+3 while i < N attempt
+traversal & n < N sample
+traversal do
+4 xi ← generateReachabilitySample (bB)
+5 xnear ← f indN earest(xi, Λ)
+6 if distance(xi, xnear) > d sample
+traversal then
+7 addNode(G, xi)
+8 n = n + 1
+9 end
+10 i = i + 1
+11 end
+// Stage 2: increase edge density
+12 Elocal ← getU ncertainEdgeP airs(bB, pe
+update)
+13 for ei ∈ E local do
+14 OBB, l O, pobs ← computeEdgeState (ei)
+15 if lO= free then
+16 addEdge(G, ei)
+17 else if lO= unk then
+18 cacheUncertainEdge(G, ei, OBB, l O, pobs)
+19 else if lO= occ then
+20 cacheCollisionEdge(G, ei)
+21 end
+22 end
+density within the graph, and the second stage increases the
+total edge density.
+In the first stage, collision-free positions are uniformly
+sampled from bB, for a maximum of N attempt
+traversal attempts, or
+until a threshold of N sample
+traversal samples are accepted. Each
+sample is evaluated according to the distance of its nearest
+neighbor in Λ, and compared against a threshold distance,
+dsample
+traversal. dsample
+traversal serves as a density constraint to prevent
+too many samples from being added in close proximity,
+which would unnecessarily increase the size complexity of
+the graph while adding little or no additional reachability
+knowledge. A sample is accepted if its nearest neighbor
+distance is greater than dsample
+traversal, and a new node is added
+to the graph using the sampled position.
+The second stage begins by extracting the local
+set of candidate edge pairs Elocal using the function
+getU nknownEdgeP airs. This procedure searches bB to find
+the set of node pairs (vu, vw) such that the collision state of
+the corresponding edge eu,w is either null or unknown. Here,
+a null edge indicates the edge does not exist (i.e. has not
+been evaluated in any DFR cycle), while unknown refers
+to an edge found with an uncertain collision state from a
+previous DFR cycle. A parameter pe
+update ∈ [0, 1) is used to
+specify a random probability threshold of whether to evaluate
+a candidate node pair (vu, vw). This helps to limit the number
+of edge evaluation operations that occur per cycle, similar the
+parameter pλ
+local used for coverage view sampling.
+Each edge is evaluated by computeEdgeState to de-
+
+PAGE 10
+termine its collision state data, which leverages previously
+cached results if available. Since edges may be evaluated
+between any nodes over any distance within bB, the cached
+collision data can significantly reduce the update complexity.
+If an occupied collision is found, the edge is added to the
+cache of collision edges to prevent future evaluation. For
+unknown voxel collisions, the edge is added to the cache
+of uncertain edges along with the intermediate collision data
+results to accelerate future re-evaluation. Otherwise, the edge
+is added to the graph by addEdge which computes and stores
+its associated cost information according to (3) for efficient
+lookup by other procedures and planning.
+E. Topological Clustering
+The graph nodes are decomposed into a set of subgraph
+regions represented by the hyperedges C, as illustrated in
+Fig. 2b. C serves as a topological hierarchy over G to
+reduce its size complexity. This representation can be utilized
+to increase the efficiency for search, traversal, and other
+operations. A tradeoff occurs where greater reductions in size
+complexity also result in reduced level of detail (LoD), i.e.
+resolution.
+To compute the hyperedges, we use a density-based clus-
+tering approach based on [32], [33], extended to lever-
+age both the geometric and reachability knowledge already
+present in the APN. The algorithm uses two parameters, Dc
+and ρc, where Dc defines neighborhood distance threshold,
+and ρc defines a density threshold for the neighborhood.
+Let a node vp be defined as a core node if it has at least ρc
+edge-connected neighbors within distance Dc. A node vq is
+then defined as a reachable node from vp only if there exists
+an edge connection between vp and vq, and vq is within
+distance Dc from vp. Given a core node vp, a cluster is
+formed by all nodes reachable from vp. Any remaining nodes
+that are neither core nodes nor reachable from a core node
+are assigned as singleton clusters.
+This approach allows clusters to form more naturally
+by additionally considering the edge connectivity between
+points. They are also not required to be geometrically convex
+as with other clustering approaches. This enables fewer
+clusters to be formed, since they can be better fit to the
+nodes over arbitrarily shaped space. Explicit constraints on
+the maximum number of clusters or their size are also
+not necessary, such that clusters can conform to the map
+with variable size and density, which can effectively handle
+environments where different regions may have different
+geometric characteristics and complexities.
+VIII. H IERARCHICAL EVOLUTIONARY VIEW PLANNING
+The iteratively updated APN provides a generalized repre-
+sentation of the exploration state space, which can be utilized
+by any graph-based planning strategy for global and local
+planning. In this section, we present an anytime planning
+approach referred to as the APN Planner (APN-P), which
+leverages the hierarchical decomposition of the APN to plan
+a global sequence over the topological subgraph regions. A
+second planning stage then optimizes the low-level view
+Fig. 3: Visual depiction of the hierarchical planning strategy.
+The first stage computes the global path (dark red arrows)
+over the node clusters, with the start fixed to the robot
+location and the end fixed to the home location. The second
+stage optimizes the NBV sequence (depicted using tan
+arrows) within the first cluster of the global sequence (green
+bounding box).
+path for the first subgraph of the topological sequence.
+Each stage is formulated as a Fixed-Ended Open Traveling
+Salesman Problem (FEOTSP), solved using an evolutionary
+optimization approach to determine the optimal sequence
+orders. A visualization of this procedure is displayed in Fig.
+3.
+Let JH ⊂ N be an index set that enumerates the clusters C.
+A cost matrix mH is computed by finding the shortest path
+between the centroid views of each pair of clusters. Given the
+pairwise cost s(u, w) ∈ mH between cluster indices u, w ∈
+JH, the cluster planning objective is to find the minimum
+cost permutation ΠH ∈ Sn(JH) of the indices JH, where
+Sn(JH) is the symmetric group of JH.
+Given first cluster H0 of ΠH, and its induced subgraph
+G[H0], the view planning procedure is similarly formulated.
+Given an index set JΛ ⊂ N enumerating the NBVs {λ} ∈
+G[H0], a pairwise cost matrix mΛ between index pairs
+u, w ∈ JΛ can be obtained directly from the existing edge
+costs. The view path planning objective is then to find the
+minimum cost permutation Πλ = ( vagent, λJΛ
+0
+, · · · , λJΛn),
+which begins at the current robot configuration vagent and
+visits each NBV node of the target cluster.
+The optimized sequences are preserved in a data cache
+allowing them to be used to re-initialize subsequent planning
+cycles. Given a planning cycle i and target cluster G[H0], the
+current solution Πi is initialized from Πi−1 by first filtering
+out any invalid views Πi−1 \ G[H0] that do not belong to the
+current cluster. The relative order over the common subset
+Πi−1 ∪ G[H0] is preserved, and any additional views G[H0] \
+Πi−1 are inserted using local search to estimate their optimal
+sequence positions.
+Sequence optimization is performed using a mimetic evo-
+lutionary algorithm [34]. A population of Pn candidates,
+
+PAGE 11
+or individuals, are initialized by randomized permutations
+of ˆΠ. For a maximum of Ng generations, the population
+is optimized using a pairwise swap mutation and partially
+mapped crossover (PMX) [35]. The procedure terminates
+once Ng generations is exceeded, or an improved solution
+cannot be found after Nstall generations.
+Once the exploration plan optimization is complete, the
+first view of the local sequence represents the navigation
+goal, λg. If this goal is different from the previous goal, the
+cost of their respective sequences is compared to determine
+whether to accept or reject the new goal, penalizing signifi-
+cant changes in the direction of motion. Once the appropriate
+goal is selected, its trajectory is computed with RRT ∗ [36],
+using the APN to find the shortest path to initialize the
+trajectory planner. Exploration terminates once no frontiers
+remain, or no reachable views can be found for the remaining
+frontiers.
+Given that solutions tend to become more optimal with
+more generations, the computational efficiency of DFR di-
+rectly impacts the planning quality. This can have a com-
+pounding effect also, since the planning convergence rate
+can be increased with increased optimality of prior solutions
+used to initialize subsequent instances.
+IX. E VALUATION
+The APN and APN-P were evaluated through ROS-based
+simulations using Gazebo [37] and the RotorS MA V sim-
+ulation framework [38]. The AscTec Firefly MA V model
+provided by RotorS was used to simulate the robot dynamics
+and control systems, and was equipped with a stereo depth
+sensor for visual perception. The simulations and all algo-
+rithms were executed using a single laptop computer with
+Intel Core i7 2.6 GHz processor and 16 GB RAM. The test
+results were used to analyze the computational performance
+and planning efficiency of the proposed approach.
+Exploration was tested using several different 3D structure
+models with various scales as displayed in Fig. 4, with a
+visual comparison of their relative scales shown in Fig. 4e.
+In addition to varying sizes, each environment provides dif-
+ferent characteristics for evaluation, such as obstacle density,
+narrow spaces opposed to open space, dead-ends, and overall
+geometric complexity.
+A video presentation demonstrating the operation and
+performance of the APN-P is included with this work. The
+simulation environment is used to visualize the concepts of
+operation as they are executed. The Apartment scenario is
+used in the video presentation to demonstrate the real-time
+operation of the full exploration procedure while visualizing
+the APN’s dynamically changing structure.
+To account for the stochastic nature of the approach,
+each scenario was run 5 times and statistical analysis was
+computed over a variety of performance metrics, summarized
+in Table I. The average total exploration runtime required to
+complete the exploration task is denoted as T , and ¯tcycle
+refers to the average computational time required per update
+and planning cycle. A maximum exploration time limit of
+Tmax = 14min (840s) was imposed, which is the maximum
+TABLE I: Summary of performance analysis metrics.
+Symbol Description
+T average total exploration runtime (s)
+¯tcycle average computational time per cycle (ms)
+ϑM final map surface coverage ratio ( %) as Mocc/cMocc
+ηM average voxel discovery rate (m 3/s)
+ηMocc average surface voxel discovery rate (m 3/s)
+ϑV avg. number of nodes per unit of map volume ( 1/100m3)
+ϑE avg. ratio of known edges |E| to possible edges
+ |V|
+2
+
+TABLE II: Summary of common configuration parameters.
+Scenario
+Param Apt. Maze Ind. Plant Warehouse
+rM {0.1, 0.2, 0.4} { 0.1, 0.2} { 0.2} { 0.4}
+dsaf e 0.75m
+vmax 1.0m/s 2.0m/s 2.5m/s 3.0m/s
+˙ψmax 0.75rad/s
+dsense
+max 5m 6m 7m 9m
+αv, αh [60°, 90°] [60°, 90°] [75°, 115°] [75°, 115°]
+rated flight time for the AscTec Firefly. If this threshold is
+exceeded, exploration immediately terminates and failure is
+reported.
+The total map coverage is given as the ratio ϑM of the
+number of surface voxels Mocc discovered during explo-
+ration with respect to a ground truth set cMocc of all visible
+surface voxels. cMocc was determined by manually guiding
+the robot through each world scenario, carefully ensuring
+every observable surface was covered by the sensor. The
+total volumetric exploration rate is given as ηM, which is the
+average volume of new information gain per second in m3/s.
+Since the objective is to achieve complete surface coverage,
+a more useful metric is ηMocc which refers to the rate of
+occupied information gain in m 3/s.
+The APN is evaluated according to its average node
+density ϑV and edge density ϑE. Here, node density refers
+to the number of nodes within a standard unit of volume,
+normalized as the number of nodes per 100m3 of the mapped
+free space. Edge density refers to the ratio between the
+known edges |E| and the total edge capacity of a complete
+edge set over the nodes,
+ |V|
+2
+
+. ϑV and ϑE are given as the
+average over all cycles of the test scenario.
+The following baseline approaches were used for compar-
+ative analysis with the APN-P:
+• RH-NBVP [16]: A receding horizon method that finds
+informative view paths using RRT-based expansion
+within a local region of the robot.
+• AEP [17]: An approach that extends the strategy of RH-
+NBVP, using RH-NBVP for local planning and frontier-
+based planning for global search when local planning
+fails to find informative views.
+• FFI [18]: A hybrid frontier-based and sampling-based
+approach that uses an efficient frontier clustering strat-
+egy to guide the sampling of views.
+• Rapid [19]: An extension of frontier-based planning
+
+PAGE 12
+(a) Apartment
+ (b) Maze
+ (c) Industrial Plant
+(d) Warehouse
+ (e) Relative environment scale comparison
+Fig. 4: Visualization of each evaluated world scenario. The relative scale of each scenario is depicted in 4e according to their
+bounding box dimensions, where red represents the Apartment (slightly offset from the origin for visual clarity), blue represents
+the Maze, grey represents the Industrial Plant, and green represents the Warehouse.
+designed to maintain the fastest allowable velocity by
+guiding towards frontiers within the sensors current field
+of view, and using classical frontier planning when no
+visible frontiers are available.
+A summary of common parameters for the different sce-
+narios is shown in Table II, which were selected as consis-
+tently as possible to the baseline approaches. The map reso-
+lution rM was varied between the values {0.1, 0.2, 0.4}m to
+analyze its effects on performance scalability. The maximum
+linear velocity vmax and yaw rate ˙ψmax were assigned based
+on the common values used in the comparative approaches,
+along with the sensing parameters dsense
+max and (αv, αh).
+Coverage view sampling parameters related to Alg. 1 were
+set as pλ
+local = 0 .8, pλ
+global = 0 .1, and N attempt
+nbv = 30 for
+each scenario. The reachability update parameters for Alg.
+2 for each scenario were commonly set to N sample
+traversal = 3,
+pe
+update = 0.7, and dsample
+traversal = 2.0m.
+A. Apartment Scenario
+The apartment scenario in Fig. 4a is a relatively small scale
+interior space with the dimensions 20 × 10 × 3(m3), used
+as a baseline for comparing the larger and more complex
+scenarios. An example map reconstruction by APN-P is
+shown in Fig. 5a with the traced exploration path, and the
+APN roadmap is shown in Fig. 5b. The average distance
+traveled was 76.5m, and a surface coverage completeness of
+ϑM = 100% was consistently achieved at each evaluated
+map resolution.
+Fig. 6a shows an example of the explored map volume
+over time using resolution 0.2m for reference. The sur-
+(a) Reconstructed map and exploration path.
+(b) APN reachability roadmap.
+Fig. 5: Exploration results for the Maze Scenario. (a): The
+explored path is plotted in red, with intermediate keyframe
+configurations represented by yellow points. (b): The APN
+nodes and edges overlayed in blue.
+face coverage rate ηMocc was 1.5m3/s and 2.6m3/s for
+the respective map resolutions of 0.1m and 0.2m. Since
+there are multiple dead-end regions for this scenario, some
+amount of backtracking is unavoidable, where the effects of
+backtracking correspond to the periods in Fig. 6a where the
+map growth briefly stagnates (e.g. around the 30s timestamp).
+
+PAGE 13
+(a) Apt., rM = 0.2m
+ (b) Maze, rM = 0.2m.
+ (c) Ind. Plant, rM = 0.4m.
+ (d) Warehouse, rM = 0.4m.
+(e) Apt., ϑV = 17.1, ϑE = 0.58.
+ (f) Maze, ϑV = 16.0, ϑE = 0.20.
+ (g) Ind. Plant, ϑV = 3.8, ϑE = 0.25.
+ (h) Warehouse,
+ϑV = 2.7, ϑE = 0.42.
+Fig. 6: Representative results of the exploration progress over time. (a) - (d): explored map in terms of total voxels and their
+volume. (e) - (h): corresponding APN size in terms of its nodes (red) and edges (blue), with the respective node density (ϑV)
+and edge density (ϑE).
+The size growth of the APN over time shown in Fig. 6e.
+Compared to the map scale in Fig. 6a, the APN is signif-
+icantly smaller and its growth over time is non-monotonic
+due to iterative pruning and refinements. The final state of
+the APN roadmap is shown in Fig. 5b, which can be seen
+to expand throughout the reachable free-space at a sufficient
+density for planning and navigation.
+Fig. 7a shows representative results of the computation
+times per cycle, using map resolution 0.2m as reference.
+The time taken for DFR remains fairly consistent over
+time despite the increasing map size. This demonstrates the
+effectiveness of the difference-aware update procedures at
+constraining the complexity as the map grows. A statistical
+boxplot of the respective procedures executed per cycle is
+shown in Fig. 7e. The majority of computation time per
+cycle was spent on view planning, which had a median value
+of 13.6ms. The time spent on global cluster planning was
+negligible due to the relatively small size and complexity
+of this environment. The APN contained an average of only
+1.2 clusters, resulting in a trivial instance of cluster sequence
+optimization. The computation times for all differential regu-
+lation procedures were minimal compared to planning, given
+the relatively simple environment.
+The time performance with the compared methods is sum-
+marized in Table III. At the lowest map resolution of 0.4m,
+the APN-P achieved an average total exploration time of
+T = 52.9s±4.3s, and average computation time per iteration
+of ¯tcycle = 14.0 ± 8.0ms. Using a map resolution of 0.2m,
+the average exploration time was 57.9s with 18.9 ± 9.1ms
+per cycle. At the highest map resolution of 0.1m, the average
+exploration time was 69.4s with 28.9 ± 18.5ms per cycle.
+The RH-NBV approach required the highest total explo-
+ration time of 501.9s, with an average computation time per
+iteration of 153ms. For AEP, the total exploration time for
+each resolution was reported to take approximately 200s on
+average (exact quantities were not specified), with an average
+computation time per iteration of 98ms. FFI reported the
+fastest exploration time of the compared methods, with a
+total time of 80s and 151s for the respective map resolutions
+0.4m and 0.1m. It should be noted that this approach was
+terminated once 95% exploration was reached, rather than
+full coverage.
+The APN-P performance demonstrated a significant im-
+provement over the compared state-of-the-art implementa-
+tions in terms of both total exploration time and per-iteration
+computation times. Compared to FFI, APN-P achieved com-
+plete coverage while the exploration time was reduced by
+34% using resolution 0.4m, and 54% using resolution 0.1m.
+Additionally, the percent improvement between resolutions
+indicates better scalability to higher resolution mapping.
+B. Maze-like Scenario
+A maze-like environment is presented in Fig. 4b with the
+dimensions of 20 × 20 × 2.5(m3). This scenario was tested
+using map resolutions of 0.1m and 0.2m; higher resolutions
+were not evaluated since there are narrow passageways that
+require lower resolutions to admit collision-free paths (as
+also noted in [18]). This scenario was primarily compared
+against FFI, as this scenario was not evaluated in the original
+works of the other approaches.
+A representative example of the mapped environment after
+exploration is shown in Fig. 8a with the executed explo-
+
+PAGE 14
+(a) Apt.
+ (b) Maze
+ (c) Ind. Plant
+ (d) Warehouse
+(e) Apt.
+ (f) Maze
+ (g) Ind. Plant
+ (h) Warehouse
+Fig. 7: Timing performance for each exploration scenario. (a)-(d): depict the processing time taken per cycle. (e)-(h): display the
+median statistical boxplot of the DFR and planning computation times per cycle.
+TABLE III: Time performance comparison in terms of total exploration runtime T and computation time per cycle ¯tcycle,
+averaged over 10 runs.
+APN-P FFI AEP RH-NBVP Rapid
+Scenario rM[m] T [s] ¯tcycle[ms] T [s] ¯tcycle[ms] T [s] ¯tcycle[ms] T [s] ¯tcycle[ms] T [s] ¯tcycle[ms]
+Apt.
+0.4 52.9 14.0 ± 8.0 80 122 ± 36 200 92 501.9 153 - -
+0.2 57.9 18.9 ± 9.1 - 156 ± 109 200 - - - - -
+0.1 69.4 28.9 ± 18.5 151 68 ± 27 200 129 - - - -
+Maze 0.2 145.1 26 .1 ± 20.8 177 155 ± 71 - - - - - -
+0.1 212.6 48 .0 ± 28.8 330 238 ± 80 - - - - - -
+Ind. Plant 0.2 353.1 186 .8 ± 113.4 > 1000 152 ± 20 941 − 2104 − 582 −
+Warehouse 0.4 268.1 121 .3 ± 84.4 - - - - - - - -
+ration path overlayed in red. The path shows that very few
+redundant motions were executed and progresses smoothly
+throughout the maze passages, with an average total path
+length of 208.9m.
+Fig. 6b shows the map construction over time. An average
+coverage value of ϑM = 100% was reached at each map
+resolution, and the surface coverage rate ηMocc was 0.5m3/s
+and 1.4m3/s for the respective map resolutions of 0.1m and
+0.2m. The APN size growth over time was plotted in Fig.
+6f, and visualized in Fig. 8b. The average node density per
+100m3 was ϑV = 16.0 ± 1.3, with an average edge density
+of ϑE = 0.20 ± 0.12.
+The computation times per cycle are plotted in Fig. 7b
+with a statistical analysis of the computation time taken
+per procedure shown in Fig. 7f. For this scenario, most of
+the computation time went towards APN regulation, with
+coverage view sampling requiring the most time of 15.8ms
+due to the prevalence of obstacles and occlusions. Despite the
+high obstacle density, the computation times for reachability
+updates remained relatively small, while still maintaining
+sufficient node and edge densities to facilitate planning.
+This demonstrates the effectiveness of the local difference-
+awareness and efficient data caching strategies that minimize
+wasteful or redundant processing.
+Table III summarizes the exploration efficiency of the
+compared approaches with respect to total exploration time
+and computation time per cycle. Note that as previously
+mentioned, exploration time for FFI was reported when
+95% coverage was achieved, rather than 100%. The APN-P
+completed the exploration with 100% coverage in an average
+time of 145.1s and 212.6s for map resolutions 0.2m and
+0.1m, respectively. These are significant improvements over
+the results of FFI, while the processing time per cycle was
+also reduced by around 80% and had much less variability.
+Additionally, the total exploration time for FFI increased by
+86% between the two map resolutions, while the respective
+increase for the APN-P was 45%. This further demonstrates
+the performance scalability for higher mapping resolutions
+
+PAGE 15
+(a) Reconstructed map and exploration path.
+(b) APN reachability roadmap.
+Fig. 8: Exploration results for the Maze Scenario. (a): The
+explored path is plotted in red, with intermediate keyframe
+configurations represented by yellow points. (b): The APN
+nodes and edges overlayed in blue.
+using larger and more complex environments.
+C. Industrial Plant Scenario
+The Industrial Plant scenario shown in Fig. 4c is an
+outdoor environment based on the Gazebo Powerplant model,
+truncated to the approximate dimensions of 33×31×26(m3).
+It represents both a large-scale and complex exploration
+task due to intricate structural geometries with many auto-
+occlusions. It was tested using a map resolution of 0.2m and
+maximum velocity of 2.5m/s, consistent with the compared
+approaches.
+An example of the explored map is shown in Fig. 9a, with
+the explored volume over time plotted in Fig. 6c. A high
+surface coverage rate of ηMocc = 3 .2m3/s was achieved,
+which was consistently maintained as shown in Fig. 6c. The
+average total coverage was 98.7%, due to a few small regions
+with high surrounding occlusions, where coverage sampling
+failed to find a feasible viewpose. This could be overcome by
+selecting more aggressive sampling parameters, which was
+not done for these tests for parameter consistency between
+scenarios.
+The APN size over time is plotted in Fig. 6g, with the final
+roadmap structure visualized in Fig. 9b. The average node
+(a) Reconstructed map (colorized by voxel height).
+(b) APN reachability roadmap.
+Fig. 9: Exploration results of the Industrial Plant scenario.
+and edge density were ϑV = 3.8 and ϑE = 0.25, respectively.
+By visual inspection of Fig. 9b, the extent and density of
+the network appear to provide good coverage throughout the
+map.
+The processing time per cycle is displayed in Fig. 7c, with
+a statistical boxplot of the time taken by each subroutine
+shown in Fig. 7g. Traversal edge maximization required
+the most computation time during differential regulation
+with an average of 67.2ms due to the large scale and the
+amount of empty-space surrounding the structures which is
+initially unknown. Unknown edges are repeatedly checked
+for collision checks until they can be determined as either
+completely free, or having an occupied collision after which
+they are suppressed. The processing time spent on planning
+was well-balanced between the hierarchical layers.
+A comparison of the timing results to the baseline ap-
+proaches is shown in Table III. We note that this environment
+was not originally tested by the authors of RH-NBVP;
+instead, the corresponding value of 2104s was obtained from
+the comparative analysis performed by [19].
+Rapid performed with the fastest total exploration time
+among the compared methods, taking 582s with an average
+total distance of 728m. This was also the only approach able
+to finish exploration within the rated time limit Tmax of
+840s. This could be explained because this approach takes
+advantage of the large amount of free space to maintain
+
+PAGE 16
+high velocity, which helps to offset the diminished efficiency
+from greedy planning. However, this also has the effect
+of frequently leaving regions that have only been partially
+mapped. Coverage gaps can frequently occur that require
+large redundant paths to revisit, or otherwise reduce the
+completeness of the final map depending on the specific
+termination criteria.
+Additionally, the authors of Rapid note that their imple-
+mentation can spend a significant amount of time computing
+paths over large distances (up to 10 seconds) using Dijkstras
+algorithm over the map. These computation times were
+omitted from the reported total exploration time to focus
+evaluation only on the quality of their flight behavior. Even
+without this consideration, the APN-P was still able to reach
+complete exploration around 65% faster on average with
+a decrease in distance traveled of around 10%. This also
+highlights the importance of the APN efficiency to prevent
+such high computation times from occurring in practice.
+APN-P exhibited significantly better performance than all
+compared methods, requiring an average total exploration
+time of only 353.1s, with each cycle requiring an average
+of 186.8ms. The average total distance traveled was 406.3m,
+with mean velocity of 1.9m/s. The MA V was able to maintain
+higher velocities due to the fast cycle times, which enabled
+the system to quickly react to the changing spatial map and
+re-plan its exploration path. Often the information gain of the
+current NBV goal gets fully observed as the MA V gets closer
+which can be quickly reflected within the network, allowing
+it to maintain its momentum by not needing to completely
+stop at each goal.
+To evaluate how the larger size of this scenario corre-
+lates to the processing time per cycle, the Ind. Plant was
+additionally evaluated against the Maze scenario. To enable
+more consistent comparison, the map resolution was kept
+at 0.2m, and the maximum velocity and sensor parameters
+were assigned the values used for the Maze as indicated in
+Table II. The resulting cycle processing time for the Ind.
+Plant decreased by around 58%, with each cycle taking an
+average of ¯tcycle = 78.7ms. Within each cycle, DFR required
+46.4ms and planning required 32.3ms.
+The effects of map resolution were analyzed by a testing
+the timing performance using map resolution of 0.4m. This
+resulted in a significant decrease in the cycle processing
+time, which was reduced to ¯tcycle = 30 .9ms, and the total
+exploration time was reduced to T = 220.2s. This indicates
+the increased cycle processing time at resolution 0.2 were
+primarily due to the increased resolution, rather than the
+larger environment size directly.
+D. Warehouse Scenario
+The Warehouse scenario is a large-scale indoor environ-
+ment with the approximate dimensions 90 × 30 × 15 (m3),
+shown in Fig. 4d with its exterior shown on the left, and the
+interior structures shown on the right. The models exterior
+structure was derived from the Powerplant model available
+from the Gazebo model library, while the interior was mod-
+ified by adding a various geometric features and structures
+Fig. 10: The reconstructed map of the Warehouse scenario
+colorized by voxel height. The maximum height of displayed
+voxels is truncated for visual clarity.
+to create a more intricate environment for exploration. Since
+this was a custom built model, the APN-P was evaluated
+independently as comparative results were unavailable.
+Due to the larger scale of this scenario, the mapping
+resolution was set to 0.4m, and the maximum velocity
+was increased to 3.0m/s. The sensing parameters were
+also increased using a maximum range of 9m, with FoV
+(75°, 115°). The larger sensor view volume results in more
+information being added to the map per scan and the higher
+maximum velocity results in more scans being integrated
+between cycles, both resulting in more changed data to
+process per cycle. This scenario was also used to analyze
+variations of the clustering parameters ρc and Dc, which
+are indicated in Table IV. Unless otherwise noted, these
+parameters were set to ρc = 4 and Dc = 7 .0, consistent
+with the previous Industrial Plant evaluation.
+A representative example of the reconstructed map results
+shown in Fig. 10 and the explored map volume over time
+is shown in Fig. 6d. A minimum coverage ratio of ϑM =
+99.98% was achieved for all test configurations. The APN
+size growth is depicted in Fig. 6h, which contained an
+average of 346 nodes and 21494 edges, with an edge density
+factor of 0.374.
+The computation time per cycle is plotted in Fig. 7d and
+summarized in Table III. Similar to the Ind. Plant scenario,
+the time spent on APN regulation remains within a bounded
+range despite the increasing size of the map and APN.
+The exploration time performance results are summarized
+in Table III, requiring an average exploration time of T =
+268.1s and average planning cycle time ¯tcycle = 121 .3ms.
+A more detailed breakdown of the processing times per sub-
+procedure is shown in Fig. 7h.
+Different clustering parameter variations were applied and
+the resulting time performance is summarized in Table IV.
+The average exploration time was not significantly changed
+between parameter variations, indicating the low sensitivity
+of these parameters. The primary effect of the variations was
+on the per-cycle computation time, though the differences
+were relatively minor. Using the values ρc = 4 and Dc =
+10.0, the cycle time was nearly evenly distributed between
+differential regulation, ¯tcycle
+DF R, and planning, ¯tcycle
+plan . The other
+parameter combinations increased the planning time, but only
+by a small amount.
+
+PAGE 17
+TABLE IV: Timing performance for the Warehouse Scenario
+with to variations of the clustering parameters ρc and Dc.
+ρc Dc[m] T [s] ¯tcycle[ms] ¯tcycle
+DF R[ms] ¯tcycle
+plan [ms]
+4 7.0 268.1 121 .3 47.4 78.9
+4 10.0 270.0 109 .7 55.3 54.4
+7 10.0 274.9 128 .7 49.1 79.7
+E. Discussions
+The experimental results show that our approach has
+the ability to iteratively update the APN and replan the
+exploration path at an average rate of at least 20Hz for the
+two smaller scale scenarios (Apt. and Maze), and at least
+5Hz for the larger scales (Industrial Plant and Warehouse).
+However, the difference between these cycle rates is not
+primarily due to the larger environment sizes. Instead, the
+larger sensor view volume and higher maximum velocities
+are the more significant factors, which result in a larger
+amount of map data for processing per cycle, but these
+factors are not directly related to the environment size. This
+helps to explain the scalability of our approach for larger
+environments.
+For the smaller environments, most of the planning time is
+spent on local view planning (see Fig. 7e and 7f), This is due
+to the relatively few clusters needed to partition the nodes,
+resulting in trivial cluster planning instances. However, plan-
+ning directly over all NBVs can quickly become intractable
+as the map size increases, either resulting in unacceptably
+large processing times, or would otherwise require premature
+search termination that degrades the planning quality.
+The hierarchical planning strategy of APN-P helps to miti-
+gate the complexity by keeping the problem size manageable.
+Furthermore, planning convergence is further accelerated by
+initializing each planning cycle from the partially optimized
+solution of the previous cycle. This reduces the need to
+introduce further problem simplifications or approximations
+that would decrease the planning quality. These effects are
+demonstrated by the results shown in Fig. 7d and 7h. The
+distributed planning time remains relatively low and does not
+exhibit continually increasing growth, despite the increasing
+size of the map and APN as shown in Fig. 6h, 6d.
+The frontier-guided information gain and sampling strat-
+egy of DFR provides an effective way to avoid the pro-
+hibitively high computation costs for analyzing information
+gain by the existing (compared) approaches and to balance
+processing time per cycle and update rates. This enables
+maximized coverage of the unknown map regions to be
+maintained at high update rates, providing the necessary
+knowledge needed for non-myopic planning.
+X. C ONCLUSIONS AND FUTURE WORK
+This paper has presented the Active Perception Network
+(APN), serving as a topological roadmap of the dynamically
+changing exploration state space, the differential regulation
+(DFR) update procedure that incrementally adapts the APN
+to the changing environment knowledge, and an exploration
+planner APN-P, which leverages the APN to find non-myopic
+exploration sequences through the APN.
+The results demonstrate the efficiency of DFR in perform-
+ing each cyclic update and its scalability with increasing map
+sizes. In comparison to several state-of-the-art approaches,
+the APN-P consistently demonstrated improved performance
+in terms of total exploration time and coverage completeness.
+The improved performance was achieved over a variety of
+different environments, both indoor and outdoor, with only
+minor parameter adjustments between them. We expect to
+make all implementations of the presented work available
+as open-source, including the full development framework it
+was built upon (briefly introduced in the Appendix).
+Several areas of future work have been identified. An
+investigation of different clustering methods and their per-
+formance effects will provide insight toward future improve-
+ments. Methods to account for sensing and localization
+uncertainty using multi-objective optimization strategies are
+also being investigated, where the current processing per-
+formance provides an excellent baseline to account for the
+greater computational complexities inherent to these. This
+will make the approach more robust for practical use in
+GPS-denied environments. An ablation study and analysis
+of parameter sensitivity will help guide future developments
+that are generalizable to a wider range of environment
+scenarios and that reduce or eliminate the need for parameter
+tuning.
+REFERENCES
+[1] A. Quattrini Li, “Exploration and mapping with groups of robots:
+Recent trends,” Current Robotics Reports , vol. 1, pp. 227–237, 2020.
+[2] B. Yamauchi, “A frontier-based approach for autonomous exploration,”
+in Computational Intelligence in Robotics and Automation, 1997.
+CIRA’97., Proceedings., 1997 IEEE International Symposium on .
+IEEE, 1997, pp. 146–151.
+[3] M. Keidar and G. A. Kaminka, “Efficient frontier detection for robot
+exploration,” The International Journal of Robotics Research , vol. 33,
+no. 2, pp. 215–236, 2014.
+[4] A. Topiwala, P. Inani, and A. Kathpal, “Frontier based exploration for
+autonomous robot,” arXiv preprint arXiv:1806.03581 , 2018.
+[5] C. Zhu, R. Ding, M. Lin, and Y . Wu, “A 3d frontier-based exploration
+tool for mavs,” in 2015 IEEE 27th International Conference on Tools
+with Artificial Intelligence (ICTAI) . IEEE, 2015, pp. 348–352.
+[6] C. Connolly, “The determination of next best views,” in Proceedings.
+1985 IEEE international conference on robotics and automation ,
+vol. 2. IEEE, 1985, pp. 432–435.
+[7] W. R. Scott, G. Roth, and J.-F. Rivest, “View planning for automated
+three-dimensional object reconstruction and inspection,” ACM Com-
+puting Surveys (CSUR) , vol. 35, no. 1, pp. 64–96, 2003.
+[8] C. Stachniss, G. Grisetti, and W. Burgard, “Information gain-based ex-
+ploration using rao-blackwellized particle filters.” in Robotics: Science
+and Systems, vol. 2, 2005, pp. 65–72.
+[9] L. Heng, A. Gotovos, A. Krause, and M. Pollefeys, “Efficient visual
+exploration and coverage with a micro aerial vehicle in unknown
+environments,” in 2015 IEEE International Conference on Robotics
+and Automation (ICRA) . IEEE, 2015, pp. 1071–1078.
+[10] E. Kaufman, T. Lee, and Z. Ai, “Autonomous exploration by expected
+information gain from probabilistic occupancy grid mapping,” in
+2016 IEEE International Conference on Simulation, Modeling, and
+Programming for Autonomous Robots (SIMPAR) . IEEE, 2016, pp.
+246–251.
+[11] S. Song and S. Jo, “Surface-based exploration for autonomous 3d
+modeling,” in 2018 IEEE International Conference on Robotics and
+Automation (ICRA). IEEE, 2018, pp. 1–8.
+
+PAGE 18
+[12] Y . Okada and J. Miura, “Exploration and observation planning for
+3d indoor mapping,” in 2015 IEEE/SICE International Symposium on
+System Integration (SII) . IEEE, 2015, pp. 599–604.
+[13] T. Dang, F. Mascarich, S. Khattak, C. Papachristos, and K. Alexis,
+“Graph-based path planning for autonomous robotic exploration in
+subterranean environments,” in 2019 IEEE/RSJ International Confer-
+ence on Intelligent Robots and Systems (IROS) . IEEE, 2019, pp.
+3105–3112.
+[14] Y . Kompis, L. Bartolomei, R. Mascaro, L. Teixeira, and M. Chli,
+“Informed sampling exploration path planner for 3d reconstruction
+of large scenes,” IEEE Robotics and Automation Letters , vol. 6, no. 4,
+pp. 7893–7900, 2021.
+[15] A. Bircher, M. Kamel, K. Alexis, H. Oleynikova, and R. Siegwart,
+“Receding horizon” next-best-view” planner for 3d exploration,” in
+2016 IEEE international conference on robotics and automation
+(ICRA). IEEE, 2016, pp. 1462–1468.
+[16] ——, “Receding horizon path planning for 3d exploration and surface
+inspection,” Autonomous Robots, vol. 42, pp. 291–306, 2018.
+[17] M. Selin, M. Tiger, D. Duberg, F. Heintz, and P. Jensfelt, “Efficient
+autonomous exploration planning of large-scale 3-d environments,”
+IEEE Robotics and Automation Letters , vol. 4, no. 2, pp. 1699–1706,
+2019.
+[18] A. Dai, S. Papatheodorou, N. Funk, D. Tzoumanikas, and S. Leuteneg-
+ger, “Fast frontier-based information-driven autonomous exploration
+with an mav,” in 2020 IEEE international conference on robotics and
+automation (ICRA). IEEE, 2020, pp. 9570–9576.
+[19] T. Cieslewski, E. Kaufmann, and D. Scaramuzza, “Rapid exploration
+with multi-rotors: A frontier selection method for high speed flight,”
+in 2017 IEEE/RSJ International Conference on Intelligent Robots and
+Systems (IROS). IEEE, 2017, pp. 2135–2142.
+[20] C. Witting, M. Fehr, R. B ¨ahnemann, H. Oleynikova, and R. Siegwart,
+“History-aware autonomous exploration in confined environments us-
+ing mavs,” in 2018 IEEE/RSJ International Conference on Intelligent
+Robots and Systems (IROS) . IEEE, 2018, pp. 1–9.
+[21] Z. Xu, D. Deng, and K. Shimada, “Autonomous uav exploration
+of dynamic environments via incremental sampling and probabilistic
+roadmap,” IEEE Robotics and Automation Letters , vol. 6, no. 2, pp.
+2729–2736, 2021.
+[22] D. Silver, D. Ferguson, A. Morris, and S. Thayer, “Topological
+exploration of subterranean environments,” Journal of Field Robotics ,
+vol. 23, no. 6-7, pp. 395–415, 2006.
+[23] F. Yang, D.-H. Lee, J. Keller, and S. Scherer, “Graph-based topological
+exploration planning in large-scale 3d environments,” in 2021 IEEE
+International Conference on Robotics and Automation (ICRA). IEEE,
+2021, pp. 12 730–12 736.
+[24] L. Fermin-Leon, J. Neira, and J. A. Castellanos, “Incremental contour-
+based topological segmentation for robot exploration,” in 2017 IEEE
+International Conference on Robotics and Automation (ICRA). IEEE,
+2017, pp. 2554–2561.
+[25] E. Palazzolo and C. Stachniss, “Effective exploration for mavs based
+on the expected information gain,” Drones, vol. 2, no. 1, p. 9, 2018.
+[26] Z. Meng, H. Sun, H. Qin, Z. Chen, C. Zhou, and M. H. Ang,
+“Intelligent robotic system for autonomous exploration and active
+slam in unknown environments,” in 2017 IEEE/SICE International
+Symposium on System Integration (SII) . IEEE, 2017, pp. 651–656.
+[27] S. Song, D. Kim, and S. Jo, “Online coverage and inspection planning
+for 3D modeling,” Autonomous Robots, vol. 44, no. 8, pp. 1431–1450,
+aug 2020.
+[28] A. Bircher, M. Kamel, K. Alexis, M. Burri, P. Oettershagen, S. Omari,
+T. Mantel, and R. Siegwart, “Three-dimensional coverage path plan-
+ning via viewpoint resampling and tour optimization for aerial robots,”
+Autonomous Robots, vol. 40, no. 6, pp. 1059–1078, 2016.
+[29] Z. Shang, J. Bradley, and Z. Shen, “A co-optimal coverage path
+planning method for aerial scanning of complex structures,” Expert
+Systems with Applications , vol. 158, p. 113535, 2020.
+[30] K. O. Ellefsen, H. A. Lepikson, and J. C. Albiez, “Multiobjective
+coverage path planning: Enabling automated inspection of complex,
+real-world structures,” Applied Soft Computing , vol. 61, pp. 264–282,
+2017.
+[31] H. Oleynikova, Z. Taylor, M. Fehr, R. Siegwart, and J. Nieto,
+“V oxblox: Incremental 3d euclidean signed distance fields for on-
+board mav planning,” in 2017 IEEE/RSJ International Conference on
+Intelligent Robots and Systems (IROS) . IEEE, 2017, pp. 1366–1373.
+[32] M. Ester, H.-P. Kriegel, J. Sander, and X. Xu, “A density-based
+algorithm for discovering clusters in large spatial databases with
+noise,” kdd, vol. 96, no. 34, pp. 226–231, 1996.
+[33] E. Schubert, J. Sander, M. Ester, H. P. Kriegel, and X. Xu, “Dbscan
+revisited, revisited: why and how you should (still) use dbscan,” ACM
+Transactions on Database Systems (TODS) , vol. 42, no. 3, pp. 1–21,
+2017.
+[34] K. Deb, A. Pratap, S. Agarwal, and T. Meyarivan, “A fast and
+elitist multiobjective genetic algorithm: Nsga-ii,” IEEE transactions
+on evolutionary computation , vol. 6, no. 2, pp. 182–197, 2002.
+[35] P. Kora and P. Yadlapalli, “Crossover operators in genetic algorithms:
+A review,” International Journal of Computer Applications , vol. 162,
+no. 10, 2017.
+[36] I. A. Sucan, M. Moll, and L. E. Kavraki, “The open motion planning
+library,” IEEE Robotics & Automation Magazine , vol. 19, no. 4, pp.
+72–82, 2012.
+[37] N. Koenig and A. Howard, “Design and use paradigms for gazebo, an
+open-source multi-robot simulator,” in 2004 IEEE/RSJ International
+Conference on Intelligent Robots and Systems (IROS)(IEEE Cat. No.
+04CH37566), vol. 3. IEEE, 2004, pp. 2149–2154.
+[38] F. Furrer, M. Burri, M. Achtelik, and R. Siegwart, “Rotors—a modular
+gazebo mav simulator framework,” in Robot Operating System (ROS).
+Springer, 2016, pp. 595–625.
+[39] B. Dezs ˝o, A. J ¨uttner, and P. Kov ´acs, “Lemon–an open source c++
+graph template library,” Electronic notes in theoretical computer
+science, vol. 264, no. 5, pp. 23–45, 2011.
+APPENDIX
+A. Software framework and architecture
+A C++ application development framework, which we
+refer to as Active Perception for Exploration, Mapping,
+and Planning (APEXMAP), was created in conjunction with
+the proposed approach and used to implement this work.
+The main goal of APEXMAP is to facilitate the rapid
+development, implementation, and evaluation of complex
+autonomous exploration and active perception systems for
+a variety of different robots, sensors, and applications. Its
+structure consists of a distributed collection of decoupled
+library packages, each intended to address a well-defined
+subproblem of active perception (e.g. mapping, sensing,
+visibility analysis) using generic and modular programming
+paradigms. These form the building blocks for the design
+of a complete system. While a detailed description of its
+complete structure is beyond the scope of this paper, we
+briefly introduce some of its key concepts.
+Unlike other open-source software for exploration tasks,
+APEXMAP is not restricted to a particular exploration for-
+mulation or methodology. As such, the APN is represented as
+a modular graph model, where its structure is not limited to
+that presented in this paper, but can be reconfigured to meet
+the requirements of nearly any graph-based formulation. For
+example, it supports the ability to represent a single graph
+structure or composition of multiple subgraphs using either
+directed or undirected edges, and the type and quantity of
+attributes for its nodes and edges can be freely defined. These
+characteristics can also be extended to define any number
+of hypergraph structures. The low level data structures and
+data types are optimized using similar design patterns to the
+LEMON graph library [39], which can achieve O(1) worst
+case amortized time complexity for all fundamental search
+and access operations, with modifying operations in linear
+worst case time complexity.
+Along similar lines, DFR and planning subsystems are
+modeled by a standardized front-end interface, while the
+
+PAGE 19
+back-end can be fully redefined using Inversion of Control
+(IoC) principles. This allows different update strategies to be
+freely implemented on a given APN configuration.
+An event-driven architecture (EDA) is used to provide in-
+line difference-awareness throughout the system, and enable
+dynamic data structures critical for managing dynamically
+changing data to ensure its state remains consistent across
+a complex system. Combined with IoC principles, any data
+container or other structures can be configured to broadcast
+the event when data inserted, erased, or modified. Other data
+structures can then subscribe to these events and invoke a
+user-defined callback to handle them.
+These design patterns decouple the transfer of data be-
+tween interfaces, allowing behaviors to be quickly and
+transparently changed throughout the system during its de-
+velopment and evaluation. They also prevents wasteful or
+redundant operations such as search and comparison, which
+may otherwise be needed to determine what data has been
+changed. An additional benefit is that many algorithms can
+be made more efficient by only processing incremental
+changes to its inputs, rather than reprocessing the full input
+set (e.g. maintaining the a list of connected components over
+the graph). The framework provides generic and flexible
+interfaces that enable these to be quickly implemented or
+modified.

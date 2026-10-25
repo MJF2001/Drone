@@ -1,0 +1,121 @@
+"""Fixed two-case provenance and six pure checks; never invokes a coverage core."""
+from common import *
+import sys,importlib.util,inspect,platform,os,traceback,difflib
+from copy import deepcopy
+from collections import Counter
+OLD=ROOT/'旧计划真实受阻PPCPP成对诊断_v0.1_20261023'
+SEL=ROOT/'覆盖阶段受阻选例核查_v0.1_20261023'
+CONTROL=ROOT/'中心区计时插桩影响核查_v0.1_20261022/run_check.py'
+def main():
+ assert not (H/'plan.json').exists()
+ for d in ('inputs','history','outputs','logs','source_snapshot'):(H/d).mkdir(exist_ok=True)
+ (H/'root_before.md').write_bytes((ROOT/'当前进度与下一步.md').read_bytes())
+ (H/'source_snapshot/执行稿.md').write_bytes((ROOT/'覆盖阶段真实受阻两例成对诊断执行稿_给sol_20261023.md').read_bytes())
+ for folder in (OLD,SEL):
+  for p,d in read(folder/'final_receipt.json')['files'].items():assert sha(folder/p)==d,(folder,p)
+ guards=read(OLD/'source_guards.json');guards.update(read(SEL/'sources_guard.json'))
+ for folder in (OLD,SEL):
+  for p,d in read(folder/'final_receipt.json')['files'].items():guards[str(folder/p)]=d
+  guards[str(folder/'final_receipt.json')]=sha(folder/'final_receipt.json')
+ selected=[];contracts=[]
+ for s in read(SEL/'usable_snapshots_v02.json')['selected']:
+  c={k:s[k] for k in ('id','base_id','shape')};src=SEL/s['N'];n=read(src);e=read(SEL/s['E']);cert=read(SEL/s['certificate']);contract=read(SEL/s['contract_certificate'])
+  for p,d in read(SEL/s['contract_freeze'])['files'].items():assert sha(SEL/p)==d
+  assert sha(src)==contract['N_sha256'] and sha(SEL/s['E'])==contract['E_v02_sha256']
+  assert 'E_contract_v02.json' in s['E'] and s['E']!=s['initial_E_not_for_algorithm']
+  for env in ('N','E'):
+   out=H/'inputs'/f"{s['id']}__{env}.json";out.write_bytes((SEL/s[env]).read_bytes());c[env]=str(out.relative_to(H))
+  history=read(SEL/'records'/(s['id']+'.json'));c['history']='history/'+s['id']+'.json';dump(H/c['history'],history)
+  c['obstacles']=cert['obstacles'];c['certificate']='history/'+s['id']+'__certificate.json';dump(H/c['certificate'],cert)
+  c['contract_certificate']='history/'+s['id']+'__contract.json';dump(H/c['contract_certificate'],contract)
+  c['sources']={k:{'path':str(SEL/v),'sha256':sha(SEL/v)} for k,v in s.items() if k in ('N','E','certificate','contract_certificate','contract_freeze','initial_E_not_for_algorithm')}
+  selected.append(c)
+  contracts.append({'case':s['id'],'physical_H_preserved':True,'core_H_projection':False,'U_N':len(ps(n['targets'])-ps(n['covered'])),'U_E':len(ps(e['targets'])-ps(e['covered'])),'blocked_completed':cert['obstacles'],'initial_E_excluded':s['initial_E_not_for_algorithm']})
+ dump(H/'selection.json',{'selected':selected,'selection':'unique usable_snapshots_v02 referenced inputs only, no new selection','new_selection_geometry_BFS':0})
+ for name in ('repair_runtime.py','worker_r.py'):(H/name).write_bytes((OLD/name).read_bytes())
+ spec=importlib.util.spec_from_file_location('_accepted_control',CONTROL);C=importlib.util.module_from_spec(spec);spec.loader.exec_module(C)
+ runtime,p2=C.B.load_native()
+ from baseline_suite import check_contract
+ # Validate/check/snapshot are input contracts only, not planning entries.
+ for c in selected:
+  for env in ('N','E'):
+   x=read(H/c[env]);runtime.validate(x);snap=runtime.snapshot(x);check_contract(snap,set(map(tuple,x['initial_targets'])),20)
+   assert snap.covered==frozenset(map(tuple,x['covered']))
+ contract_source=inspect.getsource(check_contract)
+ (H/'source_snapshot/core_contract.py.txt').write_text(contract_source,encoding='utf-8')
+ dump(H/'input_contract.json',{'cases':contracts,'projection_used':False,'reason':'actual frozen check_contract requires H subset initial published targets, not H subset F or T; native pending=T-H; audit checks targets-H-route. Physical H accepted unchanged by validation/snapshot/check_contract for both cores. No core solver run in preparation.','check_contract_file':inspect.getsourcefile(check_contract),'check_contract_sha256':sha(inspect.getsourcefile(check_contract))})
+ jobs=[];pairnum=0
+ for ci,c in enumerate(selected):
+  for si,seed in enumerate((20261020,20261021,20261022)):
+   branches=['B','R','C'];k=(ci+si)%3;branches=branches[k:]+branches[:k]
+   if (ci+si)%2:branches.reverse()
+   for branch in branches:
+    envs=('N','E') if pairnum%2==0 else ('E','N');pairnum+=1
+    for env in envs:jobs.append({'id':f"formal__{c['id']}__{seed}__{branch}__{env}",'case':c['id'],'base_id':c['base_id'],'branch':branch,'env':env,'method':{'B':'PPCPP','R':'R','C':'P2_MULTI'}[branch],'config':'OFF','seed':seed,'input':c[env],'phase':'formal'})
+ plan=read(OLD/'plan.json');plan.update(jobs=jobs,m=2,processing_cap=36,core_cap=24,R_cap=12,precheck_cases=6)
+ plan['input_contract']='T=P∩F; global physical H unchanged including blocked completed cell, no projection needed; U=T-H unchanged; D=P-F-H=empty; event public at initial snapshot'
+ dump(H/'plan.json',plan);dump(H/'source_guards.json',guards)
+ dump(H/'bindings.json',dict(read(OLD/'bindings.json'),R_worker_sha256=sha(H/'worker_r.py'),R_runtime_sha256=sha(H/'repair_runtime.py'),reused_accepted_batch=str(OLD),no_worker_or_core_changes=True))
+ dump(H/'environment.json',{'python':sys.version,'executable':sys.executable,'platform':platform.platform(),'CPU':os.environ.get('PROCESSOR_IDENTIFIER'),'threads':plan['thread_env'],'serial_fresh_process_per_entry':True,'cross_entry_cache':False})
+ dump(H/'input_freeze.json',{'files':{str(p.relative_to(H)):sha(p) for folder in ('inputs','history') for p in (H/folder).rglob('*') if p.is_file()}})
+ dump(H/'preparation_repairs.json',{'repairs_used':0,'cap':2,'records':[]})
+ print({'prepared':len(jobs),'core_calls':0,'physical_H_projection':False})
+def precheck():
+ assert not (H/'prechecks.json').exists()
+ import repair_runtime as RR
+ spec=importlib.util.spec_from_file_location('_accepted_check',CONTROL);C=importlib.util.module_from_spec(spec);spec.loader.exec_module(C)
+ runtime,p2=C.B.load_native();counts=[];records=[]
+ from baseline_suite import check_contract
+ names=['input_version_hash','common_state_and_U','blocked_H_T_D_contract','old_suffix_initial_history','R_intervals_responsibility_negative_control','count_serialization_independent_identity']
+ def fixture(block=()):
+  F={(x,y) for x in range(7) for y in range(4)}-set(block);path=[[x,1] for x in range(7)]+[[6,2]]+[[x,2] for x in range(5,-1,-1)]+[[0,1]]
+  return {'name':'fixed_stub','free':[list(p) for p in sorted(F)],'targets':[[0,1],[6,1]],'covered':[[0,1]],'published_targets':[[0,1],[6,1]],'deferred_targets':[],'current':[0,1],'previous':[0,0],'base':[0,1],'predator':[-1,0],'initial_targets':[[0,1],[6,1]],'old_route':path,'distance_budget':200}
+ try:
+  for name in names:
+   if name=='input_version_hash':
+    for p,d in read(H/'input_freeze.json')['files'].items():assert sha(H/p)==d
+    for c in read(H/'selection.json')['selected']:
+     for x in c['sources'].values():assert sha(x['path'])==x['sha256']
+     assert c['sources']['E']['path'].endswith('E_contract_v02.json')
+   elif name in ('common_state_and_U','blocked_H_T_D_contract','old_suffix_initial_history'):
+    for ci,c in enumerate(read(H/'selection.json')['selected']):
+     n,e=read(H/c['N']),read(H/c['E']);h=read(H/c['history']);cert=read(H/c['certificate'])
+     if name=='common_state_and_U':
+      assert all(n[k]==e[k] for k in n if k not in ('free','targets'))
+      assert ps(n['targets'])-ps(n['covered'])==ps(e['targets'])-ps(e['covered'])
+      assert len(ps(n['targets'])-ps(n['covered']))==[201,75][ci]
+     elif name=='blocked_H_T_D_contract':
+      assert ps(n['free'])-ps(e['free'])==ps(c['obstacles'])<=ps(e['covered'])
+      for x in (n,e):
+       P,F,T,Hh=map(ps,(x['published_targets'],x['free'],x['targets'],x['covered']))
+       assert T==P&F and not P-F-Hh and not x['deferred_targets'];runtime.validate(x);s=runtime.snapshot(x);check_contract(s,set(map(tuple,x['initial_targets'])),20);assert s.covered==frozenset(Hh)
+     else:
+      assert n['old_route']==h['suffix'] and ps(n['covered'])==ps(h['H']) and n['current']==h['prefix'][-1] and n['previous']==h['prefix'][-2]
+      assert cert['N_legal'] and cert['remaining_all_reachable']
+      assert [z['edge'] for z in cert['strict_coverage_blockages']]==[[61,62],[30,31]][ci]
+      assert all(z['pending_at_start']==[141,46][ci] for z in cert['strict_coverage_blockages'])
+      for x in h['source_files'].values():assert sha(x['path'])==x['sha256']
+   elif name=='R_intervals_responsibility_negative_control':
+    for block,expected in [(set(),0),({(2,1)},1),({(2,1),(4,1)},2)]:
+     c=fixture(block);r=RR.solve(c);counts.append(r['repair_counts']);assert len(r['repair_intervals'])==expected;assert RR.audit_saved(c,r)['passed']
+     if not block:assert r['raw']['route']==c['old_route']
+     if expected==2:assert r['repair_intervals']==[[1,3],[3,5]] # legal separator (3,1) retained
+    bad=deepcopy(r);bad['raw']['route'][1]=[99,99]
+    try:RR.audit_saved(c,bad);raise RuntimeError('tampered route accepted')
+    except AssertionError:pass
+    c=fixture();c['targets'].append([5,0]);c['published_targets'].append([5,0])
+    try:RR.solve(c);raise RuntimeError('missing responsibility accepted')
+    except RR.RepairFailure as ex:assert ex.reason=='missing_required_tasks';counts.append(ex.counts)
+   else:
+    assert all(type(v) is int and v==0 for v in RR.zero().values()) and set(RR.zero())==set(RR.KEYS)
+    assert C.detail(None)['counts'] is None;ids=C.B.identity();assert ids['primary']['file']!=ids['independent']['file']
+    c=fixture();assert json.loads(json.dumps(c))==c
+    token={'started':0,'returned':0,'exceptions':0};assert C.invoke_once(lambda:{'fixed_stub':True},token,None)=={'fixed_stub':True};assert token=={'started':1,'returned':1,'exceptions':0}
+    try:C.invoke_once(lambda:None,token,None);raise RuntimeError('duplicate accepted')
+    except AssertionError:pass
+   records.append({'id':name,'passed':True,'real_core_calls':0})
+ except BaseException as ex:records.append({'id':name,'passed':False,'reason':repr(ex),'traceback':traceback.format_exc()})
+ passed=len(records)==6 and all(x['passed'] for x in records)
+ dump(H/'prechecks.json',{'passed':passed,'cases':records,'fixed_stub_repair_attempts':len(counts),'fixed_stub_repair_counts':counts,'real_core_calls':0,'real_R_calls':0,'post_search_calls':0,'identity':C.B.identity(),'preparation_repairs':read(H/'preparation_repairs.json')['repairs_used']})
+ print({'passed':passed,'cases':records,'pure_repair_attempts':len(counts)});assert passed
+if __name__=='__main__':main() if sys.argv[1]=='setup' else precheck()

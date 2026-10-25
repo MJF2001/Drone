@@ -1,0 +1,303 @@
+{
+  "kind": "fixture",
+  "name": "mandatory_reserved",
+  "input": {
+    "name": "mandatory_reserved",
+    "free": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "targets": [
+      [
+        1,
+        0
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "covered": [],
+    "published_targets": [
+      [
+        1,
+        0
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "deferred_targets": [],
+    "current": [
+      0,
+      0
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "previous": null,
+    "predator": [
+      -1,
+      0
+    ],
+    "initial_targets": [
+      [
+        1,
+        0
+      ],
+      [
+        3,
+        0
+      ]
+    ],
+    "old_route": [
+      [
+        0,
+        0
+      ]
+    ],
+    "distance_budget": 1000000
+  },
+  "method": "PPCPP",
+  "result": {
+    "raw": {
+      "version": "PPCPP_LAST_RESERVE_v0.1",
+      "mode": "PPCPP",
+      "status": "core_complete",
+      "route": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "trace": [
+        {
+          "index": 0,
+          "current": [
+            0,
+            0
+          ],
+          "previous": null,
+          "pending_count": 2,
+          "kind": "local",
+          "options": [
+            {
+              "cell": [
+                1,
+                0
+              ],
+              "distance_reward": 0.0,
+              "straight_reward": 0.0,
+              "boundary_reward": 1.0,
+              "score": 0.5
+            }
+          ],
+          "goal": [
+            1,
+            0
+          ]
+        },
+        {
+          "index": 1,
+          "current": [
+            1,
+            0
+          ],
+          "previous": [
+            0,
+            0
+          ],
+          "pending_count": 1,
+          "kind": "recovery",
+          "goal": [
+            3,
+            0
+          ]
+        },
+        {
+          "kind": "return",
+          "index": 3,
+          "current": [
+            3,
+            0
+          ],
+          "goal": [
+            0,
+            0
+          ],
+          "pending_count": 0
+        }
+      ],
+      "selected": "P0",
+      "e": null,
+      "branches": {
+        "P0": {
+          "version": "PPCPP_CORE4_FIXED_HISTORY_v0.2_20261019",
+          "method": "PPCPP_INDEPENDENT",
+          "route": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "status": "core_complete",
+          "reason": null,
+          "seconds": 6.220000796020031e-05,
+          "budget": 19.999966599978507,
+          "seed": 0,
+          "seed_used": false,
+          "predator": [
+            -1,
+            0
+          ],
+          "initial_previous": null,
+          "weights": [
+            2.0,
+            0.5
+          ],
+          "trace": [
+            {
+              "index": 0,
+              "current": [
+                0,
+                0
+              ],
+              "previous": null,
+              "pending_count": 2,
+              "kind": "local",
+              "options": [
+                {
+                  "cell": [
+                    1,
+                    0
+                  ],
+                  "distance_reward": 0.0,
+                  "straight_reward": 0.0,
+                  "boundary_reward": 1.0,
+                  "score": 0.5
+                }
+              ],
+              "goal": [
+                1,
+                0
+              ]
+            },
+            {
+              "index": 1,
+              "current": [
+                1,
+                0
+              ],
+              "previous": [
+                0,
+                0
+              ],
+              "pending_count": 1,
+              "kind": "recovery",
+              "goal": [
+                3,
+                0
+              ]
+            },
+            {
+              "kind": "return",
+              "index": 3,
+              "current": [
+                3,
+                0
+              ],
+              "goal": [
+                0,
+                0
+              ],
+              "pending_count": 0
+            }
+          ],
+          "accepted_seconds": 6.19000056758523e-05,
+          "fallback_selected": false,
+          "overrun_gt_10ms": false
+        }
+      },
+      "reason": null
+    },
+    "entry_seconds": 0.000159399991389364,
+    "phase_seconds": {
+      "p0": 6.719998782500625e-05,
+      "final_audit": 3.200024366378784e-06,
+      "encoding": 2.6100024115294218e-05
+    },
+    "eligible": true,
+    "budget": 20,
+    "method": "PPCPP",
+    "seed": 0,
+    "injection_events": []
+  },
+  "audit": {
+    "extra_work_connection_steps": 0,
+    "work_segments": []
+  }
+}

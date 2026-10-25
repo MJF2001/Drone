@@ -1,0 +1,138 @@
+{
+  "cases": [
+    {
+      "id": "tuple_tuple",
+      "should_accept": true
+    },
+    {
+      "id": "tuple_list",
+      "should_accept": true
+    },
+    {
+      "id": "list_tuple",
+      "should_accept": true
+    },
+    {
+      "id": "list_list",
+      "should_accept": true
+    },
+    {
+      "id": "none_none",
+      "should_accept": true
+    },
+    {
+      "id": "none_coordinate",
+      "should_accept": false
+    },
+    {
+      "id": "coordinate_none",
+      "should_accept": false
+    },
+    {
+      "id": "different_coordinate",
+      "should_accept": false
+    },
+    {
+      "id": "wrong_real_previous",
+      "should_accept": false
+    },
+    {
+      "id": "missing_previous_or_heading",
+      "should_accept": false
+    },
+    {
+      "id": "wrong_dimension_1",
+      "should_accept": false
+    },
+    {
+      "id": "wrong_dimension_3",
+      "should_accept": false
+    },
+    {
+      "id": "string_container",
+      "should_accept": false
+    },
+    {
+      "id": "string_element",
+      "should_accept": false
+    },
+    {
+      "id": "bool_element",
+      "should_accept": false
+    },
+    {
+      "id": "float_element",
+      "should_accept": false
+    },
+    {
+      "id": "nan_element",
+      "should_accept": false
+    },
+    {
+      "id": "infinite_element",
+      "should_accept": false
+    },
+    {
+      "id": "route_bool",
+      "should_accept": false
+    },
+    {
+      "id": "current_bool",
+      "should_accept": false
+    },
+    {
+      "id": "goal_bool",
+      "should_accept": false
+    },
+    {
+      "id": "option_cell_bool",
+      "should_accept": false
+    },
+    {
+      "id": "return_previous_explicit_correct",
+      "should_accept": true
+    },
+    {
+      "id": "return_previous_explicit_wrong",
+      "should_accept": false
+    },
+    {
+      "id": "return_schema_without_previous",
+      "should_accept": true
+    },
+    {
+      "id": "missing_goal",
+      "should_accept": false
+    },
+    {
+      "id": "missing_current",
+      "should_accept": false
+    },
+    {
+      "id": "missing_recovery_field",
+      "should_accept": false
+    },
+    {
+      "id": "new_source_missing_or_legacy_previous_missing",
+      "should_accept": false
+    },
+    {
+      "id": "new_source_wrong_or_legacy_previous_wrong",
+      "should_accept": false
+    }
+  ],
+  "branches": [
+    "legacy_previous",
+    "H1_heading_source"
+  ],
+  "representations": [
+    "runtime",
+    "JSON_roundtrip"
+  ],
+  "expected_audit_calls": 120,
+  "expected_equivalence_checks": 4,
+  "handcrafted_route_fixture": "fixed 6 edges, local/recovery/return; no solver",
+  "max_technical_rounds": 3,
+  "saved_result_audits_after_pure_pass": 2,
+  "production_calls": 0
+}

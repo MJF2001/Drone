@@ -1,0 +1,22 @@
+--- E:\无人机研究项目_接续包_20261014\研究方案_剩余覆盖重规划_20261009\算法小型验证_20261010\frozen_baselines\v2_20261012\source\bfs_metric_geometry.py
++++ E:\无人机研究项目_接续包_20261014\障碍后接续估计器影子诊断_v0.1_20261023\frozen_shadow_connector_20261023\bfs_metric_geometry.py
+@@ -4,7 +4,7 @@
+     receives the same distance and first-query-direction path as Geometry.
+ """
+ from collections import deque
+-from model import Geometry,NoPath,adjacent
++from .model import Geometry,NoPath,adjacent
+ 
+ 
+ class BFSMetricGeometry(Geometry):
+--- E:\无人机研究项目_接续包_20261014\研究方案_剩余覆盖重规划_20261009\算法小型验证_20261010\frozen_baselines\v2_20261012\source\unified_geometry.py
++++ E:\无人机研究项目_接续包_20261014\障碍后接续估计器影子诊断_v0.1_20261023\frozen_shadow_connector_20261023\unified_geometry.py
+@@ -1,6 +1,6 @@
+ """Common exact metric and query-order-independent connector policy, not novelty."""
+-from bfs_metric_geometry import BFSMetricGeometry
+-from model import Geometry
++from .bfs_metric_geometry import BFSMetricGeometry
++from .model import Geometry
+ 
+ 
+ class UnifiedGeometry(BFSMetricGeometry):

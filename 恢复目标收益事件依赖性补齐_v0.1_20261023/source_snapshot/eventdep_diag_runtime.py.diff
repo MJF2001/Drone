@@ -1,0 +1,19 @@
+--- E:\无人机研究项目_接续包_20261014\覆盖受阻恢复目标单变量诊断_v0.1_20261023\recovery_diag_runtime.py
++++ eventdep_diag_runtime.py
+@@ -5,13 +5,13 @@
+ sys.path.insert(0,str(R));sys.path.insert(0,str(R/'基线复现准备_20261019'))
+ def module(name,path):
+  spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+-import recovery_diag_native as native
+-from recovery_diag_hook import Diagnostic
++import eventdep_diag_native as native
++from eventdep_diag_hook import Diagnostic
+ validate=module('last_validation',R/'PPCPP结构候选新开发验证_v0.1_20261020/validation.py').validate
+ from model import Snapshot,DeadlineExceeded,NoPath
+ def snapshot(c):return Snapshot(c['name'],frozenset(map(tuple,c['free'])),frozenset(map(tuple,c['targets'])),frozenset(map(tuple,c['covered'])),tuple(c['current']),tuple(c['base']),tuple(map(tuple,c['old_route'])),0,c['distance_budget'])
+ def run_payload(payload,mode,budget=20,seed=0,*,hook=None,clock=time.perf_counter,geometry=native.UnifiedGeometry,diagnostic_spec=None,target_intervention_enabled=False):
+- from recovery_diag_candidate import solve
++ from eventdep_diag_candidate import solve
+  begin=clock();deadline=begin+budget;raw=None;phases={};events=[]
+  def mark(stage):
+   if hook:hook(stage)

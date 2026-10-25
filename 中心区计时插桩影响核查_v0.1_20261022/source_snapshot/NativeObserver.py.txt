@@ -1,0 +1,24 @@
+class NativeObserver:
+    def __init__(self,runtime,p2):
+        import model,bfs_metric_geometry,unified_geometry
+        self.c=Counter({k:0 for k in ('core_started','core_returned','core_complete','context_calls','row_BFS_built','Astar_searches','geometry_distance_calls','geometry_path_calls','native_audit_calls')})
+        self.codes={runtime.native.solve.__code__:'core',p2.p2_solve.__code__:'core',model.Geometry.__init__.__code__:'context',
+            model.Geometry.path.__code__:'astar',bfs_metric_geometry.BFSMetricGeometry.distance.__code__:'distance',unified_geometry.UnifiedGeometry.path.__code__:'path',unified_geometry.single_cell_audit.__code__:'audit'}
+        self.frames={}
+    def profile(self,frame,event,arg):
+        kind=self.codes.get(frame.f_code)
+        if kind is None:return
+        if event=='call':
+            if kind=='core':self.c['core_started']+=1;assert self.c['core_started']<=1
+            elif kind=='context':self.c['context_calls']+=1
+            elif kind=='distance':self.c['geometry_distance_calls']+=1
+            elif kind=='path':self.c['geometry_path_calls']+=1
+            elif kind=='audit':self.c['native_audit_calls']+=1
+            obj=frame.f_locals.get('self');self.frames[id(frame)]=(kind,getattr(obj,'bfs_rows_built',0),getattr(obj,'searches',0))
+        elif event=='return':
+            old=self.frames.pop(id(frame),None)
+            if old:
+                obj=frame.f_locals.get('self')
+                if kind=='core':self.c['core_returned']+=int(isinstance(arg,dict));self.c['core_complete']+=int(isinstance(arg,dict) and arg.get('status') in ('core_complete','finished'))
+                if kind=='distance':self.c['row_BFS_built']+=getattr(obj,'bfs_rows_built',0)-old[1]
+                if kind=='astar':self.c['Astar_searches']+=getattr(obj,'searches',0)-old[2]

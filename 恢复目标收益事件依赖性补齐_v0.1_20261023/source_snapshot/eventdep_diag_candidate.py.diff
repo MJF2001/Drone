@@ -1,0 +1,11 @@
+--- E:\无人机研究项目_接续包_20261014\覆盖受阻恢复目标单变量诊断_v0.1_20261023\recovery_diag_candidate.py
++++ eventdep_diag_candidate.py
+@@ -1,7 +1,7 @@
+ """Only new policy: one input-selected last target; private F-e then restore F."""
+ import json,hashlib
+ from dataclasses import replace
+-from recovery_diag_runtime import native,DeadlineExceeded,NoPath
++from eventdep_diag_runtime import native,DeadlineExceeded,NoPath
+ VERSION='PPCPP_LAST_RESERVE_v0.2'
+ def append_segment(route,pending,segment,mark):
+  assert segment[0]==route[-1]

@@ -1,0 +1,234 @@
+--- original/ppcpp.py
++++ derived/ppcpp.py
+@@ -3,36 +3,41 @@
+ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[2]
+ sys.path.insert(0,str(ROOT/'基线复现准备_20261019'))
+-from ppcpp_independent import core,UnifiedGeometry,single_cell_audit,check_contract,DeadlineExceeded,NoPath
+-VERSION='PPCPP_CORE4_FIXED_HISTORY_v0.2_20261019'
+-def solve(s,initial,budget,seed,predator,previous,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit):
+-    begin=_clock();deadline=begin+budget;route=[];trace=[];status='not_started';reason=None;accepted=None
++from ppcpp_independent import UnifiedGeometry,single_cell_audit,check_contract,DeadlineExceeded,NoPath
++from h1_direction import parse_heading,after_edge
++from h1_rewards import reward_options,choose_neighbor
++VERSION='PPCPP_REAL_HEADING_H1_v0.1_20261022'
++def solve(s,initial,budget,seed,predator,heading_request,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit):
++    begin=_clock();deadline=begin+budget;route=[];trace=[];status='not_started';reason=None;accepted=None;heading_state=None
+     def tick():
+         if _clock()>=deadline:raise DeadlineExceeded()
+     def move(segment,pending):
++        nonlocal heading_state
+         assert segment[0]==route[-1]
+-        for p in segment[1:]:tick();route.append(p);pending.discard(p)
++        for p in segment[1:]:
++            tick();prior=route[-1];route.append(p);pending.discard(p)
++            heading_state=after_edge(heading_state,prior,p,len(route)-1)
+     try:
+         check_contract(s,initial,budget)
+         if not math.isfinite(budget):raise ValueError('finite budget')
+         if len(predator)!=2 or not all(math.isfinite(v) for v in predator):raise ValueError('finite predator')
+         if s.free and not (predator[0]<min(x for x,y in s.free) or predator[0]>max(x for x,y in s.free)):raise ValueError('predator outside fixed flight-domain x bounds required')
+-        if previous is not None and sum(abs(a-b) for a,b in zip(previous,s.current))!=1:raise ValueError('historical heading must be adjacent')
++        heading_state=parse_heading(heading_request,s.current)
+         tick();g=_geometry(s,deadline);reason=g.precheck();tick()
+         if reason:status='environment_infeasible'
+         else:
+             pending=set(s.targets)-set(s.covered)-{s.current};route=[s.current]
+             while pending:
+-                tick();cur=route[-1];prev=route[-2] if len(route)>1 else previous
+-                options=core.reward_options(cur,prev,pending,s.free,predator,(2.,.5));tick()
+-                event=dict(index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))
++                tick();cur=route[-1]
++                options=reward_options(cur,heading_state,pending,s.free,predator,(2.,.5));tick()
++                event=dict(index=len(route)-1,current=cur,incoming_heading=heading_state,pending_count=len(pending))
+                 if options:
+-                    goal=core.choose_neighbor(options);event.update(kind='local',options=options,goal=goal);segment=(cur,goal)
++                    goal=choose_neighbor(options);event.update(kind='local',options=options,goal=goal);segment=(cur,goal)
+                 else:
+                     goal=min(pending,key=lambda q:(g.distance(cur,q),q));tick();segment=g.path(cur,goal)
+                     event.update(kind='recovery',goal=goal)
+                 trace.append(event);move(segment,pending)
+-            tick();trace.append(dict(kind='return',index=len(route)-1,current=route[-1],goal=s.base,pending_count=0))
++            tick();trace.append(dict(kind='return',index=len(route)-1,current=route[-1],goal=s.base,pending_count=0,incoming_heading=heading_state))
+             move(g.path(route[-1],s.base),pending);tick()
+             checked=_audit(s,tuple(route));tick()
+             if checked['valid']:accepted=_clock()-begin;tick();status='core_complete'
+@@ -41,6 +46,6 @@
+     except NoPath as e:status='planning_failure';reason=str(e)
+     seconds=_clock()-begin
+     return dict(version=VERSION,method='PPCPP_INDEPENDENT',route=tuple(route) if status=='core_complete' else (),status=status,reason=reason,
+-        seconds=seconds,budget=budget,seed=seed,seed_used=False,predator=predator,initial_previous=previous,weights=(2.,.5),
+-        trace=trace,accepted_seconds=accepted if status=='core_complete' else None,fallback_selected=False,
++        seconds=seconds,budget=budget,seed=seed,seed_used=False,predator=predator,initial_heading=heading_request,weights=(2.,.5),
++        trace=trace,final_heading=heading_state,accepted_seconds=accepted if status=='core_complete' else None,fallback_selected=False,
+         overrun_gt_10ms=seconds>budget+.01)
+--- original/runtime_h1.py
++++ derived/runtime_h1.py
+@@ -1,16 +1,16 @@
+ """Production imports: frozen PPCPP and contract only; no experiment references."""
+ import sys,time,json,math,importlib.util
+ from pathlib import Path
+-R=Path(__file__).resolve().parent.parent
++R=Path(__file__).resolve().parents[2]
+ sys.path.insert(0,str(R));sys.path.insert(0,str(R/'基线复现准备_20261019'))
+ def module(name,path):
+  spec=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+-native=module('last_native',R/'基线复现准备_20261019/独立版_v0.2/ppcpp.py')
++native=module('last_native',R/'PPCPP真实来向H1最小验收_v0.1_20261022/derived/ppcpp.py')
+ validate=module('last_validation',R/'PPCPP结构候选新开发验证_v0.1_20261020/validation.py').validate
+ from model import Snapshot,DeadlineExceeded,NoPath
+ def snapshot(c):return Snapshot(c['name'],frozenset(map(tuple,c['free'])),frozenset(map(tuple,c['targets'])),frozenset(map(tuple,c['covered'])),tuple(c['current']),tuple(c['base']),tuple(map(tuple,c['old_route'])),0,c['distance_budget'])
+ def run_payload(payload,mode,budget=20,seed=0,*,hook=None,clock=time.perf_counter,geometry=native.UnifiedGeometry):
+- from candidate import solve
++ from candidate_h1 import solve
+  begin=clock();deadline=begin+budget;raw=None;phases={};events=[]
+  def mark(stage):
+   if hook:hook(stage)
+@@ -18,7 +18,7 @@
+   if clock()>=deadline:raise DeadlineExceeded()
+  try:
+   c=json.loads(payload);validate(c);s=snapshot(c);mark('entry')
+-  raw=solve(s,set(map(tuple,c['initial_targets'])),mode,seed,tuple(c['predator']),tuple(c['previous']) if c['previous'] else None,begin,deadline,phases,mark,clock,geometry)
++  raw=solve(s,set(map(tuple,c['initial_targets'])),mode,seed,tuple(c['predator']),c['incoming_heading'],begin,deadline,phases,mark,clock,geometry)
+   mark('encode_before');encode_begin=clock();wire=json.dumps(raw,ensure_ascii=False,allow_nan=False,separators=(',',':'));phases['encoding']=clock()-encode_begin;mark('encode_after')
+  except DeadlineExceeded:
+   raw=raw if raw is not None else dict(branches={},trace=[])
+--- original/candidate_h1.py
++++ derived/candidate_h1.py
+@@ -1,55 +1,20 @@
+-"""Only new policy: one input-selected last target; private F-e then restore F."""
++"""Independent H1 entry: frozen P0 flow only; LAST branch is excluded."""
+ import json,hashlib
+ from dataclasses import replace
+-from runtime import native,DeadlineExceeded,NoPath
+-VERSION='PPCPP_LAST_RESERVE_v0.2'
++from runtime_h1 import native,DeadlineExceeded,NoPath
++VERSION='PPCPP_H1_ENTRY_v0.1'
+ def append_segment(route,pending,segment,mark):
+  assert segment[0]==route[-1]
+  for q in segment[1:]:mark('alternative_move');route.append(q);pending.discard(q)
+-def solve(s,initial,mode,seed,predator,previous,begin,deadline,phases,mark,clock,geometry):
+- assert mode in ('PPCPP','ONE','LAST')
++def solve(s,initial,mode,seed,predator,heading_request,begin,deadline,phases,mark,clock,geometry):
++ assert mode in ('PPCPP',)
+  out=dict(version=VERSION,mode=mode,status='not_started',route=(),trace=[],selected=None,e=None,branches={},reason=None)
+  try:
+-  mark('p0_before');a=clock();p0=native.solve(s,initial,deadline-clock(),seed,predator,previous,_clock=clock,_geometry=geometry);phases['p0']=clock()-a;out['branches']['P0']=p0
++  mark('p0_before');a=clock();p0=native.solve(s,initial,deadline-clock(),seed,predator,heading_request,_clock=clock,_geometry=geometry);phases['p0']=clock()-a;out['branches']['P0']=p0
+   mark('p0_done')
+   if p0['status']!='core_complete':out.update(status=p0['status'],reason='original_branch_failed');return out
+   pristine=json.dumps(p0,sort_keys=True);chosen=p0;out['selected']='P0'
+   u=set(s.targets)-set(s.covered)-{s.current}
+-  if mode=='LAST' and u:
+-   a=clock();mark('candidate_before');full=geometry(s,deadline)
+-   def dist(q):mark('candidate_distance');return full.distance(s.base,q)
+-   e=min(u,key=lambda q:(dist(q),q));out['e']=e;phases['candidate']=clock()-a
+-   branch=dict(status='building',route=(),diagnostic_route=[s.current],trace=[],reserved=e,work_free_count=len(s.free)-1,cache_scopes=['original_full','alternative_full','alternative_work'],phase1_end=None,accepted_seconds=None)
+-   out['branches']['P1']=branch;route=[s.current];trace=branch['trace'];pending=set(u)-{e};a=clock()
+-   def move(segment):
+-    append_segment(route,pending,segment,mark)
+-   try:
+-    if pending:
+-     work_snapshot=replace(s,free=frozenset(set(s.free)-{e}),targets=frozenset(pending))
+-     work=geometry(work_snapshot,deadline)
+-     assert work.cache is not full.cache and work.distance_rows is not full.distance_rows
+-     # No work.precheck(): the base may be absent/unreachable until reservation release.
+-     missing=pending-work.reachable;mark('phase1_precheck')
+-     if missing:branch.update(status='reservation_infeasible',unreachable=sorted(missing))
+-     else:
+-      while pending:
+-       mark('phase1');cur=route[-1];prev=route[-2] if len(route)>1 else previous
+-       opts=native.core.reward_options(cur,prev,pending,work_snapshot.free,predator,(2.,.5))
+-       event=dict(phase='work',index=len(route)-1,current=cur,previous=prev,pending_count=len(pending))
+-       if opts:goal=native.core.choose_neighbor(opts);segment=(cur,goal);event.update(kind='local',goal=goal,options=opts)
+-       else:goal=min(pending,key=lambda q:(work.distance(cur,q),q));segment=work.path(cur,goal);event.update(kind='recovery',goal=goal)
+-       trace.append(event);move(segment)
+-    if branch['status']!='reservation_infeasible':
+-     branch['phase1_end']=len(route)-1;mark('release')
+-     trace.append(dict(phase='released',kind='reserved',index=len(route)-1,current=route[-1],goal=e,pending_count=1));move(full.path(route[-1],e))
+-     mark('return');trace.append(dict(phase='released',kind='return',index=len(route)-1,current=route[-1],goal=s.base,pending_count=0));move(full.path(route[-1],s.base))
+-     mark('p1_audit_before');checked=native.single_cell_audit(s,tuple(route));mark('p1_audit_after')
+-     branch.update(status='core_complete' if checked['valid'] else 'core_invalid',route=tuple(route) if checked['valid'] else (),errors=checked['errors'],accepted_seconds=clock()-begin if checked['valid'] else None)
+-   except NoPath as ex:branch.update(status='planning_failure',reason=str(ex))
+-   finally:branch['diagnostic_route']=tuple(route);phases['p1']=clock()-a
+-   assert json.dumps(p0,sort_keys=True)==pristine,'P0 was mutated'
+-   if branch['status']=='core_complete' and len(branch['route'])<len(p0['route']):chosen=branch;out['selected']='P1'
+-  elif mode=='LAST':out['no_tasks']=True
+   mark('final_audit_before');a=clock();checked=native.single_cell_audit(s,tuple(chosen['route']));phases['final_audit']=clock()-a;mark('final_audit_after')
+   out.update(status='core_complete' if checked['valid'] else 'core_invalid',route=tuple(chosen['route']) if checked['valid'] else (),trace=chosen['trace'],reason=checked['errors'] or None)
+  except DeadlineExceeded:
+--- original/reward_helpers.py
++++ h1_rewards.py
+@@ -1,21 +1,64 @@
+-def reward_options(current,previous,pending,free,predator,weights):
+-    """Pure scoring helper; neighbors are actual uncovered cardinal cells."""
++"""Derived CORE4 rewards: old axial arithmetic; certified H1 first-heading scores."""
++import math
++from fractions import Fraction
++from decimal import Decimal, localcontext
++
++def adjacent(p):
++    x, y = p
++    return ((x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1))
++
++def reward_options(current, heading, pending, free, predator, weights):
++    """Copied scoring structure; h replaces previous. No physical previous is made."""
+     options=sorted(q for q in adjacent(current) if q in pending and q in free)
+     if not options:return []
+     ds={q:math.hypot(q[0]-predator[0],q[1]-predator[1]) for q in options}
+     lo=min(ds.values());hi=max(ds.values());out=[]
++    direction = heading['primitive']
++    diagonal = direction is not None and direction[0] != 0 and direction[1] != 0
++    assert tuple(weights) == (2., .5)
+     for q in options:
+         rd=(ds[q]-lo)/(hi-lo) if hi>lo else 0.0
+-        if previous is None:rs=0.0
++        if direction is None:rs=0.0
+         else:
+-            old=(current[0]-previous[0],current[1]-previous[1])
++            old=direction
+             new=(q[0]-current[0],q[1]-current[1])
+-            rs=(old[0]*new[0]+old[1]*new[1]+1)/2
++            if not diagonal:
++                rs=(old[0]*new[0]+old[1]*new[1]+1)/2
++            else:
++                dot=old[0]*new[0]+old[1]*new[1]
++                norm2=old[0]*old[0]+old[1]*old[1]
++                with localcontext() as ctx:
++                    ctx.prec=40  # display only; never used for choosing or equality
++                    rs=float((Decimal(dot)/Decimal(norm2).sqrt()+1)/2)
+         n=sum(z in pending and z in free for z in adjacent(q))
+         rb=(4-n)/4
+-        out.append(dict(cell=q,distance_reward=rd,straight_reward=rs,boundary_reward=rb,
+-                        score=rd+weights[0]*rs+weights[1]*rb))
++        row=dict(cell=q,distance_reward=rd,straight_reward=rs,boundary_reward=rb,
++                 score=rd+weights[0]*rs+weights[1]*rb)
++        if diagonal:
++            # Exact score relative to the original binary64 rd and unchanged rb.
++            A=Fraction.from_float(rd)+1+Fraction.from_float(weights[1]*rb)
++            row['h1_certificate']=dict(A=str(A), B=dot, N=norm2)
++        out.append(row)
+     return out
+ 
++def compare_certificates(a, b):
++    """sign((A1-A2)+(B1-B2)/sqrt(N)), exactly over rational inputs."""
++    assert a['N'] == b['N'] and a['N'] > 0
++    A=Fraction(a['A'])-Fraction(b['A']);B=Fraction(a['B'])-Fraction(b['B']);N=a['N']
++    if not A:return (B>0)-(B<0)
++    if not B:return (A>0)-(A<0)
++    sa=(A>0)-(A<0);sb=(B>0)-(B<0)
++    if sa==sb:return sa
++    difference=A*A*N-B*B
++    if not difference:return 0
++    return sa if difference>0 else sb
++
+ def choose_neighbor(options):
+-    return min(options,key=lambda row:(-row['score'],row['cell']))['cell']
++    if 'h1_certificate' not in options[0]:
++        # Exact original expression and Python tie behavior for axial/no-motion.
++        return min(options,key=lambda row:(-row['score'],row['cell']))['cell']
++    best=options[0]
++    for row in options[1:]:
++        sign=compare_certificates(row['h1_certificate'],best['h1_certificate'])
++        if sign>0 or (sign==0 and row['cell']<best['cell']):best=row
++    return best['cell']

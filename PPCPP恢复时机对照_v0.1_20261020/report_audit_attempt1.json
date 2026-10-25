@@ -1,0 +1,12 @@
+{
+  "status": "postprocessing_assertion_failed",
+  "scope": "supplementary report check, not solver or experiment failure",
+  "passed_before_failure": ["6 pair-table rows", "20 road-state-table rows", "FIRST gap_family0_gap1 completion index 17"],
+  "failed_assertion": "FIRST return-event current == [2,2]",
+  "actual_return_event_current": [2,1],
+  "cause": "audit script guessed the within-block final cell; the report did not claim that coordinate",
+  "repair": "independently check saved route completion position, event consistency and BFS return distance rather than guess the row",
+  "solver_changes": 0,
+  "solver_reruns": 0,
+  "source_results_changed": false
+}

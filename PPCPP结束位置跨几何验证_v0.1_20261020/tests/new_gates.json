@@ -1,0 +1,409 @@
+{
+  "passed": true,
+  "count": 8,
+  "rows": [
+    {
+      "name": "tie",
+      "input": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "targets": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "covered": [],
+        "base": [
+          0,
+          0
+        ],
+        "current": [
+          0,
+          0
+        ]
+      },
+      "result": {
+        "emin": [
+          0,
+          1
+        ],
+        "distances": {
+          "(0, 1)": 1,
+          "(1, 0)": 1
+        }
+      }
+    },
+    {
+      "name": "empty",
+      "input": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "targets": [
+          [
+            0,
+            0
+          ]
+        ],
+        "covered": [
+          [
+            0,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "current": [
+          0,
+          0
+        ]
+      },
+      "result": {
+        "emin": null,
+        "distances": {}
+      }
+    },
+    {
+      "name": "current_credit",
+      "input": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "targets": [
+          [
+            0,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "covered": [],
+        "base": [
+          0,
+          0
+        ],
+        "current": [
+          0,
+          0
+        ]
+      },
+      "result": {
+        "emin": [
+          2,
+          0
+        ],
+        "distances": {
+          "(2, 0)": 2
+        }
+      }
+    },
+    {
+      "name": "graph_distance",
+      "input": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            3,
+            0
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "targets": [
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "covered": [],
+        "base": [
+          0,
+          0
+        ],
+        "current": [
+          0,
+          0
+        ]
+      },
+      "result": {
+        "emin": [
+          0,
+          2
+        ],
+        "distances": {
+          "(0, 2)": 2,
+          "(2, 0)": 6
+        }
+      }
+    },
+    {
+      "name": "mandatory_last_infeasible",
+      "result": {
+        "version": "GRID_MASK_BFS_v0.1",
+        "status": "infeasible",
+        "reason": "exhausted",
+        "length": null,
+        "route": [],
+        "discovered": 1,
+        "expanded": 1,
+        "queue_peak": 1,
+        "seconds": 1.3200042303651571e-05,
+        "limits": {
+          "seconds": 60,
+          "states": 800000
+        },
+        "start": [
+          0,
+          0
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "targets": [
+          [
+            1,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "last": [
+          1,
+          0
+        ]
+      }
+    },
+    {
+      "name": "current_not_last_candidate",
+      "passed": true
+    },
+    {
+      "name": "reuse_and_empty_mapping",
+      "passed": true
+    },
+    {
+      "name": "cap_not_infeasible",
+      "result": {
+        "version": "GRID_MASK_BFS_v0.1",
+        "status": "unresolved",
+        "reason": "state_limit",
+        "length": null,
+        "route": [],
+        "discovered": 1,
+        "expanded": 1,
+        "queue_peak": 1,
+        "seconds": 1.950003206729889e-05,
+        "limits": {
+          "seconds": 60,
+          "states": 1
+        },
+        "start": [
+          0,
+          0
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "targets": [
+          [
+            3,
+            2
+          ]
+        ],
+        "last": null
+      }
+    }
+  ]
+}

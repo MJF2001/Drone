@@ -1,0 +1,383 @@
+{
+  "passed": true,
+  "tests": [
+    {
+      "id": "all_zero",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 0,
+        "scope_engine_region_queries": 0,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 0,
+        "post_service_queries_total_protected": 0,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_route_audits": 1,
+        "post_collect_here": 1,
+        "post_resource_checks": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "one_scope",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 1,
+        "scope_engine_region_queries": 1,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 1,
+        "post_service_queries_total_protected": 1,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_inside_tests": 1,
+        "service_intersections": 1,
+        "post_service_intersections": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "multiple_scopes",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 2,
+        "scope_engine_region_queries": 1,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 1,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 1,
+        "post_service_queries_total_protected": 2,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_inside_tests": 2,
+        "service_intersections": 1,
+        "post_service_intersections": 2,
+        "post_route_audits": 1,
+        "post_collect_here": 1,
+        "post_geometry": 2,
+        "primary_domain_points": 10,
+        "post_distance": 2,
+        "post_resource_checks": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "empty_task_return",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 0,
+        "scope_engine_region_queries": 0,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 0,
+        "post_service_queries_total_protected": 0,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_route_audits": 1,
+        "post_collect_here": 1,
+        "post_geometry": 1,
+        "primary_domain_points": 5,
+        "post_distance": 1,
+        "post_resource_checks": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "zero_path",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 0,
+        "scope_engine_region_queries": 0,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 0,
+        "post_service_queries_total_protected": 0,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_route_audits": 1,
+        "post_collect_here": 1,
+        "post_resource_checks": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "serialization",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 1,
+        "scope_engine_region_queries": 1,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 1,
+        "post_service_queries_total_protected": 1,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_inside_tests": 1,
+        "service_intersections": 1,
+        "post_service_intersections": 1
+      },
+      "expected_rejections": 0
+    },
+    {
+      "id": "aborted_unstarted_unknown",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 0,
+        "scope_engine_region_queries": 0,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 0,
+        "post_service_queries_total_protected": 0,
+        "observer_started": 1,
+        "observer_finished": 0,
+        "observer_aborted": 1
+      },
+      "wrapper_or_engine_counts": {},
+      "expected_rejections": 3
+    },
+    {
+      "id": "missing_and_conservation_negative",
+      "passed": true,
+      "counts": {
+        "shared_region_queries_total": 1,
+        "scope_engine_region_queries": 1,
+        "scope_wrapper_prediction_region_queries": 0,
+        "scope_wrapper_native_region_queries": 0,
+        "scope_wrapper_post_region_queries": 0,
+        "scope_wrapper_full_region_queries": 0,
+        "post_service_intersections": 1,
+        "post_service_queries_total_protected": 1,
+        "observer_started": 1,
+        "observer_finished": 1,
+        "observer_aborted": 0
+      },
+      "wrapper_or_engine_counts": {
+        "post_inside_tests": 1,
+        "service_intersections": 1,
+        "post_service_intersections": 1
+      },
+      "expected_rejections": 4
+    }
+  ],
+  "core_calls": 0,
+  "post_search_calls": 0,
+  "cold": {
+    "cold_import_seconds": 1.4512496999814175,
+    "import_task_calls": [],
+    "actual_h1_native_source": "E:\\无人机研究项目_接续包_20261014\\PPCPP真实来向H1最小验收_v0.1_20261022\\derived\\ppcpp.py",
+    "source_alias_byte_verified": true
+  },
+  "identity_after": {
+    "namespace": {
+      "modules": {
+        "center_credit_v03_20261022": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\__init__.py",
+          "sha256": "2f4cbfb21877dd7cb704069f63d6a1a027bc131fefa3995321c7824a98bb9762",
+          "object_id": 2020342152176,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\__init__.py"
+        },
+        "center_credit_v03_20261022.utils": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\utils.py",
+          "sha256": "6c4c8b7bed422fa2378597fbcaa01ad4a5dfc9b3ee88bb9cfe051e8dfadf0228",
+          "object_id": 2020346906640,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\utils.py"
+        },
+        "center_credit_v03_20261022.final_resume": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\final_resume.py",
+          "sha256": "bfc0b897cb050c0602cead1ae99a8410878a4a1cb675c1aad975f6169df28c5e",
+          "object_id": 2020342322480,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\final_resume.py"
+        },
+        "center_credit_v03_20261022.exact": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\exact.py",
+          "sha256": "edaaad61912db8d14805cd1111b04af3a1dc4a1178eac85554ebbcf6cc7acb45",
+          "object_id": 2020376283792,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\exact.py"
+        },
+        "center_credit_v03_20261022.service": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\service.py",
+          "sha256": "9516e463686bab7fa4a18a5bc21078efc3ad974cf5f55be2eed0d278d529e17b",
+          "object_id": 2020346978096,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\service.py"
+        },
+        "center_credit_v03_20261022.geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\geometry.py",
+          "sha256": "6d5b1ee4ff284a76e0ea1a748ad5ecf05f2e6099fbcae26bdc88bd91c1dc22cb",
+          "object_id": 2020376290352,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\geometry.py"
+        },
+        "center_credit_v03_20261022.connector": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\connector.py",
+          "sha256": "ca59d5c87300a44478c803e39c2170d25160f9b00da945d8b8cfcc5888b4ed3b",
+          "object_id": 2020376288512,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\connector.py"
+        },
+        "center_credit_v03_20261022.public_contract": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\public_contract.py",
+          "sha256": "11fbfa52092a522282aa3bfe89013ab88d29dd0e433c1dce645c890b1742fc6f",
+          "object_id": 2020376291072,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\public_contract.py"
+        },
+        "center_credit_v03_20261022.pipeline": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\pipeline.py",
+          "sha256": "fdb413ec2e924ff6fb8b7bf414e59bac90e695ab78d547395285718670e71b7e",
+          "object_id": 2020376283552,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\pipeline.py"
+        },
+        "center_credit_v03_20261022.detector": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\detector.py",
+          "sha256": "6084071c2f673fd825552bba8096218c5fc001a3ef12a6302920943f64b7c236",
+          "object_id": 2020376295072,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\detector.py"
+        },
+        "center_credit_v03_20261022.executor": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\executor.py",
+          "sha256": "09fde1770bedc96f9ffc66746d783d28f7d158ee5b20dfde9bce5b4d6a956c5a",
+          "object_id": 2020376290912,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\executor.py"
+        },
+        "center_credit_v03_20261022.schema": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\schema.py",
+          "sha256": "e3450a09c97b89c3767cab338dcfee7c36280d10300988bd84ac96bcac833dbf",
+          "object_id": 2020376297312,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\schema.py"
+        },
+        "center_credit_v03_20261022.observe": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\observe.py",
+          "sha256": "3a73110b0bfb55fa4fb02b0f4ad76c32075d4eccb83ec4b3dfed57da2fbb398c",
+          "object_id": 2020376293552,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\observe.py"
+        },
+        "center_credit_v03_20261022.audit._common": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_common.py",
+          "sha256": "8d20ac6ab1cec2a631046c1c600f93b530f1de661ff79f66e10e9a681c9e7be3",
+          "object_id": 2020376579104,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_common.py"
+        },
+        "center_credit_v03_20261022.audit._geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_geometry.py",
+          "sha256": "5480fe9a3e613849dd5e948be5dcbd931db207b2a6c77966b58dd89dee025956",
+          "object_id": 2020376579504,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_geometry.py"
+        },
+        "center_credit_v03_20261022.audit._h1": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_h1.py",
+          "sha256": "10ada2cb9632fe1d5302b685ad0b7cfe7dac6a5efdc46e36877806ca62119c30",
+          "object_id": 2020376580624,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_h1.py"
+        },
+        "center_credit_v03_20261022.audit._detect": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_detect.py",
+          "sha256": "92ddf0d4a87c85df6329ea08e25fb85c9abb8e3b7c01d18588b32f844b5bf160",
+          "object_id": 2020376581504,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_detect.py"
+        },
+        "center_credit_v03_20261022.audit.region": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\region.py",
+          "sha256": "ddd294f9b9d7e882ee742242e9e53712a05cfb27ad2d11838f2b6754bc53a111",
+          "object_id": 2020376584304,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\region.py"
+        },
+        "center_credit_v03_20261022.audit._audit": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_audit.py",
+          "sha256": "5bd04a4d61aedca99a9a6454e71a534aa5eba55c786620508c09431cb7ee8145",
+          "object_id": 2020376577824,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_audit.py"
+        },
+        "center_credit_v03_20261022.audit": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\__init__.py",
+          "sha256": "1b290ec1aeec1ac22f2cfa0a82a514d3d3561088958197bdac7847b9cb926ae7",
+          "object_id": 2020376296832,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\__init__.py"
+        },
+        "center_credit_v03_20261022.audit._post_geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_post_geometry.py",
+          "sha256": "1a07e8659d6504e97c68691b5acca48d6f6a13c7e1e25cb53eba6e2585dfa329",
+          "object_id": 2020376590064,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_post_geometry.py"
+        },
+        "center_credit_v03_20261022.audit._post_saved": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_post_saved.py",
+          "sha256": "52769e706866edfc1ebd556d11e9fb7ce49427ac9264cf95e53bd45c93d84d18",
+          "object_id": 2020376579264,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\_post_saved.py"
+        },
+        "center_credit_v03_20261022.audit.pure": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\pure.py",
+          "sha256": "efb0e6b20e8aa8d6660d66b37b35c3d34ad3a73932c04994b6d6eb4519edf83e",
+          "object_id": 2020376591584,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\pure.py"
+        },
+        "center_credit_v03_20261022.post": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\post\\__init__.py",
+          "sha256": "6d57c09d0b9d9dfa5fca7d5d30f0c147c9c1cca7b85583aa26b4069591dcf0f3",
+          "object_id": 2020376592144,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\post\\__init__.py"
+        },
+        "center_credit_v03_20261022.post.geometry": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\post\\geometry.py",
+          "sha256": "3ddf572046673912970396a2356de1c37f096d42be5dfe553c00e550a00c6137",
+          "object_id": 2020377003328,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\post\\geometry.py"
+        },
+        "center_credit_v03_20261022.post.engine": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\post\\engine.py",
+          "sha256": "62c0f474cd3b4ee6532c27221fad4cf4eb151373617aa35e9893310bd9aa23fa",
+          "object_id": 2020376592304,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\post\\engine.py"
+        },
+        "center_credit_v03_20261022.context": {
+          "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\context.py",
+          "sha256": "a619c3ab17dccb230129649c24af72a4c934fec745225c893ed086dec5f9a490",
+          "object_id": 2020346684304,
+          "origin": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\context.py"
+        }
+      },
+      "primary_service_function": {
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\service.py",
+        "id": 2020376278208
+      },
+      "independent_service_function": {
+        "file": "E:\\无人机研究项目_接续包_20261014\\中心有效采集区统一接入最小验收_v0.3_20261022\\center_credit_v03_20261022\\audit\\region.py",
+        "id": 2020376692992
+      }
+    },
+    "baseline": {
+      "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "sha256": "6d5b95890a1ca666970c72cb306ec40ffc48495c9458d69cfc2bd702fa74d20f",
+      "id": 2020377180528
+    }
+  }
+}

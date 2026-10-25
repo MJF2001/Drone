@@ -1,0 +1,35 @@
+--- source/planner.py
++++ runtime/planner.py
+@@ -82,10 +82,10 @@
+     """RCG-based coverage planner (Algorithms 1--4), current-model adaptation."""
+ 
+     def __init__(self, start, known, sensor=None, seed=0, holes=True,
+-                 deadline=None, wall_clock=None):
++                 deadline=None, wall_clock=None, graph_factory=RCG):
+         self.map = known
+         self.sensor = sensor
+-        self.graph = RCG(self.map)
++        self.graph = graph_factory(self.map)
+         self.current = tuple(start)
+         self.start = tuple(start)
+         self.rng = random.Random(seed)
+--- source/rcg.py
++++ runtime/rcg.py
+@@ -161,6 +161,8 @@
+         """
+         reasons, transitions = self.essential()
+         reasons[current] = "current_anchor"
++        for p in getattr(self, "task_protected", set()):
++            if p in self.nodes:reasons.setdefault(p, "task_anchor")
+         for p in sorted(self.nodes):
+             node = self.nodes[p]
+             if node.kind in ("link", "tsp") and node.state == "Op":
+@@ -180,7 +182,7 @@
+                 if p[0] != q[0] and tuple(sorted((p, q))) not in transitions:
+                     # Preserve execution-anchor edges during the current action.
+                     def protected(n):
+-                        return self.nodes[n].kind in ("link", "tsp") and self.is_open(n)
++                        return (self.nodes[n].kind in ("link", "tsp") and self.is_open(n)) or n in getattr(self, "task_protected", set())
+                     if p != current and q != current and not protected(p) and not protected(q):
+                         self.remove_edge(p, q)
+ 

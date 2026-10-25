@@ -1,0 +1,37 @@
+test_blocked_history_retained_and_unfinished_deferred (__main__.Tests.test_blocked_history_retained_and_unfinished_deferred) ... ok
+test_blocked_or_unknown_target_rejected (__main__.Tests.test_blocked_or_unknown_target_rejected) ... ok
+test_bound_target_cannot_be_overwritten (__main__.Tests.test_bound_target_cannot_be_overwritten) ... ok
+test_covered_target_is_interface (__main__.Tests.test_covered_target_is_interface) ... ok
+test_deadline_keeps_actual_prefix_and_state (__main__.Tests.test_deadline_keeps_actual_prefix_and_state) ... ok
+test_disconnected_residual_requires_update (__main__.Tests.test_disconnected_residual_requires_update) ... FAIL
+test_entry_policy_not_invented (__main__.Tests.test_entry_policy_not_invented) ... ok
+test_entry_preserves_target_even_when_crossed (__main__.Tests.test_entry_preserves_target_even_when_crossed) ... ok
+test_explicit_next_transition (__main__.Tests.test_explicit_next_transition) ... ok
+test_free_but_unreachable_interface (__main__.Tests.test_free_but_unreachable_interface) ... ok
+test_inside_endpoint_still_allowed (__main__.Tests.test_inside_endpoint_still_allowed) ... ok
+test_invalid_time_budget (__main__.Tests.test_invalid_time_budget) ... ok
+test_local_completion_not_global_success (__main__.Tests.test_local_completion_not_global_success) ... ok
+test_missing_target_no_guess (__main__.Tests.test_missing_target_no_guess) ... ok
+test_no_automatic_next_target (__main__.Tests.test_no_automatic_next_target) ... ok
+test_no_virtual_collection_outside_path (__main__.Tests.test_no_virtual_collection_outside_path) ... ok
+test_outside_target_preserved (__main__.Tests.test_outside_target_preserved) ... ok
+test_pinned_tsp_primitives_unchanged (__main__.Tests.test_pinned_tsp_primitives_unchanged) ... ok
+test_provenance_required (__main__.Tests.test_provenance_required) ... ok
+test_resource_budget_limits_prefix (__main__.Tests.test_resource_budget_limits_prefix) ... ok
+
+======================================================================
+FAIL: test_disconnected_residual_requires_update (__main__.Tests.test_disconnected_residual_requires_update)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\CAP目标状态契约与接续原型_v0.1_20261020\test_contract.py", line 41, in test_disconnected_residual_requires_update
+    c,s=self.session();self.bind(s);r=self.record(c,s.cover_region({(0,0),(1,0),(2,0)}));self.assertEqual(r['status'],'partition_update_required');self.assertEqual(len(r['parts']),2)
+                                                                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'region_complete_transition_required' != 'partition_update_required'
+- region_complete_transition_required
++ partition_update_required
+
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.004s
+
+FAILED (failures=1)

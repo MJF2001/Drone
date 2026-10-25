@@ -1,0 +1,28 @@
+--- round01/worker.py
++++ round02/worker.py
+@@ -10,6 +10,7 @@
+     assert Path(runtime.__file__).resolve()==folder/'runtime.py' and Path(candidate.__file__).resolve()==folder/'candidate.py'
+     expected=R/'基线复现准备_20261019/独立版_v0.2/ppcpp.py' if mode=='FROZEN' else H/'native_diag.py'
+     assert Path(runtime.native.__file__).resolve()==expected
++    sys.path.insert(0,str(H))
+     return runtime,candidate
+ def imported(rt):return sorted({str(Path(m.__file__).resolve()) for m in list(sys.modules.values()) if getattr(m,'__file__',None) and Path(m.__file__).is_file()}|{str(Path(rt.native.__file__).resolve()),str(Path(rt.native.core.__file__).resolve()),str(Path(rt.validate.__code__.co_filename).resolve())})
+ def main():
+--- round01/evaluation.py
++++ round02/evaluation.py
+@@ -25,7 +25,14 @@
+     assert len(out['actual_core_calls'])==1 and set(out['runtime_reads'])=={str(H/j['input'])}
+     eq=None
+     if j['mode']=='OFF':
+-        original=read(H/'outputs'/f'gate_{j["state"]}_FROZEN.json');eq=equivalent(out,original);assert z['metrics']==both(c,original['result']['raw']['route'])
++        original=read(H/'outputs'/f'gate_{j["state"]}_FROZEN.json')
++        if j['phase']=='gate':eq=equivalent(out,original)
++        else:
++            gate_off=read(H/'outputs'/f'gate_{j["state"]}_OFF.json');gate_proof=equivalent(gate_off,original)
++            assert x['raw']['route']==gate_off['result']['raw']['route'] and x['raw']['trace']==gate_off['result']['raw']['trace']
++            assert x['raw']['branches']['P0']['seed_used'] is False and x['raw']['branches']['P0']['seed']==j['seed']
++            eq=dict(passed=True,gate_seed=20261020,formal_seed=j['seed'],gate_equivalence=gate_proof,formal_full_route_trace_and_metrics_equal_gate=True,formal_independent_reward_audit=True,note='Fresh formal replicate; seed metadata differs as scheduled. Original gate whitelist unchanged.')
++        assert z['metrics']==both(c,original['result']['raw']['route'])
+     return dict(job=j,ran=True,valid=True,timely=x['eligible'] and x['entry_seconds']<20,metrics=z['metrics'],status=x['raw']['status'],seconds=x['entry_seconds'],caller_wall_seconds=out['caller_wall_seconds'],audit=z,equivalence=eq)
+ 
+ def check_formal_pair(j):

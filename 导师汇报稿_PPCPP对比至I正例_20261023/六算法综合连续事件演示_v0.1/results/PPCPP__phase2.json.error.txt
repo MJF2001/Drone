@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\七算法共同预算比较_v0.3_Cstar07_20261020\worker.py", line 35, in <module>
+    try:main(read(sys.argv[1]),sys.argv[2])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\七算法共同预算比较_v0.3_Cstar07_20261020\worker.py", line 27, in main
+    if m=='PPCPP':r=call(s,initial,job['budget'],job['seed'],tuple(c['predator']),tuple(c['previous']) if c['previous'] is not None else None)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\基线复现准备_20261019\独立版_v0.2\ppcpp.py", line 16, in solve
+    check_contract(s,initial,budget)
+  File "E:\无人机研究项目_接续包_20261014\研究方案_剩余覆盖重规划_20261009\算法小型验证_20261010\frozen_baselines\v2_20261012\source\baseline_suite.py", line 20, in check_contract
+    if not s.covered<=set(initial_targets):raise ValueError('covered history must belong to initial published targets')
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: covered history must belong to initial published targets

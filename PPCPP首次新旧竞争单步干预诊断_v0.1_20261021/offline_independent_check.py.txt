@@ -1,0 +1,40 @@
+"""Post-run saved-JSON-only signal and strict decision-state cross-check.
+No imports from the execution chain, no new route or graph search.
+"""
+from pathlib import Path
+import json,collections,statistics,hashlib
+H=Path('PPCPP首次新旧竞争单步干预诊断_v0.1_20261021').resolve()
+def read(p):return json.loads(Path(p).read_text(encoding='utf8'))
+def save(p,x):
+    with Path(p).open('x',encoding='utf8') as f:json.dump(x,f,ensure_ascii=False,indent=2)
+a=read(H/'analysis.json');states=read(H/'states_metadata.json');ss={s['id']:s for s in a['states']};order=read(H/'order.json');jobs={(j['mode'],j['state'],j['seed']):j for j in order};independent=[];rejoin=[];trigger_calls=0;protection_calls=0
+for st in states:
+    values=[];eligible=[];triggered=[]
+    for seed in (20261020,20261021,20261022):
+        off=read(H/'outputs'/f'{jobs["OFF",st["id"],seed]["id"]}.json');on=read(H/'outputs'/f'{jobs["ON",st["id"],seed]["id"]}.json');c=read(H/jobs['OFF',st['id'],seed]['input']);old=set(map(tuple,c['initial_targets']));new=set(map(tuple,c['published_targets']))-old;targets=set(map(tuple,c['targets']))-set(map(tuple,c['covered']));aa=off['result']['raw']['route'];bb=on['result']['raw']['route'];tr0=off['result']['raw']['trace'];tr1=on['result']['raw']['trace'];logs=on['result']['raw']['branches']['P0']['diagnostic']['log'];values.append(len(bb)-len(aa));eligible.append(all(x['result']['raw']['status']=='core_complete' and x['result']['entry_seconds']<20 for x in (off,on)));triggered.append(bool(logs))
+        first=next((e for e in tr0 if e['kind']=='local' and any(tuple(o['cell']) in old for o in e['options']) and any(tuple(o['cell']) in new for o in e['options'])),None)
+        if first:
+            assert len(logs)==1 and logs[0]['index']==first['index'];assert aa[:first['index']+1]==bb[:first['index']+1];assert len([o for o in first['options'] if tuple(o['cell']) in new])==1;trigger_calls+=1
+            lookup=collections.defaultdict(list)
+            for e in tr0:
+                i=e['index'];key=(tuple(aa[i]),tuple(aa[i-1]) if i else tuple(c['previous']),frozenset(targets-set(map(tuple,aa[:i+1]))));lookup[key].append(e)
+            matches=[]
+            for e in tr1:
+                j=e['index']
+                if j<=first['index']:continue
+                key=(tuple(bb[j]),tuple(bb[j-1]),frozenset(targets-set(map(tuple,bb[:j+1]))))
+                for q in lookup.get(key,[]):
+                    i=q['index'];matches.append(dict(OFF_trace_index=tr0.index(q),ON_trace_index=tr1.index(e),OFF_route_index=i,ON_route_index=j,OFF_kind=q['kind'],ON_kind=e['kind'],current=list(key[0]),previous=list(key[1]),pending_count=len(key[2]),pending=sorted(key[2]),OFF_remaining_resource=c['distance_budget']-i,ON_remaining_resource=c['distance_budget']-j,same_remaining_resource=i==j,same_literal_route_suffix=aa[i:]==bb[j:]))
+            rejoin.append(dict(state=st['id'],seed=seed,found_actual_decision_state_match=bool(matches),first=matches[0] if matches else None,first_with_pending=next((m for m in matches if m['pending_count']>0),None),all_matches=matches,note='Both indices must be saved trace decision starts; current/previous/pending checked, remaining resource separate; no timing/cache/full-running-state identity claim'))
+        else:
+            assert not logs and aa==bb and tr0==tr1;protection_calls+=1
+    assert len(set(triggered))==1;mean=statistics.mean(values);assert ss[st['id']]['mean_delta']['length']==mean and ss[st['id']]['range_delta_L']==[min(values),max(values)]
+    independent.append(dict(state=st['id'],geometry=st['geometry'],L=st['L'],w=st['w'],triggered=triggered[0],all_eligible=all(eligible),raw_route_length_deltas=values,state_mean_delta_L=mean,all_three_strictly_shorter=all(v<0 for v in values)))
+tt=[s for s in independent if s['triggered']];pp=[s for s in independent if not s['triggered']];support=[s for s in tt if s['all_three_strictly_shorter']];geoms=sorted({s['geometry'] for s in support});lengths=sorted({s['L'] for s in support});widths=sorted({s['w'] for s in support});net=sum(s['state_mean_delta_L'] for s in tt);passed=all(s['all_eligible'] for s in independent) and all(s['state_mean_delta_L']==0 for s in pp) and len(geoms)>=3 and len(lengths)>=2 and len(widths)==2 and net<0
+assert len(tt)==len(pp)==24 and trigger_calls==protection_calls==72
+assert net==a['signal']['trigger_state_equal_weight_net_sum_delta_L'] and passed==a['signal']['registered_pass'] and geoms==a['signal']['support_geometries']
+save(H/'independent_raw_length_signal_check.json',dict(passed=True,raw_route_length_only=True,states=independent,trigger_calls=trigger_calls,protection_calls=protection_calls,state_equal_net_sum=net,support_geometries=geoms,lengths=lengths,widths=widths,registered_pass=passed,new_planner_calls=0,graph_searches=0))
+save(H/'strict_saved_decision_state_rejoin.json',rejoin)
+proofs={p['state']:p for p in a['pairs'] if p['seed']==20261020 and p['trigger_expected']};lines=['# 严格决策状态接回补充核对','','all_action_audits与action_proof中的first_task_geometry_state_rejoin检查的是保存路线位置的current/previous/pending元组；本补充进一步要求OFF和ON双方索引都是真实保存trace条目的起点。只同坐标不计接回；剩余资源分别报告，不声称时间/缓存或完整运行状态相同。','',f'72触发调用中，有任意严格决策元组匹配{sum(x["found_actual_decision_state_match"] for x in rejoin)}个，有尚余任务的匹配{sum(x["first_with_pending"] is not None for x in rejoin)}个；各次匹配的剩余资源和字面后缀详见strict_saved_decision_state_rejoin.json。','','主信号另从原始OFF/ON路线长度直接重算（不调用analyze.compute）：24触发状态三seed均值净差合计'+str(net)+'，有限继续信号='+str(passed)+'；见independent_raw_length_signal_check.json。新增规划/图搜索/反事实均0。']
+with (H/'决策状态接回与独立信号补充.md').open('x',encoding='utf8') as f:f.write('\n'.join(lines))
+print(json.dumps(dict(status='PASS_INDEPENDENT_RAW_SIGNAL_AND_STRICT_DECISION_MATCH',net_state_equal=net,registered_pass=passed,trigger_calls=trigger_calls,protection_calls=protection_calls,strict_decision_rejoin_calls=sum(x['found_actual_decision_state_match'] for x in rejoin),nonterminal_pending_rejoin_calls=sum(x['first_with_pending'] is not None for x in rejoin),new_planner_calls=0,graph_searches=0),ensure_ascii=False))

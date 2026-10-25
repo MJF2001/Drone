@@ -1,0 +1,29 @@
+--- accepted_previous_runner
++++ two_fixed_case_runner
+@@ -3,7 +3,7 @@
+ CONTROL=ROOT/'中心区计时插桩影响核查_v0.1_20261022/run_check.py'
+ spec=importlib.util.spec_from_file_location('_accepted_OFF_control',CONTROL);C=importlib.util.module_from_spec(spec);spec.loader.exec_module(C);C.H=H
+ def active():
+- return {str(p.relative_to(H)):sha(p) for p in H.rglob('*') if p.is_file() and (p.suffix=='.py' or p.is_relative_to(H/'inputs') or p.is_relative_to(H/'history') or p.name in ('selection.json','input_freeze.json','source_guards.json','plan.json','bindings.json','prechecks.json','prechecks_preparation_v01_failed.json','preparation_repairs.json','01_固定协议与实现边界.md','environment.json'))}
++ return {str(p.relative_to(H)):sha(p) for p in H.rglob('*') if p.is_file() and (p.suffix=='.py' or p.is_relative_to(H/'inputs') or p.is_relative_to(H/'history') or p.name in ('selection.json','input_freeze.json','source_guards.json','plan.json','bindings.json','prechecks.json','prechecks_preparation_v01_failed.json','preparation_repairs.json','01_固定协议与实现边界.md','environment.json','input_contract.json','prechecks_preparation_v02_failed.json'))}
+ def worker(j):
+  if j['branch']!='R':C.worker(j)
+  else:
+@@ -12,7 +12,7 @@
+   W.H=H;W.worker(j)
+ def run():
+  assert read(H/'prechecks.json')['passed'] and not (H/'attempts.jsonl').exists()
+- plan=read(H/'plan.json');jobs=plan['jobs'];assert len(jobs)<=108
++ plan=read(H/'plan.json');jobs=plan['jobs'];assert len(jobs)==36
+  dump(H/'active_freeze.json',active());env=dict(os.environ,**plan['thread_env'],PYTHONDONTWRITEBYTECODE='1')
+  status={'completed':[],'failure':None,'not_run':[],'attempted':[]}
+  for i,j in enumerate(jobs):
+@@ -32,7 +32,7 @@
+   with (H/'attempts.jsonl').open('a',encoding='utf-8') as f:f.write(json.dumps({'event':'ended','id':j['id'],'success':status['failure'] is None,'parent_wall_seconds':time.perf_counter()-start})+'\n')
+   dump(H/'status.json',status);print('COMPLETE' if status['failure'] is None else 'STOP',i+1,'/'+str(len(jobs)),j['id'],flush=True)
+   if status['failure']:return
+- print('108 FINITE PROCESSING SLOTS COMPLETE; STOP FOR REVIEW',flush=True)
++ print('36 FINITE PROCESSING SLOTS COMPLETE; STOP FOR REVIEW',flush=True)
+ if __name__=='__main__':
+  if sys.argv[1]=='worker':worker(read(sys.argv[2]))
+  else:run()

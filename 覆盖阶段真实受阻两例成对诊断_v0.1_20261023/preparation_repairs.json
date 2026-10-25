@@ -1,0 +1,30 @@
+{
+  "repairs_used": 2,
+  "cap": 2,
+  "records": [
+    {
+      "round": 1,
+      "problem": {
+        "passed": false,
+        "stage": "precheck import before six case loop",
+        "error": "ModuleNotFoundError: No module named baseline_suite",
+        "fixed_case_attempts": 0,
+        "real_core_calls": 0,
+        "R_calls": 0,
+        "post_calls": 0
+      },
+      "fix": "Load native import environment before importing frozen baseline_suite; no solver invoked, no algorithm/input/budget change.",
+      "old_source": "source_snapshot/prepare_precheck_import_v01.py.txt",
+      "old_sha256": "610617c36cacde98b45f10afc58de5b3c7c3db7bb763b6549d7c8f3140d74cc0",
+      "new_sha256": "ff9cc3207d720888cc2a4a39e6e72f4bc50854b4ea4d71edb72dc0395350eae6"
+    },
+    {
+      "round": 2,
+      "problem": "History precheck used previous batch H field; new frozen selection stores complete N_source_reconstruction. No core calls.",
+      "fix": "Compare full N input to saved N_source_reconstruction plus prefix/suffix binding.",
+      "old_source": "source_snapshot/prepare_history_schema_v02.py.txt",
+      "old_sha256": "ff9cc3207d720888cc2a4a39e6e72f4bc50854b4ea4d71edb72dc0395350eae6",
+      "new_sha256": "ce4406aa848ead09b7762db5ef0c8f29770c3b5d6a689fe3b98b512a4dc2d57b"
+    }
+  ]
+}

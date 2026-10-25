@@ -1,0 +1,79 @@
+"""Diagnostic R: retain every valid old unit fragment, BFS only invalid intervals."""
+from collections import Counter,deque
+from copy import deepcopy
+import json,time
+NEIGHBORS=((1,0),(0,1),(-1,0),(0,-1))
+KEYS=('entry_started','entry_returned','unit_edge_detection_tests','invalid_edges','intervals','BFS_started','BFS_returned','BFS_popped','neighbor_tests','path_reconstruction_steps','retained_old_edges','repair_edges','responsibility_vertex_tests','deadline_checks')
+def zero():return Counter({k:0 for k in KEYS})
+class RepairFailure(RuntimeError):
+ def __init__(self,reason,counts):super().__init__(reason);self.reason=reason;self.counts=dict(counts)
+def solve(c,limit=20.,clock=time.perf_counter):
+ start=clock();deadline=start+limit;counts=zero();counts['entry_started']=1
+ def tick():
+  counts['deadline_checks']+=1
+  if clock()>=deadline:raise RepairFailure('repair_20_second_deadline',counts)
+ tick();old=list(map(tuple,c['old_route']));F=set(map(tuple,c['free']));U=set(map(tuple,c['targets']))-set(map(tuple,c['covered']))
+ if not old or old[0]!=tuple(c['current']) or old[-1]!=tuple(c['base']):raise RepairFailure('invalid_old_endpoints',counts)
+ if old[0] not in F or old[-1] not in F:raise RepairFailure('blocked_current_or_base',counts)
+ bad=[]
+ for i,(a,b) in enumerate(zip(old,old[1:])):
+  tick();counts['unit_edge_detection_tests']+=1
+  if sum(abs(a[k]-b[k]) for k in (0,1))!=1:raise RepairFailure('old_not_unit_grid_route',counts)
+  if a not in F or b not in F:bad.append(i)
+ counts['invalid_edges']=len(bad);intervals=[]
+ for i in bad:
+  tick()
+  if intervals and i==intervals[-1][1]:intervals[-1][1]=i+1
+  else:intervals.append([i,i+1])
+ counts['intervals']=len(intervals);new=[old[0]];parts=[];cursor=0
+ for left,right in intervals:
+  tick();a,b=old[left],old[right]
+  if a not in F or b not in F:raise RepairFailure('invalid_interval_endpoints',counts)
+  begin=len(new)-1
+  for k in range(cursor,left):tick();new.append(old[k+1]);counts['retained_old_edges']+=1
+  parts.append({'kind':'retained','old_left':cursor,'old_right':left,'new_left':begin,'new_right':len(new)-1})
+  counts['BFS_started']+=1;queue=deque([a]);parent={a:None}
+  while queue and b not in parent:
+   tick();p=queue.popleft();counts['BFS_popped']+=1
+   for dx,dy in NEIGHBORS:
+    tick();counts['neighbor_tests']+=1;q=p[0]+dx,p[1]+dy
+    if q in F and q not in parent:parent[q]=p;queue.append(q)
+  if b not in parent:raise RepairFailure('unreachable_repair_endpoint',counts)
+  counts['BFS_returned']+=1;tail=[];p=b
+  while p!=a:tick();tail.append(p);p=parent[p];counts['path_reconstruction_steps']+=1
+  tail.reverse();begin=len(new)-1;new.extend(tail);counts['repair_edges']+=len(tail)
+  parts.append({'kind':'repair','old_left':left,'old_right':right,'new_left':begin,'new_right':len(new)-1,'BFS_unit_shortest_length':len(tail)})
+  cursor=right
+ begin=len(new)-1
+ for k in range(cursor,len(old)-1):tick();new.append(old[k+1]);counts['retained_old_edges']+=1
+ parts.append({'kind':'retained','old_left':cursor,'old_right':len(old)-1,'new_left':begin,'new_right':len(new)-1})
+ present=set()
+ for p in new:tick();present.add(p);counts['responsibility_vertex_tests']+=1
+ if not U<=present:raise RepairFailure('missing_required_tasks',counts)
+ if len(new)-1>c['distance_budget']:raise RepairFailure('resource_insufficient',counts)
+ tick();counts['entry_returned']=1
+ return {'raw':{'status':'finished','route':[list(p) for p in new],'trace':[],'mechanism':'R old unit fragments, runtime invalid interval detection and fixed-neighbor BFS; no core or anchor skipping'},'repair_intervals':intervals,'repair_parts':parts,'repair_counts':dict(counts),'seconds':clock()-start,'seed_role':'ignored for deterministic repair; repeats measure time only'}
+def run_payload(payload,limit,seed):
+ # Decode is part of the charged entry. The deadline includes the decoding cost.
+ start=time.perf_counter();c=json.loads(payload);elapsed=time.perf_counter()-start
+ return solve(c,max(0.,limit-elapsed))
+def audit_saved(c,result):
+ """Independent structural replay, no BFS or repaired route generation."""
+ old=c['old_route'];new=result['raw']['route'];F=set(map(tuple,c['free']));U=set(map(tuple,c['targets']))-set(map(tuple,c['covered']));checks=Counter(unit_edges=0,retained_vertex_checks=0,part_checks=0)
+ assert new[0]==c['current'] and new[-1]==c['base'] and len(new)-1<=c['distance_budget']
+ assert U<=set(map(tuple,new));assert all(tuple(p) in F for p in new)
+ for a,b in zip(new,new[1:]):checks['unit_edges']+=1;assert sum(abs(a[k]-b[k]) for k in (0,1))==1
+ oldcursor=newcursor=0
+ for part in result['repair_parts']:
+  checks['part_checks']+=1;l,r=part['old_left'],part['old_right'];i,j=part['new_left'],part['new_right']
+  assert l==oldcursor and i==newcursor and new[i]==old[l] and new[j]==old[r]
+  if part['kind']=='retained':
+   assert old[l:r+1]==new[i:j+1];checks['retained_vertex_checks']+=r-l+1
+   assert all(tuple(p) in F for p in old[l:r+1])
+  else:
+   assert all(tuple(old[k]) not in F or tuple(old[k+1]) not in F for k in range(l,r))
+   assert j-i==part['BFS_unit_shortest_length']
+  oldcursor=r;newcursor=j
+ assert oldcursor==len(old)-1 and newcursor==len(new)-1
+ assert result['repair_counts']['entry_started']==result['repair_counts']['entry_returned']==1
+ return {'passed':True,'counts':dict(checks),'no_search':True,'scope':'retained fragments, invalid interval binding, unit-grid legality, responsibility, endpoints and resource; BFS shortestness follows FIFO algorithm, no second search'}

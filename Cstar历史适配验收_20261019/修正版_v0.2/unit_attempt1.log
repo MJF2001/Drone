@@ -1,0 +1,197 @@
+test_algorithm2_link_really_inserted (test_mechanisms.Mechanisms.test_algorithm2_link_really_inserted) ... ok
+test_algorithm3_endpoint_shapes (test_mechanisms.Mechanisms.test_algorithm3_endpoint_shapes) ... ok
+test_conflicting_occupancy_rejected (test_mechanisms.Mechanisms.test_conflicting_occupancy_rejected) ... ok
+test_covered_endpoint_does_not_hide_lap_work (test_mechanisms.Mechanisms.test_covered_endpoint_does_not_hide_lap_work) ... ERROR
+test_covered_is_transit_not_obstacle (test_mechanisms.Mechanisms.test_covered_is_transit_not_obstacle) ... ERROR
+test_deadline_refuses_route (test_mechanisms.Mechanisms.test_deadline_refuses_route) ... ERROR
+test_empty_ledger_stops_without_sweeping (test_mechanisms.Mechanisms.test_empty_ledger_stops_without_sweeping) ... ERROR
+test_history_changes_first_core_decision (test_mechanisms.Mechanisms.test_history_changes_first_core_decision) ... ERROR
+test_history_does_not_close_traversal_state (test_mechanisms.Mechanisms.test_history_does_not_close_traversal_state) ... ERROR
+test_invalid_history_ledger_rejected (test_mechanisms.Mechanisms.test_invalid_history_ledger_rejected) ... ok
+test_iteration_cap_is_not_success (test_mechanisms.Mechanisms.test_iteration_cap_is_not_success) ... ERROR
+test_known_hole_detector_and_tsp_really_run (test_mechanisms.Mechanisms.test_known_hole_detector_and_tsp_really_run) ... ERROR
+test_long_vertical_edge_split (test_mechanisms.Mechanisms.test_long_vertical_edge_split) ... ok
+test_real_retreat_selection_on_closed_bridge (test_mechanisms.Mechanisms.test_real_retreat_selection_on_closed_bridge) ... ERROR
+test_resource_refusal_no_completion_patch (test_mechanisms.Mechanisms.test_resource_refusal_no_completion_patch) ... ERROR
+test_task_anchor_pruning_protects_corridor (test_mechanisms.Mechanisms.test_task_anchor_pruning_protects_corridor) ... ok
+
+======================================================================
+ERROR: test_covered_endpoint_does_not_hide_lap_work (test_mechanisms.Mechanisms.test_covered_endpoint_does_not_hide_lap_work)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 20, in test_covered_endpoint_does_not_hide_lap_work
+    f={(0,y) for y in range(5)};c=case(f,f,f-{(0,2)});r=plan(c)
+                                                        ^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 10, in plan
+    def plan(c):return solve(c,2,7)
+                       ^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 99, in solve
+    planner=HistoryCStar(start,known,targets,covered,seed=seed,deadline=deadline,wall_clock=clock)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 18, in __init__
+    self.sync_task_protection()
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 28, in sync_task_protection
+    for p in sorted(acquisition&component):
+                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for &: 'set' and 'list'
+
+======================================================================
+ERROR: test_covered_is_transit_not_obstacle (test_mechanisms.Mechanisms.test_covered_is_transit_not_obstacle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 17, in test_covered_is_transit_not_obstacle
+    c=case({(0,0),(1,0),(2,0)},{(0,0),(2,0)},{(0,0)},current=(1,0),base=(0,0));r=plan(c)
+                                                                                 ^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 10, in plan
+    def plan(c):return solve(c,2,7)
+                       ^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 99, in solve
+    planner=HistoryCStar(start,known,targets,covered,seed=seed,deadline=deadline,wall_clock=clock)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 18, in __init__
+    self.sync_task_protection()
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 28, in sync_task_protection
+    for p in sorted(acquisition&component):
+                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for &: 'set' and 'list'
+
+======================================================================
+ERROR: test_deadline_refuses_route (test_mechanisms.Mechanisms.test_deadline_refuses_route)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 67, in test_deadline_refuses_route
+    r=solve(case({(0,0)},{(0,0)}),.1,7,clock=clock)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 99, in solve
+    planner=HistoryCStar(start,known,targets,covered,seed=seed,deadline=deadline,wall_clock=clock)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 18, in __init__
+    self.sync_task_protection()
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 28, in sync_task_protection
+    for p in sorted(acquisition&component):
+                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for &: 'set' and 'list'
+
+======================================================================
+ERROR: test_empty_ledger_stops_without_sweeping (test_mechanisms.Mechanisms.test_empty_ledger_stops_without_sweeping)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 23, in test_empty_ledger_stops_without_sweeping
+    f={(x,0) for x in range(4)};c=case(f,f,f,current=(3,0));r=plan(c)
+                                                              ^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 10, in plan
+    def plan(c):return solve(c,2,7)
+                       ^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 99, in solve
+    planner=HistoryCStar(start,known,targets,covered,seed=seed,deadline=deadline,wall_clock=clock)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 18, in __init__
+    self.sync_task_protection()
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 28, in sync_task_protection
+    for p in sorted(acquisition&component):
+                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for &: 'set' and 'list'
+
+======================================================================
+ERROR: test_history_changes_first_core_decision (test_mechanisms.Mechanisms.test_history_changes_first_core_decision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 13, in test_history_changes_first_core_decision
+    f={(0,0),(1,0),(2,0)};a=plan(case(f,{(0,0),(2,0)},current=(1,0),base=(1,0)))
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 10, in plan
+    def plan(c):return solve(c,2,7)
+                       ^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 99, in solve
+    planner=HistoryCStar(start,known,targets,covered,seed=seed,deadline=deadline,wall_clock=clock)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 18, in __init__
+    self.sync_task_protection()
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 28, in sync_task_protection
+    for p in sorted(acquisition&component):
+                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for &: 'set' and 'list'
+
+======================================================================
+ERROR: test_history_does_not_close_traversal_state (test_mechanisms.Mechanisms.test_history_does_not_close_traversal_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 26, in test_history_does_not_close_traversal_state
+    m=PublicMap();m.update({(x,0):True for x in range(3)});p=HistoryCStar((1,0),m,{(0,0),(2,0)},{(0,0)})
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 18, in __init__
+    self.sync_task_protection()
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 28, in sync_task_protection
+    for p in sorted(acquisition&component):
+                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for &: 'set' and 'list'
+
+======================================================================
+ERROR: test_iteration_cap_is_not_success (test_mechanisms.Mechanisms.test_iteration_cap_is_not_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 70, in test_iteration_cap_is_not_success
+    r=solve(case({(0,0),(1,0)},{(1,0)}),2,7,max_iterations=0)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 99, in solve
+    planner=HistoryCStar(start,known,targets,covered,seed=seed,deadline=deadline,wall_clock=clock)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 18, in __init__
+    self.sync_task_protection()
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 28, in sync_task_protection
+    for p in sorted(acquisition&component):
+                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for &: 'set' and 'list'
+
+======================================================================
+ERROR: test_known_hole_detector_and_tsp_really_run (test_mechanisms.Mechanisms.test_known_hole_detector_and_tsp_really_run)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 48, in test_known_hole_detector_and_tsp_really_run
+    p=HistoryCStar((0,0),m,f,set());p.graph.prune(p.current);goal,path,retreat,why=p.select_goal()
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 18, in __init__
+    self.sync_task_protection()
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 28, in sync_task_protection
+    for p in sorted(acquisition&component):
+                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for &: 'set' and 'list'
+
+======================================================================
+ERROR: test_real_retreat_selection_on_closed_bridge (test_mechanisms.Mechanisms.test_real_retreat_selection_on_closed_bridge)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 42, in test_real_retreat_selection_on_closed_bridge
+    f={(x,0) for x in range(4)};m=PublicMap();m.update({p:True for p in f});p=HistoryCStar((0,0),m,{(3,0)},set())
+                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 18, in __init__
+    self.sync_task_protection()
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 28, in sync_task_protection
+    for p in sorted(acquisition&component):
+                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for &: 'set' and 'list'
+
+======================================================================
+ERROR: test_resource_refusal_no_completion_patch (test_mechanisms.Mechanisms.test_resource_refusal_no_completion_patch)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 57, in test_resource_refusal_no_completion_patch
+    c=case({(0,0),(1,0)},{(1,0)});c['distance_budget']=1;r=plan(c);self.assertFalse(r['route']);self.assertFalse(r['completion_tsp'])
+                                                           ^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\test_mechanisms.py", line 10, in plan
+    def plan(c):return solve(c,2,7)
+                       ^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 99, in solve
+    planner=HistoryCStar(start,known,targets,covered,seed=seed,deadline=deadline,wall_clock=clock)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 18, in __init__
+    self.sync_task_protection()
+  File "E:\无人机研究项目_接续包_20261014\Cstar历史适配验收_20261019\修正版_v0.2\runtime\history_adapter.py", line 28, in sync_task_protection
+    for p in sorted(acquisition&component):
+                    ~~~~~~~~~~~^~~~~~~~~~
+TypeError: unsupported operand type(s) for &: 'set' and 'list'
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.023s
+
+FAILED (errors=10)

@@ -1,0 +1,3229 @@
+{
+  "scope": "SYNTHETIC_HANDWRITTEN_NOT_RESEARCH_MAPS",
+  "categories": 12,
+  "subcases": 23,
+  "planned_sessions": 25,
+  "planned_stub_responses": 43,
+  "cumulative_stub_cap_all_rounds": 48,
+  "technical_round_cap": 3,
+  "routes": "literal hand-written complete routes; never solved/optimized",
+  "expected_values": "manual arithmetic before executor first run; not copied from outputs",
+  "ordered_cases": [
+    {
+      "id": "01_two_event_chain",
+      "category": 1,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 20,
+        "T_max": 10,
+        "events": [
+          {
+            "tick": 1,
+            "id": "e1",
+            "add_targets": [
+              [
+                2,
+                1
+              ]
+            ],
+            "block": []
+          },
+          {
+            "tick": 3,
+            "id": "e2",
+            "add_targets": [],
+            "block": [
+              [
+                1,
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                2,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 6,
+          "M": 6,
+          "E": 14,
+          "H": [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            0,
+            1
+          ],
+          "waits": 0,
+          "response_calls": 3,
+          "reason": null,
+          "turns90": 3,
+          "turns180": 0,
+          "historical_now_blocked": [
+            [
+              1,
+              0
+            ]
+          ],
+          "move_classes": {
+            "fresh_target": 3,
+            "initial_historical": 0,
+            "session_repeat": 0,
+            "non_target": 3
+          }
+        }
+      },
+      "input_expectations": [
+        {
+          "method": "A",
+          "sequence": 2,
+          "tick": 3,
+          "fields": {
+            "current": [
+              2,
+              1
+            ],
+            "previous": [
+              2,
+              0
+            ],
+            "covered": [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "distance_budget": 17,
+            "old_route": [
+              [
+                2,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "initial_targets": [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ]
+            ]
+          }
+        }
+      ],
+      "hand_note": "At t1 adopt response1; its moves arrive(2,0)@2,(2,1)@3; event2 input must use precisely these moves. Plan lengths4+5+3=12, actual M=6."
+    },
+    {
+      "id": "02_independent_histories",
+      "category": 2,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "published": [
+          [
+            2,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 20,
+        "T_max": 10,
+        "events": [
+          {
+            "tick": 1,
+            "id": "e1",
+            "add_targets": [
+              [
+                2,
+                1
+              ]
+            ],
+            "block": []
+          },
+          {
+            "tick": 2,
+            "id": "e2",
+            "add_targets": [],
+            "block": [
+              [
+                0,
+                1
+              ]
+            ]
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ],
+        "B": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 6,
+          "M": 6,
+          "E": 14,
+          "H": [
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 3,
+          "reason": null
+        },
+        "B": {
+          "status": "success",
+          "finish_tick": 6,
+          "M": 6,
+          "E": 14,
+          "H": [
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              1
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 3,
+          "reason": null
+        }
+      },
+      "input_expectations": [
+        {
+          "method": "A",
+          "sequence": 2,
+          "tick": 2,
+          "fields": {
+            "current": [
+              2,
+              0
+            ],
+            "previous": [
+              1,
+              0
+            ],
+            "covered": [
+              [
+                2,
+                0
+              ]
+            ],
+            "distance_budget": 18
+          }
+        },
+        {
+          "method": "B",
+          "sequence": 2,
+          "tick": 2,
+          "fields": {
+            "current": [
+              1,
+              1
+            ],
+            "previous": [
+              0,
+              1
+            ],
+            "covered": [],
+            "distance_budget": 18
+          }
+        }
+      ],
+      "hand_note": "Same two publication records and world hash; different own currents/H at event2."
+    },
+    {
+      "id": "03_early_finish_wait",
+      "category": 3,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 20,
+        "T_max": 18,
+        "events": [
+          {
+            "tick": 4,
+            "id": "e1",
+            "add_targets": [
+              [
+                2,
+                0
+              ]
+            ],
+            "block": []
+          },
+          {
+            "tick": 10,
+            "id": "e2",
+            "add_targets": [
+              [
+                3,
+                0
+              ]
+            ],
+            "block": []
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                3,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 16,
+          "M": 12,
+          "E": 8,
+          "H": [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 4,
+          "response_calls": 3,
+          "reason": null,
+          "turns90": 0,
+          "turns180": 5
+        }
+      },
+      "wait_ticks": {
+        "A": [
+          2,
+          3,
+          8,
+          9
+        ]
+      },
+      "hand_note": "Return@2, wait ticks2,3; return@8, wait8,9; final event still publishes@10."
+    },
+    {
+      "id": "04_current_new_credit",
+      "category": 4,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "published": [],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 5,
+        "events": [
+          {
+            "tick": 1,
+            "id": "e1",
+            "add_targets": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "block": []
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 2,
+          "M": 2,
+          "E": 8,
+          "H": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 2,
+          "reason": null,
+          "zero_move_credits": 1
+        }
+      },
+      "input_expectations": [
+        {
+          "method": "A",
+          "sequence": 1,
+          "tick": 1,
+          "fields": {
+            "current": [
+              1,
+              0
+            ],
+            "previous": [
+              0,
+              0
+            ],
+            "covered": [
+              [
+                1,
+                0
+              ]
+            ],
+            "initial_targets": [
+              [
+                1,
+                0
+              ]
+            ],
+            "distance_budget": 9,
+            "old_route": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      ],
+      "hand_note": "t0 traversed unpublished1; initial0 also unpublished. At t1 current1 earns exactly one credit, past0 does not; 0 credited only on actual arrival@2."
+    },
+    {
+      "id": "05_block_history_and_pending",
+      "category": 5,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 8,
+        "events": [
+          {
+            "tick": 2,
+            "id": "e1",
+            "add_targets": [],
+            "block": [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 4,
+          "M": 4,
+          "E": 6,
+          "H": [
+            [
+              1,
+              0
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            0,
+            1
+          ],
+          "waits": 0,
+          "response_calls": 2,
+          "reason": null,
+          "D": [
+            [
+              2,
+              0
+            ]
+          ],
+          "historical_now_blocked": [
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      },
+      "hand_note": "1 was captured@1 then blocked; 2 never captured and becomes deferred."
+    },
+    {
+      "id": "06_only_A_current_blocked",
+      "category": 6,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "published": [
+          [
+            2,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 20,
+        "T_max": 10,
+        "events": [
+          {
+            "tick": 1,
+            "id": "e1",
+            "add_targets": [],
+            "block": [
+              [
+                1,
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ],
+        "B": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                2,
+                1
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "environment_termination",
+          "finish_tick": 1,
+          "M": 1,
+          "E": 19,
+          "H": [],
+          "current": [
+            1,
+            0
+          ],
+          "previous": [
+            0,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 1,
+          "reason": "current_blocked"
+        },
+        "B": {
+          "status": "success",
+          "finish_tick": 8,
+          "M": 8,
+          "E": 12,
+          "H": [
+            [
+              2,
+              0
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            0,
+            1
+          ],
+          "waits": 0,
+          "response_calls": 2,
+          "reason": null
+        }
+      },
+      "hand_note": "No world repair. A frozen prefix1 is not a winning shorter route; B uses upper return."
+    },
+    {
+      "id": "07a_base_blocked",
+      "category": 7,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 4,
+        "events": [
+          {
+            "tick": 1,
+            "id": "e1",
+            "add_targets": [],
+            "block": [
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "environment_termination",
+          "finish_tick": 1,
+          "M": 1,
+          "E": 9,
+          "H": [
+            [
+              1,
+              0
+            ]
+          ],
+          "current": [
+            1,
+            0
+          ],
+          "previous": [
+            0,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 1,
+          "reason": "base_blocked"
+        }
+      }
+    },
+    {
+      "id": "07b_pending_disconnected",
+      "category": 7,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ]
+        ],
+        "published": [
+          [
+            2,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 6,
+        "events": [
+          {
+            "tick": 1,
+            "id": "e1",
+            "add_targets": [],
+            "block": [
+              [
+                1,
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "environment_termination",
+          "finish_tick": 1,
+          "M": 1,
+          "E": 9,
+          "H": [],
+          "current": [
+            0,
+            1
+          ],
+          "previous": [
+            0,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 1,
+          "reason": "target_unreachable",
+          "U": [
+            [
+              2,
+              0
+            ]
+          ],
+          "D": []
+        }
+      }
+    },
+    {
+      "id": "07c_return_disconnected",
+      "category": 7,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "published": [
+          [
+            2,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 5,
+        "events": [
+          {
+            "tick": 2,
+            "id": "e1",
+            "add_targets": [],
+            "block": [
+              [
+                1,
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "environment_termination",
+          "finish_tick": 2,
+          "M": 2,
+          "E": 8,
+          "H": [
+            [
+              2,
+              0
+            ]
+          ],
+          "current": [
+            2,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 1,
+          "reason": "base_unreachable"
+        }
+      }
+    },
+    {
+      "id": "08a_time_19_999",
+      "category": 8,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 2,
+        "T_max": 3,
+        "events": []
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 19.999,
+            "native_status": "deadline",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 2,
+          "M": 2,
+          "E": 0,
+          "H": [
+            [
+              1,
+              0
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 1,
+          "reason": null
+        }
+      }
+    },
+    {
+      "id": "08b_time_20_000",
+      "category": 8,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 2,
+        "T_max": 3,
+        "events": []
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 20.0,
+            "native_status": "deadline",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "deadline",
+          "finish_tick": 0,
+          "M": 0,
+          "E": 2,
+          "H": [],
+          "current": [
+            0,
+            0
+          ],
+          "previous": null,
+          "waits": 0,
+          "response_calls": 1,
+          "reason": "entry_not_strictly_less_than_20"
+        }
+      }
+    },
+    {
+      "id": "08c_time_20_001",
+      "category": 8,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 2,
+        "T_max": 3,
+        "events": []
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 20.001,
+            "native_status": "deadline",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "deadline",
+          "finish_tick": 0,
+          "M": 0,
+          "E": 2,
+          "H": [],
+          "current": [
+            0,
+            0
+          ],
+          "previous": null,
+          "waits": 0,
+          "response_calls": 1,
+          "reason": "entry_not_strictly_less_than_20"
+        }
+      }
+    },
+    {
+      "id": "09a_invalid_no_old_fallback",
+      "category": 9,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "published": [
+          [
+            2,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 5,
+        "events": [
+          {
+            "tick": 1,
+            "id": "e1",
+            "add_targets": [],
+            "block": [
+              [
+                2,
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "invalid_route",
+          "finish_tick": 1,
+          "M": 1,
+          "E": 9,
+          "H": [],
+          "current": [
+            1,
+            0
+          ],
+          "previous": [
+            0,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 2,
+          "reason": "endpoint_or_collision",
+          "D": [
+            [
+              2,
+              0
+            ]
+          ]
+        }
+      },
+      "input_expectations": [
+        {
+          "method": "A",
+          "sequence": 1,
+          "tick": 1,
+          "fields": {
+            "old_route": [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "09b_missing_no_old_fallback",
+      "category": 9,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "published": [
+          [
+            2,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 5,
+        "events": [
+          {
+            "tick": 1,
+            "id": "e1",
+            "add_targets": [],
+            "block": [
+              [
+                2,
+                0
+              ]
+            ]
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          null
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "solver_no_solution",
+          "finish_tick": 1,
+          "M": 1,
+          "E": 9,
+          "H": [],
+          "current": [
+            1,
+            0
+          ],
+          "previous": [
+            0,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 2,
+          "reason": "missing_response",
+          "D": [
+            [
+              2,
+              0
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "id": "10a_exact_resource_success",
+      "category": 10,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 2,
+        "T_max": 3,
+        "events": []
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 2,
+          "M": 2,
+          "E": 0,
+          "H": [
+            [
+              1,
+              0
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 1,
+          "reason": null
+        }
+      }
+    },
+    {
+      "id": "10b_resource_event_reject",
+      "category": 10,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 2,
+        "T_max": 5,
+        "events": [
+          {
+            "tick": 1,
+            "id": "e1",
+            "add_targets": [
+              [
+                2,
+                0
+              ]
+            ],
+            "block": []
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "resource_infeasible",
+          "finish_tick": 1,
+          "M": 1,
+          "E": 1,
+          "H": [
+            [
+              1,
+              0
+            ]
+          ],
+          "current": [
+            1,
+            0
+          ],
+          "previous": [
+            0,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 2,
+          "reason": "full_route_exceeds_remaining_resource"
+        }
+      },
+      "input_expectations": [
+        {
+          "method": "A",
+          "sequence": 1,
+          "tick": 1,
+          "fields": {
+            "distance_budget": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "10c_Tmax_arrival_success",
+      "category": 10,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 2,
+        "events": []
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 2,
+          "M": 2,
+          "E": 8,
+          "H": [
+            [
+              1,
+              0
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 1,
+          "reason": null
+        }
+      }
+    },
+    {
+      "id": "10d_Tmax_cannot_move",
+      "category": 10,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 1,
+        "events": []
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "tick_limit",
+          "finish_tick": 1,
+          "M": 1,
+          "E": 9,
+          "H": [
+            [
+              1,
+              0
+            ]
+          ],
+          "current": [
+            1,
+            0
+          ],
+          "previous": [
+            0,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 1,
+          "reason": "maximum_tick_reached"
+        }
+      }
+    },
+    {
+      "id": "11a_wait_keeps_turn_repeat",
+      "category": 11,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 9,
+        "events": [
+          {
+            "tick": 3,
+            "id": "e1",
+            "add_targets": [
+              [
+                2,
+                0
+              ]
+            ],
+            "block": []
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 7,
+          "M": 6,
+          "E": 4,
+          "H": [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 1,
+          "response_calls": 2,
+          "reason": null,
+          "turns90": 0,
+          "turns180": 3,
+          "move_classes": {
+            "fresh_target": 2,
+            "initial_historical": 0,
+            "session_repeat": 2,
+            "non_target": 2
+          }
+        }
+      },
+      "wait_ticks": {
+        "A": [
+          2
+        ]
+      },
+      "input_expectations": [
+        {
+          "method": "A",
+          "sequence": 1,
+          "tick": 3,
+          "fields": {
+            "previous": [
+              1,
+              0
+            ],
+            "old_route": [
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "11b_cross_plan_right_angle",
+      "category": 11,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 6,
+        "events": [
+          {
+            "tick": 1,
+            "id": "e1",
+            "add_targets": [
+              [
+                1,
+                1
+              ]
+            ],
+            "block": []
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                0,
+                1
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 4,
+          "M": 4,
+          "E": 6,
+          "H": [
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              1
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            0,
+            1
+          ],
+          "waits": 0,
+          "response_calls": 2,
+          "reason": null,
+          "turns90": 3,
+          "turns180": 0,
+          "move_classes": {
+            "fresh_target": 2,
+            "initial_historical": 0,
+            "session_repeat": 0,
+            "non_target": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "12a_merged_future_A",
+      "category": 12,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 8,
+        "events": [
+          {
+            "tick": 1,
+            "id": "b",
+            "add_targets": [],
+            "block": [
+              [
+                3,
+                0
+              ]
+            ]
+          },
+          {
+            "tick": 1,
+            "id": "a",
+            "add_targets": [
+              [
+                2,
+                0
+              ]
+            ],
+            "block": []
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 4,
+          "M": 4,
+          "E": 6,
+          "H": [
+            [
+              1,
+              0
+            ],
+            [
+              2,
+              0
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 2,
+          "reason": null
+        }
+      },
+      "isolation_pair": "12b_merged_future_B",
+      "hand_note": "IDs sorted a,b; one request at tick1. Callback input at tick0 byte-identical to future_B."
+    },
+    {
+      "id": "12b_merged_future_B",
+      "category": 12,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 10,
+        "T_max": 8,
+        "events": [
+          {
+            "tick": 1,
+            "id": "b",
+            "add_targets": [],
+            "block": []
+          },
+          {
+            "tick": 1,
+            "id": "a",
+            "add_targets": [
+              [
+                3,
+                0
+              ]
+            ],
+            "block": []
+          }
+        ]
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          },
+          {
+            "route": [
+              [
+                1,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                3,
+                0
+              ],
+              [
+                2,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": 0.01,
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "success",
+          "finish_tick": 6,
+          "M": 6,
+          "E": 4,
+          "H": [
+            [
+              1,
+              0
+            ],
+            [
+              3,
+              0
+            ]
+          ],
+          "current": [
+            0,
+            0
+          ],
+          "previous": [
+            1,
+            0
+          ],
+          "waits": 0,
+          "response_calls": 2,
+          "reason": null
+        }
+      },
+      "isolation_pair": "12a_merged_future_A"
+    },
+    {
+      "id": "08d_NaN_expected_technical_stop_LAST",
+      "category": 8,
+      "world": {
+        "free": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "published": [
+          [
+            1,
+            0
+          ]
+        ],
+        "base": [
+          0,
+          0
+        ],
+        "start": [
+          0,
+          0
+        ],
+        "E0": 2,
+        "T_max": 3,
+        "events": []
+      },
+      "methods": {
+        "A": [
+          {
+            "route": [
+              [
+                0,
+                0
+              ],
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ],
+            "entry_seconds": "NaN_STUB_FIELD",
+            "native_status": "complete",
+            "source": "HANDWRITTEN_STUB_NOT_PPCPP_OR_P2"
+          }
+        ]
+      },
+      "expected": {
+        "A": {
+          "status": "technical_error",
+          "finish_tick": 0,
+          "M": 0,
+          "E": 2,
+          "H": [],
+          "current": [
+            0,
+            0
+          ],
+          "previous": null,
+          "waits": 0,
+          "response_calls": 1,
+          "reason": "invalid_time_field"
+        }
+      },
+      "expected_technical_stop": true
+    }
+  ]
+}

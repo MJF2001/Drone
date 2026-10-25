@@ -1,0 +1,52 @@
+maps = read(H / 'maps.json')
+groups = read(H / 'groups.json')
+states = read(H / 'states.json')
+assert len(maps) == 6 and len(groups) == 12 and (len(states) == 48)
+BFS = 0
+for m in maps:
+    L, w = (m['L'], m['w'])
+    c0 = read(H / m['input'])
+    F = rect(0, 0, L + 8, w + 8)
+    T0 = rect(4, 4, L, w)
+    assert set(map(tuple, c0['free'])) == F and set(map(tuple, c0['targets'])) == T0 and (not c0['covered']) and (c0['current'] == c0['base'] == [1, 1]) and (c0['previous'] is None) and (c0['predator'] == [-1, 0]) and (c0['distance_budget'] == 1000000)
+    assert set(map(tuple, c0['initial_targets'])) == T0
+    route = list(map(tuple, read(H / 'outputs' / f"prep_{m['id']}.json")['result']['raw']['route']))
+    dual(c0, route)
+    B = {(x, 4) for x in range(4, 4 + L)}
+    first_B = sorted((route.index(p) for p in B))
+    for group in [g for g in groups if g['geometry'] == m['id']]:
+        count = group['boundary_count']
+        cut = first_B[count - 1]
+        assert cut == group['history_cut']
+        hist = set(route[:cut + 1]) & T0
+        assert normal(sorted(hist)) == group['H'] and len(hist & B) == count
+        histfile = read(H / 'history' / f"{group['id']}.json")
+        assert histfile['prefix'] == normal(route[:cut + 1]) and histfile['old_suffix'] == normal(route[cut:])
+        ell = L // 3
+        candidates = [dict(a=aa, k=len({(x, 4) for x in range(aa, aa + ell)} & hist), ell=ell) for aa in range(4, 4 + L - ell + 1)]
+        assert candidates == group['candidates']
+        for cond in CONDS[1:]:
+            eligible = [c for c in candidates if position_label(c['k'], ell) == cond]
+            chosen = min(eligible, key=lambda c: (abs(2 * c['k'] - ell), c['a']) if cond == 'MIXED_SIDE' else (c['a'],))
+            assert chosen == group['selection'][cond]
+        dc = bfs(F, route[cut])
+        db = bfs(F, (1, 1))
+        BFS += 2
+        walk = read(H / 'witnesses' / f"{group['id']}.json")['route']
+        for st in [s for s in states if s['group'] == group['id']]:
+            cond = st['condition']
+            A = set() if cond == 'CONTROL' else rect(group['selection'][cond]['a'], 2, ell, 2)
+            c = read(H / st['input'])
+            assert set(map(tuple, st['A'])) == A and (not A & T0) and (len(A) == (0 if cond == 'CONTROL' else 2 * ell))
+            assert set(map(tuple, c['targets'])) == set(map(tuple, c['published_targets'])) == T0 | A and (not c['deferred_targets'])
+            assert set(map(tuple, c['free'])) == F and set(map(tuple, c['covered'])) == hist
+            assert c['current'] == list(route[cut]) and c['previous'] == list(route[cut - 1]) and (c['base'] == [1, 1]) and (c['predator'] == [-1, 0]) and (c['distance_budget'] == 1000000 - cut) and (c['old_route'] == normal(route[cut:])) and (set(map(tuple, c['initial_targets'])) == T0)
+            assert st['history_fraction'] == len(hist) / len(T0)
+            assert c['name'].startswith('dev_e') and all((z not in c['name'] for z in CONDS))
+            dual(c, walk)
+            if A:
+                dd = dict(A_to_current_min=min((dc[p] for p in A)), A_to_base_min=min((db[p] for p in A)), A_current_distance_range=[min((dc[p] for p in A)), max((dc[p] for p in A))], A_base_distance_range=[min((db[p] for p in A)), max((db[p] for p in A))])
+                assert dd == st['distance']
+                assert all((dc[p] == abs(p[0] - route[cut][0]) + abs(p[1] - route[cut][1]) and db[p] == abs(p[0] - 1) + abs(p[1] - 1) for p in A))
+            else:
+                assert st['distance'] is None

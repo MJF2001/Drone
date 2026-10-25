@@ -1,0 +1,20 @@
+[
+  {"claim":"真实P0入口链", "source_id":"S01", "lines":[8,21], "contains":["独立版_v0.2/ppcpp.py", "tuple(c['previous'])"]},
+  {"claim":"P0调用而非旧core_route", "source_id":"S02", "lines":[9,18], "contains":["native.solve(s,initial", "mode=='LAST'"]},
+  {"claim":"连续current校验阻碍", "source_id":"S04", "lines":[5,17], "contains":["type(x) is not int", "point(c['current'])"]},
+  {"claim":"previous相邻断言", "source_id":"S03", "lines":[18,20], "contains":["historical heading must be adjacent"]},
+  {"claim":"核心起点方向首轮与后续", "source_id":"S03", "lines":[24,28], "contains":["{s.current}", "else previous", "core.reward_options", "previous=prev"]},
+  {"claim":"方向使用previous位移", "source_id":"S06", "lines":[25,46], "contains":["old=(current[0]-previous[0],current[1]-previous[1])", "rs=(old[0]*new[0]+old[1]*new[1]+1)/2", "(-row['score'],row['cell'])"]},
+  {"claim":"历史core_route不是当前主循环", "source_id":"S06", "lines":[89,104], "contains":["def core_route", "else None"]},
+  {"claim":"恢复返航输出", "source_id":"S03", "lines":[29,46], "contains":["g.distance(cur,q)", "g.path(route[-1],s.base)", "initial_previous=previous"]},
+  {"claim":"网格邻域", "source_id":"S10", "lines":[7,19], "contains":["Point = tuple[int, int]", "return ((x + 1, y)", "range(x-radius"]},
+  {"claim":"current可达性起点", "source_id":"S10", "lines":[42,62], "contains":["snapshot.current not in snapshot.free", "deque([snapshot.current])"]},
+  {"claim":"共同格点合同", "source_id":"S19", "lines":[15,20], "contains":["s.current in s.free", "s.covered<=set(initial_targets)"]},
+  {"claim":"P2无heading入参", "source_id":"S07", "lines":[6,18], "contains":["p2_solve(s,remaining,'multi',seed)"]},
+  {"claim":"P2初始距离与参考", "source_id":"S13", "lines":[27,48], "contains":["a=s.current if i==0", "offer(s.old_route,'old_suffix')", "g.views[s.current]"]},
+  {"claim":"旧格点展开自动起点信用", "source_id":"S10", "lines":[108,121], "contains":["set(self.s.covered) | self.views[self.s.current]"]},
+  {"claim":"旧发布信用与实际移动信用", "source_id":"S08", "lines":[45,80], "contains":["'publication'", "s.current=nxt;s.previous=old", "s.credit(nxt,tick+1,'arrival'"]},
+  {"claim":"后处理只接四邻接源", "source_id":"S15", "lines":[42,50], "contains":["assert path[0]==tuple(c['current'])", "==1", "first_original(path,U)"]},
+  {"claim":"后处理预测起点信用", "source_id":"S15", "lines":[22,33], "contains":["if path[0] in U", "hit(a,b,p)"]},
+  {"claim":"旧区间整数平方距离", "source_id":"S16", "lines":[32,42], "contains":["r=isqrt(n)", "ROUND_FLOOR"]}
+]

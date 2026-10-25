@@ -1,0 +1,520 @@
+--- v0.1/worker.py
++++ v0.2/worker.py
+@@ -1,73 +1,74 @@
+-"""Exactly one planned native entry per process; preserve before downstream audit."""
++"""Resume exactly one unused slot. Auditor identity is bound BEFORE any solving."""
+ from collections import Counter
+ from pathlib import Path
+-import sys, json, time, traceback
+-from common import HERE, ROOT, read, dump, sha, now, evidence
++import sys, json, traceback
++from v02_utils import HERE, read, dump, sha, now, evidence
+ from pipeline import run
++from context import prepare_context, stable_context
+ 
+ def main(job_id):
+-    reg = read(HERE/'registration.json')
+-    job = next(j for j in reg['jobs'] if j['id'] == job_id)
+-    final = HERE/'outputs'/(job_id+'.json')
+-    marker = HERE/'logs'/(job_id+'_markers.jsonl')
+-    assert not final.exists() and not marker.exists(), 'no reattempt of real slot'
+-    freeze = read(HERE/'real_freeze.json')
+-    for name, digest in freeze['files'].items():
+-        assert sha(HERE/name) == digest, ('package_conflict', name)
+-    for name, digest in read(HERE/'external_source_guards.json').items():
+-        assert sha(name) == digest, ('external_source_conflict', name)
+-    from native_loader import modules, loaded_hashes
+-    h1, p2, engine, cold = modules()
+-    loaded = loaded_hashes()
+-    guards = read(HERE/'external_source_guards.json')
+-    for name, digest in loaded.items():
+-        if not Path(name).is_relative_to(HERE):
+-            assert name in guards and guards[name] == digest, ('unbound_loaded_source', name)
+-    from observe import Recorder
+-    observer = Recorder(h1, p2, engine, marker)
+-    result = {'job': job, 'started_utc': now(), 'cold': cold, 'loaded_sources': loaded,
+-              'passed': False, 'input_sha256': sha(HERE/job['input'])}
+-    def core(payload, method, budget, seed):
+-        response = h1.run_payload(payload, 'PPCPP', budget, seed) if method == 'H1' else p2.run_payload(payload, budget, seed)
+-        dump(HERE/'outputs'/(job_id+'_native_return.json'), {'request_utf8': payload.decode(),
+-               'response': response, 'native_counts_at_return': dict(observer.counts)})
+-        return response
+-    def post(payload, **kwargs):
+-        encoded, envelope = engine.process(payload, **kwargs)
+-        dump(HERE/'outputs'/(job_id+'_post_return.json'), {'request_utf8': payload.decode(),
+-               'response_utf8': encoded, 'envelope': envelope})
+-        return encoded, envelope
++    assert job_id!='01_H1','01_H1 is saved-only reuse; never a v0.2 worker entry'
++    reg=read(HERE/'registration.json')
++    assert job_id in {j['id'] for j in reg['resume_jobs']}
++    job=next(j for j in reg['resume_jobs'] if j['id']==job_id)
++    final=HERE/'outputs'/(job_id+'.json')
++    marker=HERE/'logs'/(job_id+'_markers.jsonl')
++    assert not final.exists() and not marker.exists(),'no real reattempt'
++    result={'job':job,'started_utc':now(),'passed':False,'native_counts':{},'precore_ready':False}
++    observer=None
+     try:
+-        observer.mark('warm_pipeline_about_to_start', method=job['method'])
++        freeze=read(HERE/'real_freeze.json')
++        for name,digest in freeze['files'].items():
++            assert sha(HERE/name)==digest,('package_conflict',name)
++        for name,digest in read(HERE/'external_source_guards.json').items():
++            assert sha(name)==digest,('external_conflict',name)
++        h1,p2,engine,binding,cold,loaded,identity=prepare_context()
++        result.update(cold=cold,loaded_sources=loaded,auditor_identity_before=identity,precore_ready=True,
++                      input_sha256=sha(HERE/job['input']))
++        from observe import Recorder
++        observer=Recorder(h1,p2,engine,marker)
++        def core(payload,method,budget,seed):
++            response=h1.run_payload(payload,'PPCPP',budget,seed) if method=='H1' else p2.run_payload(payload,budget,seed)
++            dump(HERE/'outputs'/(job_id+'_native_return.json'),{'request_utf8':payload.decode(),'response':response,
++                 'native_counts_at_return':dict(observer.counts)})
++            return response
++        def post(payload,**kwargs):
++            encoded,envelope=engine.process(payload,**kwargs)
++            dump(HERE/'outputs'/(job_id+'_post_return.json'),{'request_utf8':payload.decode(),
++                 'response_utf8':encoded,'envelope':envelope})
++            return encoded,envelope
++        observer.mark('warm_pipeline_about_to_start',method=job['method'])
+         sys.settrace(observer.trace)
+         try:
+-            run((HERE/job['input']).read_bytes(), job['method'], job['seed'], core, post, result, observer)
++            run((HERE/job['input']).read_bytes(),job['method'],job['seed'],core,post,result,observer)
+         finally:
+             sys.settrace(None)
+-        result['native_counts'] = dict(observer.counts)
+-        # Persist all main/native/post data before external auditing.
+-        dump(final, evidence(result))
+-        assert observer.counts['core_started'] == observer.counts['core_returned'] == observer.counts['core_complete'] == 1
+-        assert observer.counts['post_entry_calls'] == 1
+-        from audit import load_auditor, audit_one
+-        counts = Counter()
+-        result['independent'] = audit_one(result, load_auditor(), counts)
+-        limits = reg['limits_per_real_slot']
+-        assert counts['independent_geometry'] <= limits['independent_geometry']
+-        assert counts['independent_distance'] <= limits['independent_distance']
+-        assert counts['independent_service_intersections'] <= limits['independent_service_intersections']
+-        result['passed'] = True
++        result['native_counts']=dict(observer.counts)
++        dump(final,evidence(result))
++        assert observer.counts['core_started']==observer.counts['core_returned']==observer.counts['core_complete']==1
++        assert observer.counts['post_entry_calls']==1
++        result['auditor_identity_after_main']=stable_context(binding,identity)
++        counts=Counter()
++        result['independent']=binding.audit_one(result,binding.post_auditor,counts)
++        limits=reg['limits_per_real_slot']
++        assert counts['independent_geometry']<=limits['independent_geometry']
++        assert counts['independent_distance']<=limits['independent_distance']
++        assert counts['independent_service_intersections']<=limits['independent_service_intersections']
++        result['auditor_identity_after_independent']=stable_context(binding,identity)
++        result['passed']=True
+     except BaseException as error:
+         sys.settrace(None)
+-        result.update(failure={'reason': repr(error), 'traceback': traceback.format_exc()}, passed=False)
+-    result['native_counts'] = dict(observer.counts)
+-    result['loaded_sources'] = loaded_hashes()
+-    result['finished_utc'] = now()
+-    dump(final, evidence(result))
+-    print(json.dumps({'id': job_id, 'passed': result['passed'], 'stage': result.get('stage'),
+-                      'failure': result.get('failure'), 'native_counts': result['native_counts']}, ensure_ascii=False))
++        result.update(passed=False,failure={'reason':repr(error),'traceback':traceback.format_exc()})
++    if observer is not None:
++        result['native_counts']=dict(observer.counts)
++    from native_loader import loaded_hashes
++    result['loaded_sources']=loaded_hashes()
++    result['finished_utc']=now()
++    dump(final,evidence(result))
++    print(json.dumps({'id':job_id,'passed':result['passed'],'failure':result.get('failure'),
++                      'native_counts':result['native_counts']},ensure_ascii=False))
+     if not result['passed']:
+         raise SystemExit(1)
+ 
+-if __name__ == '__main__':
++if __name__=='__main__':
+     main(sys.argv[1])
+--- v0.1/run_real.py
++++ v0.2/run_real.py
+@@ -1,44 +1,40 @@
+-"""Serial 12-slot gate. Any failure stops remaining slots; no retries."""
++"""Only remaining original 11 jobs, serial and no retries."""
+ from pathlib import Path
+-import subprocess, os, sys, json, traceback, time
+-from common import HERE, read, dump, sha, now
++import subprocess,sys,os,json,time,traceback
++from v02_utils import HERE,read,dump,sha,now
+ 
+ def main():
+-    assert not (HERE/'attempts.jsonl').exists(), 'real batch was already started; no rerun'
+-    reg = read(HERE/'registration.json')
+-    tech = read(HERE/'technical_rounds/round_1/result.json')
+-    assert tech['failed'] == 0 and tech['passed'] == 11
+-    freeze = read(HERE/'real_freeze.json')
+-    for name, digest in freeze['files'].items():
+-        assert sha(HERE/name) == digest
+-    env = dict(os.environ, PYTHONDONTWRITEBYTECODE='1', OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1')
+-    attempted, completed, failure = [], [], None
+-    for job in reg['jobs']:
++    assert not (HERE/'attempts.jsonl').exists(),'batch already attempted; no automatic resume'
++    reg=read(HERE/'registration.json')
++    assert len(reg['resume_jobs'])==11 and all(j['id']!='01_H1' for j in reg['resume_jobs'])
++    freeze=read(HERE/'real_freeze.json')
++    for name,digest in freeze['files'].items():
++        assert sha(HERE/name)==digest
++    assert read(HERE/'reuse_ready.json')['status']=='reused_saved_reaudited'
++    env=dict(os.environ,PYTHONDONTWRITEBYTECODE='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
++    attempted,completed,failure=[],[],None
++    for job in reg['resume_jobs']:
+         attempted.append(job['id'])
+-        with (HERE/'attempts.jsonl').open('a', encoding='utf-8') as file:
+-            file.write(json.dumps({'utc': now(), 'id': job['id'], 'event': 'attempted_once'}, ensure_ascii=False)+'\n')
+-        start = time.perf_counter()
++        with (HERE/'attempts.jsonl').open('a',encoding='utf-8') as file:
++            file.write(json.dumps({'utc':now(),'id':job['id'],'event':'attempted_once'},ensure_ascii=False)+'\n')
++        start=time.perf_counter()
+         try:
+-            proc = subprocess.run([sys.executable, '-B', '-X', 'utf8', str(HERE/'worker.py'), job['id']],
+-                                   env=env, capture_output=True, timeout=45)
++            proc=subprocess.run([sys.executable,'-B','-X','utf8',str(HERE/'worker.py'),job['id']],env=env,capture_output=True,timeout=45)
+             (HERE/'logs'/(job['id']+'.log')).write_bytes(proc.stdout+proc.stderr)
+-            if proc.returncode != 0:
+-                raise RuntimeError('worker_nonzero:'+str(proc.returncode))
+-            data = read(HERE/'outputs'/(job['id']+'.json'))
++            if proc.returncode:
++                raise RuntimeError('worker_exit:'+str(proc.returncode))
++            data=read(HERE/'outputs'/(job['id']+'.json'))
+             assert data['passed'] is True
+             completed.append(job['id'])
+         except Exception as error:
+-            failure = {'job': job, 'reason': repr(error), 'traceback': traceback.format_exc(),
+-                       'external_worker_wall_seconds': time.perf_counter()-start}
+-        status = {'utc': now(), 'planned': 12, 'attempted': attempted, 'completed': completed,
+-                  'failed': 1 if failure else 0, 'not_run': 12-len(attempted), 'failure': failure,
+-                  'stopped': bool(failure) or len(completed) == 12}
+-        dump(HERE/'batch_status.json', status)
+-        print(job['id'], 'STOP_FAILED' if failure else 'passed', f'{len(completed)}/12', flush=True)
++            failure={'job':job,'reason':repr(error),'traceback':traceback.format_exc(),
++                     'external_worker_wall_seconds':time.perf_counter()-start}
++        dump(HERE/'batch_status.json',{'utc':now(),'planned_new':11,'attempted':attempted,'completed':completed,
++             'failed':int(bool(failure)),'not_run':11-len(attempted),'failure':failure,
++             'old_01_H1_reused_only':True,'stopped':bool(failure) or len(completed)==11})
++        print(job['id'],'STOP_FAILED' if failure else 'passed',f'{len(completed)}/11',flush=True)
+         if failure:
+-            break
+-    if failure:
+-        raise SystemExit(1)
++            raise SystemExit(1)
+ 
+-if __name__ == '__main__':
++if __name__=='__main__':
+     main()
+--- v0.1/verify.py
++++ v0.2/verify.py
+@@ -1,69 +1,117 @@
+-"""Read saved evidence only. No selector, native loader, core or engine imports."""
++"""Saved-only independent verification; imports no native loader/selector/engine."""
++from pathlib import Path
+ from collections import Counter
+-from pathlib import Path
+-from common import HERE, ROOT, read, dump, sha, now
+-from audit import load_auditor, audit_one
++from v02_utils import HERE, ROOT, read, dump, sha, now
++from audit_binding import bind
++
++def saved_auditor_binding():
++    return bind()
++
++def assert_saved_identity(data):
++    before=data['auditor_identity_before']
++    assert before==data['auditor_identity_after_main']==data['auditor_identity_after_independent']
++    expected=read(HERE/'audit_expected_identity.json')
++    for module in before['auditor']['modules'].values():
++        assert sha(module['file'])==module['sha256']
++        assert Path(module['origin']).resolve()==Path(module['file']).resolve()
++        assert Path(module['file']).resolve().is_relative_to(HERE/expected['package'])
++    assert Path(before['baseline_audit']['file']).resolve()==Path(expected['baseline_audit_path']).resolve()
++    assert sha(before['baseline_audit']['file'])==before['baseline_audit']['sha256']
++    for function in before['auditor']['functions'].values():
++        assert sha(function['file'])==function['sha256']
++        assert function['module'].startswith(expected['package']+'.')
++
++def physical_pairs(data_by_id, cases):
++    pairs=[]
++    physical=('free','published_targets','targets','covered','deferred_targets','current','base',
++              'old_route','initial_targets','distance_budget','predator')
++    for case in cases:
++        h,p=data_by_id.get(case['id']+'_H1'),data_by_id.get(case['id']+'_P2')
++        if h is None or p is None:
++            continue
++        for name in ('gamma','gamma_length','h_entry','predicted_entry','actual_before','actual_after'):
++            assert h[name]==p[name],('physical_pair',case['id'],name)
++        for name in physical:
++            assert h['core_request'][name]==p['core_request'][name],('core_physical_pair',case['id'],name)
++        pairs.append({'case':case['id'],'physical_state_equal':True,
++                      'H1_source':'reused_v0.1_failed_return_reaudited' if case['id']=='01' else 'new_v0.2',
++                      'P2_source':'new_v0.2','same_round_timing_pair':case['id']!='01'})
++    return pairs
+ 
+ def main():
+-    manifest = read(HERE/'completion_manifest.json')
+-    for name, digest in manifest['files'].items():
+-        assert sha(HERE/name) == digest, ('package_hash', name)
++    manifest=read(HERE/'completion_manifest.json')
++    for name,digest in manifest['files'].items():
++        assert sha(HERE/name)==digest,('package_hash',name)
+     for row in read(HERE/'old_files.json'):
+-        assert sha(ROOT/row['path']) == row['sha256'], ('old_file_hash', row['path'])
+-    for name, digest in read(HERE/'external_source_guards.json').items():
+-        assert sha(name) == digest, ('external_source_hash', name)
+-    for binding in read(HERE/'bindings.json'):
+-        assert sha(HERE/binding['copy']) == sha(ROOT/binding['source']) == binding['sha256']
+-    assert sha(HERE/'root_before.md') == manifest['root_before']
+-    assert sha(HERE/'root_after.md') == manifest['root_after']
+-    reg = read(HERE/'registration.json')
+-    status = read(HERE/'batch_status.json')
+-    assert len(status['attempted']) <= 12 and len(set(status['attempted'])) == len(status['attempted'])
+-    assert status['attempted'] == [j['id'] for j in reg['jobs'][:len(status['attempted'])]]
+-    assert status['not_run'] == 12-len(status['attempted'])
+-    assert len(status['completed'])+status['failed'] == len(status['attempted'])
+-    counts, audits, completed = Counter(), [], {}
+-    auditor = load_auditor()
+-    for ident in status['attempted']:
+-        path = HERE/'outputs'/(ident+'.json')
+-        if not path.exists():
+-            assert status['failure'] and status['failure']['job']['id'] == ident
++        assert sha(ROOT/row['path'])==row['sha256'],('old_changed',row['path'])
++    for name,digest in read(HERE/'external_source_guards.json').items():
++        assert sha(name)==digest
++    assert sha(HERE/'root_before.md')==manifest['root_before']
++    assert sha(HERE/'root_after.md')==manifest['root_after']
++    for row in read(HERE/'bindings.json'):
++        assert sha(ROOT/row['source'])==sha(HERE/row['copy'])==row['sha256']
++    reg=read(HERE/'registration.json')
++    oldreg=read(HERE/'original_registration.json')
++    for name in ('cases','jobs','limits_per_real_slot','pipeline_seconds','connector_seconds','core_seconds_max','post_candidate_absolute_seconds'):
++        assert reg[name]==oldreg[name]
++    assert reg['resume_jobs']==oldreg['jobs'][1:]
++    stage=read(HERE/'batch_status.json')
++    assert len(stage['attempted'])<=11 and len(set(stage['attempted']))==len(stage['attempted'])
++    assert stage['attempted']==[j['id'] for j in reg['resume_jobs'][:len(stage['attempted'])]]
++    assert '01_H1' not in stage['attempted']
++    binding=saved_auditor_binding()
++    identity=binding.assert_stable()
++    counts=Counter()
++    checked=[]
++    data_by_id={}
++    source=read(HERE/'reuse_source.json')
++    oldpath=ROOT/source['main_source']
++    old=read(oldpath)
++    assert old['passed'] is False and old['main_passed'] is True
++    ready=read(HERE/'reuse_ready.json')
++    assert ready['status']=='reused_saved_reaudited'
++    assert sha(ROOT/ready['source'])==ready['source_sha256']
++    slot=Counter()
++    receipt=binding.audit_one(old,binding.post_auditor,slot)
++    counts.update(slot)
++    checked.append({'id':'01_H1','origin':'old_failed_return_reaudited','receipt':receipt})
++    data_by_id['01_H1']=old
++    for job in reg['resume_jobs']:
++        path=HERE/'outputs'/(job['id']+'.json')
++        if job['id'] not in stage['completed']:
+             continue
+-        data = read(path)
+-        assert data['job']['id'] == ident
+-        assert sha(HERE/data['job']['input']) == data['input_sha256']
+-        assert data.get('snapshot') == read(HERE/data['job']['input'])
+-        for name, digest in data.get('loaded_sources', {}).items():
+-            assert sha(name) == digest
+-        if data['passed']:
+-            slot = Counter()
+-            receipt = audit_one(data, auditor, slot)
+-            assert slot['independent_geometry'] <= reg['limits_per_real_slot']['independent_geometry']
+-            assert slot['independent_distance'] <= reg['limits_per_real_slot']['independent_distance']
+-            assert slot['independent_service_intersections'] <= reg['limits_per_real_slot']['independent_service_intersections']
+-            counts.update(slot)
+-            audits.append({'id': ident, 'receipt': receipt})
+-            completed[ident] = data
+-        else:
+-            assert data.get('failure') and status['failure']['job']['id'] == ident
+-    pairs = []
+-    for case in reg['cases']:
+-        h, p = completed.get(case['id']+'_H1'), completed.get(case['id']+'_P2')
+-        if h and p:
+-            for name in ('gamma', 'gamma_length', 'h_entry', 'predicted_entry', 'actual_before', 'actual_after', 'core_request'):
+-                assert h[name] == p[name], ('paired_physical_state', case['id'], name)
+-            pairs.append(case['id'])
+-    directory = HERE/'verify_receipts'
++        data=read(path)
++        assert data['passed'] and data['job']==job
++        assert data['input_sha256']==sha(HERE/job['input'])
++        assert data['snapshot']==read(HERE/job['input'])
++        assert_saved_identity(data)
++        for name,digest in data['loaded_sources'].items():
++            assert sha(name)==digest
++        slot=Counter()
++        receipt=binding.audit_one(data,binding.post_auditor,slot)
++        limits=reg['limits_per_real_slot']
++        assert slot['independent_geometry']<=limits['independent_geometry']
++        assert slot['independent_distance']<=limits['independent_distance']
++        assert slot['independent_service_intersections']<=limits['independent_service_intersections']
++        counts.update(slot)
++        checked.append({'id':job['id'],'origin':'new_v0.2','receipt':receipt})
++        data_by_id[job['id']]=data
++    pairs=physical_pairs(data_by_id,reg['cases'])
++    gate_ok=len(stage['completed'])==11 and stage['failed']==0 and len(pairs)==6 and len(checked)==12
++    assert gate_ok==manifest['real_acceptance_passed']
++    assert binding.assert_stable()==identity
++    directory=HERE/'verify_receipts'
+     directory.mkdir(exist_ok=True)
+-    index = len(list(directory.glob('verify_*.json')))+1
+-    report = {'utc': now(), 'status': 'VERIFIED_SAVED_ONLY', 'main_batch_status': manifest['status'],
+-              'saved_successful_pipelines_checked': len(audits), 'paired_physical_inputs_equal': pairs,
+-              'failed_preserved': status['failed'], 'not_run': status['not_run'],
+-              'new_core_calls': 0, 'new_selector_calls': 0, 'new_postprocess_calls': 0, 'new_graph_search': 0,
+-              'saved_geometry_and_decision_rechecks': dict(counts), 'files_checked': len(manifest['files']),
+-              'old_files_checked': len(read(HERE/'old_files.json')), 'audits': audits}
+-    dump(directory/f'verify_{index:03d}.json', report)
+-    print({k: v for k, v in report.items() if k != 'audits'})
++    index=len(list(directory.glob('verify_*.json')))+1
++    report={'utc':now(),'status':'VERIFIED_SAVED_ONLY','real_acceptance_passed':gate_ok,
++        'new_slots_checked':len(stage['completed']),'old_saved_return_checked':1,'old_status_still_failed':True,
++        'cross_version_distinct_native_entries':1+len(stage['attempted']),
++        'new_selector':0,'new_core':0,'new_postprocess':0,'new_graph_search':0,
++        'saved_rechecks':dict(counts),'physical_pairs':pairs,'auditor_identity':identity,
++        'manifest_files_checked':len(manifest['files']),'old_guard_records_checked':len(read(HERE/'old_files.json')),
++        'receipts':checked}
++    dump(directory/f'verify_{index:03d}.json',report)
++    print({k:v for k,v in report.items() if k not in ('receipts','auditor_identity')})
+ 
+-if __name__ == '__main__':
++if __name__=='__main__':
+     main()
+--- /dev/null
++++ v0.2/audit_binding.py
+@@ -0,0 +1,99 @@
++"""Absolute-path package binding. Never change sys.path or generic audit/helpers."""
++from pathlib import Path
++import importlib.util, sys, json, hashlib, inspect
++
++HERE = Path(__file__).resolve().parent
++
++def file_hash(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++def module_identity(module):
++    if module is None:
++        return None
++    source = Path(module.__file__).resolve()
++    return {'name':module.__name__, 'file':str(source), 'origin':str(Path(module.__spec__.origin).resolve()),
++            'loader':type(module.__spec__.loader).__name__, 'sha256':file_hash(source), 'object_id':id(module)}
++
++def function_identity(function):
++    assert callable(function) and inspect.isfunction(function)
++    source = Path(function.__code__.co_filename).resolve()
++    return {'module':function.__module__, 'qualname':function.__qualname__, 'file':str(source),
++            'sha256':file_hash(source), 'first_line':function.__code__.co_firstlineno, 'object_id':id(function)}
++
++class Binding:
++    def __init__(self, package, expected):
++        self.package, self.expected = package, expected
++        self.audit_one = package.audit_one
++        self.load_auditor = package.load_auditor
++        self.post_auditor = self.load_auditor()
++        self.initial_identity = self.identity()
++
++    def identity(self):
++        name = self.expected['package']
++        modules = {suffix:sys.modules[name+suffix] for suffix in ('', '._audit', '._common', '._geometry', '._h1', '._post_saved', '._post_geometry')}
++        for relative, digest in self.expected['files'].items():
++            assert file_hash(HERE/relative) == digest, ('audit_source_changed', relative)
++        for suffix, module in modules.items():
++            want = HERE/name/('__init__.py' if not suffix else suffix[2:]+'.py')
++            # suffix strips the dot only: ._audit -> _audit.py.
++            if suffix:
++                want = HERE/name/(suffix[1:]+'.py')
++            assert Path(module.__file__).resolve() == want.resolve()
++            assert Path(module.__spec__.origin).resolve() == want.resolve()
++        main = modules['._audit']
++        assert main.A is modules['._geometry'] and main.h1_audit is modules['._h1']
++        assert Path(main.HERE).resolve() == HERE
++        assert modules['._post_saved'].A is modules['._post_geometry']
++        assert self.post_auditor is modules['._post_saved']
++        assert self.audit_one is main.audit_one and self.load_auditor is main.load_auditor
++        for function,suffix in ((self.audit_one,'_audit.py'),(self.load_auditor,'_audit.py'),(self.post_auditor.audit_one,'_post_saved.py')):
++            assert Path(function.__code__.co_filename).resolve()==(HERE/name/suffix).resolve()
++            assert function.__module__==name+'.'+suffix[:-3]
++        return {'modules':{k:module_identity(v) for k,v in modules.items()},
++                'functions':{'audit_one':function_identity(self.audit_one),
++                             'load_auditor':function_identity(self.load_auditor),
++                             'post_audit_one':function_identity(self.post_auditor.audit_one)}}
++
++    def assert_stable(self):
++        current = self.identity()
++        assert current == self.initial_identity, 'audit_identity_changed'
++        return current
++
++def bind():
++    expected = json.loads((HERE/'audit_expected_identity.json').read_text(encoding='utf-8'))
++    name = expected['package']
++    original_audit = sys.modules.get('audit')
++    original_path = list(sys.path)
++    for relative, digest in expected['files'].items():
++        assert file_hash(HERE/relative) == digest
++    package = sys.modules.get(name)
++    if package is None:
++        directory = HERE/name
++        spec = importlib.util.spec_from_file_location(name, directory/'__init__.py', submodule_search_locations=[str(directory)])
++        package = importlib.util.module_from_spec(spec)
++        sys.modules[name] = package
++        spec.loader.exec_module(package)
++    binding = Binding(package, expected)
++    assert sys.modules.get('audit') is original_audit, 'generic_audit_was_modified'
++    assert sys.path == original_path, 'auditor_binding_changed_sys_path'
++    return binding
++
++def baseline_identity(required=True):
++    expected = json.loads((HERE/'audit_expected_identity.json').read_text(encoding='utf-8'))
++    module = sys.modules.get('audit')
++    if module is None:
++        assert not required
++        return None
++    assert Path(module.__file__).resolve() == Path(expected['baseline_audit_path']).resolve(), 'generic_audit_wrong_source'
++    assert hasattr(module,'audit') and not hasattr(module,'load_auditor')
++    return module_identity(module)
++
++def helpers_identity():
++    result = {}
++    for name in ('common','pipeline','exact','geometry','connector','h1_direction','h1_rewards','native_loader'):
++        module = sys.modules.get(name)
++        if module is not None:
++            actual = Path(module.__file__).resolve()
++            assert actual == (HERE/(name+'.py')).resolve(), ('generic_helper_source_conflict',name,str(actual))
++            result[name] = module_identity(module)
++    return result
+--- /dev/null
++++ v0.2/context.py
+@@ -0,0 +1,25 @@
++"""Same precore context for actual worker and dedicated import prechecks."""
++from pathlib import Path
++from v02_utils import HERE, read, sha
++from audit_binding import bind, baseline_identity, helpers_identity
++
++def prepare_context():
++    from native_loader import modules, loaded_hashes
++    h1, p2, engine, cold = modules()
++    generic_before = baseline_identity()
++    binding = bind()
++    generic_after = baseline_identity()
++    assert generic_before == generic_after
++    from observe import Recorder
++    loaded = loaded_hashes()
++    guards = read(HERE/'external_source_guards.json')
++    for name, digest in loaded.items():
++        if not Path(name).is_relative_to(HERE):
++            assert name in guards and guards[name] == digest, ('unbound_loaded_source',name)
++    identity = {'auditor':binding.assert_stable(), 'baseline_audit':generic_after, 'helpers':helpers_identity()}
++    return h1,p2,engine,binding,cold,loaded,identity
++
++def stable_context(binding, before):
++    after = {'auditor':binding.assert_stable(), 'baseline_audit':baseline_identity(), 'helpers':helpers_identity()}
++    assert before == after, 'precore_postcore_module_identity_changed'
++    return after

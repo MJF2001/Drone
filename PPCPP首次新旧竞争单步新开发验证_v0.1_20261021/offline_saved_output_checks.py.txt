@@ -1,0 +1,69 @@
+"""Post-run independent stdlib report only. No controller/metric/planner imports.
+Added after all 390 real slots completed; never used to continue or alter runs.
+"""
+from pathlib import Path
+import json,hashlib,statistics,csv,collections
+H=Path(__file__).resolve().parent
+def read(p):return json.loads(p.read_text(encoding='utf8'))
+def save(p,x):
+    with p.open('x',encoding='utf8') as f:json.dump(x,f,ensure_ascii=False,indent=2)
+def points(x):return set(map(tuple,x))
+def audit_metrics(c,path):
+    route=list(map(tuple,path));t=points(c['targets']);h=points(c['covered']);f=points(c['free']);u=t-h
+    assert route[0]==tuple(c['current']) and route[-1]==tuple(c['base']) and set(route)<=f and not u-set(route)
+    n=len(route)-1;assert n<=c['distance_budget'] and all(sum(abs(a-b) for a,b in zip(p,q))==1 for p,q in zip(route,route[1:]))
+    C=max((route.index(p) for p in u),default=0);prior=set(h)|({route[0]}&t);fresh=hist=repeat=non=0
+    for q in route[1:]:
+        if q not in t:non+=1
+        elif q in h:hist+=1
+        elif q in prior:repeat+=1
+        else:fresh+=1
+        prior.add(q)
+    assert fresh+hist+repeat+non==n
+    # Three-position displacement distinguishes reversal from right angle.
+    turns90=turns180=0
+    for p,q,r in zip(route,route[1:],route[2:]):
+        if p==r:turns180+=1
+        elif p[0]!=r[0] and p[1]!=r[1]:turns90+=1
+    return dict(length=n,completion_step=C,return_tail_steps=n-C,fresh_target_steps=fresh,historical_target_steps=hist,repeated_new_target_steps=repeat,non_target_steps=non,overlap_ratio=(hist+repeat)/(n-non) if n>non else None,turns90=turns90,turns180=turns180,direction_changes=turns90+turns180)
+def strict_rejoin(c,off,on,k):
+    pending=points(c['targets'])-points(c['covered']);aa=off['raw']['route'];bb=on['raw']['route'];lookup=collections.defaultdict(list)
+    def key(route,i):return (tuple(route[i]),tuple(route[i-1]) if i else tuple(c['previous']),frozenset(pending-points(route[:i+1])))
+    for e in off['raw']['trace']:lookup[key(aa,e['index'])].append(e['index'])
+    for e in on['raw']['trace']:
+        j=e['index']
+        if j<=k:continue
+        state=key(bb,j)
+        if state in lookup:
+            i=lookup[state][0];return dict(OFF_index=i,ON_index=j,pending_count=len(state[2]),current=state[0],previous=state[1],OFF_remaining=c['distance_budget']-i,ON_remaining=c['distance_budget']-j,equal_resource=i==j,identical_suffix=aa[i:]==bb[j:],scope='actual recorded decision starts only; time/cache not matched')
+    return None
+def main():
+    states=read(H/'states.json');a=read(H/'analysis.json');sig=read(H/'signal.json');rr={r['job']['id']:r for r in a['rows']};rows=[];ss=[];rejoins=[]
+    for st in states:
+        ds=[];trigger=st['condition'] in ('MIXED_SIDE','U_SIDE');c=read(H/st['input'])
+        for seed in (20261020,20261021,20261022):
+            out={mode:read(H/'outputs'/f'formal_{st["id"]}_{seed}_{mode}.json') for mode in ('OFF','ON')};results={mode:o['result'] for mode,o in out.items()};d={}
+            for mode,o in out.items():
+                x=o['result'];assert x['raw']['status']=='core_complete' and x['eligible'] and x['entry_seconds']<20
+                d[mode]=audit_metrics(c,x['raw']['route']);stored=rr[o['job']['id']]['metrics']
+                for key,value in d[mode].items():assert stored[key]==value,(o['job']['id'],key)
+                assert x['raw']['branches']['P0']['diagnostic']['trigger_count']==int(trigger and mode=='ON')
+                rows.append(dict(state=st['id'],seed=seed,mode=mode,**d[mode],initial_remaining_resource=c['distance_budget'],resource_after_route=c['distance_budget']-d[mode]['length'],entry_seconds=x['entry_seconds']))
+            ds.append(d['ON']['length']-d['OFF']['length'])
+            if not trigger:assert results['OFF']['raw']['route']==results['ON']['raw']['route'] and results['OFF']['raw']['trace']==results['ON']['raw']['trace']
+            else:
+                log=results['ON']['raw']['branches']['P0']['diagnostic']['log'];assert len(log)==1;k=log[0]['index']
+                assert results['OFF']['raw']['route'][:k+1]==results['ON']['raw']['route'][:k+1]
+                event=next(e for e in results['OFF']['raw']['trace'] if e['index']==k);new=points(c['published_targets'])-points(c['initial_targets']);newopts=[o for o in event['options'] if tuple(o['cell']) in new]
+                assert len(newopts)==1 and newopts[0]['cell']==log[0]['forced_selected'] and event['goal']==log[0]['original_selected']
+                rejoins.append(dict(state=st['id'],seed=seed,rejoin=strict_rejoin(c,results['OFF'],results['ON'],k)))
+        ss.append(dict(state=st['id'],geometry=st['geometry'],L=st['L'],w=st['w'],trigger=trigger,seed_deltas=ds,mean_delta=statistics.mean(ds),all_three_shorter=all(d<0 for d in ds)))
+    tr=[s for s in ss if s['trigger']];support=[s for s in tr if s['all_three_shorter']];geoms=sorted({s['geometry'] for s in support});lengths=sorted({s['L'] for s in support});widths=sorted({s['w'] for s in support});net=sum(s['mean_delta'] for s in tr)
+    gate=read(H/'OFF_equivalence.json');assert len(gate)==48 and all(g['equivalence']['passed'] for g in gate)
+    raw_pass=len(geoms)>=3 and len(lengths)>=2 and len(widths)==2 and len(tr)==24 and net<0
+    assert sig['registered_pass']==raw_pass and sig['trigger_state_equal_weight_net_sum_delta_L']==net and sig['support_geometries']==geoms and sig['lengths']==lengths and sig['widths']==widths
+    result=dict(passed=True,source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),added_postrun_saved_data_only=True,real_entry_core_calls=0,graph_searches=0,standalone_raw_route_signal=raw_pass,net=net,short=sum(s['mean_delta']<0 for s in tr),equal=sum(s['mean_delta']==0 for s in tr),long=sum(s['mean_delta']>0 for s in tr),worst=max(d for s in tr for d in s['seed_deltas']),support_geometries=geoms,lengths=lengths,widths=widths,all288_independent_metric_subset_equal=True,all72_first_original_competitions_unique_new_and_same_prefix=True,strict_actual_decision_rejoins=sum(r['rejoin'] is not None for r in rejoins),rejoins_with_unfinished_targets=sum(r['rejoin'] is not None and r['rejoin']['pending_count']>0 for r in rejoins))
+    save(H/'offline_independent_check.json',result);save(H/'strict_actual_decision_rejoins.json',rejoins);save(H/'standalone_raw_route_state_deltas.json',ss)
+    with (H/'288独立补算与资源余额.csv').open('x',encoding='utf-8-sig',newline='') as f:w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
+    print(json.dumps(result,ensure_ascii=False))
+if __name__=='__main__':main()

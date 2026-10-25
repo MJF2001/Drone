@@ -1,0 +1,20 @@
+--- frozen_original
++++ new_interface_copy
+@@ -4,7 +4,7 @@
+ ROOT=Path(__file__).resolve().parents[2]
+ sys.path.insert(0,str(ROOT/'基线复现准备_20261019'))
+ from ppcpp_independent import core,UnifiedGeometry,single_cell_audit,check_contract,DeadlineExceeded,NoPath
+-VERSION='PPCPP_CORE4_FIXED_HISTORY_v0.2_20261019'
++VERSION='PPCPP_CORE4_ROTATION_INTERFACE_v0.1'
+ def solve(s,initial,budget,seed,predator,previous,*,_clock=time.perf_counter,_geometry=UnifiedGeometry,_audit=single_cell_audit):
+     begin=_clock();deadline=begin+budget;route=[];trace=[];status='not_started';reason=None;accepted=None
+     def tick():
+@@ -16,7 +16,7 @@
+         check_contract(s,initial,budget)
+         if not math.isfinite(budget):raise ValueError('finite budget')
+         if len(predator)!=2 or not all(math.isfinite(v) for v in predator):raise ValueError('finite predator')
+-        if s.free and not (predator[0]<min(x for x,y in s.free) or predator[0]>max(x for x,y in s.free)):raise ValueError('predator outside fixed flight-domain x bounds required')
++        if s.free and not (predator[0]<min(x for x,y in s.free) or predator[0]>max(x for x,y in s.free) or predator[1]<min(y for x,y in s.free) or predator[1]>max(y for x,y in s.free)):raise ValueError('predator strictly outside flight-domain bounding rectangle required')
+         if previous is not None and sum(abs(a-b) for a,b in zip(previous,s.current))!=1:raise ValueError('historical heading must be adjacent')
+         tick();g=_geometry(s,deadline);reason=g.precheck();tick()
+         if reason:status='environment_infeasible'

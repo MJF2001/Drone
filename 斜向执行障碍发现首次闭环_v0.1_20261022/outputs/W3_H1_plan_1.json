@@ -1,0 +1,3454 @@
+{
+  "id": "W3_H1_plan_1",
+  "passed": true,
+  "native_counts": {
+    "core_started": 1,
+    "heading_parse_calls": 1,
+    "context_calls": 1,
+    "context_BFS_started": 1,
+    "context_BFS_completed": 1,
+    "geometry_precheck_calls": 1,
+    "reward_calls": 4,
+    "scored_neighbor_rows": 0,
+    "geometry_distance_calls": 10,
+    "distance_row_BFS_started": 4,
+    "distance_row_BFS_completed": 4,
+    "geometry_path_calls": 5,
+    "astar_calls": 5,
+    "Astar_started": 5,
+    "Astar_completed": 5,
+    "heading_update_calls": 16,
+    "main_audit_calls": 2,
+    "main_audit_returns": 2,
+    "main_audit_valid": 2,
+    "core_returned": 1,
+    "core_complete": 1,
+    "post_entry_calls": 1,
+    "post_source_geometry": 16,
+    "post_candidate_geometry": 5,
+    "post_output_geometry": 5,
+    "post_service_intersections": 20,
+    "post_interval_calls": 6
+  },
+  "method": "H1",
+  "seed": 20261022,
+  "wrapper_counts": {
+    "parse": 1,
+    "input_geometry": 1,
+    "primary_domain_points": 177,
+    "initial_zero_entry": 1,
+    "candidate_checks": 1,
+    "prediction_collect_here": 1,
+    "prediction_service_intersections": 4,
+    "native_adapter_calls": 1,
+    "native_route_audits": 1,
+    "native_collect_here": 1,
+    "native_geometry": 16,
+    "native_distance": 16,
+    "native_service_intersections": 25,
+    "native_resource_checks": 1,
+    "post_route_audits": 1,
+    "post_collect_here": 1,
+    "post_geometry": 5,
+    "post_distance": 5,
+    "post_service_intersections": 10,
+    "post_resource_checks": 1,
+    "full_route_audits": 1,
+    "full_collect_here": 1,
+    "full_geometry": 5,
+    "full_distance": 5,
+    "full_service_intersections": 10,
+    "full_resource_checks": 1
+  },
+  "stage": "main_complete",
+  "timing": {
+    "connector_and_contract_seconds": 0.0029790999833494425,
+    "core_adapter_seconds": 0.021540299989283085,
+    "post_adapter_seconds": 0.011359600001014769,
+    "main_encoding_seconds": 0.00031450000824406743,
+    "pipeline_seconds": 0.056266200030222535,
+    "pipeline_late": false
+  },
+  "snapshot": {
+    "id": "W3_H1_plan_1",
+    "input": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": null,
+      "heading_status": "NO_PRIOR_MOTION",
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ]
+      ],
+      "D": [],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "M": {
+        "terms": []
+      }
+    },
+    "metadata": {
+      "initial_targets": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "predator": [
+        -3,
+        -3
+      ],
+      "old_route": [],
+      "heading_source": {
+        "kind": "initialization_no_motion"
+      },
+      "execution_log_tail": "8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a",
+      "known_obstacles": [],
+      "scope": "public_execution_state_only"
+    }
+  },
+  "actual_before": {
+    "S": [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": null,
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ]
+    ],
+    "D": [],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 100,
+        "d": 1
+      },
+      "high": {
+        "n": 100,
+        "d": 1
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": []
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 0,
+        "d": 1
+      },
+      "high": {
+        "n": 0,
+        "d": 1
+      }
+    }
+  },
+  "actual_after": {
+    "S": [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": null,
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ]
+    ],
+    "D": [],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 100,
+        "d": 1
+      },
+      "high": {
+        "n": 100,
+        "d": 1
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": []
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 0,
+        "d": 1
+      },
+      "high": {
+        "n": 0,
+        "d": 1
+      }
+    }
+  },
+  "candidates": [
+    {
+      "q": [
+        0,
+        0
+      ],
+      "squared": {
+        "n": 0,
+        "d": 1
+      },
+      "dot": null,
+      "legal": true,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": []
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 0,
+          "d": 1
+        },
+        "high": {
+          "n": 0,
+          "d": 1
+        }
+      },
+      "squared_source": {
+        "n": 0,
+        "d": 1
+      },
+      "initial_zero_entry": true
+    }
+  ],
+  "q": [
+    0,
+    0
+  ],
+  "gamma": [
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ]
+  ],
+  "gamma_length": {
+    "exact": {
+      "terms": []
+    },
+    "interval_bits": 64,
+    "low": {
+      "n": 0,
+      "d": 1
+    },
+    "high": {
+      "n": 0,
+      "d": 1
+    }
+  },
+  "gamma_events": [],
+  "h_entry": null,
+  "heading": {
+    "status": "NO_PRIOR_MOTION",
+    "vector": null,
+    "source": {
+      "kind": "initialization_no_motion",
+      "execution_log_tail": "8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a"
+    }
+  },
+  "predicted_entry": {
+    "S": [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": null,
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ]
+    ],
+    "D": [],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 100,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 100,
+        "d": 1
+      },
+      "high": {
+        "n": 100,
+        "d": 1
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": []
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 0,
+        "d": 1
+      },
+      "high": {
+        "n": 0,
+        "d": 1
+      }
+    }
+  },
+  "core_request": {
+    "name": "synthetic_stop_W3_H1_plan_1",
+    "free": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "published_targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "covered": [
+      [
+        0,
+        0
+      ]
+    ],
+    "deferred_targets": [],
+    "current": [
+      0,
+      0
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "old_route": [],
+    "initial_targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "distance_budget": 100,
+    "predator": [
+      -3,
+      -3
+    ],
+    "previous": null,
+    "incoming_heading": {
+      "status": "NO_PRIOR_MOTION",
+      "vector": null,
+      "source": {
+        "kind": "initialization_no_motion",
+        "execution_log_tail": "8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a"
+      }
+    }
+  },
+  "core_request_utf8": "{\"name\":\"synthetic_stop_W3_H1_plan_1\",\"free\":[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2],[3,0],[3,1],[3,2],[4,0],[4,1],[4,2]],\"published_targets\":[[0,0],[0,2],[2,1],[4,0],[4,2]],\"targets\":[[0,0],[0,2],[2,1],[4,0],[4,2]],\"covered\":[[0,0]],\"deferred_targets\":[],\"current\":[0,0],\"base\":[0,0],\"old_route\":[],\"initial_targets\":[[0,0],[0,2],[2,1],[4,0],[4,2]],\"distance_budget\":100,\"predator\":[-3,-3],\"previous\":null,\"incoming_heading\":{\"status\":\"NO_PRIOR_MOTION\",\"vector\":null,\"source\":{\"kind\":\"initialization_no_motion\",\"execution_log_tail\":\"8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a\"}}}",
+  "core_request_sha256": "84b0c20c45111769ed117027eae0f082e1612375adff3a6e395bbd3dedf484e3",
+  "core_budget_passed": 20.0,
+  "native_entry": {
+    "raw": {
+      "version": "PPCPP_H1_ENTRY_v0.1",
+      "mode": "PPCPP",
+      "status": "core_complete",
+      "route": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "trace": [
+        {
+          "index": 0,
+          "current": [
+            0,
+            0
+          ],
+          "incoming_heading": {
+            "status": "NO_PRIOR_MOTION",
+            "raw": null,
+            "primitive": null,
+            "source": {
+              "kind": "initialization_no_motion",
+              "execution_log_tail": "8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a"
+            }
+          },
+          "pending_count": 4,
+          "kind": "recovery",
+          "goal": [
+            0,
+            2
+          ]
+        },
+        {
+          "index": 2,
+          "current": [
+            0,
+            2
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              0,
+              1
+            ],
+            "primitive": [
+              0,
+              1
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                0,
+                1
+              ],
+              "end": [
+                0,
+                2
+              ],
+              "end_index": 2
+            }
+          },
+          "pending_count": 3,
+          "kind": "recovery",
+          "goal": [
+            2,
+            1
+          ]
+        },
+        {
+          "index": 5,
+          "current": [
+            2,
+            1
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              1,
+              0
+            ],
+            "primitive": [
+              1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                1,
+                1
+              ],
+              "end": [
+                2,
+                1
+              ],
+              "end_index": 5
+            }
+          },
+          "pending_count": 2,
+          "kind": "recovery",
+          "goal": [
+            4,
+            0
+          ]
+        },
+        {
+          "index": 8,
+          "current": [
+            4,
+            0
+          ],
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              1,
+              0
+            ],
+            "primitive": [
+              1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                3,
+                0
+              ],
+              "end": [
+                4,
+                0
+              ],
+              "end_index": 8
+            }
+          },
+          "pending_count": 1,
+          "kind": "recovery",
+          "goal": [
+            4,
+            2
+          ]
+        },
+        {
+          "kind": "return",
+          "index": 10,
+          "current": [
+            4,
+            2
+          ],
+          "goal": [
+            0,
+            0
+          ],
+          "pending_count": 0,
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              0,
+              1
+            ],
+            "primitive": [
+              0,
+              1
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                4,
+                1
+              ],
+              "end": [
+                4,
+                2
+              ],
+              "end_index": 10
+            }
+          }
+        }
+      ],
+      "selected": "P0",
+      "e": null,
+      "branches": {
+        "P0": {
+          "version": "PPCPP_REAL_HEADING_H1_v0.1_20261022",
+          "method": "PPCPP_INDEPENDENT",
+          "route": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              1,
+              1
+            ],
+            [
+              2,
+              1
+            ],
+            [
+              2,
+              0
+            ],
+            [
+              3,
+              0
+            ],
+            [
+              4,
+              0
+            ],
+            [
+              4,
+              1
+            ],
+            [
+              4,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              2,
+              2
+            ],
+            [
+              1,
+              2
+            ],
+            [
+              0,
+              2
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "status": "core_complete",
+          "reason": null,
+          "seconds": 0.004649700014851987,
+          "budget": 19.999833500012755,
+          "seed": 20261022,
+          "seed_used": false,
+          "predator": [
+            -3,
+            -3
+          ],
+          "initial_heading": {
+            "status": "NO_PRIOR_MOTION",
+            "vector": null,
+            "source": {
+              "kind": "initialization_no_motion",
+              "execution_log_tail": "8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a"
+            }
+          },
+          "weights": [
+            2.0,
+            0.5
+          ],
+          "trace": [
+            {
+              "index": 0,
+              "current": [
+                0,
+                0
+              ],
+              "incoming_heading": {
+                "status": "NO_PRIOR_MOTION",
+                "raw": null,
+                "primitive": null,
+                "source": {
+                  "kind": "initialization_no_motion",
+                  "execution_log_tail": "8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a"
+                }
+              },
+              "pending_count": 4,
+              "kind": "recovery",
+              "goal": [
+                0,
+                2
+              ]
+            },
+            {
+              "index": 2,
+              "current": [
+                0,
+                2
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  0,
+                  1
+                ],
+                "primitive": [
+                  0,
+                  1
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    0,
+                    1
+                  ],
+                  "end": [
+                    0,
+                    2
+                  ],
+                  "end_index": 2
+                }
+              },
+              "pending_count": 3,
+              "kind": "recovery",
+              "goal": [
+                2,
+                1
+              ]
+            },
+            {
+              "index": 5,
+              "current": [
+                2,
+                1
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  1,
+                  0
+                ],
+                "primitive": [
+                  1,
+                  0
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    1,
+                    1
+                  ],
+                  "end": [
+                    2,
+                    1
+                  ],
+                  "end_index": 5
+                }
+              },
+              "pending_count": 2,
+              "kind": "recovery",
+              "goal": [
+                4,
+                0
+              ]
+            },
+            {
+              "index": 8,
+              "current": [
+                4,
+                0
+              ],
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  1,
+                  0
+                ],
+                "primitive": [
+                  1,
+                  0
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    3,
+                    0
+                  ],
+                  "end": [
+                    4,
+                    0
+                  ],
+                  "end_index": 8
+                }
+              },
+              "pending_count": 1,
+              "kind": "recovery",
+              "goal": [
+                4,
+                2
+              ]
+            },
+            {
+              "kind": "return",
+              "index": 10,
+              "current": [
+                4,
+                2
+              ],
+              "goal": [
+                0,
+                0
+              ],
+              "pending_count": 0,
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  0,
+                  1
+                ],
+                "primitive": [
+                  0,
+                  1
+                ],
+                "source": {
+                  "kind": "predicted_route_edge",
+                  "start": [
+                    4,
+                    1
+                  ],
+                  "end": [
+                    4,
+                    2
+                  ],
+                  "end_index": 10
+                }
+              }
+            }
+          ],
+          "final_heading": {
+            "status": "KNOWN",
+            "raw": [
+              0,
+              -1
+            ],
+            "primitive": [
+              0,
+              -1
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                0,
+                1
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "end_index": 16
+            }
+          },
+          "accepted_seconds": 0.004648800007998943,
+          "fallback_selected": false,
+          "overrun_gt_10ms": false
+        }
+      },
+      "reason": null
+    },
+    "entry_seconds": 0.005337200011126697,
+    "phase_seconds": {
+      "p0": 0.005015999951865524,
+      "final_audit": 2.7799978852272034e-05,
+      "encoding": 5.749997217208147e-05
+    },
+    "eligible": true,
+    "budget": 20.0,
+    "method": "PPCPP",
+    "seed": 20261022,
+    "injection_events": []
+  },
+  "native_main_audit": {
+    "points": [
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 2,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 2,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 2,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 2,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 2,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 2,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 16,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 16,
+        "d": 1
+      },
+      "high": {
+        "n": 16,
+        "d": 1
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          2,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          0
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          2
+        ]
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": -1,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "D": [],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 84,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 84,
+          "d": 1
+        },
+        "high": {
+          "n": 84,
+          "d": 1
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 16,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 16,
+          "d": 1
+        },
+        "high": {
+          "n": 16,
+          "d": 1
+        }
+      }
+    },
+    "valid": true
+  },
+  "core_output_used": true,
+  "native_source": "PPCPP_H1_ENTRY_v0.1",
+  "native_fallback_selected": false,
+  "native_raw_edges": 16,
+  "post_request_utf8": "{\"id\":\"W3_H1_plan_1_H1\",\"input\":{\"name\":\"synthetic_stop_W3_H1_plan_1\",\"free\":[[0,0],[0,1],[0,2],[1,0],[1,1],[1,2],[2,0],[2,1],[2,2],[3,0],[3,1],[3,2],[4,0],[4,1],[4,2]],\"published_targets\":[[0,0],[0,2],[2,1],[4,0],[4,2]],\"targets\":[[0,0],[0,2],[2,1],[4,0],[4,2]],\"covered\":[[0,0]],\"deferred_targets\":[],\"current\":[0,0],\"base\":[0,0],\"old_route\":[],\"initial_targets\":[[0,0],[0,2],[2,1],[4,0],[4,2]],\"distance_budget\":100,\"predator\":[-3,-3],\"previous\":null,\"incoming_heading\":{\"status\":\"NO_PRIOR_MOTION\",\"vector\":null,\"source\":{\"kind\":\"initialization_no_motion\",\"execution_log_tail\":\"8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a\"}}},\"raw\":{\"version\":\"PPCPP_H1_ENTRY_v0.1\",\"mode\":\"PPCPP\",\"status\":\"core_complete\",\"route\":[[0,0],[0,1],[0,2],[0,1],[1,1],[2,1],[2,0],[3,0],[4,0],[4,1],[4,2],[3,2],[2,2],[1,2],[0,2],[0,1],[0,0]],\"trace\":[{\"index\":0,\"current\":[0,0],\"incoming_heading\":{\"status\":\"NO_PRIOR_MOTION\",\"raw\":null,\"primitive\":null,\"source\":{\"kind\":\"initialization_no_motion\",\"execution_log_tail\":\"8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a\"}},\"pending_count\":4,\"kind\":\"recovery\",\"goal\":[0,2]},{\"index\":2,\"current\":[0,2],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[0,1],\"primitive\":[0,1],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[0,1],\"end\":[0,2],\"end_index\":2}},\"pending_count\":3,\"kind\":\"recovery\",\"goal\":[2,1]},{\"index\":5,\"current\":[2,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[1,1],\"end\":[2,1],\"end_index\":5}},\"pending_count\":2,\"kind\":\"recovery\",\"goal\":[4,0]},{\"index\":8,\"current\":[4,0],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[3,0],\"end\":[4,0],\"end_index\":8}},\"pending_count\":1,\"kind\":\"recovery\",\"goal\":[4,2]},{\"kind\":\"return\",\"index\":10,\"current\":[4,2],\"goal\":[0,0],\"pending_count\":0,\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[0,1],\"primitive\":[0,1],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[4,1],\"end\":[4,2],\"end_index\":10}}}],\"selected\":\"P0\",\"e\":null,\"branches\":{\"P0\":{\"version\":\"PPCPP_REAL_HEADING_H1_v0.1_20261022\",\"method\":\"PPCPP_INDEPENDENT\",\"route\":[[0,0],[0,1],[0,2],[0,1],[1,1],[2,1],[2,0],[3,0],[4,0],[4,1],[4,2],[3,2],[2,2],[1,2],[0,2],[0,1],[0,0]],\"status\":\"core_complete\",\"reason\":null,\"seconds\":0.004649700014851987,\"budget\":19.999833500012755,\"seed\":20261022,\"seed_used\":false,\"predator\":[-3,-3],\"initial_heading\":{\"status\":\"NO_PRIOR_MOTION\",\"vector\":null,\"source\":{\"kind\":\"initialization_no_motion\",\"execution_log_tail\":\"8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a\"}},\"weights\":[2.0,0.5],\"trace\":[{\"index\":0,\"current\":[0,0],\"incoming_heading\":{\"status\":\"NO_PRIOR_MOTION\",\"raw\":null,\"primitive\":null,\"source\":{\"kind\":\"initialization_no_motion\",\"execution_log_tail\":\"8bb8c37a742cb252d3c30dcb7d4a06160970603889178cc7722c5280bb7f546a\"}},\"pending_count\":4,\"kind\":\"recovery\",\"goal\":[0,2]},{\"index\":2,\"current\":[0,2],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[0,1],\"primitive\":[0,1],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[0,1],\"end\":[0,2],\"end_index\":2}},\"pending_count\":3,\"kind\":\"recovery\",\"goal\":[2,1]},{\"index\":5,\"current\":[2,1],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[1,1],\"end\":[2,1],\"end_index\":5}},\"pending_count\":2,\"kind\":\"recovery\",\"goal\":[4,0]},{\"index\":8,\"current\":[4,0],\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[1,0],\"primitive\":[1,0],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[3,0],\"end\":[4,0],\"end_index\":8}},\"pending_count\":1,\"kind\":\"recovery\",\"goal\":[4,2]},{\"kind\":\"return\",\"index\":10,\"current\":[4,2],\"goal\":[0,0],\"pending_count\":0,\"incoming_heading\":{\"status\":\"KNOWN\",\"raw\":[0,1],\"primitive\":[0,1],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[4,1],\"end\":[4,2],\"end_index\":10}}}],\"final_heading\":{\"status\":\"KNOWN\",\"raw\":[0,-1],\"primitive\":[0,-1],\"source\":{\"kind\":\"predicted_route_edge\",\"start\":[0,1],\"end\":[0,0],\"end_index\":16}},\"accepted_seconds\":0.004648800007998943,\"fallback_selected\":false,\"overrun_gt_10ms\":false}},\"reason\":null}}",
+  "post_candidate_time_remaining": 27.965835199982394,
+  "post_total_time_remaining": 29.965835199982394,
+  "post_response_utf8": "{\"id\":\"W3_H1_plan_1_H1\",\"L4\":16,\"Lshortcut_interval\":[\"12.944271909999158785636694674925104941762473438445\",\"12.944271909999158785636694674925104941762473438447\"],\"Lshortcut_display\":12.94427190999916,\"saving_display\":3.0557280900008412,\"saving_ratio_display\":0.19098300562505258,\"distance_budget\":100,\"resource_proof\":\"source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E\",\"vertices\":[[0,0],[0,2],[2,1],[4,0],[4,2],[0,0]],\"edges\":[{\"left\":0,\"right\":2,\"a\":[0,0],\"b\":[0,2],\"part\":0,\"kind\":\"start_to_first\"},{\"left\":2,\"right\":5,\"a\":[0,2],\"b\":[2,1],\"part\":1,\"kind\":\"between_first_services\"},{\"left\":5,\"right\":8,\"a\":[2,1],\"b\":[4,0],\"part\":2,\"kind\":\"between_first_services\"},{\"left\":8,\"right\":10,\"a\":[4,0],\"b\":[4,2],\"part\":3,\"kind\":\"between_first_services\"},{\"left\":10,\"right\":16,\"a\":[4,2],\"b\":[0,0],\"part\":4,\"kind\":\"last_to_base\"}],\"parts\":[{\"left\":0,\"right\":2,\"kind\":\"start_to_first\",\"edge_start\":0,\"edge_end\":1,\"L4\":2,\"new_interval\":[\"2\",\"2\"]},{\"left\":2,\"right\":5,\"kind\":\"between_first_services\",\"edge_start\":1,\"edge_end\":2,\"L4\":3,\"new_interval\":[\"2.2360679774997896964091736687312762354406183596114\",\"2.2360679774997896964091736687312762354406183596116\"]},{\"left\":5,\"right\":8,\"kind\":\"between_first_services\",\"edge_start\":2,\"edge_end\":3,\"L4\":3,\"new_interval\":[\"2.2360679774997896964091736687312762354406183596114\",\"2.2360679774997896964091736687312762354406183596116\"]},{\"left\":8,\"right\":10,\"kind\":\"between_first_services\",\"edge_start\":3,\"edge_end\":4,\"L4\":2,\"new_interval\":[\"2\",\"2\"]},{\"left\":10,\"right\":16,\"kind\":\"last_to_base\",\"edge_start\":4,\"edge_end\":5,\"L4\":6,\"new_interval\":[\"4.4721359549995793928183473374625524708812367192230\",\"4.4721359549995793928183473374625524708812367192232\"]}],\"first_original\":[{\"point\":[0,2],\"index\":2},{\"point\":[2,1],\"index\":5},{\"point\":[4,0],\"index\":8},{\"point\":[4,2],\"index\":10}],\"first_actual\":[{\"point\":[0,2],\"edge\":0,\"t\":\"1\"},{\"point\":[2,1],\"edge\":1,\"t\":\"1\"},{\"point\":[4,0],\"edge\":2,\"t\":\"1\"},{\"point\":[4,2],\"edge\":3,\"t\":\"1\"}],\"actual_order_changed\":false,\"trace_cross_original_moves\":{\"start_to_first x recovery\":2,\"between_first_services x recovery\":8,\"last_to_base x return\":6},\"counts\":{\"candidate\":5,\"source_validation\":16,\"output_validation\":5,\"service_intersections\":20},\"query_log\":[{\"i\":0,\"j\":2,\"legal\":true,\"part\":0},{\"i\":2,\"j\":5,\"legal\":true,\"part\":1},{\"i\":5,\"j\":8,\"legal\":true,\"part\":2},{\"i\":8,\"j\":10,\"legal\":true,\"part\":3},{\"i\":10,\"j\":16,\"legal\":true,\"part\":4}],\"fallback\":null,\"turns_original\":{\"nonzero_direction_changes\":7,\"total_turn_radians\":12.566370614359172},\"turns_new\":{\"nonzero_direction_changes\":3,\"total_turn_radians\":6.103331807387108},\"timing\":{\"parse_preprocess_source_validation\":0.00455300003523007,\"candidate\":0.002791799954138696,\"main_validation_metrics\":0.002869000018108636}}",
+  "post_envelope": {
+    "entry_seconds": 0.010278400033712387,
+    "late": false,
+    "counts": {
+      "candidate": 5,
+      "source_validation": 16,
+      "output_validation": 5,
+      "service_intersections": 20
+    },
+    "fallback": null
+  },
+  "post": {
+    "id": "W3_H1_plan_1_H1",
+    "L4": 16,
+    "Lshortcut_interval": [
+      "12.944271909999158785636694674925104941762473438445",
+      "12.944271909999158785636694674925104941762473438447"
+    ],
+    "Lshortcut_display": 12.94427190999916,
+    "saving_display": 3.0557280900008412,
+    "saving_ratio_display": 0.19098300562505258,
+    "distance_budget": 100,
+    "resource_proof": "source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E",
+    "vertices": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "edges": [
+      {
+        "left": 0,
+        "right": 2,
+        "a": [
+          0,
+          0
+        ],
+        "b": [
+          0,
+          2
+        ],
+        "part": 0,
+        "kind": "start_to_first"
+      },
+      {
+        "left": 2,
+        "right": 5,
+        "a": [
+          0,
+          2
+        ],
+        "b": [
+          2,
+          1
+        ],
+        "part": 1,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 5,
+        "right": 8,
+        "a": [
+          2,
+          1
+        ],
+        "b": [
+          4,
+          0
+        ],
+        "part": 2,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 8,
+        "right": 10,
+        "a": [
+          4,
+          0
+        ],
+        "b": [
+          4,
+          2
+        ],
+        "part": 3,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 10,
+        "right": 16,
+        "a": [
+          4,
+          2
+        ],
+        "b": [
+          0,
+          0
+        ],
+        "part": 4,
+        "kind": "last_to_base"
+      }
+    ],
+    "parts": [
+      {
+        "left": 0,
+        "right": 2,
+        "kind": "start_to_first",
+        "edge_start": 0,
+        "edge_end": 1,
+        "L4": 2,
+        "new_interval": [
+          "2",
+          "2"
+        ]
+      },
+      {
+        "left": 2,
+        "right": 5,
+        "kind": "between_first_services",
+        "edge_start": 1,
+        "edge_end": 2,
+        "L4": 3,
+        "new_interval": [
+          "2.2360679774997896964091736687312762354406183596114",
+          "2.2360679774997896964091736687312762354406183596116"
+        ]
+      },
+      {
+        "left": 5,
+        "right": 8,
+        "kind": "between_first_services",
+        "edge_start": 2,
+        "edge_end": 3,
+        "L4": 3,
+        "new_interval": [
+          "2.2360679774997896964091736687312762354406183596114",
+          "2.2360679774997896964091736687312762354406183596116"
+        ]
+      },
+      {
+        "left": 8,
+        "right": 10,
+        "kind": "between_first_services",
+        "edge_start": 3,
+        "edge_end": 4,
+        "L4": 2,
+        "new_interval": [
+          "2",
+          "2"
+        ]
+      },
+      {
+        "left": 10,
+        "right": 16,
+        "kind": "last_to_base",
+        "edge_start": 4,
+        "edge_end": 5,
+        "L4": 6,
+        "new_interval": [
+          "4.4721359549995793928183473374625524708812367192230",
+          "4.4721359549995793928183473374625524708812367192232"
+        ]
+      }
+    ],
+    "first_original": [
+      {
+        "point": [
+          0,
+          2
+        ],
+        "index": 2
+      },
+      {
+        "point": [
+          2,
+          1
+        ],
+        "index": 5
+      },
+      {
+        "point": [
+          4,
+          0
+        ],
+        "index": 8
+      },
+      {
+        "point": [
+          4,
+          2
+        ],
+        "index": 10
+      }
+    ],
+    "first_actual": [
+      {
+        "point": [
+          0,
+          2
+        ],
+        "edge": 0,
+        "t": "1"
+      },
+      {
+        "point": [
+          2,
+          1
+        ],
+        "edge": 1,
+        "t": "1"
+      },
+      {
+        "point": [
+          4,
+          0
+        ],
+        "edge": 2,
+        "t": "1"
+      },
+      {
+        "point": [
+          4,
+          2
+        ],
+        "edge": 3,
+        "t": "1"
+      }
+    ],
+    "actual_order_changed": false,
+    "trace_cross_original_moves": {
+      "start_to_first x recovery": 2,
+      "between_first_services x recovery": 8,
+      "last_to_base x return": 6
+    },
+    "counts": {
+      "candidate": 5,
+      "source_validation": 16,
+      "output_validation": 5,
+      "service_intersections": 20
+    },
+    "query_log": [
+      {
+        "i": 0,
+        "j": 2,
+        "legal": true,
+        "part": 0
+      },
+      {
+        "i": 2,
+        "j": 5,
+        "legal": true,
+        "part": 1
+      },
+      {
+        "i": 5,
+        "j": 8,
+        "legal": true,
+        "part": 2
+      },
+      {
+        "i": 8,
+        "j": 10,
+        "legal": true,
+        "part": 3
+      },
+      {
+        "i": 10,
+        "j": 16,
+        "legal": true,
+        "part": 4
+      }
+    ],
+    "fallback": null,
+    "turns_original": {
+      "nonzero_direction_changes": 7,
+      "total_turn_radians": 12.566370614359172
+    },
+    "turns_new": {
+      "nonzero_direction_changes": 3,
+      "total_turn_radians": 6.103331807387108
+    },
+    "timing": {
+      "parse_preprocess_source_validation": 0.00455300003523007,
+      "candidate": 0.002791799954138696,
+      "main_validation_metrics": 0.002869000018108636
+    }
+  },
+  "post_main_audit": {
+    "points": [
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 2,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 2,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 4,
+              "d": 1
+            }
+          },
+          {
+            "r": 5,
+            "c": {
+              "n": 4,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 59694917786065500203,
+        "d": 4611686018427387904
+      },
+      "high": {
+        "n": 14923729446516375051,
+        "d": 1152921504606846976
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 5,
+        "d": 1
+      },
+      {
+        "n": 5,
+        "d": 1
+      },
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 20,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          2,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          0
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          2
+        ]
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": -4,
+          "d": 1
+        },
+        {
+          "n": -2,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "D": [],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 96,
+                "d": 1
+              }
+            },
+            {
+              "r": 5,
+              "c": {
+                "n": -4,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 100368421014168322549,
+          "d": 1152921504606846976
+        },
+        "high": {
+          "n": 401473684056673290197,
+          "d": 4611686018427387904
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 4,
+                "d": 1
+              }
+            },
+            {
+              "r": 5,
+              "c": {
+                "n": 4,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 59694917786065500203,
+          "d": 4611686018427387904
+        },
+        "high": {
+          "n": 14923729446516375051,
+          "d": 1152921504606846976
+        }
+      }
+    },
+    "valid": true
+  },
+  "full_route": [
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 2,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 2,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 2,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ]
+  ],
+  "q_locked_index": 0,
+  "full_main_audit": {
+    "points": [
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 2,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 2,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 4,
+              "d": 1
+            }
+          },
+          {
+            "r": 5,
+            "c": {
+              "n": 4,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 59694917786065500203,
+        "d": 4611686018427387904
+      },
+      "high": {
+        "n": 14923729446516375051,
+        "d": 1152921504606846976
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 5,
+        "d": 1
+      },
+      {
+        "n": 5,
+        "d": 1
+      },
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 20,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          0,
+          2
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          2,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          0
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          2
+        ]
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": -4,
+          "d": 1
+        },
+        {
+          "n": -2,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          2
+        ]
+      ],
+      "D": [],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 96,
+                "d": 1
+              }
+            },
+            {
+              "r": 5,
+              "c": {
+                "n": -4,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 100368421014168322549,
+          "d": 1152921504606846976
+        },
+        "high": {
+          "n": 401473684056673290197,
+          "d": 4611686018427387904
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 4,
+                "d": 1
+              }
+            },
+            {
+              "r": 5,
+              "c": {
+                "n": 4,
+                "d": 1
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 59694917786065500203,
+          "d": 4611686018427387904
+        },
+        "high": {
+          "n": 14923729446516375051,
+          "d": 1152921504606846976
+        }
+      }
+    },
+    "valid": true
+  },
+  "main_passed": true,
+  "auditor_identity_after_main": {
+    "auditor": {
+      "modules": {
+        "": {
+          "name": "diagonal_loop_audit_v01_20261022",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\__init__.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\__init__.py",
+          "loader": "SourceFileLoader",
+          "sha256": "be2647c48a043ed01fee27a6b9c3084c5cda6295a57baf040a8ca0cfe131b6ab",
+          "object_id": 2426794982304
+        },
+        "._audit": {
+          "name": "diagonal_loop_audit_v01_20261022._audit",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "loader": "SourceFileLoader",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "object_id": 2426794980464
+        },
+        "._common": {
+          "name": "diagonal_loop_audit_v01_20261022._common",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_common.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_common.py",
+          "loader": "SourceFileLoader",
+          "sha256": "75d3bb2fc79f068445d38b5994552dc03d833924646b824219273608ac5ccdb4",
+          "object_id": 2426794976464
+        },
+        "._geometry": {
+          "name": "diagonal_loop_audit_v01_20261022._geometry",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_geometry.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_geometry.py",
+          "loader": "SourceFileLoader",
+          "sha256": "e2ec9e19aecd1f180495fd089d42ebf8f578c0f27b28f766186a79b74a5cdbc2",
+          "object_id": 2427176879504
+        },
+        "._h1": {
+          "name": "diagonal_loop_audit_v01_20261022._h1",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_h1.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_h1.py",
+          "loader": "SourceFileLoader",
+          "sha256": "99830dd31796247d5ab0e167006412b5f30d61b1ec0ffc80f1aedbe77ee538a6",
+          "object_id": 2427176886144
+        },
+        "._post_saved": {
+          "name": "diagonal_loop_audit_v01_20261022._post_saved",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "loader": "SourceFileLoader",
+          "sha256": "4a0215ae1e059f096d9be80c066df77935829424465a1eed0898764750f0fa38",
+          "object_id": 2426794976784
+        },
+        "._post_geometry": {
+          "name": "diagonal_loop_audit_v01_20261022._post_geometry",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_geometry.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_geometry.py",
+          "loader": "SourceFileLoader",
+          "sha256": "c38560fac5ac18c9239cc1fdd96cb5b8fc923804299b953e419911b21e0cd0c9",
+          "object_id": 2427176892224
+        },
+        "._detect": {
+          "name": "diagonal_loop_audit_v01_20261022._detect",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_detect.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_detect.py",
+          "loader": "SourceFileLoader",
+          "sha256": "28d0018916f129c51bc5ec4b692b03823b23c305d117c42a369865b5ff945ce7",
+          "object_id": 2427176885264
+        }
+      },
+      "functions": {
+        "audit_one": {
+          "module": "diagonal_loop_audit_v01_20261022._audit",
+          "qualname": "audit_one",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "first_line": 57,
+          "object_id": 2427177443040
+        },
+        "load_auditor": {
+          "module": "diagonal_loop_audit_v01_20261022._audit",
+          "qualname": "load_auditor",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "first_line": 11,
+          "object_id": 2426789591968
+        },
+        "post_audit_one": {
+          "module": "diagonal_loop_audit_v01_20261022._post_saved",
+          "qualname": "audit_one",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "sha256": "4a0215ae1e059f096d9be80c066df77935829424465a1eed0898764750f0fa38",
+          "first_line": 14,
+          "object_id": 2427177444320
+        }
+      }
+    },
+    "baseline_audit": {
+      "name": "audit",
+      "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "origin": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "loader": "SourceFileLoader",
+      "sha256": "6d5b95890a1ca666970c72cb306ec40ffc48495c9458d69cfc2bd702fa74d20f",
+      "object_id": 2426794258288
+    },
+    "helpers": {
+      "common": {
+        "name": "common",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\common.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\common.py",
+        "loader": "SourceFileLoader",
+        "sha256": "64956048b1670f8c2efff84bf29bc3677629a64206a9e309ef6e30619d93b0c9",
+        "object_id": 2426763551072
+      },
+      "pipeline": {
+        "name": "pipeline",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\pipeline.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\pipeline.py",
+        "loader": "SourceFileLoader",
+        "sha256": "3d015d85da4d0f67699ae6e830a157624295130b90ce03661ba6899479e3415c",
+        "object_id": 2426762845680
+      },
+      "exact": {
+        "name": "exact",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\exact.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\exact.py",
+        "loader": "SourceFileLoader",
+        "sha256": "484321db04502ac12f2534dced02403e16c68f883c8155dd5a2dc51ace732f7d",
+        "object_id": 2426763550352
+      },
+      "geometry": {
+        "name": "geometry",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\geometry.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\geometry.py",
+        "loader": "SourceFileLoader",
+        "sha256": "a8ae080aad4cb2d332213948bc5e56a034e18c1c9d3105e10eec592bf106b5a9",
+        "object_id": 2426788898880
+      },
+      "connector": {
+        "name": "connector",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\connector.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\connector.py",
+        "loader": "SourceFileLoader",
+        "sha256": "36f77afb2c8e32faad510d12706785846fc4d4ce1c002de959a5d0cfe9944d55",
+        "object_id": 2426788894640
+      },
+      "h1_direction": {
+        "name": "h1_direction",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_direction.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_direction.py",
+        "loader": "SourceFileLoader",
+        "sha256": "a97b15f099e4d3817edfdda97c61853875d9be66d13e49bb2978f1e91bb34fdc",
+        "object_id": 2426795259312
+      },
+      "h1_rewards": {
+        "name": "h1_rewards",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_rewards.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_rewards.py",
+        "loader": "SourceFileLoader",
+        "sha256": "39263bcde6507b729d71e0fc90a0c2f2b61af9f7d65acccc1941ad8b46bbe20e",
+        "object_id": 2426795259712
+      },
+      "native_loader": {
+        "name": "native_loader",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\native_loader.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\native_loader.py",
+        "loader": "SourceFileLoader",
+        "sha256": "ce33c97bd30f7adf1581ff2647d79e10b593ecc629a18819ffbfdfc3070ba389",
+        "object_id": 2426789445472
+      },
+      "public_contract": {
+        "name": "public_contract",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\public_contract.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\public_contract.py",
+        "loader": "SourceFileLoader",
+        "sha256": "039716288240b2930880645db023082379084359ffa95a670377444fc9a8a626",
+        "object_id": 2426788896640
+      },
+      "detector": {
+        "name": "detector",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\detector.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\detector.py",
+        "loader": "SourceFileLoader",
+        "sha256": "252134ddd0f1930a9cd6ab80f1dba34ec028692900051104be85836d8e2ecf5d",
+        "object_id": 2426788900160
+      },
+      "executor": {
+        "name": "executor",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\executor.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\executor.py",
+        "loader": "SourceFileLoader",
+        "sha256": "7c470b75b3105ab3ca8fcf130d5373d5d875c3731456038b43a209555e0e6f73",
+        "object_id": 2426788898960
+      }
+    }
+  },
+  "independent": {
+    "passed": true,
+    "counts": {
+      "independent_pipeline_audits": 1,
+      "independent_geometry": 32,
+      "independent_distance": 27,
+      "independent_service_intersections": 155,
+      "independent_H1_decision_audits": 1,
+      "independent_H1_unit_edge_checks": 16,
+      "independent_route_audits": 3,
+      "independent_frozen_post_audits": 1
+    },
+    "frozen_post_receipt": {
+      "passed": true,
+      "id": "W3_H1_plan_1_H1",
+      "input_sha256": "55137180f15e3ffca29808ac9afe2695e5ec21843d001107ffd6e2e11cc54dc1",
+      "output_sha256": "c2a3658c984043837884c395dcc0a6215d02926b0c273f5cfe8988b94c5d3780",
+      "counts": {
+        "geometry": 5,
+        "service_intersections": 20
+      },
+      "seconds": 0.0005136000108905137,
+      "independent_length_interval": [
+        "12.9442719099991587856366946749251049417624734384461028970835",
+        "12.9442719099991587856366946749251049417624734384461028970837"
+      ],
+      "geometry_method": "closed forbidden squares exact slab intersection; bounding-box exterior forbidden",
+      "service_method": "earliest exact coordinate-parameter intersection per task"
+    },
+    "seconds": 0.006786499987356365,
+    "scope": "optimistic_public_map_only_not_unexecuted_truth_safety"
+  },
+  "auditor_identity_after_independent": {
+    "auditor": {
+      "modules": {
+        "": {
+          "name": "diagonal_loop_audit_v01_20261022",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\__init__.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\__init__.py",
+          "loader": "SourceFileLoader",
+          "sha256": "be2647c48a043ed01fee27a6b9c3084c5cda6295a57baf040a8ca0cfe131b6ab",
+          "object_id": 2426794982304
+        },
+        "._audit": {
+          "name": "diagonal_loop_audit_v01_20261022._audit",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "loader": "SourceFileLoader",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "object_id": 2426794980464
+        },
+        "._common": {
+          "name": "diagonal_loop_audit_v01_20261022._common",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_common.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_common.py",
+          "loader": "SourceFileLoader",
+          "sha256": "75d3bb2fc79f068445d38b5994552dc03d833924646b824219273608ac5ccdb4",
+          "object_id": 2426794976464
+        },
+        "._geometry": {
+          "name": "diagonal_loop_audit_v01_20261022._geometry",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_geometry.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_geometry.py",
+          "loader": "SourceFileLoader",
+          "sha256": "e2ec9e19aecd1f180495fd089d42ebf8f578c0f27b28f766186a79b74a5cdbc2",
+          "object_id": 2427176879504
+        },
+        "._h1": {
+          "name": "diagonal_loop_audit_v01_20261022._h1",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_h1.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_h1.py",
+          "loader": "SourceFileLoader",
+          "sha256": "99830dd31796247d5ab0e167006412b5f30d61b1ec0ffc80f1aedbe77ee538a6",
+          "object_id": 2427176886144
+        },
+        "._post_saved": {
+          "name": "diagonal_loop_audit_v01_20261022._post_saved",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "loader": "SourceFileLoader",
+          "sha256": "4a0215ae1e059f096d9be80c066df77935829424465a1eed0898764750f0fa38",
+          "object_id": 2426794976784
+        },
+        "._post_geometry": {
+          "name": "diagonal_loop_audit_v01_20261022._post_geometry",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_geometry.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_geometry.py",
+          "loader": "SourceFileLoader",
+          "sha256": "c38560fac5ac18c9239cc1fdd96cb5b8fc923804299b953e419911b21e0cd0c9",
+          "object_id": 2427176892224
+        },
+        "._detect": {
+          "name": "diagonal_loop_audit_v01_20261022._detect",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_detect.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_detect.py",
+          "loader": "SourceFileLoader",
+          "sha256": "28d0018916f129c51bc5ec4b692b03823b23c305d117c42a369865b5ff945ce7",
+          "object_id": 2427176885264
+        }
+      },
+      "functions": {
+        "audit_one": {
+          "module": "diagonal_loop_audit_v01_20261022._audit",
+          "qualname": "audit_one",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "first_line": 57,
+          "object_id": 2427177443040
+        },
+        "load_auditor": {
+          "module": "diagonal_loop_audit_v01_20261022._audit",
+          "qualname": "load_auditor",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "first_line": 11,
+          "object_id": 2426789591968
+        },
+        "post_audit_one": {
+          "module": "diagonal_loop_audit_v01_20261022._post_saved",
+          "qualname": "audit_one",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "sha256": "4a0215ae1e059f096d9be80c066df77935829424465a1eed0898764750f0fa38",
+          "first_line": 14,
+          "object_id": 2427177444320
+        }
+      }
+    },
+    "baseline_audit": {
+      "name": "audit",
+      "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "origin": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "loader": "SourceFileLoader",
+      "sha256": "6d5b95890a1ca666970c72cb306ec40ffc48495c9458d69cfc2bd702fa74d20f",
+      "object_id": 2426794258288
+    },
+    "helpers": {
+      "common": {
+        "name": "common",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\common.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\common.py",
+        "loader": "SourceFileLoader",
+        "sha256": "64956048b1670f8c2efff84bf29bc3677629a64206a9e309ef6e30619d93b0c9",
+        "object_id": 2426763551072
+      },
+      "pipeline": {
+        "name": "pipeline",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\pipeline.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\pipeline.py",
+        "loader": "SourceFileLoader",
+        "sha256": "3d015d85da4d0f67699ae6e830a157624295130b90ce03661ba6899479e3415c",
+        "object_id": 2426762845680
+      },
+      "exact": {
+        "name": "exact",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\exact.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\exact.py",
+        "loader": "SourceFileLoader",
+        "sha256": "484321db04502ac12f2534dced02403e16c68f883c8155dd5a2dc51ace732f7d",
+        "object_id": 2426763550352
+      },
+      "geometry": {
+        "name": "geometry",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\geometry.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\geometry.py",
+        "loader": "SourceFileLoader",
+        "sha256": "a8ae080aad4cb2d332213948bc5e56a034e18c1c9d3105e10eec592bf106b5a9",
+        "object_id": 2426788898880
+      },
+      "connector": {
+        "name": "connector",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\connector.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\connector.py",
+        "loader": "SourceFileLoader",
+        "sha256": "36f77afb2c8e32faad510d12706785846fc4d4ce1c002de959a5d0cfe9944d55",
+        "object_id": 2426788894640
+      },
+      "h1_direction": {
+        "name": "h1_direction",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_direction.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_direction.py",
+        "loader": "SourceFileLoader",
+        "sha256": "a97b15f099e4d3817edfdda97c61853875d9be66d13e49bb2978f1e91bb34fdc",
+        "object_id": 2426795259312
+      },
+      "h1_rewards": {
+        "name": "h1_rewards",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_rewards.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_rewards.py",
+        "loader": "SourceFileLoader",
+        "sha256": "39263bcde6507b729d71e0fc90a0c2f2b61af9f7d65acccc1941ad8b46bbe20e",
+        "object_id": 2426795259712
+      },
+      "native_loader": {
+        "name": "native_loader",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\native_loader.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\native_loader.py",
+        "loader": "SourceFileLoader",
+        "sha256": "ce33c97bd30f7adf1581ff2647d79e10b593ecc629a18819ffbfdfc3070ba389",
+        "object_id": 2426789445472
+      },
+      "public_contract": {
+        "name": "public_contract",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\public_contract.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\public_contract.py",
+        "loader": "SourceFileLoader",
+        "sha256": "039716288240b2930880645db023082379084359ffa95a670377444fc9a8a626",
+        "object_id": 2426788896640
+      },
+      "detector": {
+        "name": "detector",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\detector.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\detector.py",
+        "loader": "SourceFileLoader",
+        "sha256": "252134ddd0f1930a9cd6ab80f1dba34ec028692900051104be85836d8e2ecf5d",
+        "object_id": 2426788900160
+      },
+      "executor": {
+        "name": "executor",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\executor.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\executor.py",
+        "loader": "SourceFileLoader",
+        "sha256": "7c470b75b3105ab3ca8fcf130d5373d5d875c3731456038b43a209555e0e6f73",
+        "object_id": 2426788898960
+      }
+    }
+  }
+}

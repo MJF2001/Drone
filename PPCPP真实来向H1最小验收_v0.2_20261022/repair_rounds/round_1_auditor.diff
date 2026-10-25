@@ -1,0 +1,127 @@
+--- v0.1/independent_audit.py
++++ v0.2/independent_audit.py
+@@ -1,6 +1,37 @@
+ """Independent saved-output audit. No production/heading implementation imports."""
+ import math
+ from fractions import Fraction as F
++
++def coordinate(value, *, allow_none=False, grid=True):
++    """Validate coordinate values before ignoring only list/tuple representation."""
++    if value is None:
++        assert allow_none, 'coordinate_none_not_allowed'
++        return None
++    assert isinstance(value,(list,tuple)) and len(value)==2, 'coordinate_dimension_or_container'
++    if grid:
++        assert all(type(v) is int for v in value), 'integer_grid_coordinate_required'
++    else:
++        assert all(type(v) in (int,float) and math.isfinite(v) for v in value), 'finite_coordinate_required'
++    return tuple(value)
++
++def coordinate_field(mapping, key, *, allow_none=False, grid=True):
++    assert isinstance(mapping,dict) and key in mapping, 'missing_coordinate_field:'+key
++    return coordinate(mapping[key],allow_none=allow_none,grid=grid)
++
++def coordinate_sequence(values):
++    assert isinstance(values,(list,tuple)), 'coordinate_sequence_required'
++    return [coordinate(p) for p in values]
++
++def source_coordinates(actual, expected):
++    assert isinstance(actual,dict) and isinstance(expected,dict) and set(actual)==set(expected), 'heading_source_fields'
++    result=dict(actual)
++    for key in actual:
++        if key in ('start','end'):
++            a=coordinate_field(actual,key);b=coordinate_field(expected,key)
++            assert a==b, 'heading_source_coordinate_mismatch'
++            result[key]=list(a)
++        else:assert actual[key]==expected[key], 'heading_source_value_mismatch'
++    return result
+ 
+ def direction(raw):
+     if raw is None:return None
+@@ -56,9 +87,9 @@
+ 
+ def audit_output(c, heading, raw, newer):
+     assert raw['status']=='core_complete',raw['status']
+-    route=[tuple(p) for p in raw['route']];free=set(map(tuple,c['free']));targets=set(map(tuple,c['targets']));history=set(map(tuple,c['covered']))
+-    assert route and route[0]==tuple(c['current']) and route[-1]==tuple(c['base'])
+-    assert all(p in free and all(type(v) is int for v in p) for p in route)
++    route=coordinate_sequence(raw['route']);free=set(coordinate_sequence(c['free']));targets=set(coordinate_sequence(c['targets']));history=set(coordinate_sequence(c['covered']))
++    assert route and route[0]==coordinate_field(c,'current') and route[-1]==coordinate_field(c,'base')
++    assert all(p in free for p in route)
+     assert all(abs(a[0]-b[0])+abs(a[1]-b[1])==1 for a,b in zip(route,route[1:]))
+     assert len(route)-1<=c['distance_budget']
+     U=targets-history;seen=set();credits=[]
+@@ -68,19 +99,23 @@
+     events=raw['trace'];assert events and events[-1]['kind']=='return'
+     bits_used=[];decisions=[];updates=[]
+     for k,event in enumerate(events):
+-        i=event['index'];cur=route[i];assert tuple(event['current'])==cur
++        i=event['index'];cur=route[i];assert coordinate_field(event,'current')==cur
+         pend=U-set(route[:i+1])
+         h=direction(heading['vector']) if i==0 and heading['status']=='KNOWN' else None if i==0 else (cur[0]-route[i-1][0],cur[1]-route[i-1][1])
+         if newer:
+-            state=event['incoming_heading'];assert tuple(state['primitive'])==h if h is not None else state['primitive'] is None
+-            if i==0:assert state['source']==heading['source']
+-            else:assert state['source']==dict(kind='predicted_route_edge',start=list(route[i-1]),end=list(cur),end_index=i)
+-            updates.append(dict(index=i,heading=list(h) if h else None,source=state['source']))
++            state=event['incoming_heading'];assert coordinate_field(state,'primitive',allow_none=True)==h
++            expected_source=heading['source'] if i==0 else dict(kind='predicted_route_edge',start=list(route[i-1]),end=list(cur),end_index=i)
++            normalized_source=source_coordinates(state['source'],expected_source)
++            updates.append(dict(index=i,heading=list(h) if h else None,source=normalized_source))
+         else:
+-            prev=c['previous'] if i==0 else list(route[i-1]);assert event.get('previous',prev)==prev
++            prev=coordinate_field(c,'previous',allow_none=True) if i==0 else route[i-1]
++            # Frozen return events have no previous field by schema. Never fill
++            # a missing local/recovery field with the expected value.
++            if event['kind']!='return' or 'previous' in event:
++                assert coordinate_field(event,'previous',allow_none=True)==prev, 'previous_coordinate_mismatch'
+         expect=expected_options(cur,h,pend,free,c['predator'])
+         if event['kind']=='local':
+-            actual=event['options'];assert [tuple(z['cell']) for z in actual]==[z['cell'] for z in expect]
++            actual=event['options'];assert [coordinate_field(z,'cell') for z in actual]==[z['cell'] for z in expect]
+             for a,b in zip(actual,expect):
+                 for field in ('distance_reward','boundary_reward'):assert a[field]==b[field]
+                 if 'h1_certificate' in b:
+@@ -95,23 +130,34 @@
+                     assert a['straight_reward']==b['straight_reward'] and a['score']==b['score']
+             if expect and 'h1_certificate' in expect[0]:chosen,bits=certified_winner(expect);bits_used.append(bits)
+             else:chosen=min(expect,key=lambda z:(-z['score'],z['cell']))['cell']
+-            assert tuple(event['goal'])==chosen and route[i+1]==chosen
++            assert coordinate_field(event,'goal')==chosen and route[i+1]==chosen
+         elif event['kind']=='recovery':
+-            assert not expect and tuple(event['goal']) in pend
++            assert not expect and coordinate_field(event,'goal') in pend
+         elif event['kind']=='return':
+-            assert not pend and tuple(event['goal'])==tuple(c['base'])
++            assert not pend and coordinate_field(event,'goal')==coordinate_field(c,'base')
+         else:raise AssertionError('unknown decision')
+         end=events[k+1]['index'] if k+1<len(events) else len(route)-1
+-        assert end>=i and route[end]==tuple(event['goal'])
+-        decisions.append(dict(kind=event['kind'],index=i,current=list(cur),goal=event['goal'],pending_count=len(pend)))
++        assert end>=i and route[end]==coordinate_field(event,'goal')
++        decisions.append(dict(kind=event['kind'],index=i,current=list(cur),goal=list(coordinate_field(event,'goal')),pending_count=len(pend)))
+     return dict(valid=True,steps=len(route)-1,credits=credits,decisions=decisions,heading_updates=updates,
+                 interval_bits_used=bits_used,route_edge_checks=len(route)-1,trace_events=len(events),graph_searches=0,LOS_queries=0)
+ 
+ def equivalence(original, newer):
+     fields=('route','status','reason','seed','weights','predator')
+-    assert all(original.get(f)==newer.get(f) for f in fields)
++    for field in fields:
++        assert field in original and field in newer, 'missing_core_field:'+field
++        if field=='route':assert coordinate_sequence(original[field])==coordinate_sequence(newer[field])
++        elif field=='predator':assert coordinate(original[field],grid=False)==coordinate(newer[field],grid=False)
++        else:assert original[field]==newer[field]
+     assert len(original['trace'])==len(newer['trace'])
+     for a,b in zip(original['trace'],newer['trace']):
+-        for field in ('kind','index','current','pending_count','goal','options'):
+-            assert a.get(field)==b.get(field),field
++        for field in ('kind','index','current','pending_count','goal'):
++            assert field in a and field in b, 'missing_trace_field:'+field
++            if field in ('current','goal'):assert coordinate_field(a,field)==coordinate_field(b,field)
++            else:assert a[field]==b[field],field
++        if a['kind']=='local' or 'options' in a or 'options' in b:
++            assert 'options' in a and 'options' in b
++            def normalized_options(rows):
++                return [dict(row,cell=coordinate_field(row,'cell')) for row in rows]
++            assert normalized_options(a['options'])==normalized_options(b['options']), 'options'
+     return True

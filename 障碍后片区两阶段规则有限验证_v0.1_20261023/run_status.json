@@ -1,0 +1,29 @@
+{
+  "status": "stopped_technical_error",
+  "completed_jobs": [
+    "history__G1-A",
+    "history__G1-B",
+    "history__G2-A",
+    "history__G2-B",
+    "history__G3-A",
+    "history__G3-B",
+    "history__G4-A",
+    "history__G4-B",
+    "history__G5-A",
+    "history__G5-B",
+    "history__G6-A",
+    "history__G6-B",
+    "equivalence__G1-A__ORIGINAL",
+    "equivalence__G1-A__OFF",
+    "equivalence__G2-A__ORIGINAL",
+    "equivalence__G2-A__OFF",
+    "equivalence__G5-A__ORIGINAL",
+    "equivalence__G5-A__OFF",
+    "equivalence__G6-A__ORIGINAL",
+    "equivalence__G6-A__OFF",
+    "formal__G1-A__ORIGINAL"
+  ],
+  "unused_budget_reassigned": false,
+  "failure": "RuntimeError('technical stop formal__G1-A__ON AssertionError()')",
+  "traceback": "Traceback (most recent call last):\n  File \"E:\\无人机研究项目_接续包_20261014\\障碍后片区两阶段规则有限验证_v0.1_20261023\\run.py\", line 28, in run\n    if j['phase']=='formal' and j['slot'] in qualified:launch(j);out['completed_jobs'].append(j['id']);dump(H/'run_status.json',out)\n                                                       ^^^^^^^^^\n  File \"E:\\无人机研究项目_接续包_20261014\\障碍后片区两阶段规则有限验证_v0.1_20261023\\run.py\", line 10, in launch\n    if cp.returncode or result.get('semantic_error'):raise RuntimeError('technical stop '+job['id']+' '+str(result.get('failure',result['status'])))\n                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: technical stop formal__G1-A__ON AssertionError()\n"
+}

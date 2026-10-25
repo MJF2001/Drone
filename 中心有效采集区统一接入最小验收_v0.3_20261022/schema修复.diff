@@ -1,0 +1,130 @@
+--- E:\无人机研究项目_接续包_20261014\中心有效采集区统一接入最小验收_v0.2_20261022\center_credit_v02_20261022\observe.py
++++ observe.py
+@@ -4,13 +4,14 @@
+ import time, json
+ from .pipeline import PipelineStop
+ from . import pipeline
++from .schema import REQUIRED,SCOPES
+ 
+ class Recorder:
+     def __init__(self, h1, p2, engine, marker):
+         import model, bfs_metric_geometry, unified_geometry
+         self.begin = None
+         self.marker = marker
+-        self.counts = Counter()
++        self.counts = Counter({k:0 for k in REQUIRED})
+         self.rows = {}
+         self.codes = {h1.native.solve.__code__: 'h1_core', p2.p2_solve.__code__: 'p2_core',
+                       model.Geometry.__init__.__code__: 'context', model.Geometry.path.__code__: 'astar',
+@@ -43,7 +44,18 @@
+                        'post_candidate_geometry': 4096, 'post_source_geometry': 100, 'post_output_geometry': 100,
+                        'post_service_intersections': 1200, 'post_service_queries_total_protected':1200}
+ 
++    def start(self):
++        assert self.counts['observer_started']==0
++        self.counts['observer_started']=1
++
++    def finish(self,success):
++        assert self.counts['observer_started']==1
++        self.counts['observer_finished']=int(success)
++        self.counts['observer_aborted']=int(not success)
++
+     def add(self, key, value=1):
++        if key.startswith('scope_') and key not in SCOPES:
++            raise PipelineStop('unknown_counter_scope')
+         self.counts[key] += value
+         if key in self.limits and self.counts[key] > self.limits[key]:
+             raise PipelineStop('observer_cap:'+key)
+@@ -60,6 +72,7 @@
+             if kind is None:
+                 return None
+             if kind=='post_hit':
++                if self.counts['observer_started']!=1:raise PipelineStop('observer_not_started')
+                 owner=frame.f_back
+                 scope=None
+                 while owner:
+
+--- E:\无人机研究项目_接续包_20261014\中心有效采集区统一接入最小验收_v0.2_20261022\center_credit_v02_20261022\worker.py
++++ worker.py
+@@ -31,23 +31,26 @@
+                 f.flush()
+         ex=Executor(public,private,writer)
+         result.update(public_initial=public,private_truth_file='worlds_private/'+job['world']+'.json',initial=ex.initial)
+-        if job_id!='W1_H1':
++        if job_id!='W2_P2':
+             assert ex.action('collect_here')['status']=='committed'
+         plans={}
+         from .observe import Recorder
+-        if job_id=='W1_H1':
+-            old=read(HERE/'reuse_session_seed.json')
+-            ex.s['H']=set(map(tuple,old['final']['H']))
+-            ex.records=old['records'];ex.tail=ex.records[-1]['record_hash']
+-            ex.counts.clear()
++        if job_id=='W2_P2':
++            seed=read(HERE/'resume_seed.json')
++            from .exact import Expr,point
++            from .connector import cellset
++            state=seed['final']
++            ex.s.update(S=point(state['S']),h=point(state['h']),H=cellset(state['H']),E=Expr.load(state['E']['exact']),M=Expr.load(state['M']['exact']))
++            ex.known=cellset(state['known']);ex.last_motion=state['last_motion'];ex.event_count=state['event_count'];ex.nonzero_segments=state['nonzero_segments'];ex.refresh()
++            ex.records=seed['records'];ex.tail=ex.records[-1]['record_hash'];ex.counts.clear()
+             log.write_text(''.join(json.dumps(v,ensure_ascii=False,separators=(',',':'))+'\n' for v in ex.records),encoding='utf-8')
+-            saved=read(HERE/'outputs/W1_H1_plan_1.json')
+-            result['plans'].append({'id':'W1_H1_plan_1','file':'outputs/W1_H1_plan_1.json','input':'calls/W1_H1_plan_1_public_input.json','provenance':'reused_saved_reaudited'})
+-            plans['W1_H1_plan_1']=saved
+-            ex.wait_plan('W1_H1_plan_1',saved['full_route'],sha(HERE/'outputs/W1_H1_plan_1.json'))
+-            status=ex.execute(saved['full_route'])
+-            assert status in ('detected','completed_route')
+-            start=1 if status=='detected' else 2
++            for row in read(HERE/'resume_plan_rows.json'):
++                result['plans'].append(row);plans[row['id']]=read(HERE/row['file'])
++            saved=plans['W2_P2_plan_2']
++            assert ex.public_case('W2_P2_plan_2')==saved['snapshot']
++            ex.wait_plan('W2_P2_plan_2',saved['full_route'],sha(HERE/'outputs/W2_P2_plan_2.json'))
++            status=ex.execute(saved['full_route']);assert status=='completed_route'
++            start=2
+         else:
+             start=0
+         for index in range(start,2):
+@@ -71,11 +74,13 @@
+             observer.mark('warm_pipeline_about_to_start',method=job['method'])
+             counts=Counter()
+             try:
++                observer.start()
+                 sys.settrace(observer.trace)
+                 try:
+                     run(input_file.read_bytes(),job['method'],job['seed'],core,post,plan,observer)
+                 finally:
+                     sys.settrace(None)
++                    observer.finish(bool(plan.get('main_passed',False)))
+                 plan['native_counts']=dict(observer.counts)
+                 dump(plan_file,evidence(plan))
+                 assert observer.counts['core_started']==observer.counts['core_returned']==observer.counts['core_complete']==1
+@@ -111,7 +116,7 @@
+         result['independent_execution']=replay
+         for row in ex.records:
+             if row['kind']=='plan_wait':
+-                assert sha(HERE/'outputs'/(row['plan_id']+'.json'))==row['plan_output_sha256']
++                assert sha(HERE/next(p['file'] for p in result['plans'] if p['id']==row['plan_id']))==row['plan_output_sha256']
+         cap=reg['per_execution_caps']
+         c=ex.counts; ic=replay['counts']
+         assert c['execution_action_calls']<=cap['actions']
+
+--- E:\无人机研究项目_接续包_20261014\中心有效采集区统一接入最小验收_v0.2_20261022\center_credit_v02_20261022\audit\_audit.py
++++ audit/_audit.py
+@@ -8,6 +8,7 @@
+ from . import _h1 as h1_audit
+ from . import _detect as T
+ from . import region as Z
++from ..schema import validate
+ 
+ def load_auditor():
+     from . import _post_saved
+@@ -167,6 +168,7 @@
+     assert A.sign(A.add(A.load(result['native_main_audit']['length']['exact']),post_length,-1))>=0
+     assert result['timing']['pipeline_seconds']<30 and result['timing']['core_adapter_seconds']<result['core_budget_passed']<=20
+     nc=result['native_counts']
++    validate(nc)
+     assert nc['shared_region_queries_total']==sum(v for k,v in nc.items() if k.startswith('scope_') and k.endswith('_region_queries'))
+     assert nc['post_service_intersections']==nc['scope_engine_region_queries']
+     for key,field in [('candidate','candidate'),('source','source_validation'),('output','output_validation')]:

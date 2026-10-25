@@ -1,0 +1,193 @@
+{
+  "request_utf8": "{\"name\":\"synthetic_stop_06\",\"free\":[[0,0],[1,0],[2,0]],\"published_targets\":[[0,0],[2,0],[4,4]],\"targets\":[[0,0],[2,0]],\"covered\":[[0,0],[2,0]],\"deferred_targets\":[[4,4]],\"current\":[2,0],\"base\":[0,0],\"old_route\":[],\"initial_targets\":[[0,0],[2,0],[4,4]],\"distance_budget\":99,\"predator\":[-3,-3],\"previous\":null,\"incoming_heading\":{\"status\":\"KNOWN\",\"vector\":[\"-1/4\",0],\"source\":{\"kind\":\"synthetic_direction_fixture\",\"snapshot_id\":\"06\",\"snapshot_sha256\":\"56012c2fb71d32f05d9303dc755db8cbab65927d5b56a03251bd524ddb747021\",\"meaning\":\"paid_predicted_gamma_direction\"}}}",
+  "response": {
+    "raw": {
+      "version": "PPCPP_H1_ENTRY_v0.1",
+      "mode": "PPCPP",
+      "status": "core_complete",
+      "route": [
+        [
+          2,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "trace": [
+        {
+          "kind": "return",
+          "index": 0,
+          "current": [
+            2,
+            0
+          ],
+          "goal": [
+            0,
+            0
+          ],
+          "pending_count": 0,
+          "incoming_heading": {
+            "status": "KNOWN",
+            "raw": [
+              "-1/4",
+              0
+            ],
+            "primitive": [
+              -1,
+              0
+            ],
+            "source": {
+              "kind": "synthetic_direction_fixture",
+              "snapshot_id": "06",
+              "snapshot_sha256": "56012c2fb71d32f05d9303dc755db8cbab65927d5b56a03251bd524ddb747021",
+              "meaning": "paid_predicted_gamma_direction"
+            }
+          }
+        }
+      ],
+      "selected": "P0",
+      "e": null,
+      "branches": {
+        "P0": {
+          "version": "PPCPP_REAL_HEADING_H1_v0.1_20261022",
+          "method": "PPCPP_INDEPENDENT",
+          "route": [
+            [
+              2,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "status": "core_complete",
+          "reason": null,
+          "seconds": 0.0005502999993041158,
+          "budget": 19.999869799998123,
+          "seed": 20261022,
+          "seed_used": false,
+          "predator": [
+            -3,
+            -3
+          ],
+          "initial_heading": {
+            "status": "KNOWN",
+            "vector": [
+              "-1/4",
+              0
+            ],
+            "source": {
+              "kind": "synthetic_direction_fixture",
+              "snapshot_id": "06",
+              "snapshot_sha256": "56012c2fb71d32f05d9303dc755db8cbab65927d5b56a03251bd524ddb747021",
+              "meaning": "paid_predicted_gamma_direction"
+            }
+          },
+          "weights": [
+            2.0,
+            0.5
+          ],
+          "trace": [
+            {
+              "kind": "return",
+              "index": 0,
+              "current": [
+                2,
+                0
+              ],
+              "goal": [
+                0,
+                0
+              ],
+              "pending_count": 0,
+              "incoming_heading": {
+                "status": "KNOWN",
+                "raw": [
+                  "-1/4",
+                  0
+                ],
+                "primitive": [
+                  -1,
+                  0
+                ],
+                "source": {
+                  "kind": "synthetic_direction_fixture",
+                  "snapshot_id": "06",
+                  "snapshot_sha256": "56012c2fb71d32f05d9303dc755db8cbab65927d5b56a03251bd524ddb747021",
+                  "meaning": "paid_predicted_gamma_direction"
+                }
+              }
+            }
+          ],
+          "final_heading": {
+            "status": "KNOWN",
+            "raw": [
+              -1,
+              0
+            ],
+            "primitive": [
+              -1,
+              0
+            ],
+            "source": {
+              "kind": "predicted_route_edge",
+              "start": [
+                1,
+                0
+              ],
+              "end": [
+                0,
+                0
+              ],
+              "end_index": 2
+            }
+          },
+          "accepted_seconds": 0.0005493999924510717,
+          "fallback_selected": false,
+          "overrun_gt_10ms": false
+        }
+      },
+      "reason": null
+    },
+    "entry_seconds": 0.0011085000005550683,
+    "phase_seconds": {
+      "p0": 0.000876000034622848,
+      "final_audit": 1.7200014553964138e-05,
+      "encoding": 3.409996861591935e-05
+    },
+    "eligible": true,
+    "budget": 20.0,
+    "method": "PPCPP",
+    "seed": 20261022,
+    "injection_events": []
+  },
+  "native_counts_at_return": {
+    "core_started": 1,
+    "heading_parse_calls": 1,
+    "context_calls": 1,
+    "context_BFS_started": 1,
+    "context_BFS_completed": 1,
+    "geometry_precheck_calls": 1,
+    "geometry_path_calls": 1,
+    "astar_calls": 1,
+    "Astar_started": 1,
+    "Astar_completed": 1,
+    "heading_update_calls": 2,
+    "main_audit_calls": 2,
+    "main_audit_returns": 2,
+    "main_audit_valid": 2,
+    "core_returned": 1,
+    "core_complete": 1
+  }
+}

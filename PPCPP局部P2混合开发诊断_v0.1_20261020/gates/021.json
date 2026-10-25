@@ -1,0 +1,842 @@
+{
+  "input": {
+    "state": {
+      "name": "fixed_exit",
+      "free": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "covered": [],
+      "published_targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "deferred_targets": [],
+      "current": [
+        0,
+        0
+      ],
+      "base": [
+        3,
+        0
+      ],
+      "previous": null,
+      "predator": [
+        -1,
+        0
+      ],
+      "initial_targets": [
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ]
+      ],
+      "old_route": [
+        [
+          0,
+          0
+        ]
+      ],
+      "distance_budget": 1000000
+    },
+    "marker": [
+      [
+        1,
+        1
+      ]
+    ]
+  },
+  "method": "LOCAL_P2",
+  "result": {
+    "raw": {
+      "version": "PPCPP_LOCAL_P2_v0.1",
+      "status": "core_complete",
+      "route": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "selected": "P0",
+      "P0": {
+        "version": "PPCPP_CORE4_FIXED_HISTORY_v0.2_20261019",
+        "method": "PPCPP_INDEPENDENT",
+        "route": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "status": "core_complete",
+        "reason": null,
+        "seconds": 5.570001667365432e-05,
+        "budget": 19.999964100017678,
+        "seed": 20261020,
+        "seed_used": false,
+        "predator": [
+          -1,
+          0
+        ],
+        "initial_previous": null,
+        "weights": [
+          2.0,
+          0.5
+        ],
+        "trace": [
+          {
+            "index": 0,
+            "current": [
+              0,
+              0
+            ],
+            "previous": null,
+            "pending_count": 2,
+            "kind": "local",
+            "options": [
+              {
+                "cell": [
+                  1,
+                  0
+                ],
+                "distance_reward": 0.0,
+                "straight_reward": 0.0,
+                "boundary_reward": 0.75,
+                "score": 0.375
+              }
+            ],
+            "goal": [
+              1,
+              0
+            ]
+          },
+          {
+            "index": 1,
+            "current": [
+              1,
+              0
+            ],
+            "previous": [
+              0,
+              0
+            ],
+            "pending_count": 1,
+            "kind": "local",
+            "options": [
+              {
+                "cell": [
+                  2,
+                  0
+                ],
+                "distance_reward": 0.0,
+                "straight_reward": 1.0,
+                "boundary_reward": 1.0,
+                "score": 2.5
+              }
+            ],
+            "goal": [
+              2,
+              0
+            ]
+          },
+          {
+            "kind": "return",
+            "index": 2,
+            "current": [
+              2,
+              0
+            ],
+            "goal": [
+              3,
+              0
+            ],
+            "pending_count": 0
+          }
+        ],
+        "accepted_seconds": 5.540001438930631e-05,
+        "fallback_selected": false,
+        "overrun_gt_10ms": false
+      },
+      "window": {
+        "empty": false,
+        "left": 0,
+        "right": 3,
+        "entry": [
+          0,
+          0
+        ],
+        "exit": [
+          3,
+          0
+        ],
+        "seeds": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "required": [
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ]
+        ],
+        "local_H": [],
+        "prefix": [
+          [
+            0,
+            0
+          ]
+        ],
+        "suffix": [
+          [
+            3,
+            0
+          ]
+        ],
+        "original_patch": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "pending": 2,
+        "task_fraction": 1.0,
+        "step_fraction": 1.0,
+        "first_indices": [
+          {
+            "cell": [
+              1,
+              0
+            ],
+            "index": 1
+          },
+          {
+            "cell": [
+              2,
+              0
+            ],
+            "index": 2
+          }
+        ]
+      },
+      "local": {
+        "route": [
+          [
+            0,
+            0
+          ],
+          [
+            1,
+            0
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            3,
+            0
+          ]
+        ],
+        "source": "old_suffix",
+        "status": "finished",
+        "seconds": 0.00035930000012740493,
+        "active_stage": "shuffle_1_expand",
+        "events": [
+          {
+            "stage": "fallback",
+            "start": 1.0299962013959885e-05,
+            "end": 4.409998655319214e-05,
+            "status": "completed"
+          },
+          {
+            "stage": "H_generate",
+            "start": 4.549999721348286e-05,
+            "end": 5.390000296756625e-05,
+            "status": "completed"
+          },
+          {
+            "stage": "H_raw",
+            "start": 5.479995161294937e-05,
+            "end": 6.369996117427945e-05,
+            "status": "completed"
+          },
+          {
+            "stage": "H_nearest",
+            "start": 6.429996574297547e-05,
+            "end": 7.379997987300158e-05,
+            "status": "completed"
+          },
+          {
+            "stage": "H_NN_raw",
+            "start": 7.43999844416976e-05,
+            "end": 8.159998105838895e-05,
+            "status": "completed"
+          },
+          {
+            "stage": "H_scan_passes",
+            "start": 8.289999095723033e-05,
+            "end": 9.029998909682035e-05,
+            "passes": 1,
+            "swaps": 0,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "H_scan_opt",
+            "start": 8.249998791143298e-05,
+            "end": 9.099999442696571e-05,
+            "status": "completed"
+          },
+          {
+            "stage": "H_scan_expand",
+            "start": 9.14999982342124e-05,
+            "end": 9.839999256655574e-05,
+            "status": "completed"
+          },
+          {
+            "stage": "H_NN_passes",
+            "start": 9.940000018104911e-05,
+            "end": 0.00010219996329396963,
+            "passes": 1,
+            "swaps": 0,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "H_NN_opt",
+            "start": 9.90999978967011e-05,
+            "end": 0.00010259996633976698,
+            "status": "completed"
+          },
+          {
+            "stage": "H_NN_expand",
+            "start": 0.00010309997014701366,
+            "end": 0.00010979996295645833,
+            "status": "completed"
+          },
+          {
+            "stage": "V_generate",
+            "start": 0.00011049996828660369,
+            "end": 0.00011589995119720697,
+            "status": "completed"
+          },
+          {
+            "stage": "V_raw",
+            "start": 0.00011639995500445366,
+            "end": 0.0001230000052601099,
+            "status": "completed"
+          },
+          {
+            "stage": "V_nearest",
+            "start": 0.00012349995085969567,
+            "end": 0.00012669997522607446,
+            "status": "completed"
+          },
+          {
+            "stage": "V_NN_raw",
+            "start": 0.0001270999782718718,
+            "end": 0.00013329996727406979,
+            "status": "completed"
+          },
+          {
+            "stage": "V_scan_passes",
+            "start": 0.00013429997488856316,
+            "end": 0.00013699999544769526,
+            "passes": 1,
+            "swaps": 0,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "V_scan_opt",
+            "start": 0.00013399997260421515,
+            "end": 0.00013729999773204327,
+            "status": "completed"
+          },
+          {
+            "stage": "V_scan_expand",
+            "start": 0.00013780000153928995,
+            "end": 0.00014409999130293727,
+            "status": "completed"
+          },
+          {
+            "stage": "V_NN_passes",
+            "start": 0.00014489999739453197,
+            "end": 0.00014699995517730713,
+            "passes": 1,
+            "swaps": 0,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "V_NN_opt",
+            "start": 0.0001446999958716333,
+            "end": 0.00014739995822310448,
+            "status": "completed"
+          },
+          {
+            "stage": "V_NN_expand",
+            "start": 0.00014779996126890182,
+            "end": 0.0001544999540783465,
+            "status": "completed"
+          },
+          {
+            "stage": "core_finished",
+            "end": 0.00015499995788559318,
+            "status": "completed"
+          },
+          {
+            "stage": "H_scan_deep_passes",
+            "start": 0.00015619996702298522,
+            "end": 0.0001582999830134213,
+            "passes": 1,
+            "swaps": 0,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "H_scan_deep",
+            "start": 0.00015579996397718787,
+            "end": 0.00015869998605921865,
+            "status": "completed"
+          },
+          {
+            "stage": "H_scan_deep_expand",
+            "start": 0.00015919998986646533,
+            "end": 0.00016569998115301132,
+            "status": "completed"
+          },
+          {
+            "stage": "H_NN_deep_passes",
+            "start": 0.00016659998800605536,
+            "end": 0.0001686000032350421,
+            "passes": 1,
+            "swaps": 0,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "H_NN_deep",
+            "start": 0.00016629998572170734,
+            "end": 0.00016899994807317853,
+            "status": "completed"
+          },
+          {
+            "stage": "H_NN_deep_expand",
+            "start": 0.00016939995111897588,
+            "end": 0.00017590000061318278,
+            "status": "completed"
+          },
+          {
+            "stage": "V_scan_deep_passes",
+            "start": 0.0001765000051818788,
+            "end": 0.00017849996220320463,
+            "passes": 1,
+            "swaps": 0,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "V_scan_deep",
+            "start": 0.00017630000365898013,
+            "end": 0.00017879996448755264,
+            "status": "completed"
+          },
+          {
+            "stage": "V_scan_deep_expand",
+            "start": 0.00017919996753335,
+            "end": 0.0001851999550126493,
+            "status": "completed"
+          },
+          {
+            "stage": "V_NN_deep_passes",
+            "start": 0.000185999961104244,
+            "end": 0.0001878999755717814,
+            "passes": 1,
+            "swaps": 0,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "V_NN_deep",
+            "start": 0.00018559995805844665,
+            "end": 0.0001881999778561294,
+            "status": "completed"
+          },
+          {
+            "stage": "V_NN_deep_expand",
+            "start": 0.00018859998090192676,
+            "end": 0.00019489997066557407,
+            "status": "completed"
+          },
+          {
+            "stage": "deep_finished",
+            "end": 0.00019519997294992208,
+            "status": "completed"
+          },
+          {
+            "stage": "reverse_H_raw",
+            "start": 0.00023469998268410563,
+            "end": 0.00025049998657777905,
+            "status": "completed"
+          },
+          {
+            "stage": "reverse_H_passes",
+            "start": 0.0002513999934308231,
+            "end": 0.0002578999847173691,
+            "passes": 2,
+            "swaps": 1,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "reverse_H_opt",
+            "start": 0.0002510999911464751,
+            "end": 0.00025839998852461576,
+            "status": "completed"
+          },
+          {
+            "stage": "reverse_H_expand",
+            "start": 0.0002589999930933118,
+            "end": 0.00026679999427869916,
+            "status": "completed"
+          },
+          {
+            "stage": "reverse_V_raw",
+            "start": 0.0002673999988473952,
+            "end": 0.00027469999622553587,
+            "status": "completed"
+          },
+          {
+            "stage": "reverse_V_passes",
+            "start": 0.00027550000231713057,
+            "end": 0.00028039998142048717,
+            "passes": 2,
+            "swaps": 1,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "reverse_V_opt",
+            "start": 0.00027520000003278255,
+            "end": 0.00028089998522773385,
+            "status": "completed"
+          },
+          {
+            "stage": "reverse_V_expand",
+            "start": 0.00028139998903498054,
+            "end": 0.0002882999833673239,
+            "status": "completed"
+          },
+          {
+            "stage": "perturb_H_raw",
+            "start": 0.00028899998869746923,
+            "end": 0.0002958999830298126,
+            "status": "completed"
+          },
+          {
+            "stage": "perturb_H_passes",
+            "start": 0.00029659998835995793,
+            "end": 0.000298700004350394,
+            "passes": 1,
+            "swaps": 0,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "perturb_H_opt",
+            "start": 0.0002962999860756099,
+            "end": 0.00029909994918853045,
+            "status": "completed"
+          },
+          {
+            "stage": "perturb_H_expand",
+            "start": 0.0002994999522343278,
+            "end": 0.00030620000325143337,
+            "status": "completed"
+          },
+          {
+            "stage": "perturb_V_raw",
+            "start": 0.0003065999480895698,
+            "end": 0.0003127999952994287,
+            "status": "completed"
+          },
+          {
+            "stage": "perturb_V_passes",
+            "start": 0.0003132999991066754,
+            "end": 0.0003152999561280012,
+            "passes": 1,
+            "swaps": 0,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "perturb_V_opt",
+            "start": 0.0003130999975837767,
+            "end": 0.00031569995917379856,
+            "status": "completed"
+          },
+          {
+            "stage": "perturb_V_expand",
+            "start": 0.00031599996145814657,
+            "end": 0.00032219995046034455,
+            "status": "completed"
+          },
+          {
+            "stage": "shuffle_0_raw",
+            "start": 0.00032249995274469256,
+            "end": 0.00032869999995455146,
+            "status": "completed"
+          },
+          {
+            "stage": "shuffle_0_passes",
+            "start": 0.00032920000376179814,
+            "end": 0.00033359997905790806,
+            "passes": 2,
+            "swaps": 1,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "shuffle_0_opt",
+            "start": 0.00032900000223889947,
+            "end": 0.0003339999821037054,
+            "status": "completed"
+          },
+          {
+            "stage": "shuffle_0_expand",
+            "start": 0.00033439998514950275,
+            "end": 0.00034089997643604875,
+            "status": "completed"
+          },
+          {
+            "stage": "shuffle_1_raw",
+            "start": 0.0003412999794818461,
+            "end": 0.0003472999669611454,
+            "status": "completed"
+          },
+          {
+            "stage": "shuffle_1_passes",
+            "start": 0.0003478999715298414,
+            "end": 0.0003519000019878149,
+            "passes": 2,
+            "swaps": 1,
+            "termination": "no_improving_2opt_move"
+          },
+          {
+            "stage": "shuffle_1_opt",
+            "start": 0.00034769997000694275,
+            "end": 0.0003522000042721629,
+            "status": "completed"
+          },
+          {
+            "stage": "shuffle_1_expand",
+            "start": 0.00035259994911029935,
+            "end": 0.0003588999970816076,
+            "status": "completed"
+          }
+        ],
+        "improvements": [
+          {
+            "seconds": 1.8799968529492617e-05,
+            "steps": 3,
+            "source": "old_suffix"
+          }
+        ],
+        "core_finished": true
+      },
+      "assembled_route": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          3,
+          0
+        ]
+      ],
+      "internal_calls": {
+        "PPCPP": 1,
+        "local_P2": 1
+      }
+    },
+    "budget": 20,
+    "seed": 20261020,
+    "entry_seconds": 0.0006311999750323594,
+    "phase_seconds": {
+      "p0": 6.230000872164965e-05,
+      "window": 1.5700003132224083e-05,
+      "local_P2": 0.000367300002835691,
+      "splice": 5.599984433501959e-06,
+      "encoding": 0.00013289996422827244
+    },
+    "eligible": true
+  },
+  "audit": {
+    "P0_metrics": {
+      "fresh_target_steps": 2,
+      "historical_target_steps": 0,
+      "repeated_new_target_steps": 0,
+      "non_target_steps": 1,
+      "length": 3,
+      "target_arrivals": 2,
+      "duplicate_target_arrivals": 0,
+      "overlap_ratio": 0.0,
+      "turns90": 0,
+      "turns180": 0,
+      "direction_changes": 0,
+      "initial_credit": 0,
+      "completion_step": 2,
+      "return_tail_steps": 1,
+      "active_targets": 2,
+      "remaining_before": 2,
+      "newly_completed": 2,
+      "remaining_completion_fraction": 1.0,
+      "active_covered": 2,
+      "active_coverage": 1.0,
+      "missing_active": 0,
+      "published_targets": 2,
+      "published_covered": 2,
+      "published_coverage": 1.0,
+      "deferred": 0,
+      "uncompleted_published": 0,
+      "returned": true,
+      "complete_legal": true
+    },
+    "assembled_metrics": {
+      "fresh_target_steps": 2,
+      "historical_target_steps": 0,
+      "repeated_new_target_steps": 0,
+      "non_target_steps": 1,
+      "length": 3,
+      "target_arrivals": 2,
+      "duplicate_target_arrivals": 0,
+      "overlap_ratio": 0.0,
+      "turns90": 0,
+      "turns180": 0,
+      "direction_changes": 0,
+      "initial_credit": 0,
+      "completion_step": 2,
+      "return_tail_steps": 1,
+      "active_targets": 2,
+      "remaining_before": 2,
+      "newly_completed": 2,
+      "remaining_completion_fraction": 1.0,
+      "active_covered": 2,
+      "active_coverage": 1.0,
+      "missing_active": 0,
+      "published_targets": 2,
+      "published_covered": 2,
+      "published_coverage": 1.0,
+      "deferred": 0,
+      "uncompleted_published": 0,
+      "returned": true,
+      "complete_legal": true
+    },
+    "incidental_external": [],
+    "metrics": {
+      "fresh_target_steps": 2,
+      "historical_target_steps": 0,
+      "repeated_new_target_steps": 0,
+      "non_target_steps": 1,
+      "length": 3,
+      "target_arrivals": 2,
+      "duplicate_target_arrivals": 0,
+      "overlap_ratio": 0.0,
+      "turns90": 0,
+      "turns180": 0,
+      "direction_changes": 0,
+      "initial_credit": 0,
+      "completion_step": 2,
+      "return_tail_steps": 1,
+      "active_targets": 2,
+      "remaining_before": 2,
+      "newly_completed": 2,
+      "remaining_completion_fraction": 1.0,
+      "active_covered": 2,
+      "active_coverage": 1.0,
+      "missing_active": 0,
+      "published_targets": 2,
+      "published_covered": 2,
+      "published_coverage": 1.0,
+      "deferred": 0,
+      "uncompleted_published": 0,
+      "returned": true,
+      "complete_legal": true
+    }
+  }
+}

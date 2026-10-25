@@ -1,0 +1,56 @@
+--- v0.3/history_adapter.py
++++ v0.4/history_adapter.py
+@@ -21,6 +21,8 @@
+     def __init__(self,start,known,targets,covered,**kw):
+         self.targets=set(targets);self.covered=set(covered);self.pending=self.targets-self.covered-{tuple(start)}
+         self.task_events=[];self.task_filters=[];self.prune_audits=[]
++        self._protection_cache=None
++        self.protection_cache_stats=dict(requests=0,hits=0,rebuilds=0,search_attempts=0)
+         super().__init__(start,known,graph_factory=TaskGraph,**kw)
+         self.graph.before_prune=self.sync_task_protection
+         self.graph.audit_owner=self
+@@ -31,15 +33,34 @@
+     def sync_task_protection(self):
+         # Acquisition anchors and transit anchors are different obligations.
+         # Protect existing RCG paths only; never create occupancy-grid shortcuts.
++        self.protection_cache_stats['requests']+=1
++        self._check_deadline('task_protection')
++        # Exact structural identity, not a lossy hash or assumed revision counter.
++        # States/kinds/reasons do not affect needed(), components(), or RCG.path.
++        # Include dictionary order and edge weights conservatively. Update node
++        # display metadata even on hits, since node objects may be replaced.
++        key=(self.current,self.map.version,tuple(self.map.cells.items()),frozenset(self.pending),frozenset(self.covered),
++             tuple((p,tuple(self.graph.edges[p].items())) for p in self.graph.nodes))
++        self._check_deadline('task_protection')
++        if self._protection_cache is not None and self._protection_cache[0]==key:
++            acquisition,transit,protected=self._protection_cache[1]
++            self.acquisition_anchors=set(acquisition);self.transit_anchors=set(transit)
++            self.graph.task_protected=set(protected)
++            for p,n in self.graph.nodes.items():n.tasked=p in self.covered
++            self.protection_cache_stats['hits']+=1
++            return
++        self.protection_cache_stats['rebuilds']+=1
+         acquisition={p for p in self.graph.nodes if self.needed(p)}
+         transit=set()
+         component=set(next((s for s in self.graph.components() if self.current in s),[]))
+         for p in sorted(acquisition&component):
+             self._check_deadline('task_protection')
++            self.protection_cache_stats['search_attempts']+=1
+             route,_=self.graph.path(self.current,p);transit.update(route)
+         self.acquisition_anchors=acquisition;self.transit_anchors=transit-acquisition
+         self.graph.task_protected=acquisition|transit
+         for p,n in self.graph.nodes.items():n.tasked=p in self.covered
++        self._protection_cache=(key,(frozenset(self.acquisition_anchors),frozenset(self.transit_anchors),frozenset(self.graph.task_protected)))
+     def refresh_retreat(self,a=None,b=None):
+         super().refresh_retreat(a,b);self.retreat={p for p in self.retreat if self.needed(p)}
+     def navigate(self,route,mode):
+@@ -140,7 +161,8 @@
+         open_graph_nodes=sum(planner.graph.is_open(p) for p in planner.graph.nodes),
+         termination_trigger=planner.iterations_trace[-1]['why']['group'] if planner.iterations_trace else None,
+         prune_audits=planner.prune_audits,
+-        adaptation='v0.3 deadline checkpoints and prune evidence; v0.2 acquisition/RCG transit rules unchanged.')
++        adaptation='v0.4 exact-state protection memoization; original A* and all evidence retained.',
++        protection_cache=planner.protection_cache_stats)
+     try:planner._check_deadline('result_ready')
+     except WallClockCap as exc:
+         if result['status'] not in ('wall_clock_cap','deadline'):result.update(route=[],status='deadline',graph_error=str(exc))

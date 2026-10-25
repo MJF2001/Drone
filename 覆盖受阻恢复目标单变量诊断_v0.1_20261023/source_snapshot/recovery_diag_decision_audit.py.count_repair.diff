@@ -1,0 +1,14 @@
+--- independent_count_v01.py.txt
++++ recovery_diag_decision_audit.py
+@@ -5,8 +5,9 @@
+ def ps(xs):return set(map(tuple,xs))
+ def require(v,msg):
+  if not v:raise AssertionError(msg)
+-def audit(c,native,spec,enabled):
+- start=time.perf_counter();counts=Counter(BFS_calls=0,BFS_popped=0,BFS_neighbors=0,unit_edges=0,decisions=0,local_option_rows=0,pending_state_checks=0,authorization_checks=0)
++def audit(c,native,spec,enabled,observer_counts=None):
++ start=time.perf_counter();counts=observer_counts if observer_counts is not None else Counter()
++ counts.update({k:0 for k in ('BFS_calls','BFS_popped','BFS_neighbors','unit_edges','decisions','local_option_rows','pending_state_checks','authorization_checks')})
+  r=native['raw']['branches']['P0'];diag=native['diagnostic'];route=list(map(tuple,r['route']));F=ps(c['free']);T=ps(c['targets']);HH=ps(c['covered']);events=r['trace'];pred=tuple(c['predator']);pending=T-HH-{tuple(c['current'])};cursor=0;authorized=0;receipts=[]
+  def bfs(a):
+   counts['BFS_calls']+=1;d={a:0};q=deque([a])

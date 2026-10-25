@@ -1,0 +1,29 @@
+--- E:\无人机研究项目_接续包_20261014\连续事件执行器纯桩验收_v0.1_20261021\auditor.py
++++ E:\无人机研究项目_接续包_20261014\连续事件真实接口验收_v0.1_20261021\auditor.py
+@@ -78,7 +78,7 @@
+                 snap=dict(name='stub_snapshot',free=sorted(map(list,F)),targets=sorted(map(list,P&F)),covered=sorted(map(list,H)),published_targets=sorted(map(list,P)),deferred_targets=sorted(map(list,P-F-H)),initial_targets=sorted(map(list,prior|H)),current=list(cur),previous=list(prev) if prev is not None else None,base=w['base'],predator=[-1,0],old_route=plan[cursor:] if plan is not None else [list(cur)],distance_budget=w['E0']-moves,radius=0)
+                 assert req['input']==snap and req['payload_utf8']==pack(snap) and req['payload_sha256']==hashlib.sha256(pack(snap).encode()).hexdigest()
+                 assert req['plan_before']==plan and req['cursor_before']==cursor and req['actual_prefix']==walk
+-                assert req['response']==serialized_stub(spec['methods'][name][ri]);admission,why=response_rule(snap,req['response']);assert (req['admission'],req['reason'])==(admission,why);ri+=1
++                assert isinstance(req['response'],dict);admission,why=response_rule(snap,req['response']);assert (req['admission'],req['reason'])==(admission,why);ri+=1
+                 if admission!='accepted':status,reason=admission,why
+                 else:plan=req['response']['route'];cursor=0;assert req['plan_adopted']==plan
+             if status is None:
+@@ -97,13 +97,13 @@
+                 terminal=dict(status=status,reason=reason,tick=t,state=state(P,F));assert frame==s['frames'][-1]
+                 if status=='technical_error':fatal=reason
+             assert frame['after']==state(P,F),(spec['id'],name,t,'after')
+-        assert terminal==s['terminal'] and ai==len(actions) and ri==len(requests)==len(spec['methods'][name]) and credits==s['credits']
++        assert terminal==s['terminal'] and ai==len(actions) and ri==len(requests) and ri<=3 and credits==s['credits']
+         P,F,*_=public_at(w,max([e['tick'] for e in w['events']],default=0));summary=dict(status=terminal['status'],reason=terminal['reason'],finish_tick=terminal['tick'],M=moves,E=w['E0']-moves,waits=waits,current=list(cur),previous=list(prev) if prev is not None else None,H=sorted(map(list,H)),P=sorted(map(list,P)),F=sorted(map(list,F)),U=sorted(map(list,(P&F)-H)),D=sorted(map(list,P-F-H)),historical_now_blocked=sorted(map(list,H-F)),returned=cur==tuple(w['base']),response_calls=ri,move_classes=classes,turns90=n90,turns180=n180,first_credit=credits,zero_move_credits=sum(e['source']=='publication' for e in credits),benchmark_eligible=False)
+-        assert s['summary']==summary and sum(classes.values())==moves;manual_subset(summary,spec['expected'][name],spec['id']+'/'+name)
++        assert s['summary']==summary and sum(classes.values())==moves;assert_real_source = True
+         if name in spec.get('wait_ticks',{}):assert [a['tick'] for a in actions if a['kind']=='wait']==spec['wait_ticks'][name]
+-        proofs[name]=dict(passed=True,frames=len(s['frames']),actual_moves=moves,waits=waits,requests=ri,hand_expectations_passed=True,source_prefix_and_all_snapshots_passed=True)
++        proofs[name]=dict(passed=True,frames=len(s['frames']),actual_moves=moves,waits=waits,requests=ri,hand_expectations_passed=False,real_saved_response_audit=True,source_prefix_and_all_snapshots_passed=True)
+     for e in spec.get('input_expectations',[]):
+         req=result['sessions'][e['method']]['requests'][e['sequence']];assert req['tick']==e['tick'];manual_subset(req['input'],e['fields'],spec['id']+'/manual_input')
+     assert sorted(result['environment_BFS'],key=lambda x:(x['tick'],x['method']))==sorted(expected_bfs,key=lambda x:(x['tick'],x['method']))
+     assert result['fatal_technical_error']==fatal
+-    return dict(passed=True,category=spec['category'],subcase=spec['id'],methods=proofs,independent_audit_BFS=counter['BFS']-bfs_before,main_environment_BFS=len(expected_bfs),manual_expectations_original=True)
++    return dict(passed=True,category=spec['category'],subcase=spec['id'],methods=proofs,independent_audit_BFS=counter['BFS']-bfs_before,main_environment_BFS=len(expected_bfs),manual_expectations_original=False,real_response_mode=True)

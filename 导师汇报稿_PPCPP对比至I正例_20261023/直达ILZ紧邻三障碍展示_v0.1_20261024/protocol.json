@@ -1,0 +1,24 @@
+{
+  "layouts": [
+    "I",
+    "L",
+    "Z"
+  ],
+  "sizes": [
+    "small",
+    "medium",
+    "large"
+  ],
+  "max_core": 126,
+  "max_post": 126,
+  "seed": 20261020,
+  "thresholds": [
+    0.2,
+    0.5,
+    0.75
+  ],
+  "coverage": "actual inspected / current inspectable (deferred removed)",
+  "start": "minimum target grid center as base; initially empty history; collect start at distance zero",
+  "trigger": "Earliest saved vertex after threshold, incoming axial unit direction exists (or initial base). First open grid cell entered by next segment must be adjacent (Chebyshev1), never traversed earlier, pending. No distant candidate; tie at corner enters diagonal cell. Removal blocks next segment and leaves tasks/base reachable with at least one other pending task. If not eligible, execute old route to next real vertex, no forced extra leg. Stop session if unavailable.",
+  "limits": "Original integer-grid/axial incoming interface only; not noncenter detection. own-progress event not simultaneous time, obstacle coordinates may differ. Same policy not same world paired causal test. Fixed archived maps, no outcome selection; native20/post18soft20total,4096. All actual calls include unused diagnostic post on raw branches."
+}

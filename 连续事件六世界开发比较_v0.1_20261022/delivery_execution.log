@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\连续事件六世界开发比较_v0.1_20261022\deliver.py", line 64, in <module>
+    else:main()
+         ^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\连续事件六世界开发比较_v0.1_20261022\deliver.py", line 26, in main
+    z=read(H/'完整开发分析.json');assert z==collect();counts=ledger(z);save(H/'分类入口与图搜索总账.json',counts);v=z['views'];stopped=(H/'STOP.json').exists();complete=(H/'acceptance.json').exists();now=datetime.datetime.now(datetime.timezone.utc).isoformat()
+                                                             ^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\连续事件六世界开发比较_v0.1_20261022\deliver.py", line 18, in ledger
+    technical=[dict(round=p.parent.name,**read(p)) for p in (H/'technical_rounds').glob('round_*/result.json')];static=sum(r['static_BFS'] for r in technical);verifies=[]
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: dict() got multiple values for keyword argument 'round'

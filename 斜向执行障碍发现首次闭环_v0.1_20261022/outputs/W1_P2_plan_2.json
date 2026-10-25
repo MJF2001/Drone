@@ -1,0 +1,4340 @@
+{
+  "id": "W1_P2_plan_2",
+  "passed": true,
+  "native_counts": {
+    "core_started": 1,
+    "context_calls": 1,
+    "context_BFS_started": 1,
+    "context_BFS_completed": 1,
+    "geometry_precheck_calls": 1,
+    "geometry_path_calls": 148,
+    "astar_calls": 26,
+    "Astar_started": 26,
+    "Astar_completed": 26,
+    "main_audit_calls": 25,
+    "main_audit_returns": 25,
+    "main_audit_valid": 25,
+    "geometry_distance_calls": 2576,
+    "distance_row_BFS_started": 7,
+    "distance_row_BFS_completed": 7,
+    "core_returned": 1,
+    "core_complete": 1,
+    "post_entry_calls": 1,
+    "post_source_geometry": 11,
+    "post_candidate_geometry": 8,
+    "post_output_geometry": 8,
+    "post_service_intersections": 56,
+    "post_interval_calls": 9
+  },
+  "method": "P2",
+  "seed": 20261022,
+  "wrapper_counts": {
+    "parse": 1,
+    "input_geometry": 1,
+    "primary_domain_points": 183,
+    "selector": 1,
+    "candidate_checks": 9,
+    "candidate_distance": 9,
+    "candidate_geometry": 9,
+    "candidate_resource_checks": 9,
+    "candidate_rejected": 5,
+    "candidate_comparisons": 6,
+    "prediction_collect_here": 1,
+    "prediction_service_intersections": 7,
+    "native_adapter_calls": 1,
+    "native_route_audits": 1,
+    "native_collect_here": 1,
+    "native_geometry": 11,
+    "native_distance": 11,
+    "native_service_intersections": 31,
+    "native_resource_checks": 1,
+    "post_route_audits": 1,
+    "post_collect_here": 1,
+    "post_geometry": 8,
+    "post_distance": 8,
+    "post_service_intersections": 28,
+    "post_resource_checks": 1,
+    "full_route_audits": 1,
+    "full_collect_here": 1,
+    "full_geometry": 9,
+    "full_distance": 9,
+    "full_service_intersections": 35,
+    "full_resource_checks": 1
+  },
+  "stage": "main_complete",
+  "timing": {
+    "connector_and_contract_seconds": 0.012179799959994853,
+    "core_adapter_seconds": 0.06383480003569275,
+    "post_adapter_seconds": 0.00988969998434186,
+    "main_encoding_seconds": 0.0005147000192664564,
+    "pipeline_seconds": 0.10755670000799,
+    "pipeline_late": false
+  },
+  "snapshot": {
+    "id": "W1_P2_plan_2",
+    "input": {
+      "S": [
+        {
+          "n": 11,
+          "d": 8
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": 3,
+          "d": 8
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "heading_status": "KNOWN",
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          1,
+          0
+        ]
+      ],
+      "D": [
+        [
+          2,
+          0
+        ]
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 789,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "M": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 11,
+              "d": 8
+            }
+          }
+        ]
+      }
+    },
+    "metadata": {
+      "initial_targets": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "predator": [
+        -3,
+        -3
+      ],
+      "old_route": [],
+      "heading_source": {
+        "action_index": 3,
+        "a": [
+          {
+            "n": 1,
+            "d": 1
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "b": [
+          {
+            "n": 11,
+            "d": 8
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "vector": [
+          {
+            "n": 3,
+            "d": 8
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ]
+      },
+      "execution_log_tail": "3a04102e849c6f27c4503ad4e76858916ca47499114711581f9b0a35f4945122",
+      "known_obstacles": [
+        [
+          2,
+          0
+        ]
+      ],
+      "scope": "public_execution_state_only"
+    }
+  },
+  "actual_before": {
+    "S": [
+      {
+        "n": 11,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": [
+      {
+        "n": 3,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "D": [
+      [
+        2,
+        0
+      ]
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 789,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 789,
+        "d": 8
+      },
+      "high": {
+        "n": 789,
+        "d": 8
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 11,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 11,
+        "d": 8
+      },
+      "high": {
+        "n": 11,
+        "d": 8
+      }
+    }
+  },
+  "actual_after": {
+    "S": [
+      {
+        "n": 11,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": [
+      {
+        "n": 3,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "D": [
+      [
+        2,
+        0
+      ]
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 789,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 789,
+        "d": 8
+      },
+      "high": {
+        "n": 789,
+        "d": 8
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 11,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 11,
+        "d": 8
+      },
+      "high": {
+        "n": 11,
+        "d": 8
+      }
+    }
+  },
+  "candidates": [
+    {
+      "q": [
+        0,
+        0
+      ],
+      "squared": {
+        "n": 121,
+        "d": 64
+      },
+      "dot": {
+        "n": -33,
+        "d": 64
+      },
+      "legal": true,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 11,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 11,
+          "d": 8
+        },
+        "high": {
+          "n": 11,
+          "d": 8
+        }
+      },
+      "squared_source": {
+        "n": 121,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        0,
+        1
+      ],
+      "squared": {
+        "n": 185,
+        "d": 64
+      },
+      "dot": {
+        "n": -33,
+        "d": 64
+      },
+      "legal": true,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 185,
+              "c": {
+                "n": 1,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 250902845500750779629,
+          "d": 147573952589676412928
+        },
+        "high": {
+          "n": 125451422750375389815,
+          "d": 73786976294838206464
+        }
+      },
+      "squared_source": {
+        "n": 185,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        1,
+        0
+      ],
+      "squared": {
+        "n": 9,
+        "d": 64
+      },
+      "dot": {
+        "n": -9,
+        "d": 64
+      },
+      "legal": true,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 3,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 3,
+          "d": 8
+        },
+        "high": {
+          "n": 3,
+          "d": 8
+        }
+      },
+      "squared_source": {
+        "n": 9,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        1,
+        1
+      ],
+      "squared": {
+        "n": 73,
+        "d": 64
+      },
+      "dot": {
+        "n": -9,
+        "d": 64
+      },
+      "legal": true,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 73,
+              "c": {
+                "n": 1,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 78804525227344190619,
+          "d": 73786976294838206464
+        },
+        "high": {
+          "n": 157609050454688381239,
+          "d": 147573952589676412928
+        }
+      },
+      "squared_source": {
+        "n": 73,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        2,
+        1
+      ],
+      "squared": {
+        "n": 89,
+        "d": 64
+      },
+      "dot": {
+        "n": 15,
+        "d": 64
+      },
+      "legal": false,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 89,
+              "c": {
+                "n": 1,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 87013117769626441607,
+          "d": 73786976294838206464
+        },
+        "high": {
+          "n": 174026235539252883215,
+          "d": 147573952589676412928
+        }
+      },
+      "squared_source": {
+        "n": 89,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        3,
+        0
+      ],
+      "squared": {
+        "n": 169,
+        "d": 64
+      },
+      "dot": {
+        "n": 39,
+        "d": 64
+      },
+      "legal": false,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 13,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 13,
+          "d": 8
+        },
+        "high": {
+          "n": 13,
+          "d": 8
+        }
+      },
+      "squared_source": {
+        "n": 169,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        3,
+        1
+      ],
+      "squared": {
+        "n": 233,
+        "d": 64
+      },
+      "dot": {
+        "n": 39,
+        "d": 64
+      },
+      "legal": false,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 233,
+              "c": {
+                "n": 1,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 281577327731794951039,
+          "d": 147573952589676412928
+        },
+        "high": {
+          "n": 2199822872904648055,
+          "d": 1152921504606846976
+        }
+      },
+      "squared_source": {
+        "n": 233,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        4,
+        0
+      ],
+      "squared": {
+        "n": 441,
+        "d": 64
+      },
+      "dot": {
+        "n": 63,
+        "d": 64
+      },
+      "legal": false,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 21,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 21,
+          "d": 8
+        },
+        "high": {
+          "n": 21,
+          "d": 8
+        }
+      },
+      "squared_source": {
+        "n": 441,
+        "d": 64
+      }
+    },
+    {
+      "q": [
+        4,
+        1
+      ],
+      "squared": {
+        "n": 505,
+        "d": 64
+      },
+      "dot": {
+        "n": 63,
+        "d": 64
+      },
+      "legal": false,
+      "affordable": true,
+      "length": {
+        "exact": {
+          "terms": [
+            {
+              "r": 505,
+              "c": {
+                "n": 1,
+                "d": 8
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 207269507703782808527,
+          "d": 73786976294838206464
+        },
+        "high": {
+          "n": 414539015407565617055,
+          "d": 147573952589676412928
+        }
+      },
+      "squared_source": {
+        "n": 505,
+        "d": 64
+      }
+    }
+  ],
+  "q": [
+    1,
+    0
+  ],
+  "gamma": [
+    [
+      {
+        "n": 11,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ]
+  ],
+  "gamma_length": {
+    "exact": {
+      "terms": [
+        {
+          "r": 1,
+          "c": {
+            "n": 3,
+            "d": 8
+          }
+        }
+      ]
+    },
+    "interval_bits": 64,
+    "low": {
+      "n": 3,
+      "d": 8
+    },
+    "high": {
+      "n": 3,
+      "d": 8
+    }
+  },
+  "gamma_events": [],
+  "h_entry": [
+    {
+      "n": -3,
+      "d": 8
+    },
+    {
+      "n": 0,
+      "d": 1
+    }
+  ],
+  "heading": {
+    "status": "KNOWN",
+    "vector": [
+      "-3/8",
+      0
+    ],
+    "source": {
+      "kind": "synthetic_direction_fixture",
+      "scope": "technical_world_executed_prefix",
+      "snapshot_id": "W1_P2_plan_2",
+      "snapshot_sha256": "b5183499f55d47608e36a188bbf97ba6aa9784843dcba2e734a617486938d181",
+      "meaning": "paid_predicted_gamma_direction",
+      "executed_heading": [
+        {
+          "n": 3,
+          "d": 8
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "execution_evidence": {
+        "action_index": 3,
+        "a": [
+          {
+            "n": 1,
+            "d": 1
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "b": [
+          {
+            "n": 11,
+            "d": 8
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "vector": [
+          {
+            "n": 3,
+            "d": 8
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ]
+      },
+      "execution_log_tail": "3a04102e849c6f27c4503ad4e76858916ca47499114711581f9b0a35f4945122"
+    }
+  },
+  "predicted_entry": {
+    "S": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "h": [
+      {
+        "n": -3,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    "F": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "P": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "H": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "D": [
+      [
+        2,
+        0
+      ]
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "E": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 393,
+              "d": 4
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 393,
+        "d": 4
+      },
+      "high": {
+        "n": 393,
+        "d": 4
+      }
+    },
+    "M": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 7,
+              "d": 4
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 7,
+        "d": 4
+      },
+      "high": {
+        "n": 7,
+        "d": 4
+      }
+    }
+  },
+  "core_request": {
+    "name": "synthetic_stop_W1_P2_plan_2",
+    "free": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "published_targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "covered": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        0
+      ]
+    ],
+    "deferred_targets": [
+      [
+        2,
+        0
+      ]
+    ],
+    "current": [
+      1,
+      0
+    ],
+    "base": [
+      0,
+      0
+    ],
+    "old_route": [],
+    "initial_targets": [
+      [
+        0,
+        0
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        0
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ]
+    ],
+    "distance_budget": 98,
+    "predator": [
+      -3,
+      -3
+    ],
+    "previous": null,
+    "incoming_heading": {
+      "status": "KNOWN",
+      "vector": [
+        "-3/8",
+        0
+      ],
+      "source": {
+        "kind": "synthetic_direction_fixture",
+        "scope": "technical_world_executed_prefix",
+        "snapshot_id": "W1_P2_plan_2",
+        "snapshot_sha256": "b5183499f55d47608e36a188bbf97ba6aa9784843dcba2e734a617486938d181",
+        "meaning": "paid_predicted_gamma_direction",
+        "executed_heading": [
+          {
+            "n": 3,
+            "d": 8
+          },
+          {
+            "n": 0,
+            "d": 1
+          }
+        ],
+        "execution_evidence": {
+          "action_index": 3,
+          "a": [
+            {
+              "n": 1,
+              "d": 1
+            },
+            {
+              "n": 0,
+              "d": 1
+            }
+          ],
+          "b": [
+            {
+              "n": 11,
+              "d": 8
+            },
+            {
+              "n": 0,
+              "d": 1
+            }
+          ],
+          "vector": [
+            {
+              "n": 3,
+              "d": 8
+            },
+            {
+              "n": 0,
+              "d": 1
+            }
+          ]
+        },
+        "execution_log_tail": "3a04102e849c6f27c4503ad4e76858916ca47499114711581f9b0a35f4945122"
+      }
+    }
+  },
+  "core_request_utf8": "{\"name\":\"synthetic_stop_W1_P2_plan_2\",\"free\":[[0,0],[0,1],[1,0],[1,1],[2,1],[3,0],[3,1],[4,0],[4,1]],\"published_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"targets\":[[0,0],[0,1],[1,0],[1,1],[2,1],[3,0],[3,1],[4,0],[4,1]],\"covered\":[[0,0],[1,0]],\"deferred_targets\":[[2,0]],\"current\":[1,0],\"base\":[0,0],\"old_route\":[],\"initial_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"distance_budget\":98,\"predator\":[-3,-3],\"previous\":null,\"incoming_heading\":{\"status\":\"KNOWN\",\"vector\":[\"-3/8\",0],\"source\":{\"kind\":\"synthetic_direction_fixture\",\"scope\":\"technical_world_executed_prefix\",\"snapshot_id\":\"W1_P2_plan_2\",\"snapshot_sha256\":\"b5183499f55d47608e36a188bbf97ba6aa9784843dcba2e734a617486938d181\",\"meaning\":\"paid_predicted_gamma_direction\",\"executed_heading\":[{\"n\":3,\"d\":8},{\"n\":0,\"d\":1}],\"execution_evidence\":{\"action_index\":3,\"a\":[{\"n\":1,\"d\":1},{\"n\":0,\"d\":1}],\"b\":[{\"n\":11,\"d\":8},{\"n\":0,\"d\":1}],\"vector\":[{\"n\":3,\"d\":8},{\"n\":0,\"d\":1}]},\"execution_log_tail\":\"3a04102e849c6f27c4503ad4e76858916ca47499114711581f9b0a35f4945122\"}}}",
+  "core_request_sha256": "da1d3cfb4cdb2abbd99591c91353bda5068311d85edc7499926ba1024b4b018b",
+  "core_budget_passed": 20.0,
+  "native_entry": {
+    "raw": {
+      "route": [
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "source": "common_fallback",
+      "status": "finished",
+      "seconds": 0.04868410003837198,
+      "active_stage": "shuffle_1_expand",
+      "events": [
+        {
+          "stage": "fallback",
+          "start": 0.0003355999942868948,
+          "end": 0.0013696000096388161,
+          "status": "completed"
+        },
+        {
+          "stage": "H_generate",
+          "start": 0.0013735999818891287,
+          "end": 0.0014186999760568142,
+          "status": "completed"
+        },
+        {
+          "stage": "H_raw",
+          "start": 0.0014205999905243516,
+          "end": 0.0014669999945908785,
+          "status": "completed"
+        },
+        {
+          "stage": "H_nearest",
+          "start": 0.0014685000060126185,
+          "end": 0.003590499982237816,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_raw",
+          "start": 0.003592299995943904,
+          "end": 0.004635199962649494,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_passes",
+          "start": 0.004641000006813556,
+          "end": 0.006236399989575148,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_scan_opt",
+          "start": 0.00463739997940138,
+          "end": 0.006238000001758337,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_expand",
+          "start": 0.006239800015464425,
+          "end": 0.006286799965891987,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_passes",
+          "start": 0.006291099998634309,
+          "end": 0.008813699998427182,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_NN_opt",
+          "start": 0.006288499978836626,
+          "end": 0.008815100009087473,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_expand",
+          "start": 0.008816599962301552,
+          "end": 0.009494300000369549,
+          "status": "completed"
+        },
+        {
+          "stage": "V_generate",
+          "start": 0.009496400016359985,
+          "end": 0.009539599996060133,
+          "status": "completed"
+        },
+        {
+          "stage": "V_raw",
+          "start": 0.009541200008243322,
+          "end": 0.009927799983415753,
+          "status": "completed"
+        },
+        {
+          "stage": "V_nearest",
+          "start": 0.009929499996360391,
+          "end": 0.010383500019088387,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_raw",
+          "start": 0.010385099973063916,
+          "end": 0.01043769996613264,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_passes",
+          "start": 0.010442099999636412,
+          "end": 0.012915999977849424,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_scan_opt",
+          "start": 0.010439499979838729,
+          "end": 0.012917299987748265,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_expand",
+          "start": 0.012919000000692904,
+          "end": 0.013270900002680719,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_passes",
+          "start": 0.013275399978738278,
+          "end": 0.015745599986985326,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_NN_opt",
+          "start": 0.013272700016386807,
+          "end": 0.015747500001452863,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_expand",
+          "start": 0.015749999962281436,
+          "end": 0.015815499995369464,
+          "status": "completed"
+        },
+        {
+          "stage": "core_finished",
+          "end": 0.01581770001212135,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_deep_passes",
+          "start": 0.015824700007215142,
+          "end": 0.01707369997166097,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_scan_deep",
+          "start": 0.015819999971427023,
+          "end": 0.017075099982321262,
+          "status": "completed"
+        },
+        {
+          "stage": "H_scan_deep_expand",
+          "start": 0.01707709999755025,
+          "end": 0.017133699962869287,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_deep_passes",
+          "start": 0.017138299997895956,
+          "end": 0.018444899993482977,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "H_NN_deep",
+          "start": 0.017135599977336824,
+          "end": 0.018446400004904717,
+          "status": "completed"
+        },
+        {
+          "stage": "H_NN_deep_expand",
+          "start": 0.018448300019372255,
+          "end": 0.01850070001091808,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_deep_passes",
+          "start": 0.018505599990021437,
+          "end": 0.01975430001039058,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_scan_deep",
+          "start": 0.01850229996489361,
+          "end": 0.01975559996208176,
+          "status": "completed"
+        },
+        {
+          "stage": "V_scan_deep_expand",
+          "start": 0.0197570999735035,
+          "end": 0.019802099966909736,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_deep_passes",
+          "start": 0.01980619999812916,
+          "end": 0.021018899977207184,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "V_NN_deep",
+          "start": 0.019803699979092926,
+          "end": 0.021019799984060228,
+          "status": "completed"
+        },
+        {
+          "stage": "V_NN_deep_expand",
+          "start": 0.021021399996243417,
+          "end": 0.021066199988126755,
+          "status": "completed"
+        },
+        {
+          "stage": "deep_finished",
+          "end": 0.021067399997264147,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_raw",
+          "start": 0.02118089998839423,
+          "end": 0.021740199998021126,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_passes",
+          "start": 0.021744599973317236,
+          "end": 0.02413099998375401,
+          "passes": 2,
+          "swaps": 1,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "reverse_H_opt",
+          "start": 0.021741800010204315,
+          "end": 0.024131999991368502,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_H_expand",
+          "start": 0.02413380000507459,
+          "end": 0.024179400003049523,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_raw",
+          "start": 0.024180900014471263,
+          "end": 0.024220499966759235,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_passes",
+          "start": 0.02422409999417141,
+          "end": 0.025429199973586947,
+          "passes": 1,
+          "swaps": 0,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "reverse_V_opt",
+          "start": 0.024221899977419525,
+          "end": 0.025430699985008687,
+          "status": "completed"
+        },
+        {
+          "stage": "reverse_V_expand",
+          "start": 0.025431999994907528,
+          "end": 0.02547739999135956,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_raw",
+          "start": 0.025478900002781302,
+          "end": 0.02620680001564324,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_passes",
+          "start": 0.026210899988655,
+          "end": 0.031277499976567924,
+          "passes": 4,
+          "swaps": 3,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "perturb_H_opt",
+          "start": 0.026208299968857318,
+          "end": 0.0312807000009343,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_H_expand",
+          "start": 0.03128379996633157,
+          "end": 0.03136249998351559,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_raw",
+          "start": 0.03136449999874458,
+          "end": 0.03215980000095442,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_passes",
+          "start": 0.032169600017368793,
+          "end": 0.037021700001787394,
+          "passes": 4,
+          "swaps": 3,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "perturb_V_opt",
+          "start": 0.03216429997701198,
+          "end": 0.03702360001625493,
+          "status": "completed"
+        },
+        {
+          "stage": "perturb_V_expand",
+          "start": 0.037026199977844954,
+          "end": 0.03728899999987334,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_raw",
+          "start": 0.037291100015863776,
+          "end": 0.03775700001278892,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_passes",
+          "start": 0.03776189999189228,
+          "end": 0.04249359999084845,
+          "passes": 4,
+          "swaps": 3,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "shuffle_0_opt",
+          "start": 0.0377586999675259,
+          "end": 0.04249530000379309,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_0_expand",
+          "start": 0.04249809996690601,
+          "end": 0.04255129996454343,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_raw",
+          "start": 0.04255309997824952,
+          "end": 0.042873799975495785,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_passes",
+          "start": 0.04287810000823811,
+          "end": 0.04794590000528842,
+          "passes": 4,
+          "swaps": 3,
+          "termination": "no_improving_2opt_move"
+        },
+        {
+          "stage": "shuffle_1_opt",
+          "start": 0.042875199986156076,
+          "end": 0.047949799976777285,
+          "status": "completed"
+        },
+        {
+          "stage": "shuffle_1_expand",
+          "start": 0.04795549996197224,
+          "end": 0.048222400015220046,
+          "status": "completed"
+        }
+      ],
+      "improvements": [
+        {
+          "seconds": 0.001367799995932728,
+          "steps": 11,
+          "source": "common_fallback"
+        }
+      ],
+      "core_finished": true,
+      "method": "P2_MULTI",
+      "budget": 19.999855700007174,
+      "seed": 20261022,
+      "fallback_selected": true,
+      "overrun_gt_10ms": false
+    },
+    "entry_seconds": 0.04895479994593188,
+    "budget": 20.0,
+    "method": "P2_MULTI",
+    "seed": 20261022,
+    "phase_seconds": {
+      "encoding": 0.00011859997175633907
+    }
+  },
+  "native_main_audit": {
+    "points": [
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 11,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 11,
+        "d": 1
+      },
+      "high": {
+        "n": 11,
+        "d": 1
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          2,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          3,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          3,
+          0
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          0
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          0,
+          1
+        ]
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": -1,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "D": [
+        [
+          2,
+          0
+        ]
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 349,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 349,
+          "d": 4
+        },
+        "high": {
+          "n": 349,
+          "d": 4
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 51,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 51,
+          "d": 4
+        },
+        "high": {
+          "n": 51,
+          "d": 4
+        }
+      }
+    },
+    "valid": true
+  },
+  "core_output_used": true,
+  "native_source": "common_fallback",
+  "native_fallback_selected": true,
+  "native_raw_edges": 11,
+  "post_request_utf8": "{\"id\":\"W1_P2_plan_2_P2\",\"input\":{\"name\":\"synthetic_stop_W1_P2_plan_2\",\"free\":[[0,0],[0,1],[1,0],[1,1],[2,1],[3,0],[3,1],[4,0],[4,1]],\"published_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"targets\":[[0,0],[0,1],[1,0],[1,1],[2,1],[3,0],[3,1],[4,0],[4,1]],\"covered\":[[0,0],[1,0]],\"deferred_targets\":[[2,0]],\"current\":[1,0],\"base\":[0,0],\"old_route\":[],\"initial_targets\":[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1],[4,0],[4,1]],\"distance_budget\":98,\"predator\":[-3,-3],\"previous\":null,\"incoming_heading\":{\"status\":\"KNOWN\",\"vector\":[\"-3/8\",0],\"source\":{\"kind\":\"synthetic_direction_fixture\",\"scope\":\"technical_world_executed_prefix\",\"snapshot_id\":\"W1_P2_plan_2\",\"snapshot_sha256\":\"b5183499f55d47608e36a188bbf97ba6aa9784843dcba2e734a617486938d181\",\"meaning\":\"paid_predicted_gamma_direction\",\"executed_heading\":[{\"n\":3,\"d\":8},{\"n\":0,\"d\":1}],\"execution_evidence\":{\"action_index\":3,\"a\":[{\"n\":1,\"d\":1},{\"n\":0,\"d\":1}],\"b\":[{\"n\":11,\"d\":8},{\"n\":0,\"d\":1}],\"vector\":[{\"n\":3,\"d\":8},{\"n\":0,\"d\":1}]},\"execution_log_tail\":\"3a04102e849c6f27c4503ad4e76858916ca47499114711581f9b0a35f4945122\"}}},\"raw\":{\"route\":[[1,0],[1,1],[2,1],[3,1],[3,0],[4,0],[4,1],[3,1],[2,1],[1,1],[0,1],[0,0]],\"source\":\"common_fallback\",\"status\":\"finished\",\"seconds\":0.04868410003837198,\"active_stage\":\"shuffle_1_expand\",\"events\":[{\"stage\":\"fallback\",\"start\":0.0003355999942868948,\"end\":0.0013696000096388161,\"status\":\"completed\"},{\"stage\":\"H_generate\",\"start\":0.0013735999818891287,\"end\":0.0014186999760568142,\"status\":\"completed\"},{\"stage\":\"H_raw\",\"start\":0.0014205999905243516,\"end\":0.0014669999945908785,\"status\":\"completed\"},{\"stage\":\"H_nearest\",\"start\":0.0014685000060126185,\"end\":0.003590499982237816,\"status\":\"completed\"},{\"stage\":\"H_NN_raw\",\"start\":0.003592299995943904,\"end\":0.004635199962649494,\"status\":\"completed\"},{\"stage\":\"H_scan_passes\",\"start\":0.004641000006813556,\"end\":0.006236399989575148,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_scan_opt\",\"start\":0.00463739997940138,\"end\":0.006238000001758337,\"status\":\"completed\"},{\"stage\":\"H_scan_expand\",\"start\":0.006239800015464425,\"end\":0.006286799965891987,\"status\":\"completed\"},{\"stage\":\"H_NN_passes\",\"start\":0.006291099998634309,\"end\":0.008813699998427182,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_NN_opt\",\"start\":0.006288499978836626,\"end\":0.008815100009087473,\"status\":\"completed\"},{\"stage\":\"H_NN_expand\",\"start\":0.008816599962301552,\"end\":0.009494300000369549,\"status\":\"completed\"},{\"stage\":\"V_generate\",\"start\":0.009496400016359985,\"end\":0.009539599996060133,\"status\":\"completed\"},{\"stage\":\"V_raw\",\"start\":0.009541200008243322,\"end\":0.009927799983415753,\"status\":\"completed\"},{\"stage\":\"V_nearest\",\"start\":0.009929499996360391,\"end\":0.010383500019088387,\"status\":\"completed\"},{\"stage\":\"V_NN_raw\",\"start\":0.010385099973063916,\"end\":0.01043769996613264,\"status\":\"completed\"},{\"stage\":\"V_scan_passes\",\"start\":0.010442099999636412,\"end\":0.012915999977849424,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_scan_opt\",\"start\":0.010439499979838729,\"end\":0.012917299987748265,\"status\":\"completed\"},{\"stage\":\"V_scan_expand\",\"start\":0.012919000000692904,\"end\":0.013270900002680719,\"status\":\"completed\"},{\"stage\":\"V_NN_passes\",\"start\":0.013275399978738278,\"end\":0.015745599986985326,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_NN_opt\",\"start\":0.013272700016386807,\"end\":0.015747500001452863,\"status\":\"completed\"},{\"stage\":\"V_NN_expand\",\"start\":0.015749999962281436,\"end\":0.015815499995369464,\"status\":\"completed\"},{\"stage\":\"core_finished\",\"end\":0.01581770001212135,\"status\":\"completed\"},{\"stage\":\"H_scan_deep_passes\",\"start\":0.015824700007215142,\"end\":0.01707369997166097,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_scan_deep\",\"start\":0.015819999971427023,\"end\":0.017075099982321262,\"status\":\"completed\"},{\"stage\":\"H_scan_deep_expand\",\"start\":0.01707709999755025,\"end\":0.017133699962869287,\"status\":\"completed\"},{\"stage\":\"H_NN_deep_passes\",\"start\":0.017138299997895956,\"end\":0.018444899993482977,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"H_NN_deep\",\"start\":0.017135599977336824,\"end\":0.018446400004904717,\"status\":\"completed\"},{\"stage\":\"H_NN_deep_expand\",\"start\":0.018448300019372255,\"end\":0.01850070001091808,\"status\":\"completed\"},{\"stage\":\"V_scan_deep_passes\",\"start\":0.018505599990021437,\"end\":0.01975430001039058,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_scan_deep\",\"start\":0.01850229996489361,\"end\":0.01975559996208176,\"status\":\"completed\"},{\"stage\":\"V_scan_deep_expand\",\"start\":0.0197570999735035,\"end\":0.019802099966909736,\"status\":\"completed\"},{\"stage\":\"V_NN_deep_passes\",\"start\":0.01980619999812916,\"end\":0.021018899977207184,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"V_NN_deep\",\"start\":0.019803699979092926,\"end\":0.021019799984060228,\"status\":\"completed\"},{\"stage\":\"V_NN_deep_expand\",\"start\":0.021021399996243417,\"end\":0.021066199988126755,\"status\":\"completed\"},{\"stage\":\"deep_finished\",\"end\":0.021067399997264147,\"status\":\"completed\"},{\"stage\":\"reverse_H_raw\",\"start\":0.02118089998839423,\"end\":0.021740199998021126,\"status\":\"completed\"},{\"stage\":\"reverse_H_passes\",\"start\":0.021744599973317236,\"end\":0.02413099998375401,\"passes\":2,\"swaps\":1,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"reverse_H_opt\",\"start\":0.021741800010204315,\"end\":0.024131999991368502,\"status\":\"completed\"},{\"stage\":\"reverse_H_expand\",\"start\":0.02413380000507459,\"end\":0.024179400003049523,\"status\":\"completed\"},{\"stage\":\"reverse_V_raw\",\"start\":0.024180900014471263,\"end\":0.024220499966759235,\"status\":\"completed\"},{\"stage\":\"reverse_V_passes\",\"start\":0.02422409999417141,\"end\":0.025429199973586947,\"passes\":1,\"swaps\":0,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"reverse_V_opt\",\"start\":0.024221899977419525,\"end\":0.025430699985008687,\"status\":\"completed\"},{\"stage\":\"reverse_V_expand\",\"start\":0.025431999994907528,\"end\":0.02547739999135956,\"status\":\"completed\"},{\"stage\":\"perturb_H_raw\",\"start\":0.025478900002781302,\"end\":0.02620680001564324,\"status\":\"completed\"},{\"stage\":\"perturb_H_passes\",\"start\":0.026210899988655,\"end\":0.031277499976567924,\"passes\":4,\"swaps\":3,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"perturb_H_opt\",\"start\":0.026208299968857318,\"end\":0.0312807000009343,\"status\":\"completed\"},{\"stage\":\"perturb_H_expand\",\"start\":0.03128379996633157,\"end\":0.03136249998351559,\"status\":\"completed\"},{\"stage\":\"perturb_V_raw\",\"start\":0.03136449999874458,\"end\":0.03215980000095442,\"status\":\"completed\"},{\"stage\":\"perturb_V_passes\",\"start\":0.032169600017368793,\"end\":0.037021700001787394,\"passes\":4,\"swaps\":3,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"perturb_V_opt\",\"start\":0.03216429997701198,\"end\":0.03702360001625493,\"status\":\"completed\"},{\"stage\":\"perturb_V_expand\",\"start\":0.037026199977844954,\"end\":0.03728899999987334,\"status\":\"completed\"},{\"stage\":\"shuffle_0_raw\",\"start\":0.037291100015863776,\"end\":0.03775700001278892,\"status\":\"completed\"},{\"stage\":\"shuffle_0_passes\",\"start\":0.03776189999189228,\"end\":0.04249359999084845,\"passes\":4,\"swaps\":3,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"shuffle_0_opt\",\"start\":0.0377586999675259,\"end\":0.04249530000379309,\"status\":\"completed\"},{\"stage\":\"shuffle_0_expand\",\"start\":0.04249809996690601,\"end\":0.04255129996454343,\"status\":\"completed\"},{\"stage\":\"shuffle_1_raw\",\"start\":0.04255309997824952,\"end\":0.042873799975495785,\"status\":\"completed\"},{\"stage\":\"shuffle_1_passes\",\"start\":0.04287810000823811,\"end\":0.04794590000528842,\"passes\":4,\"swaps\":3,\"termination\":\"no_improving_2opt_move\"},{\"stage\":\"shuffle_1_opt\",\"start\":0.042875199986156076,\"end\":0.047949799976777285,\"status\":\"completed\"},{\"stage\":\"shuffle_1_expand\",\"start\":0.04795549996197224,\"end\":0.048222400015220046,\"status\":\"completed\"}],\"improvements\":[{\"seconds\":0.001367799995932728,\"steps\":11,\"source\":\"common_fallback\"}],\"core_finished\":true,\"method\":\"P2_MULTI\",\"budget\":19.999855700007174,\"seed\":20261022,\"fallback_selected\":true,\"overrun_gt_10ms\":false}}",
+  "post_candidate_time_remaining": 27.91650120000122,
+  "post_total_time_remaining": 29.91650120000122,
+  "post_response_utf8": "{\"id\":\"W1_P2_plan_2_P2\",\"L4\":11,\"Lshortcut_interval\":[\"11\",\"11\"],\"Lshortcut_display\":11.0,\"saving_display\":0.0,\"saving_ratio_display\":0.0,\"distance_budget\":98,\"resource_proof\":\"source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E\",\"vertices\":[[1,0],[1,1],[2,1],[3,1],[3,0],[4,0],[4,1],[0,1],[0,0]],\"edges\":[{\"left\":0,\"right\":1,\"a\":[1,0],\"b\":[1,1],\"part\":0,\"kind\":\"start_to_first\"},{\"left\":1,\"right\":2,\"a\":[1,1],\"b\":[2,1],\"part\":1,\"kind\":\"between_first_services\"},{\"left\":2,\"right\":3,\"a\":[2,1],\"b\":[3,1],\"part\":2,\"kind\":\"between_first_services\"},{\"left\":3,\"right\":4,\"a\":[3,1],\"b\":[3,0],\"part\":3,\"kind\":\"between_first_services\"},{\"left\":4,\"right\":5,\"a\":[3,0],\"b\":[4,0],\"part\":4,\"kind\":\"between_first_services\"},{\"left\":5,\"right\":6,\"a\":[4,0],\"b\":[4,1],\"part\":5,\"kind\":\"between_first_services\"},{\"left\":6,\"right\":10,\"a\":[4,1],\"b\":[0,1],\"part\":6,\"kind\":\"between_first_services\"},{\"left\":10,\"right\":11,\"a\":[0,1],\"b\":[0,0],\"part\":7,\"kind\":\"last_to_base\"}],\"parts\":[{\"left\":0,\"right\":1,\"kind\":\"start_to_first\",\"edge_start\":0,\"edge_end\":1,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":1,\"right\":2,\"kind\":\"between_first_services\",\"edge_start\":1,\"edge_end\":2,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":2,\"right\":3,\"kind\":\"between_first_services\",\"edge_start\":2,\"edge_end\":3,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":3,\"right\":4,\"kind\":\"between_first_services\",\"edge_start\":3,\"edge_end\":4,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":4,\"right\":5,\"kind\":\"between_first_services\",\"edge_start\":4,\"edge_end\":5,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":5,\"right\":6,\"kind\":\"between_first_services\",\"edge_start\":5,\"edge_end\":6,\"L4\":1,\"new_interval\":[\"1\",\"1\"]},{\"left\":6,\"right\":10,\"kind\":\"between_first_services\",\"edge_start\":6,\"edge_end\":7,\"L4\":4,\"new_interval\":[\"4\",\"4\"]},{\"left\":10,\"right\":11,\"kind\":\"last_to_base\",\"edge_start\":7,\"edge_end\":8,\"L4\":1,\"new_interval\":[\"1\",\"1\"]}],\"first_original\":[{\"point\":[1,1],\"index\":1},{\"point\":[2,1],\"index\":2},{\"point\":[3,1],\"index\":3},{\"point\":[3,0],\"index\":4},{\"point\":[4,0],\"index\":5},{\"point\":[4,1],\"index\":6},{\"point\":[0,1],\"index\":10}],\"first_actual\":[{\"point\":[1,1],\"edge\":0,\"t\":\"1\"},{\"point\":[2,1],\"edge\":1,\"t\":\"1\"},{\"point\":[3,1],\"edge\":2,\"t\":\"1\"},{\"point\":[3,0],\"edge\":3,\"t\":\"1\"},{\"point\":[4,0],\"edge\":4,\"t\":\"1\"},{\"point\":[4,1],\"edge\":5,\"t\":\"1\"},{\"point\":[0,1],\"edge\":6,\"t\":\"1\"}],\"actual_order_changed\":false,\"trace_cross_original_moves\":{\"start_to_first x unavailable\":1,\"between_first_services x unavailable\":9,\"last_to_base x unavailable\":1},\"counts\":{\"candidate\":8,\"source_validation\":11,\"output_validation\":8,\"service_intersections\":56},\"query_log\":[{\"i\":0,\"j\":1,\"legal\":true,\"part\":0},{\"i\":1,\"j\":2,\"legal\":true,\"part\":1},{\"i\":2,\"j\":3,\"legal\":true,\"part\":2},{\"i\":3,\"j\":4,\"legal\":true,\"part\":3},{\"i\":4,\"j\":5,\"legal\":true,\"part\":4},{\"i\":5,\"j\":6,\"legal\":true,\"part\":5},{\"i\":6,\"j\":10,\"legal\":true,\"part\":6},{\"i\":10,\"j\":11,\"legal\":true,\"part\":7}],\"fallback\":null,\"turns_original\":{\"nonzero_direction_changes\":6,\"total_turn_radians\":9.42477796076938},\"turns_new\":{\"nonzero_direction_changes\":6,\"total_turn_radians\":9.42477796076938},\"timing\":{\"parse_preprocess_source_validation\":0.003033099987078458,\"candidate\":0.0023654999677091837,\"main_validation_metrics\":0.0032410999992862344}}",
+  "post_envelope": {
+    "entry_seconds": 0.008725899970158935,
+    "late": false,
+    "counts": {
+      "candidate": 8,
+      "source_validation": 11,
+      "output_validation": 8,
+      "service_intersections": 56
+    },
+    "fallback": null
+  },
+  "post": {
+    "id": "W1_P2_plan_2_P2",
+    "L4": 11,
+    "Lshortcut_interval": [
+      "11",
+      "11"
+    ],
+    "Lshortcut_display": 11.0,
+    "saving_display": 0.0,
+    "saving_ratio_display": 0.0,
+    "distance_budget": 98,
+    "resource_proof": "source L4 <= E; subsequence edges replace disjoint original intervals; triangle inequality; independently bounded output <= E",
+    "vertices": [
+      [
+        1,
+        0
+      ],
+      [
+        1,
+        1
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        0
+      ],
+      [
+        4,
+        0
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        0,
+        0
+      ]
+    ],
+    "edges": [
+      {
+        "left": 0,
+        "right": 1,
+        "a": [
+          1,
+          0
+        ],
+        "b": [
+          1,
+          1
+        ],
+        "part": 0,
+        "kind": "start_to_first"
+      },
+      {
+        "left": 1,
+        "right": 2,
+        "a": [
+          1,
+          1
+        ],
+        "b": [
+          2,
+          1
+        ],
+        "part": 1,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 2,
+        "right": 3,
+        "a": [
+          2,
+          1
+        ],
+        "b": [
+          3,
+          1
+        ],
+        "part": 2,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 3,
+        "right": 4,
+        "a": [
+          3,
+          1
+        ],
+        "b": [
+          3,
+          0
+        ],
+        "part": 3,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 4,
+        "right": 5,
+        "a": [
+          3,
+          0
+        ],
+        "b": [
+          4,
+          0
+        ],
+        "part": 4,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 5,
+        "right": 6,
+        "a": [
+          4,
+          0
+        ],
+        "b": [
+          4,
+          1
+        ],
+        "part": 5,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 6,
+        "right": 10,
+        "a": [
+          4,
+          1
+        ],
+        "b": [
+          0,
+          1
+        ],
+        "part": 6,
+        "kind": "between_first_services"
+      },
+      {
+        "left": 10,
+        "right": 11,
+        "a": [
+          0,
+          1
+        ],
+        "b": [
+          0,
+          0
+        ],
+        "part": 7,
+        "kind": "last_to_base"
+      }
+    ],
+    "parts": [
+      {
+        "left": 0,
+        "right": 1,
+        "kind": "start_to_first",
+        "edge_start": 0,
+        "edge_end": 1,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 1,
+        "right": 2,
+        "kind": "between_first_services",
+        "edge_start": 1,
+        "edge_end": 2,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 2,
+        "right": 3,
+        "kind": "between_first_services",
+        "edge_start": 2,
+        "edge_end": 3,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 3,
+        "right": 4,
+        "kind": "between_first_services",
+        "edge_start": 3,
+        "edge_end": 4,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 4,
+        "right": 5,
+        "kind": "between_first_services",
+        "edge_start": 4,
+        "edge_end": 5,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 5,
+        "right": 6,
+        "kind": "between_first_services",
+        "edge_start": 5,
+        "edge_end": 6,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      },
+      {
+        "left": 6,
+        "right": 10,
+        "kind": "between_first_services",
+        "edge_start": 6,
+        "edge_end": 7,
+        "L4": 4,
+        "new_interval": [
+          "4",
+          "4"
+        ]
+      },
+      {
+        "left": 10,
+        "right": 11,
+        "kind": "last_to_base",
+        "edge_start": 7,
+        "edge_end": 8,
+        "L4": 1,
+        "new_interval": [
+          "1",
+          "1"
+        ]
+      }
+    ],
+    "first_original": [
+      {
+        "point": [
+          1,
+          1
+        ],
+        "index": 1
+      },
+      {
+        "point": [
+          2,
+          1
+        ],
+        "index": 2
+      },
+      {
+        "point": [
+          3,
+          1
+        ],
+        "index": 3
+      },
+      {
+        "point": [
+          3,
+          0
+        ],
+        "index": 4
+      },
+      {
+        "point": [
+          4,
+          0
+        ],
+        "index": 5
+      },
+      {
+        "point": [
+          4,
+          1
+        ],
+        "index": 6
+      },
+      {
+        "point": [
+          0,
+          1
+        ],
+        "index": 10
+      }
+    ],
+    "first_actual": [
+      {
+        "point": [
+          1,
+          1
+        ],
+        "edge": 0,
+        "t": "1"
+      },
+      {
+        "point": [
+          2,
+          1
+        ],
+        "edge": 1,
+        "t": "1"
+      },
+      {
+        "point": [
+          3,
+          1
+        ],
+        "edge": 2,
+        "t": "1"
+      },
+      {
+        "point": [
+          3,
+          0
+        ],
+        "edge": 3,
+        "t": "1"
+      },
+      {
+        "point": [
+          4,
+          0
+        ],
+        "edge": 4,
+        "t": "1"
+      },
+      {
+        "point": [
+          4,
+          1
+        ],
+        "edge": 5,
+        "t": "1"
+      },
+      {
+        "point": [
+          0,
+          1
+        ],
+        "edge": 6,
+        "t": "1"
+      }
+    ],
+    "actual_order_changed": false,
+    "trace_cross_original_moves": {
+      "start_to_first x unavailable": 1,
+      "between_first_services x unavailable": 9,
+      "last_to_base x unavailable": 1
+    },
+    "counts": {
+      "candidate": 8,
+      "source_validation": 11,
+      "output_validation": 8,
+      "service_intersections": 56
+    },
+    "query_log": [
+      {
+        "i": 0,
+        "j": 1,
+        "legal": true,
+        "part": 0
+      },
+      {
+        "i": 1,
+        "j": 2,
+        "legal": true,
+        "part": 1
+      },
+      {
+        "i": 2,
+        "j": 3,
+        "legal": true,
+        "part": 2
+      },
+      {
+        "i": 3,
+        "j": 4,
+        "legal": true,
+        "part": 3
+      },
+      {
+        "i": 4,
+        "j": 5,
+        "legal": true,
+        "part": 4
+      },
+      {
+        "i": 5,
+        "j": 6,
+        "legal": true,
+        "part": 5
+      },
+      {
+        "i": 6,
+        "j": 10,
+        "legal": true,
+        "part": 6
+      },
+      {
+        "i": 10,
+        "j": 11,
+        "legal": true,
+        "part": 7
+      }
+    ],
+    "fallback": null,
+    "turns_original": {
+      "nonzero_direction_changes": 6,
+      "total_turn_radians": 9.42477796076938
+    },
+    "turns_new": {
+      "nonzero_direction_changes": 6,
+      "total_turn_radians": 9.42477796076938
+    },
+    "timing": {
+      "parse_preprocess_source_validation": 0.003033099987078458,
+      "candidate": 0.0023654999677091837,
+      "main_validation_metrics": 0.0032410999992862344
+    }
+  },
+  "post_main_audit": {
+    "points": [
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 11,
+              "d": 1
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 11,
+        "d": 1
+      },
+      "high": {
+        "n": 11,
+        "d": 1
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 16,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          2,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          3,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          3,
+          0
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          0
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          0,
+          1
+        ]
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": -1,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "D": [
+        [
+          2,
+          0
+        ]
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 349,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 349,
+          "d": 4
+        },
+        "high": {
+          "n": 349,
+          "d": 4
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 51,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 51,
+          "d": 4
+        },
+        "high": {
+          "n": 51,
+          "d": 4
+        }
+      }
+    },
+    "valid": true
+  },
+  "full_route": [
+    [
+      {
+        "n": 11,
+        "d": 8
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 2,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 3,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 3,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 4,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    [
+      {
+        "n": 0,
+        "d": 1
+      },
+      {
+        "n": 0,
+        "d": 1
+      }
+    ]
+  ],
+  "q_locked_index": 1,
+  "full_main_audit": {
+    "points": [
+      [
+        {
+          "n": 11,
+          "d": 8
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 1,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 2,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 3,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 4,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 1,
+          "d": 1
+        }
+      ],
+      [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ]
+    ],
+    "length": {
+      "exact": {
+        "terms": [
+          {
+            "r": 1,
+            "c": {
+              "n": 91,
+              "d": 8
+            }
+          }
+        ]
+      },
+      "interval_bits": 64,
+      "low": {
+        "n": 91,
+        "d": 8
+      },
+      "high": {
+        "n": 91,
+        "d": 8
+      }
+    },
+    "squared_sources": [
+      {
+        "n": 9,
+        "d": 64
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      },
+      {
+        "n": 16,
+        "d": 1
+      },
+      {
+        "n": 1,
+        "d": 1
+      }
+    ],
+    "events": [
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          1,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          2,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          3,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          3,
+          0
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          0
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          4,
+          1
+        ]
+      },
+      {
+        "kind": "arrival",
+        "t": {
+          "n": 1,
+          "d": 1
+        },
+        "cell": [
+          0,
+          1
+        ]
+      }
+    ],
+    "predicted_final": {
+      "S": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": 0,
+          "d": 1
+        }
+      ],
+      "h": [
+        {
+          "n": 0,
+          "d": 1
+        },
+        {
+          "n": -1,
+          "d": 1
+        }
+      ],
+      "F": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "P": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "H": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ]
+      ],
+      "D": [
+        [
+          2,
+          0
+        ]
+      ],
+      "base": [
+        0,
+        0
+      ],
+      "E": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 349,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 349,
+          "d": 4
+        },
+        "high": {
+          "n": 349,
+          "d": 4
+        }
+      },
+      "M": {
+        "exact": {
+          "terms": [
+            {
+              "r": 1,
+              "c": {
+                "n": 51,
+                "d": 4
+              }
+            }
+          ]
+        },
+        "interval_bits": 64,
+        "low": {
+          "n": 51,
+          "d": 4
+        },
+        "high": {
+          "n": 51,
+          "d": 4
+        }
+      }
+    },
+    "valid": true
+  },
+  "main_passed": true,
+  "auditor_identity_after_main": {
+    "auditor": {
+      "modules": {
+        "": {
+          "name": "diagonal_loop_audit_v01_20261022",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\__init__.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\__init__.py",
+          "loader": "SourceFileLoader",
+          "sha256": "be2647c48a043ed01fee27a6b9c3084c5cda6295a57baf040a8ca0cfe131b6ab",
+          "object_id": 1818203241376
+        },
+        "._audit": {
+          "name": "diagonal_loop_audit_v01_20261022._audit",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "loader": "SourceFileLoader",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "object_id": 1818203239536
+        },
+        "._common": {
+          "name": "diagonal_loop_audit_v01_20261022._common",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_common.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_common.py",
+          "loader": "SourceFileLoader",
+          "sha256": "75d3bb2fc79f068445d38b5994552dc03d833924646b824219273608ac5ccdb4",
+          "object_id": 1818203235536
+        },
+        "._geometry": {
+          "name": "diagonal_loop_audit_v01_20261022._geometry",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_geometry.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_geometry.py",
+          "loader": "SourceFileLoader",
+          "sha256": "e2ec9e19aecd1f180495fd089d42ebf8f578c0f27b28f766186a79b74a5cdbc2",
+          "object_id": 1818585072880
+        },
+        "._h1": {
+          "name": "diagonal_loop_audit_v01_20261022._h1",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_h1.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_h1.py",
+          "loader": "SourceFileLoader",
+          "sha256": "99830dd31796247d5ab0e167006412b5f30d61b1ec0ffc80f1aedbe77ee538a6",
+          "object_id": 1818585079520
+        },
+        "._post_saved": {
+          "name": "diagonal_loop_audit_v01_20261022._post_saved",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "loader": "SourceFileLoader",
+          "sha256": "4a0215ae1e059f096d9be80c066df77935829424465a1eed0898764750f0fa38",
+          "object_id": 1818203235856
+        },
+        "._post_geometry": {
+          "name": "diagonal_loop_audit_v01_20261022._post_geometry",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_geometry.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_geometry.py",
+          "loader": "SourceFileLoader",
+          "sha256": "c38560fac5ac18c9239cc1fdd96cb5b8fc923804299b953e419911b21e0cd0c9",
+          "object_id": 1818585085600
+        },
+        "._detect": {
+          "name": "diagonal_loop_audit_v01_20261022._detect",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_detect.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_detect.py",
+          "loader": "SourceFileLoader",
+          "sha256": "28d0018916f129c51bc5ec4b692b03823b23c305d117c42a369865b5ff945ce7",
+          "object_id": 1818585078640
+        }
+      },
+      "functions": {
+        "audit_one": {
+          "module": "diagonal_loop_audit_v01_20261022._audit",
+          "qualname": "audit_one",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "first_line": 57,
+          "object_id": 1818585636576
+        },
+        "load_auditor": {
+          "module": "diagonal_loop_audit_v01_20261022._audit",
+          "qualname": "load_auditor",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "first_line": 11,
+          "object_id": 1818197851040
+        },
+        "post_audit_one": {
+          "module": "diagonal_loop_audit_v01_20261022._post_saved",
+          "qualname": "audit_one",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "sha256": "4a0215ae1e059f096d9be80c066df77935829424465a1eed0898764750f0fa38",
+          "first_line": 14,
+          "object_id": 1818585637856
+        }
+      }
+    },
+    "baseline_audit": {
+      "name": "audit",
+      "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "origin": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "loader": "SourceFileLoader",
+      "sha256": "6d5b95890a1ca666970c72cb306ec40ffc48495c9458d69cfc2bd702fa74d20f",
+      "object_id": 1818202517360
+    },
+    "helpers": {
+      "common": {
+        "name": "common",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\common.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\common.py",
+        "loader": "SourceFileLoader",
+        "sha256": "64956048b1670f8c2efff84bf29bc3677629a64206a9e309ef6e30619d93b0c9",
+        "object_id": 1818172137824
+      },
+      "pipeline": {
+        "name": "pipeline",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\pipeline.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\pipeline.py",
+        "loader": "SourceFileLoader",
+        "sha256": "3d015d85da4d0f67699ae6e830a157624295130b90ce03661ba6899479e3415c",
+        "object_id": 1818171432432
+      },
+      "exact": {
+        "name": "exact",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\exact.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\exact.py",
+        "loader": "SourceFileLoader",
+        "sha256": "484321db04502ac12f2534dced02403e16c68f883c8155dd5a2dc51ace732f7d",
+        "object_id": 1818172137104
+      },
+      "geometry": {
+        "name": "geometry",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\geometry.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\geometry.py",
+        "loader": "SourceFileLoader",
+        "sha256": "a8ae080aad4cb2d332213948bc5e56a034e18c1c9d3105e10eec592bf106b5a9",
+        "object_id": 1818197157952
+      },
+      "connector": {
+        "name": "connector",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\connector.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\connector.py",
+        "loader": "SourceFileLoader",
+        "sha256": "36f77afb2c8e32faad510d12706785846fc4d4ce1c002de959a5d0cfe9944d55",
+        "object_id": 1818197153712
+      },
+      "h1_direction": {
+        "name": "h1_direction",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_direction.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_direction.py",
+        "loader": "SourceFileLoader",
+        "sha256": "a97b15f099e4d3817edfdda97c61853875d9be66d13e49bb2978f1e91bb34fdc",
+        "object_id": 1818203452848
+      },
+      "h1_rewards": {
+        "name": "h1_rewards",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_rewards.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_rewards.py",
+        "loader": "SourceFileLoader",
+        "sha256": "39263bcde6507b729d71e0fc90a0c2f2b61af9f7d65acccc1941ad8b46bbe20e",
+        "object_id": 1818203453248
+      },
+      "native_loader": {
+        "name": "native_loader",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\native_loader.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\native_loader.py",
+        "loader": "SourceFileLoader",
+        "sha256": "ce33c97bd30f7adf1581ff2647d79e10b593ecc629a18819ffbfdfc3070ba389",
+        "object_id": 1818197704544
+      },
+      "public_contract": {
+        "name": "public_contract",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\public_contract.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\public_contract.py",
+        "loader": "SourceFileLoader",
+        "sha256": "039716288240b2930880645db023082379084359ffa95a670377444fc9a8a626",
+        "object_id": 1818197155712
+      },
+      "detector": {
+        "name": "detector",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\detector.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\detector.py",
+        "loader": "SourceFileLoader",
+        "sha256": "252134ddd0f1930a9cd6ab80f1dba34ec028692900051104be85836d8e2ecf5d",
+        "object_id": 1818197159232
+      },
+      "executor": {
+        "name": "executor",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\executor.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\executor.py",
+        "loader": "SourceFileLoader",
+        "sha256": "7c470b75b3105ab3ca8fcf130d5373d5d875c3731456038b43a209555e0e6f73",
+        "object_id": 1818197158032
+      }
+    }
+  },
+  "independent": {
+    "passed": true,
+    "counts": {
+      "independent_pipeline_audits": 1,
+      "independent_geometry": 46,
+      "independent_distance": 38,
+      "independent_forbidden_box_checks": 5,
+      "independent_saved_choice_comparisons": 4,
+      "independent_service_intersections": 346,
+      "independent_route_audits": 3,
+      "independent_frozen_post_audits": 1
+    },
+    "frozen_post_receipt": {
+      "passed": true,
+      "id": "W1_P2_plan_2_P2",
+      "input_sha256": "e1c37ab95407e1b2b9e647afba7d02af6313696920b95e7d2f29bcb3e026d5dd",
+      "output_sha256": "f6a9acc4d56d488971b271c83f98f3a4d23a4fb4c7741effdae7c9dc6c2dbb62",
+      "counts": {
+        "geometry": 8,
+        "service_intersections": 56
+      },
+      "seconds": 0.0005273999995552003,
+      "independent_length_interval": [
+        "11",
+        "11"
+      ],
+      "geometry_method": "closed forbidden squares exact slab intersection; bounding-box exterior forbidden",
+      "service_method": "earliest exact coordinate-parameter intersection per task"
+    },
+    "seconds": 0.007896199997048825,
+    "scope": "optimistic_public_map_only_not_unexecuted_truth_safety"
+  },
+  "auditor_identity_after_independent": {
+    "auditor": {
+      "modules": {
+        "": {
+          "name": "diagonal_loop_audit_v01_20261022",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\__init__.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\__init__.py",
+          "loader": "SourceFileLoader",
+          "sha256": "be2647c48a043ed01fee27a6b9c3084c5cda6295a57baf040a8ca0cfe131b6ab",
+          "object_id": 1818203241376
+        },
+        "._audit": {
+          "name": "diagonal_loop_audit_v01_20261022._audit",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "loader": "SourceFileLoader",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "object_id": 1818203239536
+        },
+        "._common": {
+          "name": "diagonal_loop_audit_v01_20261022._common",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_common.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_common.py",
+          "loader": "SourceFileLoader",
+          "sha256": "75d3bb2fc79f068445d38b5994552dc03d833924646b824219273608ac5ccdb4",
+          "object_id": 1818203235536
+        },
+        "._geometry": {
+          "name": "diagonal_loop_audit_v01_20261022._geometry",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_geometry.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_geometry.py",
+          "loader": "SourceFileLoader",
+          "sha256": "e2ec9e19aecd1f180495fd089d42ebf8f578c0f27b28f766186a79b74a5cdbc2",
+          "object_id": 1818585072880
+        },
+        "._h1": {
+          "name": "diagonal_loop_audit_v01_20261022._h1",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_h1.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_h1.py",
+          "loader": "SourceFileLoader",
+          "sha256": "99830dd31796247d5ab0e167006412b5f30d61b1ec0ffc80f1aedbe77ee538a6",
+          "object_id": 1818585079520
+        },
+        "._post_saved": {
+          "name": "diagonal_loop_audit_v01_20261022._post_saved",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "loader": "SourceFileLoader",
+          "sha256": "4a0215ae1e059f096d9be80c066df77935829424465a1eed0898764750f0fa38",
+          "object_id": 1818203235856
+        },
+        "._post_geometry": {
+          "name": "diagonal_loop_audit_v01_20261022._post_geometry",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_geometry.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_geometry.py",
+          "loader": "SourceFileLoader",
+          "sha256": "c38560fac5ac18c9239cc1fdd96cb5b8fc923804299b953e419911b21e0cd0c9",
+          "object_id": 1818585085600
+        },
+        "._detect": {
+          "name": "diagonal_loop_audit_v01_20261022._detect",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_detect.py",
+          "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_detect.py",
+          "loader": "SourceFileLoader",
+          "sha256": "28d0018916f129c51bc5ec4b692b03823b23c305d117c42a369865b5ff945ce7",
+          "object_id": 1818585078640
+        }
+      },
+      "functions": {
+        "audit_one": {
+          "module": "diagonal_loop_audit_v01_20261022._audit",
+          "qualname": "audit_one",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "first_line": 57,
+          "object_id": 1818585636576
+        },
+        "load_auditor": {
+          "module": "diagonal_loop_audit_v01_20261022._audit",
+          "qualname": "load_auditor",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_audit.py",
+          "sha256": "2b7543edbdf9954ab4ef1a590e2d4e8c49d72cfffe8c63f45956704bcc5bc02b",
+          "first_line": 11,
+          "object_id": 1818197851040
+        },
+        "post_audit_one": {
+          "module": "diagonal_loop_audit_v01_20261022._post_saved",
+          "qualname": "audit_one",
+          "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\diagonal_loop_audit_v01_20261022\\_post_saved.py",
+          "sha256": "4a0215ae1e059f096d9be80c066df77935829424465a1eed0898764750f0fa38",
+          "first_line": 14,
+          "object_id": 1818585637856
+        }
+      }
+    },
+    "baseline_audit": {
+      "name": "audit",
+      "file": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "origin": "E:\\无人机研究项目_接续包_20261014\\研究方案_剩余覆盖重规划_20261009\\算法小型验证_20261010\\frozen_baselines\\v2_20261012\\source\\audit.py",
+      "loader": "SourceFileLoader",
+      "sha256": "6d5b95890a1ca666970c72cb306ec40ffc48495c9458d69cfc2bd702fa74d20f",
+      "object_id": 1818202517360
+    },
+    "helpers": {
+      "common": {
+        "name": "common",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\common.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\common.py",
+        "loader": "SourceFileLoader",
+        "sha256": "64956048b1670f8c2efff84bf29bc3677629a64206a9e309ef6e30619d93b0c9",
+        "object_id": 1818172137824
+      },
+      "pipeline": {
+        "name": "pipeline",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\pipeline.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\pipeline.py",
+        "loader": "SourceFileLoader",
+        "sha256": "3d015d85da4d0f67699ae6e830a157624295130b90ce03661ba6899479e3415c",
+        "object_id": 1818171432432
+      },
+      "exact": {
+        "name": "exact",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\exact.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\exact.py",
+        "loader": "SourceFileLoader",
+        "sha256": "484321db04502ac12f2534dced02403e16c68f883c8155dd5a2dc51ace732f7d",
+        "object_id": 1818172137104
+      },
+      "geometry": {
+        "name": "geometry",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\geometry.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\geometry.py",
+        "loader": "SourceFileLoader",
+        "sha256": "a8ae080aad4cb2d332213948bc5e56a034e18c1c9d3105e10eec592bf106b5a9",
+        "object_id": 1818197157952
+      },
+      "connector": {
+        "name": "connector",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\connector.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\connector.py",
+        "loader": "SourceFileLoader",
+        "sha256": "36f77afb2c8e32faad510d12706785846fc4d4ce1c002de959a5d0cfe9944d55",
+        "object_id": 1818197153712
+      },
+      "h1_direction": {
+        "name": "h1_direction",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_direction.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_direction.py",
+        "loader": "SourceFileLoader",
+        "sha256": "a97b15f099e4d3817edfdda97c61853875d9be66d13e49bb2978f1e91bb34fdc",
+        "object_id": 1818203452848
+      },
+      "h1_rewards": {
+        "name": "h1_rewards",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_rewards.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\h1_rewards.py",
+        "loader": "SourceFileLoader",
+        "sha256": "39263bcde6507b729d71e0fc90a0c2f2b61af9f7d65acccc1941ad8b46bbe20e",
+        "object_id": 1818203453248
+      },
+      "native_loader": {
+        "name": "native_loader",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\native_loader.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\native_loader.py",
+        "loader": "SourceFileLoader",
+        "sha256": "ce33c97bd30f7adf1581ff2647d79e10b593ecc629a18819ffbfdfc3070ba389",
+        "object_id": 1818197704544
+      },
+      "public_contract": {
+        "name": "public_contract",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\public_contract.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\public_contract.py",
+        "loader": "SourceFileLoader",
+        "sha256": "039716288240b2930880645db023082379084359ffa95a670377444fc9a8a626",
+        "object_id": 1818197155712
+      },
+      "detector": {
+        "name": "detector",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\detector.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\detector.py",
+        "loader": "SourceFileLoader",
+        "sha256": "252134ddd0f1930a9cd6ab80f1dba34ec028692900051104be85836d8e2ecf5d",
+        "object_id": 1818197159232
+      },
+      "executor": {
+        "name": "executor",
+        "file": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\executor.py",
+        "origin": "E:\\无人机研究项目_接续包_20261014\\斜向执行障碍发现首次闭环_v0.1_20261022\\executor.py",
+        "loader": "SourceFileLoader",
+        "sha256": "7c470b75b3105ab3ca8fcf130d5373d5d875c3731456038b43a209555e0e6f73",
+        "object_id": 1818197158032
+      }
+    }
+  }
+}

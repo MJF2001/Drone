@@ -1,0 +1,77 @@
+--- round2/seal.py
++++ final/seal.py
+@@ -19,7 +19,7 @@
+             if path in files:assert now==files[path],('frozen_hash_drift',path)
+             files[path]=now
+     else:
+-        require('generated');require('prep');require('seal1');files=read(H/'seal1.json')['files']
++        require('generated');require('prep');require('inputs_audited');require('seal1');files=read(H/'seal1.json')['files']
+         for p,h in files.items():assert sha(p)==h,p
+     for p in H.rglob('*'):
+         if p.is_file() and fixed_file(p):
+--- round2/tech_child.py
++++ final/tech_child.py
+@@ -94,7 +94,7 @@
+     sys.setprofile(profile);sys.argv=[str(c.H/'worker.py')]+args
+     try:runpy.run_path(str(c.H/'worker.py'),run_name='__main__')
+     finally:
+-        sys.setprofile(None);print('SYNTHETIC_CLOSURE '+json.dumps(dict(closure=closure,stub_calls=calls,real_planners_loaded=False)),flush=True)
++        sys.setprofile(None);print('SYNTHETIC_CLOSURE '+json.dumps(dict(closure=closure,stub_calls=calls,real_planners_loaded=False)),file=sys.stderr if args==['inventory'] else sys.stdout,flush=True)
+ def worker_fixture(mode,f,out):
+     setup_fixture(f);c,calls,pp,p2=stub_environment(f)
+     save(c.H/'inputs/tiny.json',synthetic_input())
+@@ -166,6 +166,17 @@
+     assert not (f/'UNREACHABLE_AFTER_HASH.json').exists()
+     save(out,dict(status='PASS',syntax_negative=True,stale_hash_negative=True,post_gate_sentinels=0,real_entry_core_calls=0))
+ def integration(f,out):
++    blocked=[]
++    for kind in ('mismatch_reference','stale_PASS'):
++        neg=Path(f).parent/(Path(f).name+'_'+kind);setup_fixture(neg);cc,*_=stub_environment(neg)
++        cc.receipt('technical',[neg/'SYNTHETIC_NOT_EXPERIMENT.json']);cc.receipt('stat_stubs',[neg/'SYNTHETIC_NOT_EXPERIMENT.json'])
++        target=neg/'frozen_source_bytes/runtime.py' if kind=='mismatch_reference' else neg/'protocol.md'
++        with target.open('ab') as z:z.write(b'SYNTHETIC_NEGATIVE')
++        before=target.read_bytes();control=runpy.run_path(str(H/'seal.py'),run_name='synthetic_negative_seal')
++        try:control['run'](1);raise RuntimeError('invalid seal accepted')
++        except AssertionError:pass
++        assert target.read_bytes()==before and not (neg/'seal1.json').exists() and not (neg/'actual_order.jsonl').exists()
++        blocked.append(kind)
+     setup_fixture(f);c,*_=stub_environment(f);f=c.H
+     save(f/'inputs/tiny.json',synthetic_input());jobs={}
+     for phase,n in [('prep',6),('gate',12),('formal',2)]:
+@@ -186,7 +197,7 @@
+     seal['run'](1);runner['run']('prep')
+     # Synthetic generation stand-in: no geometry claim; stage products and
+     # generated receipt use actual common I/O/hash code, not production inputs.
+-    save(f/'states.json',[dict(synthetic=True)]);c.receipt('generated',[f/'states.json'])
++    save(f/'states.json',[dict(synthetic=True)]);c.receipt('generated',[f/'states.json']);c.receipt('inputs_audited',[f/'states.json'])
+     seal['run'](2)
+     before=(f/'actual_order.jsonl').read_bytes()
+     try:runner['run']('formal');raise RuntimeError('missing gate accepted')
+@@ -212,7 +223,7 @@
+     try:r2['run']('prep');raise RuntimeError('output overwrite allowed')
+     except AssertionError:pass
+     assert not (neg/'actual_order.jsonl').exists() and (neg/'outputs'/f'{j["id"]}.json').read_bytes()==b'SYNTHETIC_EXISTING_RESULT_DO_NOT_OVERWRITE'
+-    save(out,dict(status='PASS',synthetic=True,actual_control_sources=['seal.py','run.py','worker.py','analysis.export','verify.csvcheck','common.require/check_seal'],simulation_counts=dict(prep=6,gate=12,formal=2,stub_entries=20,stub_cores=20),production_counts_unchanged=[6,12,288],missing_gate_blocked=True,existing_output_blocked_before_entry=True,interfaces_replaced=['planner runtime/candidate/p2_adapter','worker subprocess bootstrap','synthetic generation stage product','analysis.compute synthetic selection only'],real_entry_core_calls=0))
++    save(out,dict(status='PASS',synthetic=True,actual_control_sources=['seal.py','run.py','worker.py','analysis.export','verify.csvcheck','common.require/check_seal'],simulation_counts=dict(prep=6,gate=12,formal=2,stub_entries=20,stub_cores=20),production_counts_unchanged=[6,12,288],negative_seals_blocked=blocked,missing_gate_blocked=True,existing_output_blocked_before_entry=True,interfaces_replaced=['planner runtime/candidate/p2_adapter','worker subprocess bootstrap','synthetic generation stage product and input-audit receipt','analysis.compute synthetic selection only'],real_entry_core_calls=0))
+ if __name__=='__main__':
+     mode=sys.argv[1]
+     if mode=='b1':b1(Path(sys.argv[2]))
+--- round2/verify.py
++++ final/verify.py
+@@ -6,6 +6,7 @@
+     with (H/name).open(encoding='utf-8-sig',newline='') as f:actual=list(csv.DictReader(f))
+     keys=list(dict.fromkeys(k for r in rows for k in r));expected=[{k:json.dumps(r.get(k),ensure_ascii=False) if isinstance(r.get(k),(list,dict,tuple)) else '' if r.get(k) is None else str(r.get(k)) for k in keys} for r in rows];assert actual==expected,name
+ def verify():
++    require('technical');require('inputs_audited')
+     csv.field_size_limit(max(131072,max((p.stat().st_size for p in H.glob('*.csv')),default=0)))
+     for name in ('seal1','seal2'):
+         require(name);s=check_seal(name+'.json');assert sha(sys.executable)==s['python_sha256']
+@@ -13,6 +14,8 @@
+     for stage in ('stat_stubs','prep','generated','gate','formal'):require(stage)
+     if (H/'manifest.json').exists():
+         for p,h in read(H/'manifest.json').items():assert sha(H/p)==h,p
++    if (H/'completion_manifest.json').exists():
++        for p,h in read(H/'completion_manifest.json')['files'].items():assert sha(H/p)==h,p
+     assert read(H/'stat_stub_results.json')['passed'] and len(read(H/'stat_stub_results.json')['tests'])==8
+     for name in ('runtime.py','candidate.py','p2_adapter.py'):assert (H/'frozen_source_bytes'/name).read_bytes()==(P/name).read_bytes()
+     maps=read(H/'maps.json');groups=read(H/'groups.json');states=read(H/'states.json');assert len(maps)==6 and len(groups)==12 and len(states)==48;BFS=0

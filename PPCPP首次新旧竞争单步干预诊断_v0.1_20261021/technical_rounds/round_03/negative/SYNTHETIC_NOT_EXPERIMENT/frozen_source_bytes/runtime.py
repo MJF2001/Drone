@@ -1,0 +1,2 @@
+# SYNTHETIC_NOT_EXPERIMENT frozen reference placeholder
+BAD_REFERENCE

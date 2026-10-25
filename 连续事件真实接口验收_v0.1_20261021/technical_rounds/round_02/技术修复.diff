@@ -1,0 +1,27 @@
+--- 连续事件真实接口验收_v0.1_20261021\technical_rounds\round_01\source_technical.py
++++ 连续事件真实接口验收_v0.1_20261021\technical_rounds\round_02\source_technical.py
+@@ -83,7 +83,7 @@
+     f=Path(f).resolve();f.mkdir(parents=True);assert f.name=='SYNTHETIC_TECHNICAL_NOT_REAL'
+     for folder in ('inputs','jobs','outputs','logs','sessions','receipts','frozen_source_bytes','REFERENCES'):(f/folder).mkdir()
+     for p in H.glob('*.py'):put(f/p.name,p.read_bytes())
+-    put(f/'synthetic_api.py',b'# Handwritten fake API only. No algorithm module imported.\n')
++    assert (f/'synthetic_api.py').is_file()  # Already copied with the source set.
+     for n in ('runtime.py','candidate.py','p2_adapter.py'):put(f/'REFERENCES'/n,b'# SYNTHETIC bytes reference\n')
+     save(f/'source_lock.json',{str(p):sha(p) for p in (f/'REFERENCES').glob('*')})
+     save(f/'config.json',dict(synthetic_only=True,real_entry_cap=6,entry_budget=20,watchdog=90,seed=20261021,threads=1))
+@@ -144,6 +144,15 @@
+     for p in paths:ast.parse(p.read_text(encoding='utf8'),filename=str(p))
+     cases=[('B1_PPCPP',['--b1','PPCPP',str(d/'B1_PPCPP.json')]),('B1_P2',['--b1','P2_MULTI',str(d/'B1_P2.json')]),('references',['--references',str(d/'references.json')]),('units',['--units',str(d/'units.json')]),('chain',['--chain',str(d/'chain/SYNTHETIC_TECHNICAL_NOT_REAL'),str(d/'chain.json')])];rows=[]
+     for name,args in cases:
++        if name=='units' and n>1:
++            previous=H/'technical_rounds'/'round_01';unit=read(previous/'units.json');assert unit['passed']
++            oldtree=ast.parse((previous/'source_technical.py').read_text(encoding='utf8'));newtree=ast.parse((H/'technical.py').read_text(encoding='utf8'))
++            funcs=('units','fake_api','stamp_stub')
++            for fn in funcs:assert ast.dump(next(z for z in oldtree.body if isinstance(z,ast.FunctionDef) and z.name==fn))==ast.dump(next(z for z in newtree.body if isinstance(z,ast.FunctionDef) and z.name==fn))
++            for dependency in ('entry.py','contracts.py'):assert (previous/('source_'+dependency)).read_bytes()==(H/dependency).read_bytes()
++            assert [dict(id=r['case'],input=r['input'],route=r['result']['response']['route']) for r in unit['cases'][::2]]==read(H/'stub_fixture_spec.json')['units']
++            save(d/'units_reuse.json',dict(passed=True,original_evidence=str(previous/'units.json'),sha256=sha(previous/'units.json'),unchanged_function_AST=list(funcs),unchanged_dependencies=['entry.py','contracts.py','stub_fixture_spec units'],new_stub_API_calls=0))
++            rows.append(dict(case=name,passed=True,reused_unchanged_evidence=True));print('TECH',n,name,'PASS unchanged evidence reuse;0 new stubs',flush=True);continue
+         p=subprocess.run([sys.executable,'-B','-X','utf8',str(H/'technical.py'),*args],env=util.env(),capture_output=True,timeout=240);put(d/(name+'.stdout.log'),p.stdout);put(d/(name+'.stderr.log'),p.stderr);rows.append(dict(case=name,passed=p.returncode==0,exit_code=p.returncode));print('TECH',n,name,'PASS' if p.returncode==0 else 'FAIL',flush=True)
+         if p.returncode:print(p.stderr.decode('utf8',errors='replace')[-5000:],flush=True)
+     for name in ('B1_PPCPP','B1_P2'):

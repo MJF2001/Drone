@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "E:\无人机研究项目_接续包_20261014\PPCPP首次新旧竞争单步干预诊断_v0.1_20261021\technical.py", line 149, in <module>
+    if not args:sys.exit(run_round())
+                         ^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP首次新旧竞争单步干预诊断_v0.1_20261021\technical.py", line 135, in run_round
+    save(d/'native_structure.json',native_structure());paths=list(H.glob('*.py'))+list((H/'frozen_source_bytes').glob('*.py'));old=read(H.parent/'PPCPP侧向拓宽开发诊断_v0.4_20261021/import_inventory.json')['paths'];paths += [Path(p) for p in old if Path(p).suffix=='.py'];save(d/'A_source_parse.json',syntax(paths))
+                                                                                                                                                                                                                                                                                                             ^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP首次新旧竞争单步干预诊断_v0.1_20261021\technical.py", line 14, in syntax
+    for p in sorted(set(map(Path,paths))):ast.parse(p.read_text(encoding='utf-8-sig'),filename=str(p));rows.append(dict(path=str(p),sha256=sha(p)))
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\运行环境\python\Lib\ast.py", line 52, in parse
+    return compile(source, filename, mode, flags,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\无人机研究项目_接续包_20261014\PPCPP首次新旧竞争单步干预诊断_v0.1_20261021\run.py", line 32
+    receipt(mode,[H/f'{mode}_metrics.json',*[H/'logs'/f'{j["id"]}.receipt.json' for j in order],*[H/'outputs'/f'{j["id"]}.json' for j in order if (H/'outputs'/f'{j["id"]}.json').exists()],*([H/'OFF_equivalence.json'] if mode=='OFF' else []))
+                                                                                                                                                                                                                                                ^
+SyntaxError: closing parenthesis ')' does not match opening parenthesis '['

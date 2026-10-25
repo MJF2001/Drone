@@ -1,0 +1,343 @@
+{
+  "passed": true,
+  "real_solver_calls": 0,
+  "exact_search_calls": 0,
+  "cases": [
+    {
+      "name": "manual_reenter",
+      "input": {
+        "name": "manual_reenter",
+        "free": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            1
+          ],
+          [
+            2,
+            1
+          ]
+        ],
+        "targets": [
+          [
+            2,
+            1
+          ]
+        ],
+        "covered": [],
+        "published_targets": [
+          [
+            2,
+            1
+          ]
+        ],
+        "deferred_targets": [],
+        "current": [
+          0,
+          1
+        ],
+        "base": [
+          0,
+          1
+        ],
+        "previous": null,
+        "predator": [
+          -1,
+          0
+        ],
+        "initial_targets": [
+          [
+            2,
+            1
+          ]
+        ],
+        "old_route": [],
+        "distance_budget": 100000
+      },
+      "route": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "stats": {
+        "edges": [
+          {
+            "edge": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "start_side": false,
+            "base_other_side": false,
+            "other_size": 2,
+            "other_pending": [
+              [
+                2,
+                1
+              ]
+            ],
+            "lower_bound": 2,
+            "crossings": 4,
+            "excess": 2,
+            "first_enter": 1,
+            "exits": [
+              {
+                "step": 2,
+                "remaining": 1
+              },
+              {
+                "step": 6,
+                "remaining": 0
+              }
+            ],
+            "last_completion": 4,
+            "final_exit": 6,
+            "unfinished_exit_reentry": 1
+          },
+          {
+            "edge": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "start_side": false,
+            "base_other_side": false,
+            "other_size": 1,
+            "other_pending": [
+              [
+                2,
+                1
+              ]
+            ],
+            "lower_bound": 2,
+            "crossings": 2,
+            "excess": 0,
+            "first_enter": 4,
+            "exits": [
+              {
+                "step": 5,
+                "remaining": 0
+              }
+            ],
+            "last_completion": 4,
+            "final_exit": 5,
+            "unfinished_exit_reentry": 0
+          }
+        ],
+        "groups": [
+          {
+            "signature": "(False, ((2, 1),))",
+            "edge_count": 2,
+            "lower_bound": 2,
+            "other_pending": [
+              [
+                2,
+                1
+              ]
+            ],
+            "base_other_side": false,
+            "crossings_min": 2,
+            "crossings_max": 4,
+            "excess_min": 0,
+            "excess_max": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "manual_cross",
+      "stats": {
+        "edges": [
+          {
+            "edge": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "start_side": false,
+            "base_other_side": true,
+            "other_size": 1,
+            "other_pending": [],
+            "lower_bound": 1,
+            "crossings": 1,
+            "excess": 0,
+            "first_enter": 2,
+            "exits": [],
+            "last_completion": null,
+            "final_exit": null,
+            "unfinished_exit_reentry": 0
+          },
+          {
+            "edge": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "start_side": false,
+            "base_other_side": true,
+            "other_size": 2,
+            "other_pending": [
+              [
+                1,
+                1
+              ]
+            ],
+            "lower_bound": 1,
+            "crossings": 1,
+            "excess": 0,
+            "first_enter": 1,
+            "exits": [],
+            "last_completion": 1,
+            "final_exit": null,
+            "unfinished_exit_reentry": 0
+          }
+        ],
+        "groups": [
+          {
+            "signature": "(True, ((1, 1),))",
+            "edge_count": 1,
+            "lower_bound": 1,
+            "other_pending": [
+              [
+                1,
+                1
+              ]
+            ],
+            "base_other_side": true,
+            "crossings_min": 1,
+            "crossings_max": 1,
+            "excess_min": 0,
+            "excess_max": 0
+          },
+          {
+            "signature": "(True, ())",
+            "edge_count": 1,
+            "lower_bound": 1,
+            "other_pending": [],
+            "base_other_side": true,
+            "crossings_min": 1,
+            "crossings_max": 1,
+            "excess_min": 0,
+            "excess_max": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "manual_empty",
+      "stats": {
+        "edges": [
+          {
+            "edge": [
+              [
+                0,
+                1
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "start_side": false,
+            "base_other_side": false,
+            "other_size": 2,
+            "other_pending": [],
+            "lower_bound": 0,
+            "crossings": 0,
+            "excess": 0,
+            "first_enter": null,
+            "exits": [],
+            "last_completion": null,
+            "final_exit": null,
+            "unfinished_exit_reentry": 0
+          },
+          {
+            "edge": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "start_side": false,
+            "base_other_side": false,
+            "other_size": 1,
+            "other_pending": [],
+            "lower_bound": 0,
+            "crossings": 0,
+            "excess": 0,
+            "first_enter": null,
+            "exits": [],
+            "last_completion": null,
+            "final_exit": null,
+            "unfinished_exit_reentry": 0
+          }
+        ],
+        "groups": [
+          {
+            "signature": "(False, ())",
+            "edge_count": 2,
+            "lower_bound": 0,
+            "other_pending": [],
+            "base_other_side": false,
+            "crossings_min": 0,
+            "crossings_max": 0,
+            "excess_min": 0,
+            "excess_max": 0
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+--- v0.1/history_adapter.py
++++ v0.2/history_adapter.py
+@@ -6,17 +6,29 @@
+ from common_geometry import GridMetric,NoPath
+ class TaskGraph(RCG):
+     def __init__(self,known):super().__init__(known);self.task_protected=set()
++    def prune(self,current):
++        if hasattr(self,'before_prune'):self.before_prune()
++        return super().prune(current)
+ class HistoryCStar(CStar):
+     def __init__(self,start,known,targets,covered,**kw):
+         self.targets=set(targets);self.covered=set(covered);self.pending=self.targets-self.covered-{tuple(start)}
+         self.task_events=[];self.task_filters=[]
+         super().__init__(start,known,graph_factory=TaskGraph,**kw)
++        self.graph.before_prune=self.sync_task_protection
+         self.sync_task_protection()
+     def needed(self,p):
+         if p in self.pending:return True
+         return any(q[0]==p[0] and set(lap_points(p,q))&self.pending for q in self.graph.edges[p])
+     def sync_task_protection(self):
+-        self.graph.task_protected={p for p in self.graph.nodes if self.needed(p)}
++        # Acquisition anchors and transit anchors are different obligations.
++        # Protect existing RCG paths only; never create occupancy-grid shortcuts.
++        acquisition={p for p in self.graph.nodes if self.needed(p)}
++        transit=set()
++        component=set(next((s for s in self.graph.components() if self.current in s),[]))
++        for p in sorted(acquisition&component):
++            route,_=self.graph.path(self.current,p);transit.update(route)
++        self.acquisition_anchors=acquisition;self.transit_anchors=transit-acquisition
++        self.graph.task_protected=acquisition|transit
+         for p,n in self.graph.nodes.items():n.tasked=p in self.covered
+     def refresh_retreat(self,a=None,b=None):
+         super().refresh_retreat(a,b);self.retreat={p for p in self.retreat if self.needed(p)}
+@@ -24,6 +36,7 @@
+         before=len(self.path);pending_before=set(self.pending);n=super().navigate(route,mode)
+         traversed=self.path[before:];self.covered.update(set(traversed)&self.targets);self.pending-=set(traversed)
+         self.task_events.append(dict(mode=mode,start_index=before-1,end_index=len(self.path)-1,credited=sorted(pending_before-self.pending),pending_after=sorted(self.pending)))
++        self.task_events[-1]['rcg_route']=[list(p) for p in route]
+         self.sync_task_protection();self.refresh_retreat();return n
+     def select_goal(self):
+         self.sync_task_protection();p=self.current
+@@ -39,6 +52,25 @@
+         if candidates:
+             paths=[self.graph.path(p,q) for q in candidates];path,cost=min(paths,key=lambda v:(v[1],v[0][-1]))
+             return path[-1],path,True,dict(group='retreat',options=candidates,chosen=path[-1],rcg_path_cost=cost)
++        # Existing direct acquisition and C* retreat retain priority. If neither
++        # applies, traverse ONE existing RCG edge toward an explicit service
++        # action. Closed/covered nodes remain traversable. This is a disclosed
++        # task-transit adaptation, not a global target-completion pass.
++        actions=[]
++        component=set(next((s for s in self.graph.components() if p in s),[]))
++        for a in sorted(self.acquisition_anchors&component):
++            self._check_deadline()
++            approach,cost=self.graph.path(p,a)
++            if a in self.pending and len(approach)>1:
++                actions.append((cost,tuple(approach),'node',a,a))
++            for b in sorted(self.graph.edges[a]):
++                if a[0]==b[0] and set(lap_points(a,b))&self.pending:
++                    actions.append((cost+abs(a[1]-b[1]),tuple(approach+[b]),'lap',a,b))
++        if actions:
++            cost,full,kind,a,b=min(actions)
++            goal=full[1]
++            return goal,[p,goal],True,dict(group='task_transit',options=[goal],chosen=goal,
++                rcg_service_route=full,service_kind=kind,service_edge=[a,b],rcg_service_cost=cost)
+         return None,None,False,dict(group='no_task_representative',options=[],chosen=None,pending=sorted(self.pending))
+     def detect_holes(self,goal):
+         # Preserve the original open-component connectivity test. Only components
+@@ -86,4 +118,4 @@
+         historical_nodes=[p for p in planner.graph.nodes if p in covered],completion_tsp=False,
+         open_graph_nodes=sum(planner.graph.is_open(p) for p in planner.graph.nodes),
+         termination_trigger=planner.iterations_trace[-1]['why']['group'] if planner.iterations_trace else None,
+-        adaptation='History/lap-obligation prototype, no claim of original completeness or performance.')
++        adaptation='v0.2 acquisition plus existing-RCG transit obligations; not original C* completeness or global completion.')
